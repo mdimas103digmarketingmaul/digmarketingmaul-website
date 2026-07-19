@@ -8,30 +8,181 @@
     content="width=device-width, initial-scale=1.0"
   >
 
+  <meta
+    name="description"
+    content="Website pembelajaran web development dan digital marketing milik Maul."
+  >
+
   <title>Dig Marketing Maul</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <h1>Website Pertama Saya</h1>
+  <header class="site-header">
+    <nav class="navbar" aria-label="Navigasi utama">
+      <a class="brand" href="index.html">
+        Dig Marketing Maul
+      </a>
 
-  <p>
-    Saya sedang belajar membuat dan mengelola website sendiri.
-  </p>
+      <div class="nav-links">
+        <a href="index.html">
+          Beranda
+        </a>
 
-  <p>
-    Website ini nantinya akan digunakan untuk mempelajari
-    web development dan digital marketing.
-  </p>
+        <a href="tentang.html">
+          Tentang Saya
+        </a>
 
-  <button id="actionButton" type="button">
-    Klik Saya
-  </button>
+        <a href="#layanan">
+          Layanan
+        </a>
 
-  <p id="message">
-    Tombol belum diklik.
-  </p>
+        <a href="#kontak">
+          Kontak
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">
+        Digital Marketing & Web Development
+      </p>
+
+      <h1>
+        Belajar Membangun Website yang Terukur
+      </h1>
+
+      <p class="hero-description">
+        Saya sedang mempelajari cara membuat, mengelola,
+        menerbitkan, dan mengintegrasikan website dengan
+        kebutuhan digital marketing.
+      </p>
+
+      <div class="hero-actions">
+        <a class="primary-button" href="tentang.html">
+          Tentang Saya
+        </a>
+
+        <a class="secondary-button" href="#layanan">
+          Lihat Pembelajaran
+        </a>
+      </div>
+    </section>
+
+    <section class="services-section" id="layanan">
+      <p class="section-label">
+        Fokus Pembelajaran
+      </p>
+
+      <h2>
+        Kemampuan yang Sedang Saya Pelajari
+      </h2>
+
+      <div class="services-grid">
+        <article class="service-card">
+          <h3>
+            Website Development
+          </h3>
+
+          <p>
+            Membuat website menggunakan HTML, CSS,
+            JavaScript, GitHub, domain, dan deployment.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <h3>
+            Tracking & Analytics
+          </h3>
+
+          <p>
+            Mengintegrasikan website dengan GTM, GA4,
+            conversion tracking, UTM, dan GCLID.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <h3>
+            Digital Marketing
+          </h3>
+
+          <p>
+            Menghubungkan website dengan Meta Ads,
+            Google Ads, SEO, serta pengelolaan leads.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="about-preview">
+      <div>
+        <p class="section-label">
+          Tentang Saya
+        </p>
+
+        <h2>
+          Digital Marketer yang Sedang Mempelajari Web Development
+        </h2>
+
+        <p>
+          Tujuan saya adalah mampu menyediakan layanan digital
+          marketing yang terintegrasi, mulai dari pembuatan website,
+          tracking, pengumpulan leads, hingga optimasi campaign.
+        </p>
+
+        <a href="tentang.html">
+          Baca selengkapnya tentang saya
+        </a>
+      </div>
+    </section>
+
+    <section class="javascript-demo">
+      <p class="section-label">
+        Demo JavaScript
+      </p>
+
+      <h2>
+        Interaksi Pertama Saya
+      </h2>
+
+      <p>
+        Klik tombol berikut untuk menguji apakah JavaScript
+        berhasil dijalankan.
+      </p>
+
+      <button id="actionButton" type="button">
+        Klik Saya
+      </button>
+
+      <p id="message">
+        Tombol belum diklik.
+      </p>
+    </section>
+
+    <section class="contact-section" id="kontak">
+      <p class="section-label">
+        Kontak
+      </p>
+
+      <h2>
+        Mari Terhubung
+      </h2>
+
+      <p>
+        Bagian ini nantinya akan dikembangkan menjadi
+        formulir leads dan tombol WhatsApp.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      © 2026 Dig Marketing Maul. Website pembelajaran web development.
+    </p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
