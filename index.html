@@ -168,13 +168,185 @@
       </p>
 
       <h2>
-        Mari Terhubung
+        Konsultasikan Kebutuhan Digital Marketing Anda
       </h2>
 
-      <p>
-        Bagian ini nantinya akan dikembangkan menjadi
-        formulir leads dan tombol WhatsApp.
+      <p class="contact-description">
+        Isi formulir berikut. Data ini nantinya akan dikirim
+        dan tersimpan secara otomatis ke Google Sheets.
       </p>
+
+      <form id="leadForm" class="lead-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="fullName">
+              Nama lengkap
+            </label>
+
+            <input
+              type="text"
+              id="fullName"
+              name="full_name"
+              autocomplete="name"
+              placeholder="Masukkan nama lengkap"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="email">
+              Email
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autocomplete="email"
+              placeholder="nama@email.com"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="phone">
+              Nomor WhatsApp
+            </label>
+
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              autocomplete="tel"
+              inputmode="tel"
+              placeholder="Contoh: 081234567890"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="service">
+              Kebutuhan layanan
+            </label>
+
+            <select
+              id="service"
+              name="service"
+              required
+            >
+              <option value="">
+                Pilih layanan
+              </option>
+
+              <option value="website-development">
+                Pembuatan Website
+              </option>
+
+              <option value="meta-ads">
+                Meta Ads
+              </option>
+
+              <option value="google-ads">
+                Google Ads
+              </option>
+
+              <option value="tracking-analytics">
+                Tracking & Analytics
+              </option>
+
+              <option value="seo">
+                SEO
+              </option>
+
+              <option value="lainnya">
+                Lainnya
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="leadMessage">
+            Ceritakan kebutuhan Anda
+          </label>
+
+          <textarea
+            id="leadMessage"
+            name="message"
+            rows="5"
+            placeholder="Jelaskan kebutuhan atau tujuan digital marketing Anda"
+            required
+          ></textarea>
+        </div>
+
+        <div class="consent-group">
+          <input
+            type="checkbox"
+            id="consent"
+            name="consent"
+            value="agreed"
+            required
+          >
+
+          <label for="consent">
+            Saya menyetujui data ini digunakan untuk menghubungi
+            saya terkait kebutuhan layanan.
+          </label>
+        </div>
+
+        <!-- Data atribusi yang nantinya diisi melalui JavaScript -->
+
+        <input
+          type="hidden"
+          id="utmSource"
+          name="utm_source"
+        >
+
+        <input
+          type="hidden"
+          id="utmMedium"
+          name="utm_medium"
+        >
+
+        <input
+          type="hidden"
+          id="utmCampaign"
+          name="utm_campaign"
+        >
+
+        <input
+          type="hidden"
+          id="gclid"
+          name="gclid"
+        >
+
+        <input
+          type="hidden"
+          id="landingPage"
+          name="landing_page"
+        >
+
+        <input
+          type="hidden"
+          id="submittedAt"
+          name="submitted_at"
+        >
+
+        <button
+          type="submit"
+          id="submitButton"
+          class="submit-button"
+        >
+          Kirim Permintaan
+        </button>
+
+        <p
+          id="formStatus"
+          class="form-status"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </form>
     </section>
   </main>
 
