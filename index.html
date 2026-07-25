@@ -177,6 +177,29 @@
       </p>
 
       <form id="leadForm" class="lead-form">
+
+        <!--
+          Honeypot antispam.
+          Pengguna normal tidak boleh melihat atau mengisi field ini.
+        -->
+
+        <div
+          class="honeypot-field"
+          aria-hidden="true"
+        >
+          <label for="website">
+            Jangan isi kolom ini
+          </label>
+
+          <input
+            type="text"
+            id="website"
+            name="website"
+            autocomplete="off"
+            tabindex="-1"
+          >
+        </div>
+
         <div class="form-grid">
           <div class="form-group">
             <label for="fullName">
