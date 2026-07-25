@@ -189,6 +189,8 @@
               name="full_name"
               autocomplete="name"
               placeholder="Masukkan nama lengkap"
+              minlength="2"
+              maxlength="100"
               required
             >
           </div>
@@ -204,6 +206,7 @@
               name="email"
               autocomplete="email"
               placeholder="nama@email.com"
+              maxlength="150"
               required
             >
           </div>
@@ -220,6 +223,10 @@
               autocomplete="tel"
               inputmode="tel"
               placeholder="Contoh: 081234567890"
+              minlength="9"
+              maxlength="20"
+              pattern="[0-9+() -]{9,20}"
+              title="Masukkan nomor WhatsApp 9–20 karakter. Gunakan angka, tanda tambah, spasi, tanda kurung, atau tanda hubung."
               required
             >
           </div>
@@ -275,6 +282,8 @@
             name="message"
             rows="5"
             placeholder="Jelaskan kebutuhan atau tujuan digital marketing Anda"
+            minlength="10"
+            maxlength="1000"
             required
           ></textarea>
         </div>
@@ -294,7 +303,7 @@
           </label>
         </div>
 
-        <!-- Data atribusi yang nantinya diisi melalui JavaScript -->
+        <!-- Data atribusi yang diisi melalui JavaScript -->
 
         <input
           type="hidden"
