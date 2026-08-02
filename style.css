@@ -523,3 +523,90 @@ body > footer p {
   height: 1px;
   overflow: hidden;
 } 
+
+/*
+  Navigasi halaman Tentang Saya
+*/
+
+.about-navbar {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.about-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+
+/*
+  Toggle bahasa ID dan EN
+*/
+
+.language-switcher {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background-color: var(--background-color);
+}
+
+.language-button {
+  padding: 6px 11px;
+  border: none;
+  border-radius: 999px;
+  background-color: transparent;
+  color: var(--muted-color);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.language-button:hover {
+  color: var(--primary-color);
+}
+
+.language-button.is-active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.language-button.is-active:hover {
+  color: #ffffff;
+}
+
+.language-divider {
+  color: var(--border-color);
+  font-size: 13px;
+}
+
+
+/*
+  Tampilan bilingual pada mobile
+*/
+
+@media (max-width: 768px) {
+  .about-navbar {
+    min-height: auto;
+    padding: 14px 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .about-nav-links {
+    gap: 16px;
+  }
+
+  .language-switcher {
+    margin-left: auto;
+  }
+}
