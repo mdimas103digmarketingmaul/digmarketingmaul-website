@@ -20,39 +20,87 @@
 
 <body>
   <header>
-    <nav>
-      <a href="index.html">
-        Beranda
-      </a>
+    <nav
+      class="about-navbar"
+      aria-label="Navigasi utama"
+    >
+      <div class="about-nav-links">
+        <a
+          href="index.html"
+          data-i18n="navHome"
+        >
+          Beranda
+        </a>
 
-      <a href="tentang.html">
-        Tentang Saya
-      </a>
+        <a
+          href="tentang.html"
+          data-i18n="navAbout"
+          aria-current="page"
+        >
+          Tentang Saya
+        </a>
+      </div>
+
+      <div
+        class="language-switcher"
+        role="group"
+        aria-label="Pilihan bahasa"
+      >
+        <button
+          type="button"
+          class="language-button is-active"
+          data-language="id"
+          aria-pressed="true"
+        >
+          ID
+        </button>
+
+        <span
+          class="language-divider"
+          aria-hidden="true"
+        >
+          |
+        </span>
+
+        <button
+          type="button"
+          class="language-button"
+          data-language="en"
+          aria-pressed="false"
+        >
+          EN
+        </button>
+      </div>
     </nav>
   </header>
 
   <main>
     <section>
-      <h1>Tentang Saya</h1>
+      <h1 data-i18n="heading">
+        Tentang Saya
+      </h1>
 
-      <p>
+      <p data-i18n="introduction">
         Halo, saya Maul. Saya merupakan seorang digital marketer
         yang sedang mempelajari web development.
       </p>
 
-      <p>
+      <p data-i18n="learningJourney">
         Saya ingin memahami proses pembuatan website mulai dari
         HTML, CSS, JavaScript, deployment, tracking, hingga
         pengelolaan data digital marketing.
       </p>
 
-      <p>
+      <p data-i18n="goal">
         Tujuan saya adalah dapat membuat dan mengelola website
         secara mandiri serta mengintegrasikannya dengan kebutuhan
         digital marketing klien.
       </p>
 
-      <a href="index.html">
+      <a
+        href="index.html"
+        data-i18n="backHome"
+      >
         Kembali ke Beranda
       </a>
     </section>
@@ -64,6 +112,10 @@
     </p>
   </footer>
 
-  <script src="script.js"></script>
+  <!-- Tetap digunakan untuk menyimpan UTM dan GCLID -->
+  <script src="script.js?v=3"></script>
+
+  <!-- Khusus fitur bilingual halaman Tentang Saya -->
+  <script src="tentang.js?v=1"></script>
 </body>
 </html>
