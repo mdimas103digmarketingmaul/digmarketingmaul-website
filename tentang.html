@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
   <meta charset="UTF-8">
 
@@ -14,6 +14,44 @@
   >
 
   <title>Tentang Saya | Dig Marketing Maul</title>
+
+  <!--
+    Menentukan tema sebelum halaman ditampilkan
+    agar tidak terjadi kilatan warna terang ketika mode dark aktif.
+  -->
+  <script>
+    (function () {
+      const themeStorageKey =
+        "digmarketingmaul_theme";
+
+      try {
+        const savedTheme =
+          localStorage.getItem(
+            themeStorageKey
+          );
+
+        const systemPrefersDark =
+          window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+
+        const initialTheme =
+          savedTheme === "light" ||
+          savedTheme === "dark"
+            ? savedTheme
+            : systemPrefersDark
+              ? "dark"
+              : "light";
+
+        document.documentElement.dataset.theme =
+          initialTheme;
+
+      } catch (error) {
+        document.documentElement.dataset.theme =
+          "light";
+      }
+    })();
+  </script>
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -41,34 +79,62 @@
         </a>
       </div>
 
-      <div
-        class="language-switcher"
-        role="group"
-        aria-label="Pilihan bahasa"
-      >
+      <div class="about-controls">
+
+        <!-- Pilihan bahasa -->
+
+        <div
+          class="language-switcher"
+          role="group"
+          aria-label="Pilihan bahasa"
+        >
+          <button
+            type="button"
+            class="language-button is-active"
+            data-language="id"
+            aria-pressed="true"
+          >
+            ID
+          </button>
+
+          <span
+            class="language-divider"
+            aria-hidden="true"
+          >
+            |
+          </span>
+
+          <button
+            type="button"
+            class="language-button"
+            data-language="en"
+            aria-pressed="false"
+          >
+            EN
+          </button>
+        </div>
+
+        <!-- Toggle Light dan Dark -->
+
         <button
           type="button"
-          class="language-button is-active"
-          data-language="id"
-          aria-pressed="true"
-        >
-          ID
-        </button>
-
-        <span
-          class="language-divider"
-          aria-hidden="true"
-        >
-          |
-        </span>
-
-        <button
-          type="button"
-          class="language-button"
-          data-language="en"
+          id="themeToggle"
+          class="theme-toggle"
+          aria-label="Aktifkan mode gelap"
           aria-pressed="false"
+          title="Aktifkan mode gelap"
         >
-          EN
+          <span
+            id="themeToggleIcon"
+            class="theme-toggle-icon"
+            aria-hidden="true"
+          >
+            ☾
+          </span>
+
+          <span id="themeToggleText">
+            Gelap
+          </span>
         </button>
       </div>
     </nav>
@@ -112,10 +178,10 @@
     </p>
   </footer>
 
-  <!-- Tetap digunakan untuk menyimpan UTM dan GCLID -->
+  <!-- Tetap digunakan untuk UTM dan GCLID -->
   <script src="script.js?v=3"></script>
 
-  <!-- Khusus fitur bilingual halaman Tentang Saya -->
-  <script src="tentang.js?v=1"></script>
+  <!-- Bilingual dan Light/Dark mode -->
+  <script src="tentang.js?v=2"></script>
 </body>
 </html>
