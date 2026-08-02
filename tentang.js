@@ -1,6 +1,15 @@
 const LANGUAGE_STORAGE_KEY =
   "digmarketingmaul_language";
 
+const THEME_STORAGE_KEY =
+  "digmarketingmaul_theme";
+
+const AVAILABLE_THEMES =
+  new Set([
+    "light",
+    "dark"
+  ]);
+
 
 /*
   Kamus terjemahan halaman Tentang Saya
@@ -36,7 +45,19 @@ const translations = {
       "Tujuan saya adalah dapat membuat dan mengelola website secara mandiri serta mengintegrasikannya dengan kebutuhan digital marketing klien.",
 
     backHome:
-      "Kembali ke Beranda"
+      "Kembali ke Beranda",
+
+    darkLabel:
+      "Gelap",
+
+    lightLabel:
+      "Terang",
+
+    switchToDark:
+      "Aktifkan mode gelap",
+
+    switchToLight:
+      "Aktifkan mode terang"
   },
 
   en: {
@@ -68,7 +89,19 @@ const translations = {
       "My goal is to build and manage websites independently and integrate them with clients' digital marketing needs.",
 
     backHome:
-      "Back to Home"
+      "Back to Home",
+
+    darkLabel:
+      "Dark",
+
+    lightLabel:
+      "Light",
+
+    switchToDark:
+      "Enable dark mode",
+
+    switchToLight:
+      "Enable light mode"
   }
 };
 
@@ -77,12 +110,13 @@ document.addEventListener(
   "DOMContentLoaded",
   function () {
     setupLanguageSwitcher();
+    setupThemeToggle();
   }
 );
 
 
 /*
-  Menyiapkan tombol ID dan EN
+  Menyiapkan pilihan bahasa
 */
 
 function setupLanguageSwitcher() {
@@ -114,7 +148,9 @@ function setupLanguageSwitcher() {
             button.dataset.language;
 
           if (
-            !translations[selectedLanguage]
+            !translations[
+              selectedLanguage
+            ]
           ) {
             return;
           }
@@ -134,7 +170,7 @@ function setupLanguageSwitcher() {
 
 
 /*
-  Mengganti seluruh teks halaman
+  Mengganti bahasa halaman
 */
 
 function applyLanguage(language) {
@@ -145,26 +181,11 @@ function applyLanguage(language) {
     return;
   }
 
-
-  /*
-    Mengubah atribut bahasa dokumen
-  */
-
   document.documentElement.lang =
     language;
 
-
-  /*
-    Mengubah judul tab browser
-  */
-
   document.title =
     selectedTranslation.pageTitle;
-
-
-  /*
-    Mengubah meta description
-  */
 
   const metaDescription =
     document.querySelector(
@@ -174,15 +195,10 @@ function applyLanguage(language) {
   if (metaDescription) {
     metaDescription.setAttribute(
       "content",
-      selectedTranslation.metaDescription
+      selectedTranslation
+        .metaDescription
     );
   }
-
-
-  /*
-    Mengubah semua elemen
-    yang memiliki data-i18n
-  */
 
   const translatedElements =
     document.querySelectorAll(
@@ -205,11 +221,6 @@ function applyLanguage(language) {
       }
     }
   );
-
-
-  /*
-    Memperbarui tampilan tombol aktif
-  */
 
   const languageButtons =
     document.querySelectorAll(
@@ -234,11 +245,6 @@ function applyLanguage(language) {
     }
   );
 
-
-  /*
-    Memperbarui label aksesibilitas
-  */
-
   const languageSwitcher =
     document.querySelector(
       ".language-switcher"
@@ -251,6 +257,10 @@ function applyLanguage(language) {
         .languageSwitcherLabel
     );
   }
+
+  updateThemeToggle(
+    getCurrentTheme()
+  );
 }
 
 
@@ -264,6 +274,7 @@ function saveLanguage(language) {
       LANGUAGE_STORAGE_KEY,
       language
     );
+
   } catch (error) {
     console.warn(
       "Pilihan bahasa tidak dapat disimpan.",
@@ -282,9 +293,283 @@ function getStoredLanguage() {
     return localStorage.getItem(
       LANGUAGE_STORAGE_KEY
     );
+
   } catch (error) {
     console.warn(
       "Pilihan bahasa tidak dapat dibaca.",
+      error
+    );
+
+    return null;
+  }
+}
+
+
+/*
+  Menyiapkan toggle Light dan Dark
+*/
+
+function setupThemeToggle() {
+  const themeToggle =
+    document.getElementById(
+      "themeToggle"
+    );
+
+  if (!themeToggle) {
+    return;
+  }
+
+  const initialTheme =
+    getInitialTheme();
+
+  applyTheme(initialTheme);
+
+  themeToggle.addEventListener(
+    "click",
+    function () {
+      const currentTheme =
+        getCurrentTheme();
+
+      const nextTheme =
+        currentTheme === "dark"
+          ? "light"
+          : "dark";
+
+      applyTheme(nextTheme);
+      saveTheme(nextTheme);
+    }
+  );
+
+
+  /*
+    Mengikuti perubahan tema perangkat
+    hanya jika pengguna belum memilih tema sendiri.
+  */
+
+  const systemThemeQuery =
+    window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    );
+
+  systemThemeQuery.addEventListener(
+    "change",
+    function (event) {
+      const storedTheme =
+        getStoredTheme();
+
+      if (storedTheme) {
+        return;
+      }
+
+      applyTheme(
+        event.matches
+          ? "dark"
+          : "light"
+      );
+    }
+  );
+}
+
+
+/*
+  Menentukan tema awal
+*/
+
+function getInitialTheme() {
+  const documentTheme =
+    document.documentElement
+      .dataset.theme;
+
+  if (
+    AVAILABLE_THEMES.has(
+      documentTheme
+    )
+  ) {
+    return documentTheme;
+  }
+
+  const storedTheme =
+    getStoredTheme();
+
+  if (
+    AVAILABLE_THEMES.has(
+      storedTheme
+    )
+  ) {
+    return storedTheme;
+  }
+
+  const systemPrefersDark =
+    window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+  return systemPrefersDark
+    ? "dark"
+    : "light";
+}
+
+
+/*
+  Mengaktifkan tema
+*/
+
+function applyTheme(theme) {
+  if (
+    !AVAILABLE_THEMES.has(theme)
+  ) {
+    return;
+  }
+
+  document.documentElement
+    .dataset.theme = theme;
+
+  updateThemeToggle(theme);
+}
+
+
+/*
+  Memperbarui tombol tema
+*/
+
+function updateThemeToggle(theme) {
+  const themeToggle =
+    document.getElementById(
+      "themeToggle"
+    );
+
+  const themeToggleIcon =
+    document.getElementById(
+      "themeToggleIcon"
+    );
+
+  const themeToggleText =
+    document.getElementById(
+      "themeToggleText"
+    );
+
+  if (
+    !themeToggle ||
+    !themeToggleIcon ||
+    !themeToggleText
+  ) {
+    return;
+  }
+
+  const currentLanguage =
+    translations[
+      document.documentElement.lang
+    ]
+      ? document.documentElement.lang
+      : "id";
+
+  const selectedTranslation =
+    translations[currentLanguage];
+
+  const isDarkMode =
+    theme === "dark";
+
+  const actionLabel =
+    isDarkMode
+      ? selectedTranslation
+          .switchToLight
+      : selectedTranslation
+          .switchToDark;
+
+  const visibleLabel =
+    isDarkMode
+      ? selectedTranslation
+          .lightLabel
+      : selectedTranslation
+          .darkLabel;
+
+  themeToggle.classList.toggle(
+    "is-dark",
+    isDarkMode
+  );
+
+  themeToggle.setAttribute(
+    "aria-pressed",
+    String(isDarkMode)
+  );
+
+  themeToggle.setAttribute(
+    "aria-label",
+    actionLabel
+  );
+
+  themeToggle.setAttribute(
+    "title",
+    actionLabel
+  );
+
+  themeToggleIcon.textContent =
+    isDarkMode
+      ? "☀"
+      : "☾";
+
+  themeToggleText.textContent =
+    visibleLabel;
+}
+
+
+/*
+  Mendapatkan tema yang sedang aktif
+*/
+
+function getCurrentTheme() {
+  const currentTheme =
+    document.documentElement
+      .dataset.theme;
+
+  return AVAILABLE_THEMES.has(
+    currentTheme
+  )
+    ? currentTheme
+    : "light";
+}
+
+
+/*
+  Menyimpan tema ke localStorage
+*/
+
+function saveTheme(theme) {
+  try {
+    localStorage.setItem(
+      THEME_STORAGE_KEY,
+      theme
+    );
+
+  } catch (error) {
+    console.warn(
+      "Pilihan tema tidak dapat disimpan.",
+      error
+    );
+  }
+}
+
+
+/*
+  Membaca tema dari localStorage
+*/
+
+function getStoredTheme() {
+  try {
+    const storedTheme =
+      localStorage.getItem(
+        THEME_STORAGE_KEY
+      );
+
+    return AVAILABLE_THEMES.has(
+      storedTheme
+    )
+      ? storedTheme
+      : null;
+
+  } catch (error) {
+    console.warn(
+      "Pilihan tema tidak dapat dibaca.",
       error
     );
 
