@@ -2551,3 +2551,59 @@ h3 {
     min-height: auto;
   }
 }
+
+
+/* =========================================================
+   16. PERSONAL PORTFOLIO V4
+========================================================= */
+
+.footer-static {
+  display: block;
+  margin: 8px 0;
+  color: #98a6b9;
+}
+
+.detail-sidebar-copy {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.personal-context-note {
+  margin-top: 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-soft);
+  color: var(--text-muted);
+}
+
+
+/* =========================================================
+   ABOUT — SIMPLE PAGE
+========================================================= */
+
+.about-simple-page {
+  padding-top: 96px;
+}
+
+.about-simple-title {
+  margin-bottom: 24px;
+
+  color: var(--text-dark);
+
+  font-size: clamp(2.5rem, 4.5vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+}
+
+@media (max-width: 680px) {
+  .about-simple-page {
+    padding-top: 72px;
+  }
+
+  .about-simple-title {
+    font-size: clamp(2.4rem, 12vw, 3.7rem);
+  }
+}
+
