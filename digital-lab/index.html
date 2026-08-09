@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Digital Lab — Maul</title>
+  <meta name="description" content="Maul&#x27;s Digital Marketing and Web Development learning lab." />
+
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a href="/" class="brand" aria-label="Maul home">
+        <span class="brand-name">MAUL<span class="brand-dot">.</span></span>
+        <span class="brand-tagline">Full Stack Digital Marketing</span>
+      </a>
+
+      <button
+        class="mobile-menu-button"
+        id="mobileMenuButton"
+        aria-expanded="false"
+        aria-controls="mainNav"
+        aria-label="Open navigation"
+        type="button"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav" id="mainNav" aria-label="Primary navigation">
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+
+        <div class="nav-dropdown">
+          <button class="dropdown-trigger" type="button" aria-expanded="false">
+            Expertise
+            <span class="chevron">⌄</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="/expertise/digital-ads/">Digital Ads</a>
+            <a href="/expertise/web-development/">Web Development</a>
+            <a href="/expertise/tracking-analytics/">Tracking & Analytics</a>
+            <a href="/expertise/seo/">Search Engine Optimization</a>
+            <a href="/expertise/digital-branding/">Digital Branding</a>
+            <a href="/expertise/creative-content/">Creative & Content</a>
+          </div>
+        </div>
+
+        <div class="nav-dropdown">
+          <button class="dropdown-trigger" type="button" aria-expanded="false">
+            Services
+            <span class="chevron">⌄</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="/services/mentoring/">Digital Marketing Mentoring</a>
+            <a href="/services/business-growth/">Digital Marketing for Business Growth</a>
+            <a href="/services/meta-ads-management/">Meta Ads Management</a>
+            <a href="/services/google-ads-management/">Google Ads Management</a>
+          </div>
+        </div>
+
+        <a href="/digital-products/">Digital Products</a>
+        <a href="/case-studies/">Case Studies</a>
+        <a href="/digital-lab/">Digital Lab</a>
+
+        <a href="/contact/" class="nav-contact">Contact Me</a>
+
+        <div class="language-switch" aria-label="Language switcher">
+          <button class="language-button active" type="button">EN</button>
+          <button
+            class="language-button"
+            type="button"
+            disabled
+            title="Indonesian version coming later"
+          >
+            ID
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="breadcrumbs"><a href="/">Home</a><span class="breadcrumb-sep">/</span><span>Digital Lab</span></div>
+        <p class="eyebrow">DIGITAL LAB</p>
+        <h1>Learn. Build. Test. Document.</h1>
+        <p class="page-hero-lead">A living technical and marketing notebook where experiments become reusable knowledge and portfolio evidence.</p>
+        <div class="page-hero-chips"><span>Web Development</span><span>Performance</span><span>Tracking</span><span>SEO</span><span>Ads</span><span>AI</span></div>
+      </div>
+    </section>
+    <section class="simple-page-section">
+      <div class="container simple-page-grid">
+        <div class="simple-page-intro">
+          <p class="eyebrow">THE LAB</p>
+          <h2>Learning in Public</h2>
+          <p>
+            Topics here will gradually become full articles, experiments,
+            technical notes, and implementation walkthroughs.
+          </p>
+        </div>
+
+        <div class="simple-stack">
+          <article class="simple-card">
+            <p class="content-card-label">WEBSITE PERFORMANCE</p>
+            <h3>Understanding Website Performance Through Chrome DevTools</h3>
+            <p>TTFB, Network, rendering, Main Thread, Core Web Vitals, and performance diagnosis.</p>
+          </article>
+
+          <article class="simple-card">
+            <p class="content-card-label">WEB DEVELOPMENT</p>
+            <h3>Building and Deploying a Website from Scratch</h3>
+            <p>HTML, CSS, JavaScript, GitHub Pages, hosting, DNS, and deployment.</p>
+          </article>
+
+          <article class="simple-card">
+            <p class="content-card-label">TRACKING & ANALYTICS</p>
+            <h3>Understanding Conversion Tracking with GA4 & GTM</h3>
+            <p>Events, tags, triggers, conversion signals, attribution, and marketing measurement.</p>
+          </article>
+
+          <article class="simple-card">
+            <p class="content-card-label">WORDPRESS & HOSTING</p>
+            <h3>From Static Website to Self-Hosted WordPress</h3>
+            <p>Hosting, PHP, databases, WordPress, plugins, caching, and server-side concepts.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="brand footer-brand">
+          <span class="brand-name">MAUL<span class="brand-dot">.</span></span>
+          <span class="brand-tagline">Full Stack Digital Marketing</span>
+        </div>
+        <p>
+          Connecting web development, digital marketing, tracking, SEO,
+          branding, and creative into one measurable ecosystem.
+        </p>
+      </div>
+
+      <div>
+        <h3>Expertise</h3>
+        <a href="/expertise/digital-ads/">Digital Ads</a>
+        <a href="/expertise/web-development/">Web Development</a>
+        <a href="/expertise/tracking-analytics/">Tracking & Analytics</a>
+        <a href="/expertise/seo/">SEO</a>
+      </div>
+
+      <div>
+        <h3>Services</h3>
+        <a href="/services/mentoring/">Mentoring</a>
+        <a href="/services/business-growth/">Business Growth</a>
+        <a href="/services/meta-ads-management/">Meta Ads</a>
+        <a href="/services/google-ads-management/">Google Ads</a>
+      </div>
+
+      <div>
+        <h3>Explore</h3>
+        <a href="/case-studies/">Case Studies</a>
+        <a href="/digital-lab/">Digital Lab</a>
+        <a href="/digital-products/">Digital Products</a>
+        <a href="/contact/">Contact</a>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <p>© 2026 Maul. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
