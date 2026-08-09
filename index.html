@@ -1,393 +1,623 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
+  <title>Maul — Full Stack Digital Marketing</title>
   <meta
     name="description"
-    content="Website pembelajaran web development dan digital marketing milik Maul."
-  >
+    content="Full Stack Digital Marketing portfolio covering Digital Ads, Web Development, Tracking & Analytics, SEO, Digital Branding, Creative & Content."
+  />
 
-  <title>Dig Marketing Maul</title>
-
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <header class="site-header">
-    <nav class="navbar" aria-label="Navigasi utama">
-      <a class="brand" href="index.html">
-        Dig Marketing Maul
+  <!-- =========================================================
+       HEADER / NAVIGATION
+  ========================================================== -->
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a href="#top" class="brand" aria-label="Maul home">
+        <span class="brand-name">MAUL.</span>
+        <span class="brand-tagline">Full Stack Digital Marketing</span>
       </a>
 
-      <div class="nav-links">
-        <a href="index.html">
-          Beranda
-        </a>
+      <button
+        class="mobile-menu-button"
+        id="mobileMenuButton"
+        aria-expanded="false"
+        aria-controls="mainNav"
+        aria-label="Open navigation"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
 
-        <a href="tentang.html">
-          Tentang Saya
-        </a>
+      <nav class="main-nav" id="mainNav" aria-label="Primary navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
 
-        <a href="#layanan">
-          Layanan
-        </a>
+        <div class="nav-dropdown">
+          <button class="dropdown-trigger" type="button" aria-expanded="false">
+            Expertise
+            <span class="chevron">⌄</span>
+          </button>
 
-        <a href="#kontak">
-          Kontak
-        </a>
-      </div>
-    </nav>
+          <div class="dropdown-menu">
+            <a href="#digital-ads">Digital Ads</a>
+            <a href="#web-development">Web Development</a>
+            <a href="#tracking-analytics">Tracking & Analytics</a>
+            <a href="#seo">Search Engine Optimization</a>
+            <a href="#digital-branding">Digital Branding</a>
+            <a href="#creative-content">Creative & Content</a>
+          </div>
+        </div>
+
+        <div class="nav-dropdown">
+          <button class="dropdown-trigger" type="button" aria-expanded="false">
+            Services
+            <span class="chevron">⌄</span>
+          </button>
+
+          <div class="dropdown-menu">
+            <a href="#mentoring">Digital Marketing Mentoring</a>
+            <a href="#business-growth">Digital Marketing for Business Growth</a>
+            <a href="#meta-ads-service">Meta Ads Management</a>
+            <a href="#google-ads-service">Google Ads Management</a>
+          </div>
+        </div>
+
+        <a href="#digital-products">Digital Products</a>
+        <a href="#case-studies">Case Studies</a>
+        <a href="#digital-lab">Digital Lab</a>
+        <a href="#contact">Contact</a>
+
+        <div class="language-switch" aria-label="Language switcher">
+          <button class="language-button active" type="button">EN</button>
+          <button class="language-button" type="button" disabled title="Indonesian version coming later">
+            ID
+          </button>
+        </div>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <section class="hero">
-      <p class="eyebrow">
-        Digital Marketing & Web Development
-      </p>
+    <!-- =========================================================
+         HERO
+    ========================================================== -->
+    <section class="hero section-dark" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">FULL STACK DIGITAL MARKETING</p>
 
-      <h1>
-        Belajar Membangun Website Digital yang Terukur
-      </h1>
+          <h1>
+            Build. Measure.<br />
+            Acquire. <span>Optimize.</span>
+          </h1>
 
-      <p class="hero-description">
-        Saya sedang mempelajari cara membuat, mengelola,
-        menerbitkan, dan mengintegrasikan website dengan
-        kebutuhan digital marketing secara mandiri.
-      </p>
+          <p class="hero-description">
+            I help businesses and professionals build their digital presence,
+            acquire the right audience, measure what happens across the
+            customer journey, and continuously optimize digital performance
+            for measurable growth.
+          </p>
 
-      <div class="hero-actions">
-        <a class="primary-button" href="tentang.html">
-          Tentang Saya
-        </a>
+          <p class="hero-secondary">
+            My work connects web development, digital advertising, tracking &
+            analytics, SEO, branding, and creative into one integrated digital
+            marketing ecosystem.
+          </p>
 
-        <a class="secondary-button" href="#layanan">
-          Lihat Pembelajaran
-        </a>
+          <div class="button-group">
+            <a href="#expertise" class="button button-primary">
+              Explore My Expertise
+            </a>
+            <a href="#services" class="button button-outline">
+              Work With Me
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="visual-card visual-card-main">
+            <p>Digital Ecosystem</p>
+
+            <div class="metric-row">
+              <span>Build</span>
+              <strong>Foundation</strong>
+            </div>
+
+            <div class="metric-row">
+              <span>Measure</span>
+              <strong>Data</strong>
+            </div>
+
+            <div class="metric-row">
+              <span>Acquire</span>
+              <strong>Audience</strong>
+            </div>
+
+            <div class="metric-row">
+              <span>Optimize</span>
+              <strong>Growth</strong>
+            </div>
+          </div>
+
+          <div class="visual-orb visual-orb-one"></div>
+          <div class="visual-orb visual-orb-two"></div>
+        </div>
       </div>
     </section>
 
-    <section class="services-section" id="layanan">
-      <p class="section-label">
-        Fokus Pembelajaran
-      </p>
+    <!-- =========================================================
+         INTRODUCTION
+    ========================================================== -->
+    <section class="section section-light" id="about">
+      <div class="container narrow">
+        <p class="eyebrow">MY APPROACH</p>
 
-      <h2>
-        Kemampuan yang Sedang Saya Pelajari
-      </h2>
+        <h2>Digital Marketing Is More Than Running Ads</h2>
 
-      <div class="services-grid">
-        <article class="service-card">
-          <h3>
-            Website Development
-          </h3>
-
-          <p>
-            Membuat website menggunakan HTML, CSS,
-            JavaScript, GitHub, domain, dan deployment.
-          </p>
-        </article>
-
-        <article class="service-card">
-          <h3>
-            Tracking & Analytics
-          </h3>
-
-          <p>
-            Mengintegrasikan website dengan GTM, GA4,
-            conversion tracking, UTM, dan GCLID.
-          </p>
-        </article>
-
-        <article class="service-card">
-          <h3>
-            Digital Marketing
-          </h3>
-
-          <p>
-            Menghubungkan website dengan Meta Ads,
-            Google Ads, SEO, serta pengelolaan leads.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="about-preview">
-      <div>
-        <p class="section-label">
-          Tentang Saya
+        <p class="lead">
+          A successful digital presence is not built from a single channel.
         </p>
 
-        <h2>
-          Digital Marketer yang Sedang Mempelajari Web Development
-        </h2>
+        <div class="flow-line">
+          <span>Website</span>
+          <span>→</span>
+          <span>Traffic</span>
+          <span>→</span>
+          <span>Measurement</span>
+          <span>→</span>
+          <span>Data</span>
+          <span>→</span>
+          <span>Optimization</span>
+          <span>→</span>
+          <span>Growth</span>
+        </div>
 
         <p>
-          Tujuan saya adalah mampu menyediakan layanan digital
-          marketing yang terintegrasi, mulai dari pembuatan website,
-          tracking, pengumpulan leads, hingga optimasi campaign.
+          This is how I approach <strong>Full Stack Digital Marketing</strong>:
+          understanding and connecting the different layers of digital
+          marketing instead of treating them as separate activities.
         </p>
 
-        <a href="tentang.html">
-          Baca selengkapnya tentang saya
-        </a>
+        <p>
+          From building the digital foundation to acquiring users, measuring
+          their behavior, and improving performance, every layer should work
+          together as one connected system.
+        </p>
       </div>
     </section>
 
-    <section class="javascript-demo">
-      <p class="section-label">
-        Demo JavaScript
-      </p>
+    <!-- =========================================================
+         FRAMEWORK
+    ========================================================== -->
+    <section class="section section-soft" id="framework">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">THE FRAMEWORK</p>
+          <h2>One Connected Digital Marketing System</h2>
+          <p>
+            My approach is structured around four interconnected areas.
+          </p>
+        </div>
 
-      <h2>
-        Interaksi Pertama Saya
-      </h2>
+        <div class="framework-grid">
+          <article class="framework-card">
+            <span class="card-number">01</span>
+            <h3>Build</h3>
+            <p>Create the digital foundation.</p>
+            <ul>
+              <li>Website Development</li>
+              <li>Landing Pages</li>
+              <li>Digital Branding</li>
+              <li>Creative & Content</li>
+            </ul>
+          </article>
 
-      <p>
-        Klik tombol berikut untuk menguji apakah JavaScript
-        berhasil dijalankan.
-      </p>
+          <article class="framework-card">
+            <span class="card-number">02</span>
+            <h3>Measure</h3>
+            <p>Understand what users actually do.</p>
+            <ul>
+              <li>Google Tag Manager</li>
+              <li>Google Analytics 4</li>
+              <li>Mobile Measurement Platform</li>
+              <li>Conversion Tracking</li>
+            </ul>
+          </article>
 
-      <button id="actionButton" type="button">
-        Klik Saya
-      </button>
+          <article class="framework-card">
+            <span class="card-number">03</span>
+            <h3>Acquire</h3>
+            <p>Bring the right audience into the ecosystem.</p>
+            <ul>
+              <li>Meta Ads</li>
+              <li>Google Ads</li>
+              <li>Search Engine Optimization</li>
+              <li>Organic Search</li>
+            </ul>
+          </article>
 
-      <p id="message">
-        Tombol belum diklik.
-      </p>
+          <article class="framework-card">
+            <span class="card-number">04</span>
+            <h3>Optimize</h3>
+            <p>Turn data into better decisions.</p>
+            <ul>
+              <li>Campaign Optimization</li>
+              <li>Funnel Analysis</li>
+              <li>Conversion Analysis</li>
+              <li>Revenue & Growth Optimization</li>
+            </ul>
+          </article>
+        </div>
+      </div>
     </section>
 
-    <section class="contact-section" id="kontak">
-      <p class="section-label">
-        Kontak
-      </p>
-
-      <h2>
-        Konsultasikan Kebutuhan Digital Marketing Anda
-      </h2>
-
-      <p class="contact-description">
-        Isi formulir berikut. Data ini nantinya akan dikirim
-        dan tersimpan secara otomatis ke Google Sheets.
-      </p>
-
-      <form id="leadForm" class="lead-form">
-
-        <!--
-          Honeypot antispam.
-          Pengguna normal tidak boleh melihat atau mengisi field ini.
-        -->
-
-        <div
-          class="honeypot-field"
-          aria-hidden="true"
-        >
-          <label for="website">
-            Jangan isi kolom ini
-          </label>
-
-          <input
-            type="text"
-            id="website"
-            name="website"
-            autocomplete="off"
-            tabindex="-1"
-          >
+    <!-- =========================================================
+         EXPERTISE
+    ========================================================== -->
+    <section class="section section-light" id="expertise">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">MY EXPERTISE</p>
+          <h2>Expertise Across the Digital Marketing Stack</h2>
+          <p>
+            Acquisition, technology, measurement, search, branding, and
+            creative working together.
+          </p>
         </div>
 
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="fullName">
-              Nama lengkap
-            </label>
+        <div class="card-grid card-grid-3">
+          <article class="content-card" id="digital-ads">
+            <p class="content-card-label">ACQUIRE</p>
+            <h3>Digital Ads</h3>
+            <p>
+              Build and optimize paid acquisition campaigns based on measurable
+              business objectives and conversion signals.
+            </p>
+            <ul class="tag-list">
+              <li>Meta Ads</li>
+              <li>Google Ads</li>
+              <li>Campaign Strategy</li>
+              <li>Optimization</li>
+            </ul>
+            <a href="#" class="text-link">Explore Digital Ads →</a>
+          </article>
 
-            <input
-              type="text"
-              id="fullName"
-              name="full_name"
-              autocomplete="name"
-              placeholder="Masukkan nama lengkap"
-              minlength="2"
-              maxlength="100"
-              required
-            >
-          </div>
+          <article class="content-card" id="web-development">
+            <p class="content-card-label">BUILD</p>
+            <h3>Web Development</h3>
+            <p>
+              Build websites that connect user experience, performance,
+              analytics, SEO, and marketing technology.
+            </p>
+            <ul class="tag-list">
+              <li>HTML / CSS / JS</li>
+              <li>WordPress</li>
+              <li>Hosting</li>
+              <li>Performance</li>
+            </ul>
+            <a href="#" class="text-link">Explore Web Development →</a>
+          </article>
 
-          <div class="form-group">
-            <label for="email">
-              Email
-            </label>
+          <article class="content-card" id="tracking-analytics">
+            <p class="content-card-label">MEASURE</p>
+            <h3>Tracking & Analytics</h3>
+            <p>
+              Build measurement systems that connect traffic, user behavior,
+              conversion, attribution, and marketing performance.
+            </p>
+            <ul class="tag-list">
+              <li>GTM</li>
+              <li>GA4</li>
+              <li>MMP</li>
+              <li>Conversion Tracking</li>
+            </ul>
+            <a href="#" class="text-link">Explore Tracking & Analytics →</a>
+          </article>
 
-            <input
-              type="email"
-              id="email"
-              name="email"
-              autocomplete="email"
-              placeholder="nama@email.com"
-              maxlength="150"
-              required
-            >
-          </div>
+          <article class="content-card" id="seo">
+            <p class="content-card-label">ACQUIRE</p>
+            <h3>Search Engine Optimization</h3>
+            <p>
+              Improve organic visibility through website structure, content,
+              technical SEO, and continuous search performance analysis.
+            </p>
+            <ul class="tag-list">
+              <li>GSC</li>
+              <li>Technical SEO</li>
+              <li>On-page SEO</li>
+              <li>Core Web Vitals</li>
+            </ul>
+            <a href="#" class="text-link">Explore SEO →</a>
+          </article>
 
-          <div class="form-group">
-            <label for="phone">
-              Nomor WhatsApp
-            </label>
+          <article class="content-card" id="digital-branding">
+            <p class="content-card-label">BUILD</p>
+            <h3>Digital Branding</h3>
+            <p>
+              Build a consistent brand presence across websites, content,
+              social platforms, advertising, and digital touchpoints.
+            </p>
+            <ul class="tag-list">
+              <li>Brand Positioning</li>
+              <li>Messaging</li>
+              <li>Digital Presence</li>
+            </ul>
+            <a href="#" class="text-link">Explore Digital Branding →</a>
+          </article>
 
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              autocomplete="tel"
-              inputmode="tel"
-              placeholder="Contoh: 081234567890"
-              minlength="9"
-              maxlength="20"
-              pattern="[0-9+() -]{9,20}"
-              title="Masukkan nomor WhatsApp 9–20 karakter. Gunakan angka, tanda tambah, spasi, tanda kurung, atau tanda hubung."
-              required
-            >
-          </div>
+          <article class="content-card" id="creative-content">
+            <p class="content-card-label">BUILD & OPTIMIZE</p>
+            <h3>Creative & Content</h3>
+            <p>
+              Create communication that supports brand building and
+              performance marketing objectives.
+            </p>
+            <ul class="tag-list">
+              <li>Creative Strategy</li>
+              <li>Copywriting</li>
+              <li>Content</li>
+              <li>Creative Testing</li>
+            </ul>
+            <a href="#" class="text-link">Explore Creative & Content →</a>
+          </article>
+        </div>
+      </div>
+    </section>
 
-          <div class="form-group">
-            <label for="service">
-              Kebutuhan layanan
-            </label>
-
-            <select
-              id="service"
-              name="service"
-              required
-            >
-              <option value="">
-                Pilih layanan
-              </option>
-
-              <option value="website-development">
-                Pembuatan Website
-              </option>
-
-              <option value="meta-ads">
-                Meta Ads
-              </option>
-
-              <option value="google-ads">
-                Google Ads
-              </option>
-
-              <option value="tracking-analytics">
-                Tracking & Analytics
-              </option>
-
-              <option value="seo">
-                SEO
-              </option>
-
-              <option value="lainnya">
-                Lainnya
-              </option>
-            </select>
-          </div>
+    <!-- =========================================================
+         SERVICES
+    ========================================================== -->
+    <section class="section section-dark" id="services">
+      <div class="container">
+        <div class="section-heading section-heading-light">
+          <p class="eyebrow">SERVICES</p>
+          <h2>How I Can Help</h2>
+          <p>
+            Practical services for professionals and businesses that want to
+            learn, manage, or improve digital marketing.
+          </p>
         </div>
 
-        <div class="form-group">
-          <label for="leadMessage">
-            Ceritakan kebutuhan Anda
-          </label>
+        <div class="card-grid card-grid-2">
+          <article class="service-card" id="mentoring">
+            <span>01</span>
+            <h3>Digital Marketing Mentoring</h3>
+            <p>
+              1-on-1 practical guidance across ads, analytics, tracking, SEO,
+              websites, and digital marketing fundamentals.
+            </p>
+            <a href="#" class="text-link light-link">Explore Mentoring →</a>
+          </article>
 
-          <textarea
-            id="leadMessage"
-            name="message"
-            rows="5"
-            placeholder="Jelaskan kebutuhan atau tujuan digital marketing Anda"
-            minlength="10"
-            maxlength="1000"
-            required
-          ></textarea>
+          <article class="service-card" id="business-growth">
+            <span>02</span>
+            <h3>Digital Marketing for Business Growth</h3>
+            <p>
+              Review and improve your digital ecosystem from acquisition and
+              website experience to measurement and performance optimization.
+            </p>
+            <a href="#contact" class="text-link light-link">
+              Discuss Your Business →
+            </a>
+          </article>
+
+          <article class="service-card" id="meta-ads-service">
+            <span>03</span>
+            <h3>Meta Ads Management</h3>
+            <p>
+              Campaign strategy, setup, audience planning, creative testing,
+              conversion tracking, optimization, and reporting.
+            </p>
+            <a href="#" class="text-link light-link">Explore Meta Ads →</a>
+          </article>
+
+          <article class="service-card" id="google-ads-service">
+            <span>04</span>
+            <h3>Google Ads Management</h3>
+            <p>
+              Campaign management based on business objectives, search intent,
+              conversion measurement, and continuous optimization.
+            </p>
+            <a href="#" class="text-link light-link">Explore Google Ads →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CASE STUDIES
+    ========================================================== -->
+    <section class="section section-light" id="case-studies">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">CASE STUDIES</p>
+          <h2>Selected Work & Experiments</h2>
         </div>
 
-        <div class="consent-group">
-          <input
-            type="checkbox"
-            id="consent"
-            name="consent"
-            value="agreed"
-            required
-          >
+        <div class="card-grid card-grid-3">
+          <article class="content-card placeholder-card">
+            <p class="content-card-label">DIGITAL ADS</p>
+            <h3>Digital Ads Optimization</h3>
+            <p>Challenge → Approach → Implementation → Measurement → Result</p>
+            <a href="#" class="text-link">View Case Study →</a>
+          </article>
 
-          <label for="consent">
-            Saya menyetujui data ini digunakan untuk menghubungi
-            saya terkait kebutuhan layanan.
-          </label>
+          <article class="content-card placeholder-card">
+            <p class="content-card-label">TRACKING</p>
+            <h3>Tracking & Analytics Implementation</h3>
+            <p>Challenge → Approach → Implementation → Measurement → Result</p>
+            <a href="#" class="text-link">View Case Study →</a>
+          </article>
+
+          <article class="content-card placeholder-card">
+            <p class="content-card-label">WEB</p>
+            <h3>Web Development & Performance</h3>
+            <p>Challenge → Approach → Implementation → Measurement → Result</p>
+            <a href="#" class="text-link">View Case Study →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         DIGITAL LAB
+    ========================================================== -->
+    <section class="section section-soft" id="digital-lab">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">DIGITAL LAB</p>
+          <h2>Learn. Build. Test. Document.</h2>
+          <p>
+            A place to document practical experiments across digital marketing,
+            tracking, analytics, web development, SEO, hosting, and AI.
+          </p>
         </div>
 
-        <!-- Data atribusi yang diisi melalui JavaScript -->
+        <div class="article-list">
+          <article>
+            <span>Website Performance</span>
+            <h3>Understanding Website Performance Through Chrome DevTools</h3>
+            <a href="#">Read Article →</a>
+          </article>
 
-        <input
-          type="hidden"
-          id="utmSource"
-          name="utm_source"
-        >
+          <article>
+            <span>Web Development</span>
+            <h3>Building and Deploying a Website from Scratch</h3>
+            <a href="#">Read Article →</a>
+          </article>
 
-        <input
-          type="hidden"
-          id="utmMedium"
-          name="utm_medium"
-        >
+          <article>
+            <span>Tracking & Analytics</span>
+            <h3>Understanding Conversion Tracking with GA4 & GTM</h3>
+            <a href="#">Read Article →</a>
+          </article>
+        </div>
+      </div>
+    </section>
 
-        <input
-          type="hidden"
-          id="utmCampaign"
-          name="utm_campaign"
-        >
+    <!-- =========================================================
+         DIGITAL PRODUCTS
+    ========================================================== -->
+    <section class="section section-light" id="digital-products">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">DIGITAL PRODUCTS</p>
+          <h2>Practical Digital Marketing Resources</h2>
+        </div>
 
-        <input
-          type="hidden"
-          id="gclid"
-          name="gclid"
-        >
+        <div class="card-grid card-grid-2">
+          <article class="product-card">
+            <div class="product-cover">EBOOK</div>
+            <div>
+              <h3>Digital Marketing Guide #01</h3>
+              <p>
+                A practical guide designed to help you understand and implement
+                digital marketing step by step.
+              </p>
+              <p class="product-price">Rp XX.XXX</p>
+              <button class="button button-disabled" type="button" disabled>
+                Buy Now — Coming Soon
+              </button>
+            </div>
+          </article>
 
-        <input
-          type="hidden"
-          id="landingPage"
-          name="landing_page"
-        >
+          <article class="product-card">
+            <div class="product-cover">TEMPLATE</div>
+            <div>
+              <h3>Digital Marketing Template #01</h3>
+              <p>
+                A practical template designed to simplify planning, tracking,
+                reporting, or optimization.
+              </p>
+              <p class="product-price">Rp XX.XXX</p>
+              <button class="button button-disabled" type="button" disabled>
+                Buy Now — Coming Soon
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-        <input
-          type="hidden"
-          id="submittedAt"
-          name="submitted_at"
-        >
+    <!-- =========================================================
+         FINAL CTA
+    ========================================================== -->
+    <section class="final-cta" id="contact">
+      <div class="container final-cta-inner">
+        <div>
+          <p class="eyebrow">LET'S CONNECT</p>
+          <h2>Let's Build Something Measurable</h2>
+          <p>
+            Whether you want to grow your business, improve your digital
+            marketing, build a stronger digital presence, or learn how
+            everything works — let's start with a conversation.
+          </p>
+        </div>
 
-        <button
-          type="submit"
-          id="submitButton"
-          class="submit-button"
-        >
-          Kirim Permintaan
-        </button>
-
-        <p
-          id="formStatus"
-          class="form-status"
-          role="status"
-          aria-live="polite"
-        ></p>
-      </form>
+        <div class="button-group">
+          <a href="mailto:your-email@example.com" class="button button-primary">
+            Contact Me
+          </a>
+        </div>
+      </div>
     </section>
   </main>
 
+  <!-- =========================================================
+       FOOTER
+  ========================================================== -->
   <footer class="site-footer">
-    <p>
-      © 2026 Dig Marketing Maul. Website pembelajaran web development.
-    </p>
+    <div class="container footer-grid">
+      <div>
+        <div class="brand footer-brand">
+          <span class="brand-name">MAUL.</span>
+          <span class="brand-tagline">Full Stack Digital Marketing</span>
+        </div>
+
+        <p>
+          Connecting web development, digital marketing, tracking, SEO,
+          branding, and creative into one measurable ecosystem.
+        </p>
+      </div>
+
+      <div>
+        <h3>Expertise</h3>
+        <a href="#digital-ads">Digital Ads</a>
+        <a href="#web-development">Web Development</a>
+        <a href="#tracking-analytics">Tracking & Analytics</a>
+        <a href="#seo">SEO</a>
+      </div>
+
+      <div>
+        <h3>Services</h3>
+        <a href="#mentoring">Mentoring</a>
+        <a href="#business-growth">Business Growth</a>
+        <a href="#meta-ads-service">Meta Ads</a>
+        <a href="#google-ads-service">Google Ads</a>
+      </div>
+
+      <div>
+        <h3>Explore</h3>
+        <a href="#case-studies">Case Studies</a>
+        <a href="#digital-lab">Digital Lab</a>
+        <a href="#digital-products">Digital Products</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <p>© 2026 Maul. All Rights Reserved.</p>
+    </div>
   </footer>
 
-  <script src="script.js?v=3"></script>
+  <script src="script.js"></script>
 </body>
 </html>
