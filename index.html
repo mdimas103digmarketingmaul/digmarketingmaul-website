@@ -19,8 +19,10 @@
   ========================================================== -->
   <header class="site-header" id="top">
     <div class="container nav-wrap">
-      <a href="#top" class="brand" aria-label="Maul home">
-        <span class="brand-name">MAUL.</span>
+      <a href="#home" class="brand" aria-label="Maul home">
+        <span class="brand-name">
+          MAUL<span class="brand-dot">.</span>
+        </span>
         <span class="brand-tagline">Full Stack Digital Marketing</span>
       </a>
 
@@ -30,6 +32,7 @@
         aria-expanded="false"
         aria-controls="mainNav"
         aria-label="Open navigation"
+        type="button"
       >
         <span></span>
         <span></span>
@@ -73,11 +76,17 @@
         <a href="#digital-products">Digital Products</a>
         <a href="#case-studies">Case Studies</a>
         <a href="#digital-lab">Digital Lab</a>
-        <a href="#contact">Contact</a>
+
+        <a href="#contact" class="nav-contact">Contact Me</a>
 
         <div class="language-switch" aria-label="Language switcher">
           <button class="language-button active" type="button">EN</button>
-          <button class="language-button" type="button" disabled title="Indonesian version coming later">
+          <button
+            class="language-button"
+            type="button"
+            disabled
+            title="Indonesian version coming later"
+          >
             ID
           </button>
         </div>
@@ -115,40 +124,69 @@
           <div class="button-group">
             <a href="#expertise" class="button button-primary">
               Explore My Expertise
+              <span class="button-arrow">→</span>
             </a>
+
             <a href="#services" class="button button-outline">
               Work With Me
+              <span class="button-arrow">→</span>
             </a>
           </div>
         </div>
 
         <div class="hero-visual" aria-hidden="true">
-          <div class="visual-card visual-card-main">
-            <p>Digital Ecosystem</p>
-
-            <div class="metric-row">
-              <span>Build</span>
-              <strong>Foundation</strong>
+          <div class="ecosystem-card">
+            <div class="ecosystem-header">
+              <span class="ecosystem-label">DIGITAL ECOSYSTEM</span>
+              <span class="ecosystem-status">Connected</span>
             </div>
 
-            <div class="metric-row">
-              <span>Measure</span>
-              <strong>Data</strong>
+            <div class="ecosystem-center">
+              <span class="ecosystem-center-label">FULL STACK</span>
+              <strong>Digital Marketing</strong>
             </div>
 
-            <div class="metric-row">
-              <span>Acquire</span>
-              <strong>Audience</strong>
+            <div class="ecosystem-grid">
+              <div class="ecosystem-item">
+                <span class="ecosystem-number">01</span>
+                <div>
+                  <strong>Build</strong>
+                  <small>Foundation</small>
+                </div>
+              </div>
+
+              <div class="ecosystem-item">
+                <span class="ecosystem-number">02</span>
+                <div>
+                  <strong>Measure</strong>
+                  <small>Data</small>
+                </div>
+              </div>
+
+              <div class="ecosystem-item">
+                <span class="ecosystem-number">03</span>
+                <div>
+                  <strong>Acquire</strong>
+                  <small>Audience</small>
+                </div>
+              </div>
+
+              <div class="ecosystem-item">
+                <span class="ecosystem-number">04</span>
+                <div>
+                  <strong>Optimize</strong>
+                  <small>Growth</small>
+                </div>
+              </div>
             </div>
 
-            <div class="metric-row">
-              <span>Optimize</span>
-              <strong>Growth</strong>
+            <div class="ecosystem-footer">
+              Web Development · Ads · Analytics · SEO · Creative
             </div>
           </div>
 
-          <div class="visual-orb visual-orb-one"></div>
-          <div class="visual-orb visual-orb-two"></div>
+          <div class="hero-glow hero-glow-one"></div>
+          <div class="hero-glow hero-glow-two"></div>
         </div>
       </div>
     </section>
@@ -156,41 +194,94 @@
     <!-- =========================================================
          INTRODUCTION
     ========================================================== -->
-    <section class="section section-light" id="about">
-      <div class="container narrow">
-        <p class="eyebrow">MY APPROACH</p>
+    <section class="intro-section" id="about">
+      <div class="container">
+        <div class="intro-panel">
+          <div class="intro-copy">
+            <p class="eyebrow">MY APPROACH</p>
 
-        <h2>Digital Marketing Is More Than Running Ads</h2>
+            <h2>Digital Marketing Is More Than Running Ads</h2>
 
-        <p class="lead">
-          A successful digital presence is not built from a single channel.
-        </p>
+            <p class="intro-lead">
+              A successful digital presence is not built from a single channel.
+            </p>
 
-        <div class="flow-line">
-          <span>Website</span>
-          <span>→</span>
-          <span>Traffic</span>
-          <span>→</span>
-          <span>Measurement</span>
-          <span>→</span>
-          <span>Data</span>
-          <span>→</span>
-          <span>Optimization</span>
-          <span>→</span>
-          <span>Growth</span>
+            <p>
+              This is how I approach
+              <strong>Full Stack Digital Marketing</strong> — connecting
+              different layers of digital marketing instead of treating them
+              as separate activities.
+            </p>
+
+            <p>
+              From building the digital foundation to acquiring users,
+              measuring their behavior, and improving performance, every layer
+              should work together as one connected system.
+            </p>
+          </div>
+
+          <aside class="intro-principle">
+            <span class="principle-label">THE PRINCIPLE</span>
+            <p>
+              Every digital activity should create a measurable connection
+              between audience, experience, data, and business outcome.
+            </p>
+          </aside>
         </div>
 
-        <p>
-          This is how I approach <strong>Full Stack Digital Marketing</strong>:
-          understanding and connecting the different layers of digital
-          marketing instead of treating them as separate activities.
-        </p>
+        <div class="marketing-flow" aria-label="Digital marketing flow">
+          <article class="flow-step">
+            <span class="flow-number">01</span>
+            <div class="flow-icon">W</div>
+            <h3>Website</h3>
+            <p>Build the digital destination.</p>
+          </article>
 
-        <p>
-          From building the digital foundation to acquiring users, measuring
-          their behavior, and improving performance, every layer should work
-          together as one connected system.
-        </p>
+          <article class="flow-step">
+            <span class="flow-number">02</span>
+            <div class="flow-icon">T</div>
+            <h3>Traffic</h3>
+            <p>Bring the right audience.</p>
+          </article>
+
+          <article class="flow-step">
+            <span class="flow-number">03</span>
+            <div class="flow-icon">M</div>
+            <h3>Measurement</h3>
+            <p>Track what users do.</p>
+          </article>
+
+          <article class="flow-step">
+            <span class="flow-number">04</span>
+            <div class="flow-icon">D</div>
+            <h3>Data</h3>
+            <p>Turn activity into insight.</p>
+          </article>
+
+          <article class="flow-step">
+            <span class="flow-number">05</span>
+            <div class="flow-icon">O</div>
+            <h3>Optimization</h3>
+            <p>Improve performance.</p>
+          </article>
+
+          <article class="flow-step">
+            <span class="flow-number">06</span>
+            <div class="flow-icon">G</div>
+            <h3>Growth</h3>
+            <p>Create better outcomes.</p>
+          </article>
+        </div>
+
+        <div class="intro-summary">
+          <span>Build</span>
+          <span class="summary-arrow">→</span>
+          <span>Measure</span>
+          <span class="summary-arrow">→</span>
+          <span>Acquire</span>
+          <span class="summary-arrow">→</span>
+          <span>Optimize</span>
+        </div>
       </div>
     </section>
 
@@ -203,13 +294,15 @@
           <p class="eyebrow">THE FRAMEWORK</p>
           <h2>One Connected Digital Marketing System</h2>
           <p>
-            My approach is structured around four interconnected areas.
+            My approach is structured around four interconnected areas that
+            move from digital foundation to measurable business growth.
           </p>
         </div>
 
         <div class="framework-grid">
           <article class="framework-card">
             <span class="card-number">01</span>
+            <div class="framework-icon">B</div>
             <h3>Build</h3>
             <p>Create the digital foundation.</p>
             <ul>
@@ -222,6 +315,7 @@
 
           <article class="framework-card">
             <span class="card-number">02</span>
+            <div class="framework-icon">M</div>
             <h3>Measure</h3>
             <p>Understand what users actually do.</p>
             <ul>
@@ -234,6 +328,7 @@
 
           <article class="framework-card">
             <span class="card-number">03</span>
+            <div class="framework-icon">A</div>
             <h3>Acquire</h3>
             <p>Bring the right audience into the ecosystem.</p>
             <ul>
@@ -246,6 +341,7 @@
 
           <article class="framework-card">
             <span class="card-number">04</span>
+            <div class="framework-icon">O</div>
             <h3>Optimize</h3>
             <p>Turn data into better decisions.</p>
             <ul>
@@ -255,6 +351,16 @@
               <li>Revenue & Growth Optimization</li>
             </ul>
           </article>
+        </div>
+
+        <div class="framework-path">
+          <span>Foundation</span>
+          <span>→</span>
+          <span>Measurement</span>
+          <span>→</span>
+          <span>Acquisition</span>
+          <span>→</span>
+          <span>Growth</span>
         </div>
       </div>
     </section>
@@ -269,103 +375,139 @@
           <h2>Expertise Across the Digital Marketing Stack</h2>
           <p>
             Acquisition, technology, measurement, search, branding, and
-            creative working together.
+            creative working together as one system.
           </p>
         </div>
 
         <div class="card-grid card-grid-3">
           <article class="content-card" id="digital-ads">
-            <p class="content-card-label">ACQUIRE</p>
+            <div class="content-card-top">
+              <p class="content-card-label">ACQUIRE</p>
+              <span class="content-card-index">01</span>
+            </div>
+
             <h3>Digital Ads</h3>
             <p>
               Build and optimize paid acquisition campaigns based on measurable
               business objectives and conversion signals.
             </p>
+
             <ul class="tag-list">
               <li>Meta Ads</li>
               <li>Google Ads</li>
               <li>Campaign Strategy</li>
               <li>Optimization</li>
             </ul>
+
             <a href="#" class="text-link">Explore Digital Ads →</a>
           </article>
 
           <article class="content-card" id="web-development">
-            <p class="content-card-label">BUILD</p>
+            <div class="content-card-top">
+              <p class="content-card-label">BUILD</p>
+              <span class="content-card-index">02</span>
+            </div>
+
             <h3>Web Development</h3>
             <p>
               Build websites that connect user experience, performance,
               analytics, SEO, and marketing technology.
             </p>
+
             <ul class="tag-list">
               <li>HTML / CSS / JS</li>
               <li>WordPress</li>
               <li>Hosting</li>
               <li>Performance</li>
             </ul>
+
             <a href="#" class="text-link">Explore Web Development →</a>
           </article>
 
           <article class="content-card" id="tracking-analytics">
-            <p class="content-card-label">MEASURE</p>
+            <div class="content-card-top">
+              <p class="content-card-label">MEASURE</p>
+              <span class="content-card-index">03</span>
+            </div>
+
             <h3>Tracking & Analytics</h3>
             <p>
               Build measurement systems that connect traffic, user behavior,
               conversion, attribution, and marketing performance.
             </p>
+
             <ul class="tag-list">
               <li>GTM</li>
               <li>GA4</li>
               <li>MMP</li>
               <li>Conversion Tracking</li>
             </ul>
+
             <a href="#" class="text-link">Explore Tracking & Analytics →</a>
           </article>
 
           <article class="content-card" id="seo">
-            <p class="content-card-label">ACQUIRE</p>
+            <div class="content-card-top">
+              <p class="content-card-label">ACQUIRE</p>
+              <span class="content-card-index">04</span>
+            </div>
+
             <h3>Search Engine Optimization</h3>
             <p>
               Improve organic visibility through website structure, content,
               technical SEO, and continuous search performance analysis.
             </p>
+
             <ul class="tag-list">
               <li>GSC</li>
               <li>Technical SEO</li>
               <li>On-page SEO</li>
               <li>Core Web Vitals</li>
             </ul>
+
             <a href="#" class="text-link">Explore SEO →</a>
           </article>
 
           <article class="content-card" id="digital-branding">
-            <p class="content-card-label">BUILD</p>
+            <div class="content-card-top">
+              <p class="content-card-label">BUILD</p>
+              <span class="content-card-index">05</span>
+            </div>
+
             <h3>Digital Branding</h3>
             <p>
               Build a consistent brand presence across websites, content,
               social platforms, advertising, and digital touchpoints.
             </p>
+
             <ul class="tag-list">
               <li>Brand Positioning</li>
               <li>Messaging</li>
               <li>Digital Presence</li>
             </ul>
+
             <a href="#" class="text-link">Explore Digital Branding →</a>
           </article>
 
           <article class="content-card" id="creative-content">
-            <p class="content-card-label">BUILD & OPTIMIZE</p>
+            <div class="content-card-top">
+              <p class="content-card-label">BUILD & OPTIMIZE</p>
+              <span class="content-card-index">06</span>
+            </div>
+
             <h3>Creative & Content</h3>
             <p>
               Create communication that supports brand building and
               performance marketing objectives.
             </p>
+
             <ul class="tag-list">
               <li>Creative Strategy</li>
               <li>Copywriting</li>
               <li>Content</li>
               <li>Creative Testing</li>
             </ul>
+
             <a href="#" class="text-link">Explore Creative & Content →</a>
           </article>
         </div>
@@ -375,7 +517,7 @@
     <!-- =========================================================
          SERVICES
     ========================================================== -->
-    <section class="section section-dark" id="services">
+    <section class="section services-section" id="services">
       <div class="container">
         <div class="section-heading section-heading-light">
           <p class="eyebrow">SERVICES</p>
@@ -388,7 +530,8 @@
 
         <div class="card-grid card-grid-2">
           <article class="service-card" id="mentoring">
-            <span>01</span>
+            <span class="service-number">01</span>
+            <p class="service-type">FOR PROFESSIONALS</p>
             <h3>Digital Marketing Mentoring</h3>
             <p>
               1-on-1 practical guidance across ads, analytics, tracking, SEO,
@@ -398,7 +541,8 @@
           </article>
 
           <article class="service-card" id="business-growth">
-            <span>02</span>
+            <span class="service-number">02</span>
+            <p class="service-type">FOR BUSINESSES</p>
             <h3>Digital Marketing for Business Growth</h3>
             <p>
               Review and improve your digital ecosystem from acquisition and
@@ -410,7 +554,8 @@
           </article>
 
           <article class="service-card" id="meta-ads-service">
-            <span>03</span>
+            <span class="service-number">03</span>
+            <p class="service-type">PAID ACQUISITION</p>
             <h3>Meta Ads Management</h3>
             <p>
               Campaign strategy, setup, audience planning, creative testing,
@@ -420,7 +565,8 @@
           </article>
 
           <article class="service-card" id="google-ads-service">
-            <span>04</span>
+            <span class="service-number">04</span>
+            <p class="service-type">PAID ACQUISITION</p>
             <h3>Google Ads Management</h3>
             <p>
               Campaign management based on business objectives, search intent,
@@ -428,6 +574,17 @@
             </p>
             <a href="#" class="text-link light-link">Explore Google Ads →</a>
           </article>
+        </div>
+
+        <div class="services-cta">
+          <div>
+            <strong>Not sure which service fits your needs?</strong>
+            <p>Start with your current challenge and objective.</p>
+          </div>
+          <a href="#contact" class="button button-primary">
+            Let's Discuss
+            <span class="button-arrow">→</span>
+          </a>
         </div>
       </div>
     </section>
@@ -440,28 +597,47 @@
         <div class="section-heading">
           <p class="eyebrow">CASE STUDIES</p>
           <h2>Selected Work & Experiments</h2>
+          <p>
+            Projects will be documented through the challenge, approach,
+            implementation, measurement, and result.
+          </p>
         </div>
 
         <div class="card-grid card-grid-3">
-          <article class="content-card placeholder-card">
-            <p class="content-card-label">DIGITAL ADS</p>
+          <article class="case-card">
+            <div class="case-card-header">
+              <span>DIGITAL ADS</span>
+              <span>01</span>
+            </div>
             <h3>Digital Ads Optimization</h3>
-            <p>Challenge → Approach → Implementation → Measurement → Result</p>
-            <a href="#" class="text-link">View Case Study →</a>
+            <p>
+              Challenge → Approach → Implementation → Measurement → Result
+            </p>
+            <span class="status-badge">Case Study Coming Soon</span>
           </article>
 
-          <article class="content-card placeholder-card">
-            <p class="content-card-label">TRACKING</p>
+          <article class="case-card">
+            <div class="case-card-header">
+              <span>TRACKING & ANALYTICS</span>
+              <span>02</span>
+            </div>
             <h3>Tracking & Analytics Implementation</h3>
-            <p>Challenge → Approach → Implementation → Measurement → Result</p>
-            <a href="#" class="text-link">View Case Study →</a>
+            <p>
+              Challenge → Approach → Implementation → Measurement → Result
+            </p>
+            <span class="status-badge">Case Study Coming Soon</span>
           </article>
 
-          <article class="content-card placeholder-card">
-            <p class="content-card-label">WEB</p>
+          <article class="case-card">
+            <div class="case-card-header">
+              <span>WEB DEVELOPMENT</span>
+              <span>03</span>
+            </div>
             <h3>Web Development & Performance</h3>
-            <p>Challenge → Approach → Implementation → Measurement → Result</p>
-            <a href="#" class="text-link">View Case Study →</a>
+            <p>
+              Challenge → Approach → Implementation → Measurement → Result
+            </p>
+            <span class="status-badge">Case Study Coming Soon</span>
           </article>
         </div>
       </div>
@@ -471,33 +647,48 @@
          DIGITAL LAB
     ========================================================== -->
     <section class="section section-soft" id="digital-lab">
-      <div class="container">
-        <div class="section-heading">
+      <div class="container lab-layout">
+        <div class="lab-intro">
           <p class="eyebrow">DIGITAL LAB</p>
           <h2>Learn. Build. Test. Document.</h2>
           <p>
             A place to document practical experiments across digital marketing,
             tracking, analytics, web development, SEO, hosting, and AI.
           </p>
+
+          <div class="lab-topics">
+            <span>Web Development</span>
+            <span>Website Performance</span>
+            <span>Digital Ads</span>
+            <span>GA4 & GTM</span>
+            <span>SEO</span>
+            <span>AI for Marketing</span>
+          </div>
         </div>
 
         <div class="article-list">
           <article>
-            <span>Website Performance</span>
-            <h3>Understanding Website Performance Through Chrome DevTools</h3>
-            <a href="#">Read Article →</a>
+            <div>
+              <span>Website Performance</span>
+              <h3>Understanding Website Performance Through Chrome DevTools</h3>
+            </div>
+            <span class="article-status">Planned</span>
           </article>
 
           <article>
-            <span>Web Development</span>
-            <h3>Building and Deploying a Website from Scratch</h3>
-            <a href="#">Read Article →</a>
+            <div>
+              <span>Web Development</span>
+              <h3>Building and Deploying a Website from Scratch</h3>
+            </div>
+            <span class="article-status">Planned</span>
           </article>
 
           <article>
-            <span>Tracking & Analytics</span>
-            <h3>Understanding Conversion Tracking with GA4 & GTM</h3>
-            <a href="#">Read Article →</a>
+            <div>
+              <span>Tracking & Analytics</span>
+              <h3>Understanding Conversion Tracking with GA4 & GTM</h3>
+            </div>
+            <span class="article-status">Planned</span>
           </article>
         </div>
       </div>
@@ -511,18 +702,28 @@
         <div class="section-heading">
           <p class="eyebrow">DIGITAL PRODUCTS</p>
           <h2>Practical Digital Marketing Resources</h2>
+          <p>
+            This section will later connect product pages, checkout, payment
+            gateway, and automated digital delivery.
+          </p>
         </div>
 
         <div class="card-grid card-grid-2">
           <article class="product-card">
-            <div class="product-cover">EBOOK</div>
-            <div>
+            <div class="product-cover">
+              <span>MAUL.</span>
+              <strong>EBOOK</strong>
+            </div>
+
+            <div class="product-content">
+              <span class="status-badge">Coming Soon</span>
               <h3>Digital Marketing Guide #01</h3>
               <p>
                 A practical guide designed to help you understand and implement
                 digital marketing step by step.
               </p>
               <p class="product-price">Rp XX.XXX</p>
+
               <button class="button button-disabled" type="button" disabled>
                 Buy Now — Coming Soon
               </button>
@@ -530,19 +731,36 @@
           </article>
 
           <article class="product-card">
-            <div class="product-cover">TEMPLATE</div>
-            <div>
+            <div class="product-cover">
+              <span>MAUL.</span>
+              <strong>TEMPLATE</strong>
+            </div>
+
+            <div class="product-content">
+              <span class="status-badge">Coming Soon</span>
               <h3>Digital Marketing Template #01</h3>
               <p>
                 A practical template designed to simplify planning, tracking,
                 reporting, or optimization.
               </p>
               <p class="product-price">Rp XX.XXX</p>
+
               <button class="button button-disabled" type="button" disabled>
                 Buy Now — Coming Soon
               </button>
             </div>
           </article>
+        </div>
+
+        <div class="payment-placeholder">
+          <div class="payment-placeholder-icon">$</div>
+          <div>
+            <strong>Payment Gateway Integration</strong>
+            <p>
+              Checkout, payment confirmation, and digital delivery will be
+              explored in the next development phase.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -565,6 +783,7 @@
         <div class="button-group">
           <a href="mailto:your-email@example.com" class="button button-primary">
             Contact Me
+            <span class="button-arrow">→</span>
           </a>
         </div>
       </div>
@@ -578,7 +797,9 @@
     <div class="container footer-grid">
       <div>
         <div class="brand footer-brand">
-          <span class="brand-name">MAUL.</span>
+          <span class="brand-name">
+            MAUL<span class="brand-dot">.</span>
+          </span>
           <span class="brand-tagline">Full Stack Digital Marketing</span>
         </div>
 
