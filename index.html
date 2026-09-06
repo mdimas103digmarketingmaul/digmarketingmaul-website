@@ -1,677 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="M. Dimas Maulana — Digital Marketer working across creative, acquisition, measurement, digital products, and performance optimization.">
+  <meta name="theme-color" content="#07111f">
+  <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32.png">
+  <link rel="shortcut icon" href="./assets/images/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/images/apple-touch-icon.png">
+  <title>M. Dimas Maulana — Digital Marketing</title>
 
-  <title>Maul — Full Stack Digital Marketing</title>
-  <meta
-    name="description"
-    content="Full Stack Digital Marketing portfolio covering Digital Ads, Web Development, Tracking & Analytics, SEO, Digital Branding, Creative & Content."
-  />
-
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 
-<body>
-  <!-- =========================================================
-       HEADER / NAVIGATION
-  ========================================================== -->
-  <header class="site-header" id="top">
-    <div class="container nav-wrap">
-      <a href="/" class="brand" aria-label="Maul home">
-        <span class="brand-name">MAUL<span class="brand-dot">.</span></span>
-        <span class="brand-tagline">Full Stack Digital Marketing</span>
+<body data-page="home">
+
+  <div class="aurora-layer" aria-hidden="true">
+    <span class="aurora-orb aurora-one"></span>
+    <span class="aurora-orb aurora-two"></span>
+    <span class="aurora-orb aurora-three"></span>
+  </div>
+  <div class="grid-layer" aria-hidden="true"></div>
+  <div class="cursor-grid-light" id="cursor-grid-light" aria-hidden="true"></div>
+  <div class="grain-layer" aria-hidden="true"></div>
+
+  <aside class="social-rail social-rail-left" aria-label="Social media links">
+    <div class="social-rail-links">
+      <a href="https://www.instagram.com/dig.marketing.maul/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="#" class="social-link social-link-placeholder" data-placeholder-social="true" aria-label="TikTok — coming soon"><i class="fa-brands fa-tiktok"></i></a>
+    </div>
+    <span class="social-rail-line" aria-hidden="true"></span>
+  </aside>
+
+  <aside class="social-rail social-rail-right" aria-label="Email">
+    <a href="mailto:mdimas103@gmail.com" class="email-rail-link">mdimas103@gmail.com</a>
+    <span class="social-rail-line" aria-hidden="true"></span>
+  </aside>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="#home" class="brand-logo" aria-label="M. Dimas Maulana Home">
+        <span class="brand-mark">M</span><span class="brand-dot">.</span>
       </a>
 
-      <button
-        class="mobile-menu-button"
-        id="mobileMenuButton"
-        aria-expanded="false"
-        aria-controls="mainNav"
-        aria-label="Open navigation"
-        type="button"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-      <nav class="main-nav" id="mainNav" aria-label="Primary navigation">
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-
-        <div class="nav-dropdown">
-          <button class="dropdown-trigger" type="button" aria-expanded="false">
-            Expertise
-            <span class="chevron">⌄</span>
-          </button>
-          <div class="dropdown-menu">
-            <a href="/expertise/digital-ads/">Digital Ads</a>
-            <a href="/expertise/web-development/">Web Development</a>
-            <a href="/expertise/tracking-analytics/">Tracking & Analytics</a>
-            <a href="/expertise/seo/">Search Engine Optimization</a>
-            <a href="/expertise/digital-branding/">Digital Branding</a>
-            <a href="/expertise/creative-content/">Creative & Content</a>
-          </div>
-        </div>
-
-        <a href="/case-studies/">Case Studies</a>
-        <a href="/digital-lab/">Digital Lab</a>
-        <a href="/about/" class="nav-contact">My Profile</a>
-
-        <div class="language-switch" aria-label="Language switcher">
-          <button class="language-button active" type="button">EN</button>
-          <button
-            class="language-button"
-            type="button"
-            disabled
-            title="Indonesian version coming later"
-          >
-            ID
-          </button>
-        </div>
+      <nav class="main-nav" aria-label="Primary Navigation">
+        <a href="#home" class="nav-link active" data-section-link="home"><span class="nav-number">01.</span><span>Home</span></a>
+        <a href="./blog/" class="nav-link"><span class="nav-number">02.</span><span>Blog</span></a>
+        <a href="./products/" class="nav-link"><span class="nav-number">03.</span><span>Products</span></a>
+        <a href="#profile" class="nav-link" data-section-link="profile"><span class="nav-number">04.</span><span>Profile</span></a>
       </nav>
     </div>
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
   </header>
 
   <main>
-    <!-- =========================================================
-         HERO
-    ========================================================== -->
-    <section class="hero section-dark" id="home">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">FULL STACK DIGITAL MARKETING</p>
-
-          <h1>
-            Build. Measure.<br />
-            Acquire. <span>Optimize.</span>
-          </h1>
-
-          <p class="hero-description">
-            I explore how digital presence, audience acquisition, measurement,
-            technology, and optimization work together across the full digital
-            marketing journey.
-          </p>
-
-          <p class="hero-secondary">
-            This website is my personal portfolio and learning space — a place to
-            document how I think, what I build, and what I continue to learn
-            across digital marketing and web development.
-          </p>
-
-          <div class="button-group">
-            <a href="/expertise/" class="button button-primary">
-              Explore My Expertise
-              <span class="button-arrow">→</span>
-            </a>
-
-            <a href="/about/" class="button button-outline">
-              About Me
-              <span class="button-arrow">→</span>
-            </a>
-          </div>
+    <section class="hero-section" id="home">
+      <div class="hero-content">
+        <div class="reveal-mask">
+          <p class="hero-eyebrow reveal-item"><span class="eyebrow-accent">Hi</span>, my name is</p>
         </div>
 
-        <div class="hero-visual" aria-hidden="true">
-          <div class="ecosystem-card">
-            <div class="ecosystem-header">
-              <span class="ecosystem-label">DIGITAL ECOSYSTEM</span>
-              <span class="ecosystem-status">Connected</span>
-            </div>
+        <div class="reveal-mask hero-title-mask">
+          <h1 class="hero-title hero-title-gradient reveal-item reveal-delay-1">M. Dimas Maulana<span class="accent-dot">.</span></h1>
+        </div>
 
-            <div class="ecosystem-center">
-              <span class="ecosystem-center-label">FULL STACK</span>
-              <strong>Digital Marketing</strong>
-            </div>
+        <div class="hero-copy reveal-item reveal-delay-2">
+          <p>I’m passionate about driving <strong>sustainable</strong> and <strong>efficient</strong> business growth through full-stack <strong>digital marketing</strong>.</p>
+          <p>This website is my personal space to share my <strong>experiences, knowledge,</strong> and <strong>everything I learn</strong> along the way.</p>
+          <p>Currently, I’m working full-time at <strong>Hijra Bank</strong>.</p>
+        </div>
+      </div>
 
-            <div class="ecosystem-grid">
-              <div class="ecosystem-item">
-                <span class="ecosystem-number">01</span>
-                <div>
-                  <strong>Build</strong>
-                  <small>Foundation</small>
-                </div>
-              </div>
+      <div class="hero-visual reveal-item reveal-delay-2" data-tilt-zone>
+        <div class="portrait-glow" aria-hidden="true"></div>
+        <div class="portrait-ring portrait-ring-outer" aria-hidden="true"></div>
+        <div class="portrait-ring portrait-ring-inner" aria-hidden="true"></div>
 
-              <div class="ecosystem-item">
-                <span class="ecosystem-number">02</span>
-                <div>
-                  <strong>Measure</strong>
-                  <small>Data</small>
-                </div>
-              </div>
+        <div class="portrait-orbit-dot-wrap" aria-hidden="true">
+          <span class="portrait-orbit-dot"></span>
+        </div>
 
-              <div class="ecosystem-item">
-                <span class="ecosystem-number">03</span>
-                <div>
-                  <strong>Acquire</strong>
-                  <small>Audience</small>
-                </div>
-              </div>
+        <div class="portrait-frame" data-tilt-card>
+          <img src="./assets/images/profile.png" alt="Portrait of M. Dimas Maulana" class="profile-image" decoding="async" fetchpriority="high">
+          <span class="portrait-tone-overlay" aria-hidden="true"></span>
+          <span class="portrait-scanlines" aria-hidden="true"></span>
+          <span class="portrait-inner-shadow" aria-hidden="true"></span>
+        </div>
 
-              <div class="ecosystem-item">
-                <span class="ecosystem-number">04</span>
-                <div>
-                  <strong>Optimize</strong>
-                  <small>Growth</small>
-                </div>
-              </div>
-            </div>
-
-            <div class="ecosystem-footer">
-              Web Development · Ads · Analytics · SEO · Creative
-            </div>
-          </div>
-
-          <div class="hero-glow hero-glow-one"></div>
-          <div class="hero-glow hero-glow-two"></div>
+        <div class="location-info">
+          <span class="location-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+          <div class="location-copy"><span class="location-label">Based in</span><span class="location-place">Indonesia, Bekasi</span></div>
         </div>
       </div>
     </section>
 
-    <!-- =========================================================
-         INTRODUCTION
-    ========================================================== -->
-    <section class="intro-section" id="about">
-      <div class="container">
-        <div class="intro-panel">
-          <div class="intro-copy">
-            <p class="eyebrow">MY APPROACH</p>
+    <section class="stack-section section-reveal" id="stack">
+      <div class="section-heading">
+        <h2><span class="section-title-main">What I Work Across</span><span class="section-title-accent">Digital Marketing Stack</span></h2>
+        <p>A mix of creative thinking, data, and experimentation to drive real business impact.</p>
+      </div>
 
-            <h2>Digital Marketing Is More Than Running Ads</h2>
+      <div class="stack-categories">
+        <button class="stack-card" type="button" data-stack="creative" aria-label="View Creative and Brand capabilities">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <div class="stack-card-title"><span class="stack-icon"><i class="fa-solid fa-pen-ruler"></i></span><span>Creative &amp; Brand</span></div>
+          <p>Brand Guidelines &amp; Creative Production.</p>
+          <span class="stack-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>
+        </button>
 
-            <p class="intro-lead">
-              A successful digital presence is not built from a single channel.
-            </p>
+        <button class="stack-card active" type="button" data-stack="acquire" aria-label="View acquisition capabilities">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <div class="stack-card-title"><span class="stack-icon"><i class="fa-solid fa-chart-column"></i></span><span>Acquire</span></div>
+          <p>Digital ads, acquisition, and growth channels.</p>
+          <span class="stack-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>
+        </button>
 
-            <p>
-              This is how I approach
-              <strong>Full Stack Digital Marketing</strong> — connecting
-              different layers of digital marketing instead of treating them
-              as separate activities.
-            </p>
+        <button class="stack-card" type="button" data-stack="measurement" aria-label="View measurement capabilities">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <div class="stack-card-title"><span class="stack-icon"><i class="fa-solid fa-chart-pie"></i></span><span>Measurement</span></div>
+          <p>Tracking, analytics, and attribution.</p>
+          <span class="stack-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>
+        </button>
 
-            <p>
-              From building the digital foundation to acquiring users,
-              measuring their behavior, and improving performance, every layer
-              should work together as one connected system.
-            </p>
-          </div>
+        <button class="stack-card" type="button" data-stack="build" aria-label="View build capabilities">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <div class="stack-card-title"><span class="stack-icon"><i class="fa-solid fa-layer-group"></i></span><span>Build</span></div>
+          <p>Website, Blog, SEO &amp; Content.</p>
+          <span class="stack-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>
+        </button>
 
-          <aside class="intro-principle">
-            <span class="principle-label">THE PRINCIPLE</span>
-            <p>
-              Every digital activity becomes more meaningful when audience,
-              experience, data, technology, and outcomes can be understood
-              as one connected system.
-            </p>
-          </aside>
+        <button class="stack-card" type="button" data-stack="optimize" aria-label="View optimization capabilities">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <div class="stack-card-title"><span class="stack-icon"><i class="fa-solid fa-bullseye"></i></span><span>Optimize</span></div>
+          <p class="optimize-card-copy">Experiment and<br>improve performance.</p>
+          <span class="stack-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>
+        </button>
+      </div>
+
+      <div class="stack-detail" id="stack-detail" aria-live="polite">
+        <span class="detail-pattern" aria-hidden="true"></span>
+        <div class="stack-detail-intro">
+          <span class="detail-icon" aria-hidden="true"></span>
+          <div class="detail-copy"><h3></h3><p></p></div>
         </div>
-
-        <div class="marketing-flow" aria-label="Digital marketing flow">
-          <article class="flow-step">
-            <span class="flow-number">01</span>
-            <div class="flow-icon">W</div>
-            <h3>Website</h3>
-            <p>Build the digital destination.</p>
-          </article>
-
-          <article class="flow-step">
-            <span class="flow-number">02</span>
-            <div class="flow-icon">T</div>
-            <h3>Traffic</h3>
-            <p>Bring the right audience.</p>
-          </article>
-
-          <article class="flow-step">
-            <span class="flow-number">03</span>
-            <div class="flow-icon">M</div>
-            <h3>Measurement</h3>
-            <p>Track what users do.</p>
-          </article>
-
-          <article class="flow-step">
-            <span class="flow-number">04</span>
-            <div class="flow-icon">D</div>
-            <h3>Data</h3>
-            <p>Turn activity into insight.</p>
-          </article>
-
-          <article class="flow-step">
-            <span class="flow-number">05</span>
-            <div class="flow-icon">O</div>
-            <h3>Optimization</h3>
-            <p>Improve performance.</p>
-          </article>
-
-          <article class="flow-step">
-            <span class="flow-number">06</span>
-            <div class="flow-icon">G</div>
-            <h3>Growth</h3>
-            <p>Create better outcomes.</p>
-          </article>
-        </div>
-
-        <div class="intro-summary">
-          <span>Build</span>
-          <span class="summary-arrow">→</span>
-          <span>Measure</span>
-          <span class="summary-arrow">→</span>
-          <span>Acquire</span>
-          <span class="summary-arrow">→</span>
-          <span>Optimize</span>
-        </div>
+        <div class="stack-skills" id="stack-skills"></div>
       </div>
     </section>
 
-    <!-- =========================================================
-         FRAMEWORK
-    ========================================================== -->
-    <section class="section section-soft" id="framework">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">THE FRAMEWORK</p>
-          <h2>One Connected Digital Marketing System</h2>
-          <p>
-            My approach is structured around four interconnected areas that
-            move from digital foundation to measurable business growth.
-          </p>
-        </div>
+    <section class="profile-section section-reveal" id="profile">
+      <div class="profile-heading">
+        <h2><span class="section-title-main">Profile</span><span class="section-title-accent">Licenses &amp; Certifications</span></h2>
+        <p>A selected record of certifications and learning milestones across digital marketing.</p>
+      </div>
 
-        <div class="framework-grid">
-          <article class="framework-card">
-            <span class="card-number">01</span>
-            <div class="framework-icon">B</div>
-            <h3>Build</h3>
-            <p>Create the digital foundation.</p>
-            <ul>
-              <li>Website Development</li>
-              <li>Landing Pages</li>
-              <li>Digital Branding</li>
-              <li>Creative & Content</li>
-            </ul>
-          </article>
+      <div class="certification-list">
+        <details class="certification-item">
+          <summary class="certification-summary"><span class="certification-index">01</span><span class="certification-name">Meta Blueprint Badges obtained as part of the process &quot;Certified Media Buying Professional&quot; (2026)</span><span class="certification-chevron" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span></summary>
+          <div class="certification-content"><div class="certificate-frame"><img src="./assets/images/certifications/meta-blueprint-media-buying.png" alt="Meta Blueprint badges obtained as part of the Certified Media Buying Professional process" loading="lazy" decoding="async"></div></div>
+        </details>
 
-          <article class="framework-card">
-            <span class="card-number">02</span>
-            <div class="framework-icon">M</div>
-            <h3>Measure</h3>
-            <p>Understand what users actually do.</p>
-            <ul>
-              <li>Google Tag Manager</li>
-              <li>Google Analytics 4</li>
-              <li>Mobile Measurement Platform</li>
-              <li>Conversion Tracking</li>
-            </ul>
-          </article>
+        <details class="certification-item">
+          <summary class="certification-summary"><span class="certification-index">02</span><span class="certification-name">Google Ads Search Certification (2026)</span><span class="certification-chevron" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span></summary>
+          <div class="certification-content"><div class="certificate-frame"><img src="./assets/images/certifications/google-ads-search-2026.png" alt="Google Ads Search Certification 2026" loading="lazy" decoding="async"></div></div>
+        </details>
 
-          <article class="framework-card">
-            <span class="card-number">03</span>
-            <div class="framework-icon">A</div>
-            <h3>Acquire</h3>
-            <p>Bring the right audience into the ecosystem.</p>
-            <ul>
-              <li>Meta Ads</li>
-              <li>Google Ads</li>
-              <li>Search Engine Optimization</li>
-              <li>Organic Search</li>
-            </ul>
-          </article>
+        <details class="certification-item">
+          <summary class="certification-summary"><span class="certification-index">03</span><span class="certification-name">Google Analytics for Beginners (2021)</span><span class="certification-chevron" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span></summary>
+          <div class="certification-content"><div class="certificate-frame"><img src="./assets/images/certifications/google-analytics-for-beginners.png" alt="Google Analytics for Beginners certificate" loading="lazy" decoding="async"></div></div>
+        </details>
 
-          <article class="framework-card">
-            <span class="card-number">04</span>
-            <div class="framework-icon">O</div>
-            <h3>Optimize</h3>
-            <p>Turn data into better decisions.</p>
-            <ul>
-              <li>Campaign Optimization</li>
-              <li>Funnel Analysis</li>
-              <li>Conversion Analysis</li>
-              <li>Revenue & Growth Optimization</li>
-            </ul>
-          </article>
-        </div>
+        <details class="certification-item">
+          <summary class="certification-summary"><span class="certification-index">04</span><span class="certification-name">The Fundamentals of Digital Marketing (2021)</span><span class="certification-chevron" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span></summary>
+          <div class="certification-content"><div class="certificate-frame"><img src="./assets/images/certifications/fundamentals-digital-marketing.png" alt="The Fundamentals of Digital Marketing certificate" loading="lazy" decoding="async"></div></div>
+        </details>
 
-        <div class="framework-path">
-          <span>Foundation</span>
-          <span>→</span>
-          <span>Measurement</span>
-          <span>→</span>
-          <span>Acquisition</span>
-          <span>→</span>
-          <span>Growth</span>
-        </div>
+        <details class="certification-item">
+          <summary class="certification-summary"><span class="certification-index">05</span><span class="certification-name">Google Ads Search Certification (2021)</span><span class="certification-chevron" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span></summary>
+          <div class="certification-content"><div class="certificate-frame"><img src="./assets/images/certifications/google-ads-search-2021.png" alt="Google Ads Search Certification 2021" loading="lazy" decoding="async"></div></div>
+        </details>
+
+        <details class="certification-item">
+          <summary class="certification-summary"><span class="certification-index">06</span><span class="certification-name">Google Ads Display Certification (2021)</span><span class="certification-chevron" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span></summary>
+          <div class="certification-content"><div class="certificate-frame"><img src="./assets/images/certifications/google-ads-display.png" alt="Google Ads Display Certification" loading="lazy" decoding="async"></div></div>
+        </details>
       </div>
     </section>
 
-    <!-- =========================================================
-         EXPERTISE
-    ========================================================== -->
-    <section class="section section-light" id="expertise">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">MY EXPERTISE</p>
-          <h2>Expertise Across the Digital Marketing Stack</h2>
-          <p>
-            Acquisition, technology, measurement, search, branding, and
-            creative working together as one system.
-          </p>
-        </div>
-
-        <div class="card-grid card-grid-3">
-          <article class="content-card" id="digital-ads">
-            <div class="content-card-top">
-              <p class="content-card-label">ACQUIRE</p>
-              <span class="content-card-index">01</span>
-            </div>
-
-            <h3>Digital Ads</h3>
-            <p>
-              Build and optimize paid acquisition campaigns based on measurable
-              business objectives and conversion signals.
-            </p>
-
-            <ul class="tag-list">
-              <li>Meta Ads</li>
-              <li>Google Ads</li>
-              <li>Campaign Strategy</li>
-              <li>Optimization</li>
-            </ul>
-
-            <a href="/expertise/digital-ads/" class="text-link">Explore Digital Ads →</a>
-          </article>
-
-          <article class="content-card" id="web-development">
-            <div class="content-card-top">
-              <p class="content-card-label">BUILD</p>
-              <span class="content-card-index">02</span>
-            </div>
-
-            <h3>Web Development</h3>
-            <p>
-              Build websites that connect user experience, performance,
-              analytics, SEO, and marketing technology.
-            </p>
-
-            <ul class="tag-list">
-              <li>HTML / CSS / JS</li>
-              <li>WordPress</li>
-              <li>Hosting</li>
-              <li>Performance</li>
-            </ul>
-
-            <a href="/expertise/web-development/" class="text-link">Explore Web Development →</a>
-          </article>
-
-          <article class="content-card" id="tracking-analytics">
-            <div class="content-card-top">
-              <p class="content-card-label">MEASURE</p>
-              <span class="content-card-index">03</span>
-            </div>
-
-            <h3>Tracking & Analytics</h3>
-            <p>
-              Build measurement systems that connect traffic, user behavior,
-              conversion, attribution, and marketing performance.
-            </p>
-
-            <ul class="tag-list">
-              <li>GTM</li>
-              <li>GA4</li>
-              <li>MMP</li>
-              <li>Conversion Tracking</li>
-            </ul>
-
-            <a href="/expertise/tracking-analytics/" class="text-link">Explore Tracking & Analytics →</a>
-          </article>
-
-          <article class="content-card" id="seo">
-            <div class="content-card-top">
-              <p class="content-card-label">ACQUIRE</p>
-              <span class="content-card-index">04</span>
-            </div>
-
-            <h3>Search Engine Optimization</h3>
-            <p>
-              Improve organic visibility through website structure, content,
-              technical SEO, and continuous search performance analysis.
-            </p>
-
-            <ul class="tag-list">
-              <li>GSC</li>
-              <li>Technical SEO</li>
-              <li>On-page SEO</li>
-              <li>Core Web Vitals</li>
-            </ul>
-
-            <a href="/expertise/seo/" class="text-link">Explore SEO →</a>
-          </article>
-
-          <article class="content-card" id="digital-branding">
-            <div class="content-card-top">
-              <p class="content-card-label">BUILD</p>
-              <span class="content-card-index">05</span>
-            </div>
-
-            <h3>Digital Branding</h3>
-            <p>
-              Build a consistent brand presence across websites, content,
-              social platforms, advertising, and digital touchpoints.
-            </p>
-
-            <ul class="tag-list">
-              <li>Brand Positioning</li>
-              <li>Messaging</li>
-              <li>Digital Presence</li>
-            </ul>
-
-            <a href="/expertise/digital-branding/" class="text-link">Explore Digital Branding →</a>
-          </article>
-
-          <article class="content-card" id="creative-content">
-            <div class="content-card-top">
-              <p class="content-card-label">BUILD & OPTIMIZE</p>
-              <span class="content-card-index">06</span>
-            </div>
-
-            <h3>Creative & Content</h3>
-            <p>
-              Create communication that supports brand building and
-              performance marketing objectives.
-            </p>
-
-            <ul class="tag-list">
-              <li>Creative Strategy</li>
-              <li>Copywriting</li>
-              <li>Content</li>
-              <li>Creative Testing</li>
-            </ul>
-
-            <a href="/expertise/creative-content/" class="text-link">Explore Creative & Content →</a>
-          </article>
-        </div>
+    <footer class="site-footer">
+      <p>© 2026 Build and Design by Maul</p>
+      <div class="footer-socials">
+        <a href="https://www.instagram.com/dig.marketing.maul/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="#" data-placeholder-social="true" aria-label="TikTok — coming soon"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="mailto:mdimas103@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
       </div>
-    </section>
-
-    <!-- =========================================================
-         CASE STUDIES
-    ========================================================== -->
-    <section class="section section-light" id="case-studies">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">CASE STUDIES</p>
-          <h2>Selected Work & Experiments</h2>
-          <p>
-            Projects will be documented through the challenge, approach,
-            implementation, measurement, and result.
-          </p>
-        </div>
-
-        <div class="card-grid card-grid-3">
-          <article class="case-card">
-            <div class="case-card-header">
-              <span>DIGITAL ADS</span>
-              <span>01</span>
-            </div>
-            <h3>Digital Ads Optimization</h3>
-            <p>
-              Challenge → Approach → Implementation → Measurement → Result
-            </p>
-            <span class="status-badge">Case Study Coming Soon</span>
-          </article>
-
-          <article class="case-card">
-            <div class="case-card-header">
-              <span>TRACKING & ANALYTICS</span>
-              <span>02</span>
-            </div>
-            <h3>Tracking & Analytics Implementation</h3>
-            <p>
-              Challenge → Approach → Implementation → Measurement → Result
-            </p>
-            <span class="status-badge">Case Study Coming Soon</span>
-          </article>
-
-          <article class="case-card">
-            <div class="case-card-header">
-              <span>WEB DEVELOPMENT</span>
-              <span>03</span>
-            </div>
-            <h3>Web Development & Performance</h3>
-            <p>
-              Challenge → Approach → Implementation → Measurement → Result
-            </p>
-            <span class="status-badge">Case Study Coming Soon</span>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================
-         DIGITAL LAB
-    ========================================================== -->
-    <section class="section section-soft" id="digital-lab">
-      <div class="container lab-layout">
-        <div class="lab-intro">
-          <p class="eyebrow">DIGITAL LAB</p>
-          <h2>Learn. Build. Test. Document.</h2>
-          <p>
-            A place to document practical experiments across digital marketing,
-            tracking, analytics, web development, SEO, hosting, and AI.
-          </p>
-
-          <div class="lab-topics">
-            <span>Web Development</span>
-            <span>Website Performance</span>
-            <span>Digital Ads</span>
-            <span>GA4 & GTM</span>
-            <span>SEO</span>
-            <span>AI for Marketing</span>
-          </div>
-        </div>
-
-        <div class="article-list">
-          <article>
-            <div>
-              <span>Website Performance</span>
-              <h3>Understanding Website Performance Through Chrome DevTools</h3>
-            </div>
-            <span class="article-status">Planned</span>
-          </article>
-
-          <article>
-            <div>
-              <span>Web Development</span>
-              <h3>Building and Deploying a Website from Scratch</h3>
-            </div>
-            <span class="article-status">Planned</span>
-          </article>
-
-          <article>
-            <div>
-              <span>Tracking & Analytics</span>
-              <h3>Understanding Conversion Tracking with GA4 & GTM</h3>
-            </div>
-            <span class="article-status">Planned</span>
-          </article>
-        </div>
-      </div>
-    </section>
-    <!-- =========================================================
-         PERSONAL NOTE
-    ========================================================== -->
-    <section class="final-cta" id="profile-note">
-      <div class="container final-cta-inner">
-        <div>
-          <p class="eyebrow">PERSONAL PORTFOLIO</p>
-          <h2>A Space to Learn, Build, and Document</h2>
-          <p>
-            I currently work in digital marketing within Hijra Group,
-            including Hijra Bank and ALAMI. This website is a personal space
-            where I document my interests, experience, experiments, and
-            continuous learning across Full Stack Digital Marketing.
-          </p>
-        </div>
-
-        <div class="button-group">
-          <a href="/about/" class="button button-primary">
-            More About Me
-            <span class="button-arrow">→</span>
-          </a>
-        </div>
-      </div>
-    </section>
+    </footer>
   </main>
 
-  <!-- =========================================================
-       FOOTER
-  ========================================================== -->
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <div class="brand footer-brand">
-          <span class="brand-name">MAUL<span class="brand-dot">.</span></span>
-          <span class="brand-tagline">Full Stack Digital Marketing</span>
-        </div>
-
-        <p>
-          A personal portfolio and learning space documenting how digital
-          advertising, web development, tracking, SEO, branding, and creative
-          connect as one digital marketing system.
-        </p>
-      </div>
-
-      <div>
-        <h3>Expertise</h3>
-        <a href="/expertise/digital-ads/">Digital Ads</a>
-        <a href="/expertise/web-development/">Web Development</a>
-        <a href="/expertise/tracking-analytics/">Tracking & Analytics</a>
-        <a href="/expertise/seo/">SEO</a>
-      </div>
-
-      <div>
-        <h3>Portfolio</h3>
-        <a href="/case-studies/">Case Studies</a>
-        <a href="/digital-lab/">Digital Lab</a>
-        <a href="/about/">About Me</a>
-      </div>
-
-      <div>
-        <h3>Current Focus</h3>
-        <span class="footer-static">Digital Marketing</span>
-        <span class="footer-static">Web Development</span>
-        <span class="footer-static">Measurement</span>
-        <span class="footer-static">Continuous Learning</span>
-      </div>
-    </div>
-
-    <div class="container footer-bottom">
-      <p>© 2026 Maul. Personal portfolio & learning journal.</p>
-    </div>
-  </footer>
-
-  <script src="script.js"></script>
+  <div class="skill-tooltip" id="skill-tooltip" role="tooltip"></div>
+  <script src="./script.js"></script>
 </body>
 </html>
