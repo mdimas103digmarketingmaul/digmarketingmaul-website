@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Digital Ads Operating System — bagaimana M. Dimas Maulana menjalankan dan mengelola digital ads dari objective bisnis hingga continuous improvement.">
+  <meta name="theme-color" content="#07111f">
+
+  <link rel="icon" type="image/svg+xml" href="../../assets/images/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/images/favicon-32.png">
+  <link rel="shortcut icon" href="../../assets/images/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/images/apple-touch-icon.png">
+
+  <title>Digital Ads Operating System — M. Dimas Maulana</title>
+
+  <script>
+    (function () {
+      try {
+        const savedTheme = localStorage.getItem("maulArticleTheme");
+        document.documentElement.dataset.articleTheme =
+          savedTheme === "dark" ? "dark" : "light";
+      } catch (error) {
+        document.documentElement.dataset.articleTheme = "light";
+      }
+    })();
+  </script>
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body data-page="framework-article">
+
+  <div class="aurora-layer" aria-hidden="true">
+    <span class="aurora-orb aurora-one"></span>
+    <span class="aurora-orb aurora-two"></span>
+    <span class="aurora-orb aurora-three"></span>
+  </div>
+
+  <div class="grid-layer" aria-hidden="true"></div>
+  <div class="cursor-grid-light" id="cursor-grid-light" aria-hidden="true"></div>
+  <div class="grain-layer" aria-hidden="true"></div>
+
+  <aside class="social-rail social-rail-left" aria-label="Social media links">
+    <div class="social-rail-links">
+      <a href="https://www.instagram.com/dig.marketing.maul/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="#" class="social-link social-link-placeholder" data-placeholder-social="true" aria-label="TikTok — coming soon"><i class="fa-brands fa-tiktok"></i></a>
+    </div>
+    <span class="social-rail-line" aria-hidden="true"></span>
+  </aside>
+
+  <aside class="social-rail social-rail-right" aria-label="Email">
+    <a href="mailto:mdimas103@gmail.com" class="email-rail-link">mdimas103@gmail.com</a>
+    <span class="social-rail-line" aria-hidden="true"></span>
+  </aside>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+
+      <a href="../../index.html#home" class="brand-logo" aria-label="M. Dimas Maulana Home">
+        <span class="brand-mark">M</span><span class="brand-dot">.</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary Navigation">
+        <a href="../../index.html#home" class="nav-link"><span class="nav-number">01.</span><span>Home</span></a>
+        <a href="../" class="nav-link active"><span class="nav-number">02.</span><span>Frameworks</span></a>
+        <a href="../../products/" class="nav-link"><span class="nav-number">03.</span><span>Products</span></a>
+        <a href="../../blog/" class="nav-link"><span class="nav-number">04.</span><span>Blog</span></a>
+        <a href="../../index.html#profile" class="nav-link"><span class="nav-number">05.</span><span>Profile</span></a>
+      </nav>
+
+    </div>
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+  </header>
+
+  <main>
+
+    <section class="article-hero">
+      <div class="article-hero-inner">
+
+        <a href="../" class="article-back-link">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span data-copy-lang="id">Kembali ke Frameworks</span>
+          <span data-copy-lang="en" hidden>Back to Frameworks</span>
+        </a>
+
+        <div class="article-meta-row">
+          <div class="subpage-kicker reveal-item">
+            <span class="kicker-line"></span>
+            <span>Framework / Digital Advertising</span>
+          </div>
+
+          <div class="article-controls">
+            <div class="language-switch" role="group" aria-label="Article language">
+              <button type="button" class="language-btn active" data-language="id" aria-pressed="true">ID</button>
+              <button type="button" class="language-btn" data-language="en" aria-pressed="false">EN</button>
+            </div>
+
+            <div class="theme-switch" role="group" aria-label="Article appearance">
+              <button type="button" class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">
+                <i class="fa-regular fa-sun" aria-hidden="true"></i>
+                <span>Light</span>
+              </button>
+              <button type="button" class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">
+                <i class="fa-regular fa-moon" aria-hidden="true"></i>
+                <span>Dark</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-mask">
+          <h1 class="article-title hero-title-gradient reveal-item reveal-delay-1">
+            Digital Ads<br>
+            <span class="accent-text">Operating System.</span>
+          </h1>
+        </div>
+
+        <div class="article-subtitle reveal-item reveal-delay-2">
+          <span data-copy-lang="id">Bagaimana Saya Menjalankan &amp; Mengelola Digital Ads</span>
+          <span data-copy-lang="en" hidden>How I Run &amp; Manage Digital Ads</span>
+        </div>
+
+        <div class="article-lead reveal-item reveal-delay-2">
+          <div data-copy-lang="id">
+            <p>
+              Digital ads adalah sebuah sistem untuk membantu bisnis mencapai outcome yang terukur—
+              mulai dari membangun awareness, menghasilkan lead, mengakuisisi pengguna atau pelanggan,
+              mendorong transaksi, sampai mempertahankan pengguna yang bernilai bagi bisnis.
+            </p>
+            <p>
+              Berikut inilah operating system yang saya gunakan untuk menjalankan dan mengelola digital ads.
+            </p>
+          </div>
+
+          <div data-copy-lang="en" hidden>
+            <p>
+              Digital ads are a system for helping a business achieve measurable outcomes—from building
+              awareness and generating leads, to acquiring users or customers, driving transactions,
+              and retaining users who are valuable to the business.
+            </p>
+            <p>
+              This is the operating system I use to run and manage digital ads.
+            </p>
+          </div>
+        </div>
+
+        <div class="article-system-preview" aria-label="Digital Ads Operating System summary">
+          <span>Objective</span>
+          <i class="fa-solid fa-arrow-right"></i>
+          <span>Measurement</span>
+          <i class="fa-solid fa-arrow-right"></i>
+          <span>Campaign</span>
+          <i class="fa-solid fa-arrow-right"></i>
+          <span>Creative</span>
+          <i class="fa-solid fa-arrow-right"></i>
+          <span>Optimize</span>
+          <i class="fa-solid fa-arrow-right"></i>
+          <span>Review</span>
+          <i class="fa-solid fa-arrow-right"></i>
+          <span>Improve</span>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="article-shell section-reveal">
+
+      <aside class="article-toc">
+        <p class="article-toc-label">
+          <span data-copy-lang="id">Isi Framework</span>
+          <span data-copy-lang="en" hidden>Framework Contents</span>
+        </p>
+
+        <nav class="article-toc-nav" aria-label="Article contents">
+          <a href="#section-1"><span>01</span><span data-copy-lang="id">Objective Bisnis</span><span data-copy-lang="en" hidden>Business Objective</span></a>
+          <a href="#section-2"><span>02</span><span>Measurement &amp; Tracking</span></a>
+          <a href="#section-3"><span>03</span><span>Account &amp; Campaign Setup</span></a>
+          <a href="#section-4"><span>04</span><span>Creative Testing</span></a>
+          <a href="#section-5"><span>05</span><span>Budget &amp; Optimization</span></a>
+          <a href="#section-6"><span>06</span><span>Performance Review</span></a>
+          <a href="#section-7"><span>07</span><span>Reporting &amp; Decision</span></a>
+          <a href="#section-8"><span>08</span><span>Continuous Improvement</span></a>
+          <a href="#summary"><span>→</span><span data-copy-lang="id">Ringkasan</span><span data-copy-lang="en" hidden>Summary</span></a>
+        </nav>
+      </aside>
+
+      <article class="article-content">
+
+        <section class="article-section" id="section-1">
+          <div class="article-section-number">01</div>
+
+          <div data-copy-lang="id">
+            <h2>Mulai dari Objective Bisnis</h2>
+
+            <p>Sebelum membuka Ads Manager, saya mulai dari bisnisnya terlebih dahulu.</p>
+
+            <p>
+              Tahap pertama adalah memahami apa yang ingin dicapai bisnis, bagaimana customer journey
+              berjalan, dan di titik mana conversion yang bernilai terjadi. Conversion tersebut bisa berupa:
+            </p>
+
+            <ul class="article-bullets">
+              <li>Transaksi di website</li>
+              <li>Transaksi di mobile app</li>
+              <li>Pengisian lead atau form</li>
+              <li>Transaksi offline</li>
+              <li>Registrasi akun</li>
+              <li>Subscription atau aktivitas bisnis lain yang dapat diukur</li>
+            </ul>
+
+            <p>
+              Model bisnis yang berbeda membutuhkan campaign structure dan measurement setup yang berbeda.
+            </p>
+
+            <p>
+              Karena itu, objective-nya bukan sekadar “menjalankan iklan”. Yang perlu ditentukan adalah
+              outcome bisnis apa yang ingin dibantu oleh digital ads dan bagaimana outcome tersebut dapat diukur.
+            </p>
+
+            <p>Cara sederhananya saya melihat alur ini sebagai:</p>
+
+            <div class="article-flow">
+              <span>Objective Bisnis</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Customer Journey</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Conversion Point</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Advertising Objective</span>
+            </div>
+
+            <p>
+              Setelah objective ini jelas, langkah berikutnya adalah membangun fondasi measurement.
+            </p>
+          </div>
+
+          <div data-copy-lang="en" hidden>
+            <h2>Start with the Business Objective</h2>
+
+            <p>Before opening Ads Manager, I start with the business first.</p>
+
+            <p>
+              The first step is understanding what the business wants to achieve, how the customer journey
+              works, and where valuable conversions happen. Those conversions may include:
+            </p>
+
+            <ul class="article-bullets">
+              <li>Transactions on a website</li>
+              <li>Transactions in a mobile app</li>
+              <li>Lead or form submissions</li>
+              <li>Offline transactions</li>
+              <li>Account registrations</li>
+              <li>Subscriptions or other measurable business activities</li>
+            </ul>
+
+            <p>
+              Different business models require different campaign structures and measurement setups.
+            </p>
+
+            <p>
+              The objective is therefore not simply to “run ads.” The important question is which business
+              outcome digital ads should help achieve and how that outcome can be measured.
+            </p>
+
+            <p>I simplify the flow like this:</p>
+
+            <div class="article-flow">
+              <span>Business Objective</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Customer Journey</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Conversion Point</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Advertising Objective</span>
+            </div>
+
+            <p>
+              Once the objective is clear, the next step is to build the measurement foundation.
+            </p>
+          </div>
+        </section>
+
+        <section class="article-section" id="section-2">
+          <div class="article-section-number">02</div>
+
+          <div data-copy-lang="id">
+            <h2>Measurement &amp; Tracking Implementation</h2>
+
+            <p>
+              Measurement adalah salah satu fondasi terpenting dalam sistem digital ads yang saya gunakan.
+            </p>
+
+            <p>
+              Advertising platform melakukan optimization berdasarkan signal yang diterimanya. Dengan
+              menentukan conversion event yang tepat dan memasang tracking yang dapat diandalkan, kita
+              memberi tahu platform outcome seperti apa yang penting bagi bisnis.
+            </p>
+
+            <p>
+              Seiring waktu, conversion data membantu algoritma mengenali pola pengguna yang lebih
+              berpotensi menghasilkan outcome serupa.
+            </p>
+
+            <p>Alurnya:</p>
+
+            <div class="article-flow">
+              <span>Objective Bisnis</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Conversion Event</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Tracking</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Data Signal</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Optimization</span>
+            </div>
+
+            <p>
+              Tracking bisa melibatkan website event, mobile app event, lead tracking, offline conversion,
+              maupun first-party data lainnya.
+            </p>
+
+            <p>
+              Tujuannya adalah mengukur aktivitas yang benar-benar menunjukkan progress penting dalam customer journey.
+            </p>
+
+            <div class="related-placeholder">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Artikel Terkait: Sistem Measurement &amp; Tracking Implementation</span>
+            </div>
+          </div>
+
+          <div data-copy-lang="en" hidden>
+            <h2>Measurement &amp; Tracking Implementation</h2>
+
+            <p>
+              Measurement is one of the most important foundations in the digital ads system I use.
+            </p>
+
+            <p>
+              Advertising platforms optimize based on the signals they receive. By defining the right
+              conversion events and implementing reliable tracking, we tell the platform which outcomes
+              are important to the business.
+            </p>
+
+            <p>
+              Over time, conversion data helps the algorithm recognize patterns among users who are more
+              likely to produce similar outcomes.
+            </p>
+
+            <p>The flow:</p>
+
+            <div class="article-flow">
+              <span>Business Objective</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Conversion Event</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Tracking</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Data Signal</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Optimization</span>
+            </div>
+
+            <p>
+              Tracking can involve website events, mobile app events, lead tracking, offline conversions,
+              and other first-party data.
+            </p>
+
+            <p>
+              The goal is to measure activities that genuinely represent important progress in the customer journey.
+            </p>
+
+            <div class="related-placeholder">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Related Article: Measurement &amp; Tracking Implementation System</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="article-section" id="section-3">
+          <div class="article-section-number">03</div>
+
+          <div data-copy-lang="id">
+            <h2>Account &amp; Campaign Setup</h2>
+
+            <p>
+              Setelah objective dan fondasi measurement jelas, saya menentukan campaign setup yang sesuai.
+            </p>
+
+            <p>Pemilihan channel biasanya mempertimbangkan beberapa hal:</p>
+
+            <ul class="article-bullets two-column">
+              <li>Objective bisnis</li>
+              <li>Customer journey</li>
+              <li>Lokasi terjadinya conversion</li>
+              <li>Perilaku audience</li>
+              <li>Budget yang tersedia</li>
+              <li>Creative asset yang tersedia</li>
+              <li>Kesiapan measurement</li>
+            </ul>
+
+            <p>Digital ads dapat menggunakan berbagai platform dan tipe campaign, seperti:</p>
+
+            <div class="platform-grid">
+              <div><i class="fa-brands fa-meta"></i><span>Meta Ads</span></div>
+              <div><i class="fa-brands fa-google"></i><span>Google Ads</span></div>
+              <div><i class="fa-brands fa-tiktok"></i><span>TikTok Ads</span></div>
+              <div><i class="fa-brands fa-linkedin-in"></i><span>LinkedIn Ads</span></div>
+            </div>
+
+            <div class="article-sublist">
+              <span>Google Search</span>
+              <span>App Campaign</span>
+              <span>Performance Max</span>
+              <span>Display, jika relevan</span>
+            </div>
+
+            <p>
+              Channel lain dapat ditambahkan jika memang relevan dengan objective bisnis.
+            </p>
+
+            <p>
+              Khusus Google Search, saya menggunakan sistem optimization tersendiri karena performanya
+              sangat dipengaruhi oleh search intent, keyword, search terms, match type, bidding, negative
+              keyword, dan evaluasi query secara berkala.
+            </p>
+
+            <div class="related-placeholder">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Artikel Terkait: Google Search Campaign Optimization System</span>
+            </div>
+          </div>
+
+          <div data-copy-lang="en" hidden>
+            <h2>Account &amp; Campaign Setup</h2>
+
+            <p>
+              Once the objective and measurement foundation are clear, I define the appropriate campaign setup.
+            </p>
+
+            <p>Channel selection usually considers several factors:</p>
+
+            <ul class="article-bullets two-column">
+              <li>Business objective</li>
+              <li>Customer journey</li>
+              <li>Where the conversion happens</li>
+              <li>Audience behavior</li>
+              <li>Available budget</li>
+              <li>Available creative assets</li>
+              <li>Measurement readiness</li>
+            </ul>
+
+            <p>Digital ads can use different platforms and campaign types, such as:</p>
+
+            <div class="platform-grid">
+              <div><i class="fa-brands fa-meta"></i><span>Meta Ads</span></div>
+              <div><i class="fa-brands fa-google"></i><span>Google Ads</span></div>
+              <div><i class="fa-brands fa-tiktok"></i><span>TikTok Ads</span></div>
+              <div><i class="fa-brands fa-linkedin-in"></i><span>LinkedIn Ads</span></div>
+            </div>
+
+            <div class="article-sublist">
+              <span>Google Search</span>
+              <span>App Campaign</span>
+              <span>Performance Max</span>
+              <span>Display, when relevant</span>
+            </div>
+
+            <p>
+              Other channels can be added when they are relevant to the business objective.
+            </p>
+
+            <p>
+              For Google Search specifically, I use a separate optimization system because performance is
+              heavily influenced by search intent, keywords, search terms, match types, bidding, negative
+              keywords, and recurring query evaluation.
+            </p>
+
+            <div class="related-placeholder">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Related Article: Google Search Campaign Optimization System</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="article-section" id="section-4">
+          <div class="article-section-number">04</div>
+
+          <div data-copy-lang="id">
+            <h2>Creative Testing &amp; Optimization</h2>
+
+            <p>Creative bukan hanya asset iklan. Creative juga menjadi sumber learning.</p>
+
+            <p>
+              Daripada membuat banyak variasi tanpa alasan yang jelas, saya lebih memilih memulai dari
+              hypothesis. Setiap test sebaiknya membantu menjawab sebuah pertanyaan.
+            </p>
+
+            <p>Contohnya:</p>
+
+            <ul class="article-bullets">
+              <li>Apakah angle yang menonjolkan benefit bekerja lebih baik dibandingkan angle yang berfokus pada produk?</li>
+              <li>Apakah pendekatan visual yang berbeda mampu meningkatkan perhatian?</li>
+              <li>Apakah opening hook yang lebih kuat mampu meningkatkan engagement?</li>
+              <li>Apakah format tertentu bekerja lebih baik pada placement tertentu?</li>
+            </ul>
+
+            <p>Alur dasarnya:</p>
+
+            <div class="article-flow">
+              <span>Hypothesis</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Creative</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Launch</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Measure</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Learn</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Iterate</span>
+            </div>
+
+            <p>Variabel yang diuji bisa berupa:</p>
+
+            <div class="article-chip-grid">
+              <span>Message / Angle</span>
+              <span>Hook</span>
+              <span>Konsep Visual</span>
+              <span>Format</span>
+              <span>Call to Action</span>
+              <span>Placement</span>
+            </div>
+
+            <p>
+              Winning creative tentu penting. Namun learning di balik hasil tersebut lebih berharga karena
+              dapat digunakan untuk membuat variasi berikutnya dan meningkatkan performance secara bertahap.
+            </p>
+
+            <div class="related-placeholder">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Artikel Terkait: Sistem Creative Testing &amp; Optimization</span>
+            </div>
+          </div>
+
+          <div data-copy-lang="en" hidden>
+            <h2>Creative Testing &amp; Optimization</h2>
+
+            <p>Creative is not only an ad asset. Creative is also a source of learning.</p>
+
+            <p>
+              Rather than producing many variations without a clear reason, I prefer to start with a
+              hypothesis. Every test should help answer a question.
+            </p>
+
+            <p>For example:</p>
+
+            <ul class="article-bullets">
+              <li>Does a benefit-led angle work better than a product-focused angle?</li>
+              <li>Can a different visual approach improve attention?</li>
+              <li>Can a stronger opening hook increase engagement?</li>
+              <li>Does a certain format work better in a particular placement?</li>
+            </ul>
+
+            <p>The basic flow:</p>
+
+            <div class="article-flow">
+              <span>Hypothesis</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Creative</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Launch</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Measure</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Learn</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Iterate</span>
+            </div>
+
+            <p>Variables can include:</p>
+
+            <div class="article-chip-grid">
+              <span>Message / Angle</span>
+              <span>Hook</span>
+              <span>Visual Concept</span>
+              <span>Format</span>
+              <span>Call to Action</span>
+              <span>Placement</span>
+            </div>
+
+            <p>
+              Winning creative is important. But the learning behind the result is even more valuable
+              because it can be used to build the next variations and improve performance over time.
+            </p>
+
+            <div class="related-placeholder">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Related Article: Creative Testing &amp; Optimization System</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="article-section" id="section-5">
+          <div class="article-section-number">05</div>
+
+          <div data-copy-lang="id">
+            <h2>Budget &amp; Campaign Optimization</h2>
+
+            <p>Performance review untuk menentukan apakah sebuah campaign sebaiknya:</p>
+
+            <div class="decision-grid">
+              <div class="decision-card"><strong>Scale</strong><p>Menambah budget ketika performance efisien, stabil, dan masih memiliki ruang untuk mendapatkan volume tambahan.</p></div>
+              <div class="decision-card"><strong>Maintain</strong><p>Mempertahankan setup ketika hasilnya konsisten dan belum membutuhkan perubahan besar.</p></div>
+              <div class="decision-card"><strong>Optimize</strong><p>Menyesuaikan variable tertentu ketika ada indikasi performance masih dapat ditingkatkan.</p></div>
+              <div class="decision-card"><strong>Reduce</strong><p>Mengurangi budget ketika efisiensi mulai menurun atau terdapat campaign lain dengan peluang yang lebih kuat.</p></div>
+              <div class="decision-card"><strong>Pause</strong><p>Menghentikan campaign ketika performance secara konsisten lemah, hypothesis sudah tidak relevan, atau setup perlu dibangun ulang.</p></div>
+            </div>
+
+            <p>Tujuannya adalah mengalokasikan budget berdasarkan evidence &amp; data analysis.</p>
+          </div>
+
+          <div data-copy-lang="en" hidden>
+            <h2>Budget &amp; Campaign Optimization</h2>
+
+            <p>Performance reviews help determine whether a campaign should be:</p>
+
+            <div class="decision-grid">
+              <div class="decision-card"><strong>Scale</strong><p>Increase budget when performance is efficient, stable, and there is still room to gain additional volume.</p></div>
+              <div class="decision-card"><strong>Maintain</strong><p>Keep the setup when results are consistent and no major change is currently needed.</p></div>
+              <div class="decision-card"><strong>Optimize</strong><p>Adjust specific variables when there are indications that performance can still be improved.</p></div>
+              <div class="decision-card"><strong>Reduce</strong><p>Reduce budget when efficiency starts to decline or another campaign offers a stronger opportunity.</p></div>
+              <div class="decision-card"><strong>Pause</strong><p>Stop the campaign when performance is consistently weak, the hypothesis is no longer relevant, or the setup needs to be rebuilt.</p></div>
+            </div>
+
+            <p>The goal is to allocate budget based on evidence and data analysis.</p>
+          </div>
+        </section>
+
+        <section class="article-section" id="section-6">
+          <div class="article-section-number">06</div>
+
+          <div data-copy-lang="id">
+            <h2>Periodic Performance Review</h2>
+
+            <p>Digital ads membutuhkan evaluasi secara berkala untuk menjawab tiga pertanyaan utama:</p>
+
+            <div class="question-grid">
+              <div><span>01</span><strong>Apa yang terjadi?</strong></div>
+              <div><span>02</span><strong>Kenapa hal tersebut terjadi?</strong></div>
+              <div><span>03</span><strong>Apa yang sebaiknya dilakukan berikutnya?</strong></div>
+            </div>
+
+            <p>Evaluasi dapat mencakup:</p>
+
+            <ul class="article-bullets two-column">
+              <li>Campaign performance</li>
+              <li>Creative performance</li>
+              <li>Audience performance</li>
+              <li>Placement performance</li>
+              <li>Location performance</li>
+              <li>Conversion funnel</li>
+              <li>Kualitas tracking</li>
+              <li>Efisiensi budget</li>
+            </ul>
+
+            <p>Dari analisis tersebut saya mencari signal seperti:</p>
+
+            <ul class="article-bullets two-column">
+              <li>Winning campaign</li>
+              <li>Campaign yang underperform</li>
+              <li>Creative fatigue atau saturation</li>
+              <li>Audience yang menghasilkan performance lebih baik</li>
+              <li>Lokasi yang lebih efisien</li>
+              <li>Funnel bottleneck</li>
+              <li>Troubleshoot tracking</li>
+              <li>Peluang growth baru</li>
+            </ul>
+
+            <p>
+              Tujuannya bukan hanya mengetahui mana yang bagus atau buruk, tetapi memahami apa yang
+              sedang disampaikan oleh data dan keputusan apa yang seharusnya diambil setelahnya.
+            </p>
+
+            <div class="related-placeholder">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Artikel Terkait: Sistem Periodic Digital Ads Performance Review</span>
+            </div>
+          </div>
+
+          <div data-copy-lang="en" hidden>
+            <h2>Periodic Performance Review</h2>
+
+            <p>Digital ads require recurring evaluation to answer three main questions:</p>
+
+            <div class="question-grid">
+              <div><span>01</span><strong>What happened?</strong></div>
+              <div><span>02</span><strong>Why did it happen?</strong></div>
+              <div><span>03</span><strong>What should we do next?</strong></div>
+            </div>
+
+            <p>The review can include:</p>
+
+            <ul class="article-bullets two-column">
+              <li>Campaign performance</li>
+              <li>Creative performance</li>
+              <li>Audience performance</li>
+              <li>Placement performance</li>
+              <li>Location performance</li>
+              <li>Conversion funnel</li>
+              <li>Tracking quality</li>
+              <li>Budget efficiency</li>
+            </ul>
+
+            <p>From the analysis, I look for signals such as:</p>
+
+            <ul class="article-bullets two-column">
+              <li>Winning campaigns</li>
+              <li>Underperforming campaigns</li>
+              <li>Creative fatigue or saturation</li>
+              <li>Audiences producing stronger performance</li>
+              <li>More efficient locations</li>
+              <li>Funnel bottlenecks</li>
+              <li>Tracking issues that need troubleshooting</li>
+              <li>New growth opportunities</li>
+            </ul>
+
+            <p>
+              The goal is not only to identify what is good or bad, but to understand what the data is
+              communicating and which decision should follow.
+            </p>
+
+            <div class="related-placeholder">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Related Article: Periodic Digital Ads Performance Review System</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="article-section" id="section-7">
+          <div class="article-section-number">07</div>
+
+          <div data-copy-lang="id">
+            <h2>Reporting &amp; Decision System</h2>
+
+            <p>Reporting bukan sekadar kumpulan angka.</p>
+
+            <p>Reporting yang baik harus membantu mengubah performance data menjadi keputusan.</p>
+
+            <p>Struktur yang saya gunakan adalah:</p>
+
+            <div class="article-flow">
+              <span>Data</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Observation</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Analysis</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Insight</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Decision</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Action</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Next Experiment</span>
+            </div>
+
+            <p>Reporting harus membantu menjawab pertanyaan seperti:</p>
+
+            <ul class="article-bullets">
+              <li>Campaign mana yang layak mendapatkan tambahan budget?</li>
+              <li>Campaign mana yang sebaiknya dipertahankan?</li>
+              <li>Creative mana yang perlu di-iterate?</li>
+              <li>Audience mana yang mulai kurang efisien?</li>
+              <li>Placement atau lokasi mana yang layak diuji lebih lanjut?</li>
+              <li>Di bagian mana conversion funnel kehilangan pengguna?</li>
+              <li>Hypothesis apa yang perlu diuji berikutnya?</li>
+            </ul>
+
+            <p>
+              Dengan pendekatan ini, reporting menjadi bagian dari proses optimization, bukan aktivitas
+              administratif yang berdiri sendiri.
+            </p>
+
+            <p>Keputusan akhirnya dapat berupa:</p>
+
+            <div class="article-flow compact-flow">
+              <span>Maintain</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Scale</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Optimize</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Test</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Pause</span>
+            </div>
+
+            <div class="related-placeholder">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Artikel Terkait: Digital Ads Reporting &amp; Decision System</span>
+            </div>
+          </div>
+
+          <div data-copy-lang="en" hidden>
+            <h2>Reporting &amp; Decision System</h2>
+
+            <p>Reporting is not simply a collection of numbers.</p>
+
+            <p>Good reporting should help turn performance data into decisions.</p>
+
+            <p>The structure I use is:</p>
+
+            <div class="article-flow">
+              <span>Data</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Observation</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Analysis</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Insight</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Decision</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Action</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Next Experiment</span>
+            </div>
+
+            <p>Reporting should help answer questions such as:</p>
+
+            <ul class="article-bullets">
+              <li>Which campaigns deserve additional budget?</li>
+              <li>Which campaigns should be maintained?</li>
+              <li>Which creative should be iterated?</li>
+              <li>Which audience is becoming less efficient?</li>
+              <li>Which placements or locations deserve further testing?</li>
+              <li>Where in the conversion funnel are users being lost?</li>
+              <li>Which hypothesis should be tested next?</li>
+            </ul>
+
+            <p>
+              With this approach, reporting becomes part of the optimization process rather than a
+              standalone administrative activity.
+            </p>
+
+            <p>The resulting decision may be:</p>
+
+            <div class="article-flow compact-flow">
+              <span>Maintain</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Scale</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Optimize</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Test</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Pause</span>
+            </div>
+
+            <div class="related-placeholder">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Related Article: Digital Ads Reporting &amp; Decision System</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="article-section" id="section-8">
+          <div class="article-section-number">08</div>
+
+          <div data-copy-lang="id">
+            <h2>Continuous Improvement</h2>
+
+            <p>Digital ads bukan setup sekali jalan.</p>
+
+            <p>
+              Campaign yang saat ini bekerja dengan baik tetap dapat kehilangan efektivitas seiring waktu.
+              Creative bisa mengalami saturation, perilaku audience dapat berubah, kompetisi bisa meningkat,
+              dan prioritas bisnis juga bisa bergeser.
+            </p>
+
+            <p>Karena itu, operating system ini harus terus menghasilkan learning baru.</p>
+
+            <p>Siklusnya:</p>
+
+            <div class="article-flow">
+              <span>Launch</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Measure</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Analyze</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Learn</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Optimize</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Test</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Repeat</span>
+            </div>
+
+            <p>Analisis berkala dapat menemukan hal seperti:</p>
+
+            <ul class="article-bullets">
+              <li>Iklan yang mulai mengalami creative fatigue</li>
+              <li>Campaign yang memiliki comparative performance advantage</li>
+              <li>Konsep visual yang menghasilkan kualitas conversion lebih baik</li>
+              <li>Lokasi dengan efisiensi yang lebih tinggi</li>
+              <li>Setup yang secara konsisten mengungguli variasi lainnya</li>
+              <li>Hypothesis baru yang layak diuji</li>
+            </ul>
+
+            <p>
+              A/B testing juga tidak terbatas pada creative. Tergantung campaign dan platform, experiment
+              dapat dilakukan pada:
+            </p>
+
+            <div class="article-chip-grid">
+              <span>Creative</span>
+              <span>Placement</span>
+              <span>Location Targeting</span>
+              <span>Audience Signal</span>
+              <span>Campaign Structure</span>
+              <span>Landing Experience</span>
+              <span>Conversion Event</span>
+              <span>Bidding / Budget</span>
+            </div>
+
+            <p>
+              Tujuannya bukan melakukan perubahan terus-menerus tanpa alasan. Tujuannya adalah melakukan
+              continuous improvement berdasarkan evidence &amp; data analysis.
+            </p>
+          </div>
+
+          <div data-copy-lang="en" hidden>
+            <h2>Continuous Improvement</h2>
+
+            <p>Digital ads are not a one-time setup.</p>
+
+            <p>
+              A campaign that performs well today can still lose effectiveness over time. Creative can
+              become saturated, audience behavior can change, competition can increase, and business
+              priorities can shift.
+            </p>
+
+            <p>The operating system therefore needs to keep generating new learning.</p>
+
+            <p>The cycle:</p>
+
+            <div class="article-flow">
+              <span>Launch</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Measure</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Analyze</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Learn</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Optimize</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Test</span><i class="fa-solid fa-arrow-right"></i>
+              <span>Repeat</span>
+            </div>
+
+            <p>Recurring analysis can reveal things such as:</p>
+
+            <ul class="article-bullets">
+              <li>Ads beginning to experience creative fatigue</li>
+              <li>Campaigns with a comparative performance advantage</li>
+              <li>Visual concepts producing better conversion quality</li>
+              <li>Locations with stronger efficiency</li>
+              <li>Setups that consistently outperform other variations</li>
+              <li>New hypotheses worth testing</li>
+            </ul>
+
+            <p>
+              A/B testing is also not limited to creative. Depending on the campaign and platform,
+              experiments can include:
+            </p>
+
+            <div class="article-chip-grid">
+              <span>Creative</span>
+              <span>Placement</span>
+              <span>Location Targeting</span>
+              <span>Audience Signal</span>
+              <span>Campaign Structure</span>
+              <span>Landing Experience</span>
+              <span>Conversion Event</span>
+              <span>Bidding / Budget</span>
+            </div>
+
+            <p>
+              The goal is not to make endless changes without a reason. The goal is continuous
+              improvement based on evidence and data analysis.
+            </p>
+          </div>
+        </section>
+
+        <section class="article-section article-summary" id="summary">
+          <div class="article-section-number">→</div>
+
+          <div data-copy-lang="id">
+            <h2>Ringkasan Digital Ads Operating System</h2>
+            <p>Secara sederhana, sistem ini dapat dirangkum menjadi:</p>
+
+            <div class="summary-steps">
+              <span>Objective Bisnis</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Measurement &amp; Tracking</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Account &amp; Campaign Setup</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Creative Testing</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Budget &amp; Campaign Optimization</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Periodic Performance Review</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Reporting &amp; Decision</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>New Hypothesis &amp; Continuous Improvement</span>
+            </div>
+
+            <p class="article-closing">
+              Tools, platform, dan tactic akan terus berubah. Namun sebuah operating system memberikan
+              cara yang konsisten untuk memahami apa yang penting, mengambil keputusan yang lebih baik,
+              dan meningkatkan performance dari waktu ke waktu.
+            </p>
+          </div>
+
+          <div data-copy-lang="en" hidden>
+            <h2>Digital Ads Operating System Summary</h2>
+            <p>In simple terms, the system can be summarized as:</p>
+
+            <div class="summary-steps">
+              <span>Business Objective</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Measurement &amp; Tracking</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Account &amp; Campaign Setup</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Creative Testing</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Budget &amp; Campaign Optimization</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Periodic Performance Review</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>Reporting &amp; Decision</span>
+              <i class="fa-solid fa-arrow-down"></i>
+              <span>New Hypothesis &amp; Continuous Improvement</span>
+            </div>
+
+            <p class="article-closing">
+              Tools, platforms, and tactics will continue to change. An operating system, however,
+              provides a consistent way to understand what matters, make better decisions, and improve
+              performance over time.
+            </p>
+          </div>
+        </section>
+
+      </article>
+
+    </section>
+
+    <footer class="site-footer">
+      <p>© 2026 Build and Design by Maul</p>
+
+      <div class="footer-socials">
+        <a href="https://www.instagram.com/dig.marketing.maul/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="#" data-placeholder-social="true" aria-label="TikTok — coming soon"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="mailto:mdimas103@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

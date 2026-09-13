@@ -1,15 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Future digital products, systems, learning resources, and services by M. Dimas Maulana.">
+  <meta name="description" content="Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.">
   <meta name="theme-color" content="#07111f">
+
   <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32.png">
   <link rel="shortcut icon" href="../assets/images/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
-  <title>Products — M. Dimas Maulana</title>
+
+  <title>Products & Services — M. Dimas Maulana</title>
+
+  <script>
+    (function () {
+      try {
+        const savedTheme = localStorage.getItem("maulProductsTheme");
+        document.documentElement.dataset.productsTheme =
+          savedTheme === "light" ? "light" : "dark";
+      } catch (error) {
+        document.documentElement.dataset.productsTheme = "dark";
+      }
+    })();
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +34,12 @@
 
 <body data-page="products">
 
-  <div class="aurora-layer" aria-hidden="true"><span class="aurora-orb aurora-one"></span><span class="aurora-orb aurora-two"></span><span class="aurora-orb aurora-three"></span></div>
+  <div class="aurora-layer" aria-hidden="true">
+    <span class="aurora-orb aurora-one"></span>
+    <span class="aurora-orb aurora-two"></span>
+    <span class="aurora-orb aurora-three"></span>
+  </div>
+
   <div class="grid-layer" aria-hidden="true"></div>
   <div class="cursor-grid-light" id="cursor-grid-light" aria-hidden="true"></div>
   <div class="grain-layer" aria-hidden="true"></div>
@@ -41,28 +60,67 @@
 
   <header class="site-header">
     <div class="site-header-inner">
-      <a href="../index.html#home" class="brand-logo" aria-label="M. Dimas Maulana Home"><span class="brand-mark">M</span><span class="brand-dot">.</span></a>
+      <a href="../index.html#home" class="brand-logo" aria-label="M. Dimas Maulana Home">
+        <span class="brand-mark">M</span><span class="brand-dot">.</span>
+      </a>
+
       <nav class="main-nav" aria-label="Primary Navigation">
         <a href="../index.html#home" class="nav-link"><span class="nav-number">01.</span><span>Home</span></a>
-        <a href="../blog/" class="nav-link"><span class="nav-number">02.</span><span>Blog</span></a>
+        <a href="../frameworks/" class="nav-link"><span class="nav-number">02.</span><span>Frameworks</span></a>
         <a href="./" class="nav-link active"><span class="nav-number">03.</span><span>Products</span></a>
-        <a href="../index.html#profile" class="nav-link"><span class="nav-number">04.</span><span>Profile</span></a>
+        <a href="../blog/" class="nav-link"><span class="nav-number">04.</span><span>Blog</span></a>
+        <a href="../index.html#profile" class="nav-link"><span class="nav-number">05.</span><span>Profile</span></a>
       </nav>
     </div>
     <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
   </header>
 
   <main>
-    <section class="subpage-hero product-hero">
+    <section class="subpage-hero product-hero commerce-product-hero">
       <div class="subpage-hero-inner">
-        <div class="subpage-kicker reveal-item"><span class="kicker-line"></span><span>Products / Future Space</span></div>
+
+        <div class="product-hero-top reveal-item">
+          <div class="subpage-kicker product-page-kicker">
+            <span class="kicker-line"></span>
+            <span>Products / Services</span>
+          </div>
+
+          <div class="product-page-controls">
+            <div class="language-switch product-language-switch" role="group" aria-label="Page language">
+              <button type="button" class="language-btn active" data-language="id" aria-pressed="true">ID</button>
+              <button type="button" class="language-btn" data-language="en" aria-pressed="false">EN</button>
+            </div>
+
+            <div class="product-theme-switch" role="group" aria-label="Page appearance">
+              <button type="button" class="product-theme-btn" data-products-theme="light" aria-pressed="false" title="Light mode">
+                <i class="fa-regular fa-sun" aria-hidden="true"></i>
+                <span>Light</span>
+              </button>
+              <button type="button" class="product-theme-btn" data-products-theme="dark" aria-pressed="false" title="Dark mode">
+                <i class="fa-regular fa-moon" aria-hidden="true"></i>
+                <span>Dark</span>
+              </button>
+            </div>
+          </div>
+        </div>
 
         <div class="reveal-mask">
-          <h1 class="subpage-title hero-title-gradient reveal-item reveal-delay-1">Things I Build<br><span class="accent-text">&amp; Share.</span></h1>
+          <h1 class="subpage-title hero-title-gradient reveal-item reveal-delay-1">
+            Build, Run &amp;<br>
+            <span class="accent-text">Grow Together.</span>
+          </h1>
         </div>
 
         <div class="subpage-intro reveal-item reveal-delay-2">
-          <p>A future space for digital products, practical resources, and learning materials built from what I learn and explore across digital marketing.</p>
+          <p data-copy-lang="id">
+            Layanan dan resource praktis untuk membantu membangun, menjalankan,
+            mengukur, dan mengembangkan aktivitas digital marketing.
+          </p>
+
+          <p data-copy-lang="en" hidden>
+            Practical services and resources to help build, run, measure,
+            and grow digital marketing activities.
+          </p>
         </div>
 
         <div class="subpage-orbit" aria-hidden="true">
@@ -73,33 +131,291 @@
       </div>
     </section>
 
-    <section class="topic-section section-reveal">
-      <div class="section-heading compact-heading">
-        <div class="subpage-kicker"><span class="kicker-line"></span><span>Future Categories</span></div>
-        <h2><span class="section-title-main">Products, Systems</span><span class="section-title-accent">&amp; Learning Resources</span></h2>
-      </div>
-
-      <div class="product-grid">
-        <article class="product-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">01</span><span class="product-icon"><i class="fa-solid fa-book-open"></i></span><h3>Digital Products</h3><p>E-books, guides, toolkits, and checklists.</p><span class="future-label">Future</span></article>
-        <article class="product-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">02</span><span class="product-icon"><i class="fa-solid fa-table-columns"></i></span><h3>Templates &amp; Systems</h3><p>Reporting templates, campaign review systems, dashboards, frameworks, and AI automation.</p><span class="future-label">Future</span></article>
-        <article class="product-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">03</span><span class="product-icon"><i class="fa-solid fa-map"></i></span><h3>Learning Resources</h3><p>Tutorials, learning materials, and practical playbooks.</p><span class="future-label">Future</span></article>
-        <article class="product-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">04</span><span class="product-icon"><i class="fa-regular fa-comments"></i></span><h3>Mentoring &amp; Guidance</h3><p>Knowledge sharing, discussion, and practical guidance.</p><span class="future-label">Future</span></article>
-        <article class="product-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">05</span><span class="product-icon"><i class="fa-solid fa-compass"></i></span><h3>Consulting &amp; Advisory</h3><p>Digital marketing strategy, measurement, and paid media.</p><span class="future-label">Future only</span></article>
-      </div>
-
-      <div class="coming-soon-panel">
-        <span class="detail-pattern" aria-hidden="true"></span>
-        <div>
-          <div class="subpage-kicker"><span class="kicker-line"></span><span>Coming Soon</span></div>
-          <h2>Still learning. Still building.</h2>
-          <p>I’m currently focused on learning, building, and documenting my experience while working full-time. This space is a placeholder for things I may create and share in the future.</p>
+    <section class="topic-section product-catalog-section section-reveal">
+      <div class="product-catalog-heading">
+        <div class="subpage-kicker">
+          <span class="kicker-line"></span>
+          <span>Categories</span>
         </div>
-        <span class="coming-soon-mark" aria-hidden="true">→</span>
+      </div>
+
+      <div class="commerce-product-grid">
+
+        <article class="commerce-product-card" data-product-id="website-development" data-price="1500000">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">01</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-solid fa-code"></i></span>
+            <span class="commerce-category">Website &amp; Build</span>
+          </div>
+
+          <h2>Website Development</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Membangun website untuk kebutuhan personal,<br>
+            bisnis, atau digital product.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            Building websites for personal, business, or digital product needs.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price">Rp1.500.000</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
+            <button class="commerce-checkout-btn" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="commerce-product-card" data-product-id="website-building-advisory" data-price="1200000">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">02</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-regular fa-comments"></i></span>
+            <span class="commerce-category">1 on 1 Advisory</span>
+          </div>
+
+          <h2>Website Building Advisory 1 on 1</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Pendampingan untuk membantu kamu memahami dan membangun website sendiri,
+            dari perencanaan sampai launch.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            1 on 1 guidance to help you understand and build your own website,
+            from planning through launch.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price">Rp1.200.000</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
+            <button class="commerce-checkout-btn" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="commerce-product-card" data-product-id="digital-ads-management">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">03</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-solid fa-chart-column"></i></span>
+            <span class="commerce-category">Digital Ads</span>
+          </div>
+
+          <h2>Digital Ads Management</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Membantu merencanakan, menjalankan, mengukur, dan mengoptimalkan campaign
+            digital ads secara terstruktur.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            Helping plan, run, measure, and optimize digital ads campaigns in a structured way.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price">Rpx.xxx.xxx</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
+            <button class="commerce-checkout-btn" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="commerce-product-card" data-product-id="meta-ads-advisory" data-price="1200000">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">04</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-brands fa-meta"></i></span>
+            <span class="commerce-category">1 on 1 Advisory</span>
+          </div>
+
+          <h2>Meta Ads Advisory 1 on 1</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Pendampingan praktis untuk memahami setup, campaign structure, creative
+            testing, dan optimization di Meta Ads.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            Practical guidance to understand setup, campaign structure, creative
+            testing, and optimization in Meta Ads.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price">Rp1.200.000</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
+            <button class="commerce-checkout-btn" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="commerce-product-card" data-product-id="google-ads-advisory" data-price="1200000">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">05</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-brands fa-google"></i></span>
+            <span class="commerce-category">1 on 1 Advisory</span>
+          </div>
+
+          <h2>Google Ads Advisory 1 on 1</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Pendampingan untuk memahami dan menjalankan Google Ads, termasuk Search,
+            campaign setup, dan optimization.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            Guidance to understand and run Google Ads, including Search,
+            campaign setup, and optimization.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price">Rp1.200.000</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
+            <button class="commerce-checkout-btn" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="commerce-product-card" data-product-id="exclusive-technical-digital-marketing-discussion">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">06</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-regular fa-message"></i></span>
+            <span class="commerce-category">1 on 1 Discussion</span>
+          </div>
+
+          <h2 data-copy-lang="id">Diskusi Eksklusif 1 on 1 Seputar Technical Digital Marketing</h2>
+          <h2 data-copy-lang="en" hidden>Exclusive 1 on 1 Technical Digital Marketing Discussion</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Diskusi untuk panduan praktis dan insight teknis seputar digital marketing,
+            berdasarkan pengalaman langsung yang saya jalani.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            A personalized discussion on practical guidance and technical insights on digital marketing,
+            based on my hands-on experience.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price">Rpx.xxx.xxx</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
+            <button class="commerce-checkout-btn" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="commerce-product-card" data-product-id="digital-marketing-reporting-templates">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">07</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-solid fa-table-columns"></i></span>
+            <span class="commerce-category">Templates</span>
+          </div>
+
+          <h2>Digital Marketing Reporting Templates</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Template praktis untuk membantu monitoring, review, dan<br>
+            reporting performance marketing dengan lebih terstruktur.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            Practical templates to support more structured monitoring, review,
+            and performance marketing reporting.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price">Rpx.xxx.xxx</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
+            <button class="commerce-checkout-btn" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="commerce-product-card" data-product-id="digital-marketing-ebooks">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">08</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-solid fa-book-open"></i></span>
+            <span class="commerce-category">Digital Resource</span>
+          </div>
+
+          <h2>Digital Marketing<br>eBooks</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Materi praktis yang merangkum framework, pengalaman,<br>
+            dan pembelajaran mengenai digital marketing.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            Practical materials summarizing frameworks, experiences, and learnings in
+            digital marketing.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price">Rpx.xxx.xxx</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
+            <button class="commerce-checkout-btn" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="commerce-product-card" data-product-id="conversion-tracking-measurement-setup">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">09</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-solid fa-chart-line"></i></span>
+            <span class="commerce-category">Measurement</span>
+          </div>
+
+          <h2>Conversion Tracking &amp; Measurement Setup</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Pemasangan event tracking dan conversion measurement agar aktivitas digital marketing
+            dapat diukur dan dioptimasi lebih baik.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            Implementation of event tracking and conversion measurement so digital marketing
+            activities can be measured and optimized more effectively.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price">Rpx.xxx.xxx</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
+            <button class="commerce-checkout-btn" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            </button>
+          </div>
+        </article>
+
       </div>
     </section>
 
     <footer class="site-footer">
       <p>© 2026 Build and Design by Maul</p>
+
       <div class="footer-socials">
         <a href="https://www.instagram.com/dig.marketing.maul/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
         <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
