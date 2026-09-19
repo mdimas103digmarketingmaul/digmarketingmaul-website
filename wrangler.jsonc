@@ -1,17 +1,30 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
+
   "name": "digmarketingmaul-website",
   "main": "worker.js",
+
   "compatibility_date": "2026-09-19",
-  "keep_vars": true,
+
   "observability": {
     "enabled": true
   },
+
   "assets": {
     "directory": ".",
     "binding": "ASSETS",
     "run_worker_first": [
       "/api/*"
     ]
-  }
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "digmarketingmaul-payments",
+      "database_id": "bcf2ab90-f8f9-41e1-b502-96e997cd0236"
+    }
+  ],
+
+  "keep_vars": true
 }
