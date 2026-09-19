@@ -6,20 +6,12 @@ const encoder = new TextEncoder();
 function toBase64(buffer) {
   const bytes = new Uint8Array(buffer);
   let binary = "";
-
-  for (const byte of bytes) {
-    binary += String.fromCharCode(byte);
-  }
-
+  for (const byte of bytes) binary += String.fromCharCode(byte);
   return btoa(binary);
 }
 
 async function generateDigest(body) {
-  const hash = await crypto.subtle.digest(
-    "SHA-256",
-    encoder.encode(body)
-  );
-
+  const hash = await crypto.subtle.digest("SHA-256", encoder.encode(body));
   return toBase64(hash);
 }
 
@@ -27,10 +19,7 @@ async function generateSignature(secret, component) {
   const key = await crypto.subtle.importKey(
     "raw",
     encoder.encode(secret),
-    {
-      name: "HMAC",
-      hash: "SHA-256",
-    },
+    { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign"]
   );
@@ -86,20 +75,17 @@ async function createPayment(env) {
     `Request-Target:${CREATE_PAYMENT_REQUEST_TARGET}\n` +
     `Digest:${digest}`;
 
-  const signature = await generateSignature(
-    secretKey,
-    componentSignature
-  );
+  const signature = await generateSignature(secretKey, componentSignature);
 
   const response = await fetch(DOKU_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Accept": "application/json",
+      Accept: "application/json",
       "Client-Id": clientId,
       "Request-Id": requestId,
       "Request-Timestamp": requestTimestamp,
-      "Signature": signature,
+      Signature: signature,
     },
     body,
   });
@@ -133,6 +119,103 @@ async function createPayment(env) {
   });
 }
 
+async function saveSuccessfulPayment(notification, requestId, env) {
+  if (!env.DB) throw new Error("D1 binding DB is missing");
+
+  const invoiceNumber = String(
+    notification?.order?.invoice_number || ""
+  ).trim();
+
+  const amount = Number(notification?.order?.amount);
+  const status = String(
+    notification?.transaction?.status || ""
+  ).trim();
+
+  if (!invoiceNumber) {
+    throw new Error("invoice_number is missing from DOKU notification");
+  }
+
+  if (!Number.isFinite(amount)) {
+    throw new Error("Invalid payment amount from DOKU notification");
+  }
+
+  if (status !== "SUCCESS") {
+    throw new Error(`Unexpected payment status: ${status || "EMPTY"}`);
+  }
+
+  const currency = "IDR";
+  const service = String(notification?.service?.id || "").trim() || null;
+  const paymentChannel =
+    String(notification?.channel?.id || "").trim() || null;
+  const acquirer =
+    String(notification?.acquirer?.id || "").trim() || null;
+  const virtualAccountNumber =
+    String(
+      notification?.virtual_account_info?.virtual_account_number || ""
+    ).trim() || null;
+
+  const paidAt =
+    String(notification?.transaction?.date || "").trim() ||
+    new Date().toISOString();
+
+  const result = await env.DB.prepare(
+    `INSERT INTO payments (
+      invoice_number,
+      request_id,
+      amount,
+      currency,
+      status,
+      service,
+      payment_channel,
+      acquirer,
+      virtual_account_number,
+      paid_at,
+      created_at,
+      updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    ON CONFLICT(invoice_number) DO UPDATE SET
+      request_id = excluded.request_id,
+      amount = excluded.amount,
+      currency = excluded.currency,
+      status = excluded.status,
+      service = excluded.service,
+      payment_channel = excluded.payment_channel,
+      acquirer = excluded.acquirer,
+      virtual_account_number = excluded.virtual_account_number,
+      paid_at = COALESCE(excluded.paid_at, payments.paid_at),
+      updated_at = CURRENT_TIMESTAMP`
+  )
+    .bind(
+      invoiceNumber,
+      requestId,
+      amount,
+      currency,
+      status,
+      service,
+      paymentChannel,
+      acquirer,
+      virtualAccountNumber,
+      paidAt
+    )
+    .run();
+
+  console.log(
+    JSON.stringify({
+      type: "DOKU_PAYMENT_SAVED",
+      invoiceNumber,
+      amount,
+      status,
+      paymentChannel,
+      acquirer,
+      paidAt,
+      d1Success: Boolean(result?.success),
+      rowsWritten: result?.meta?.changes ?? null,
+    })
+  );
+
+  return result;
+}
+
 async function handleDokuNotification(request, env) {
   const clientId = String(request.headers.get("Client-Id") || "").trim();
   const requestId = String(request.headers.get("Request-Id") || "").trim();
@@ -148,22 +231,13 @@ async function handleDokuNotification(request, env) {
 
   if (!expectedClientId || !secretKey) {
     console.error("DOKU webhook runtime credentials are missing");
-
     return Response.json(
-      {
-        success: false,
-        error: "Webhook configuration error",
-      },
+      { success: false, error: "Webhook configuration error" },
       { status: 500 }
     );
   }
 
-  if (
-    !clientId ||
-    !requestId ||
-    !requestTimestamp ||
-    !receivedSignature
-  ) {
+  if (!clientId || !requestId || !requestTimestamp || !receivedSignature) {
     console.error("DOKU webhook missing required headers", {
       hasClientId: Boolean(clientId),
       hasRequestId: Boolean(requestId),
@@ -172,10 +246,7 @@ async function handleDokuNotification(request, env) {
     });
 
     return Response.json(
-      {
-        success: false,
-        error: "Missing DOKU notification headers",
-      },
+      { success: false, error: "Missing DOKU notification headers" },
       { status: 400 }
     );
   }
@@ -186,10 +257,7 @@ async function handleDokuNotification(request, env) {
     });
 
     return Response.json(
-      {
-        success: false,
-        error: "Invalid Client-Id",
-      },
+      { success: false, error: "Invalid Client-Id" },
       { status: 401 }
     );
   }
@@ -211,17 +279,13 @@ async function handleDokuNotification(request, env) {
 
   const signatureValid = receivedSignature === expectedSignature;
 
-  let notification = null;
+  let notification;
   try {
     notification = JSON.parse(rawBody);
   } catch {
     console.error("DOKU webhook body is not valid JSON");
-
     return Response.json(
-      {
-        success: false,
-        error: "Invalid JSON body",
-      },
+      { success: false, error: "Invalid JSON body" },
       { status: 400 }
     );
   }
@@ -239,44 +303,64 @@ async function handleDokuNotification(request, env) {
       channel: notification?.channel?.id || null,
       virtualAccountNumber:
         notification?.virtual_account_info?.virtual_account_number || null,
+      transactionDate: notification?.transaction?.date || null,
     })
   );
 
   if (!signatureValid) {
     console.error("DOKU webhook signature validation failed");
-
     return Response.json(
-      {
-        success: false,
-        error: "Invalid notification signature",
-      },
+      { success: false, error: "Invalid notification signature" },
       { status: 401 }
     );
   }
 
-  // Untuk tahap Sandbox saat ini kita hanya:
-  // 1. memvalidasi signature,
-  // 2. membaca status transaksi,
-  // 3. mencatat event ke Cloudflare Observability.
-  //
-  // Nanti saat production, status SUCCESS sebaiknya disimpan ke database
-  // secara idempotent berdasarkan Request-Id / invoice number.
-
-  if (notification?.transaction?.status === "SUCCESS") {
+  if (notification?.transaction?.status !== "SUCCESS") {
     console.log(
       JSON.stringify({
-        type: "DOKU_PAYMENT_SUCCESS",
+        type: "DOKU_NOTIFICATION_IGNORED",
+        reason: "status_not_success",
+        transactionStatus: notification?.transaction?.status || null,
         invoiceNumber: notification?.order?.invoice_number || null,
-        amount: notification?.order?.amount || null,
-        requestId,
       })
     );
+
+    return Response.json(
+      { success: true, message: "Notification received but not persisted" },
+      { status: 200 }
+    );
   }
+
+  try {
+    await saveSuccessfulPayment(notification, requestId, env);
+  } catch (error) {
+    console.error(
+      JSON.stringify({
+        type: "DOKU_PAYMENT_SAVE_FAILED",
+        invoiceNumber: notification?.order?.invoice_number || null,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    );
+
+    return Response.json(
+      { success: false, error: "Failed to persist payment" },
+      { status: 500 }
+    );
+  }
+
+  console.log(
+    JSON.stringify({
+      type: "DOKU_PAYMENT_SUCCESS",
+      invoiceNumber: notification?.order?.invoice_number || null,
+      amount: notification?.order?.amount || null,
+      requestId,
+    })
+  );
 
   return Response.json(
     {
       success: true,
-      message: "DOKU notification received",
+      message: "DOKU notification received and payment saved",
     },
     { status: 200 }
   );
@@ -290,9 +374,7 @@ export default {
       if (request.method !== "POST") {
         return new Response("Method Not Allowed", {
           status: 405,
-          headers: {
-            "Allow": "POST",
-          },
+          headers: { Allow: "POST" },
         });
       }
 
@@ -303,9 +385,7 @@ export default {
       if (request.method !== "POST") {
         return new Response("Method Not Allowed", {
           status: 405,
-          headers: {
-            "Allow": "POST",
-          },
+          headers: { Allow: "POST" },
         });
       }
 
