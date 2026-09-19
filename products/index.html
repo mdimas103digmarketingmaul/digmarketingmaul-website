@@ -429,13 +429,212 @@
   <script>
     (function () {
       const buyNowButton = document.getElementById("buy-now-test");
+      const productCard = document.querySelector(
+        '[data-product-id="website-development"]'
+      );
+      const paymentProgress = productCard
+        ? productCard.querySelector(".payment-progress")
+        : null;
+
+      const STORAGE_KEY = "maulLastPayment";
+      const PRODUCT_ID = "website-development";
+      const POLL_FAST_MS = 4000;
+      const POLL_SLOW_MS = 15000;
+      const FAST_POLL_DURATION_MS = 5 * 60 * 1000;
+      const MAX_POLL_DURATION_MS = 60 * 60 * 1000;
+
+      let pollTimer = null;
+      let pollingInvoice = null;
 
       if (!buyNowButton) return;
+
+      function readStoredPayment() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch (error) {
+          console.warn("Tidak dapat membaca payment session:", error);
+          return null;
+        }
+      }
+
+      function saveStoredPayment(payment) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payment));
+      }
+
+      function setProgressMessage(message, state) {
+        if (!paymentProgress) return;
+
+        paymentProgress.innerHTML =
+          '<span class="payment-progress-dot"></span>' + message;
+
+        paymentProgress.dataset.paymentState = state || "";
+
+        if (state === "SUCCESS") {
+          paymentProgress.style.fontWeight = "600";
+        } else {
+          paymentProgress.style.fontWeight = "";
+        }
+      }
+
+      function stopPaymentPolling() {
+        if (pollTimer) {
+          clearTimeout(pollTimer);
+          pollTimer = null;
+        }
+
+        pollingInvoice = null;
+      }
+
+      async function checkPaymentStatus(invoiceNumber) {
+        const response = await fetch(
+          "/api/payment-status?invoice=" +
+            encodeURIComponent(invoiceNumber),
+          {
+            method: "GET",
+            cache: "no-store"
+          }
+        );
+
+        /*
+         * 404 = invoice belum ada di D1.
+         * Pada flow kita D1 baru menyimpan transaksi ketika DOKU mengirim SUCCESS,
+         * sehingga 404 di sini masih kita perlakukan sebagai PENDING.
+         */
+        if (response.status === 404) {
+          return {
+            found: false,
+            status: "PENDING"
+          };
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data && data.error
+              ? data.error
+              : "Gagal mengecek status pembayaran"
+          );
+        }
+
+        return data;
+      }
+
+      function startPaymentPolling(invoiceNumber, startedAt) {
+        stopPaymentPolling();
+
+        pollingInvoice = invoiceNumber;
+
+        const pollingStartedAt =
+          startedAt && !Number.isNaN(Date.parse(startedAt))
+            ? Date.parse(startedAt)
+            : Date.now();
+
+        async function poll() {
+          if (pollingInvoice !== invoiceNumber) return;
+
+          try {
+            const result = await checkPaymentStatus(invoiceNumber);
+
+            if (
+              result &&
+              result.found === true &&
+              result.status === "SUCCESS"
+            ) {
+              const current = readStoredPayment() || {};
+
+              if (current.invoice_number === invoiceNumber) {
+                const updated = {
+                  ...current,
+                  status: "SUCCESS",
+                  paid_at: result.paid_at || null,
+                  confirmed_at: new Date().toISOString()
+                };
+
+                saveStoredPayment(updated);
+              }
+
+              setProgressMessage(
+                "Pembayaran berhasil ✓",
+                "SUCCESS"
+              );
+
+              console.log("Payment status updated to SUCCESS:", result);
+              stopPaymentPolling();
+              return;
+            }
+
+            setProgressMessage(
+              "Menunggu pembayaran...",
+              "PENDING"
+            );
+          } catch (error) {
+            /*
+             * Gangguan sementara saat polling tidak membatalkan checkout.
+             * Kita cukup log lalu mencoba lagi.
+             */
+            console.warn("Payment status check failed:", error);
+          }
+
+          const elapsed = Date.now() - pollingStartedAt;
+
+          if (elapsed >= MAX_POLL_DURATION_MS) {
+            setProgressMessage(
+              "Status pembayaran belum terkonfirmasi",
+              "TIMEOUT"
+            );
+            stopPaymentPolling();
+            return;
+          }
+
+          const nextDelay =
+            elapsed < FAST_POLL_DURATION_MS
+              ? POLL_FAST_MS
+              : POLL_SLOW_MS;
+
+          pollTimer = setTimeout(poll, nextDelay);
+        }
+
+        poll();
+      }
+
+      function restoreLastPaymentState() {
+        const stored = readStoredPayment();
+
+        if (
+          !stored ||
+          stored.product_id !== PRODUCT_ID ||
+          !stored.invoice_number
+        ) {
+          return;
+        }
+
+        if (stored.status === "SUCCESS") {
+          setProgressMessage(
+            "Pembayaran terakhir berhasil ✓",
+            "SUCCESS"
+          );
+          return;
+        }
+
+        setProgressMessage(
+          "Menunggu pembayaran...",
+          "PENDING"
+        );
+
+        startPaymentPolling(
+          stored.invoice_number,
+          stored.created_at
+        );
+      }
 
       buyNowButton.addEventListener("click", async function () {
         const originalHTML = buyNowButton.innerHTML;
 
         try {
+          stopPaymentPolling();
+
           buyNowButton.disabled = true;
           buyNowButton.innerHTML = "<span>Memuat Checkout...</span>";
 
@@ -460,15 +659,13 @@
           }
 
           /*
-           * Simpan transaksi terakhir di browser.
-           *
-           * Ini BUKAN sumber kebenaran pembayaran.
-           * Status final tetap berasal dari DOKU Notification -> D1.
-           * Data ini hanya membantu frontend mengingat invoice yang sedang dicek.
+           * localStorage hanya mengingat invoice yang sedang dipantau frontend.
+           * Sumber kebenaran pembayaran tetap:
+           * DOKU Notification -> Worker -> D1 -> /api/payment-status.
            */
           const checkoutSession = {
             invoice_number: data.invoice_number,
-            product_id: "website-development",
+            product_id: PRODUCT_ID,
             amount: 100000,
             currency: "IDR",
             status: "PENDING",
@@ -477,12 +674,24 @@
             created_at: new Date().toISOString()
           };
 
-          localStorage.setItem(
-            "maulLastPayment",
-            JSON.stringify(checkoutSession)
+          saveStoredPayment(checkoutSession);
+
+          setProgressMessage(
+            "Menunggu pembayaran...",
+            "PENDING"
           );
 
           console.log("Checkout session saved:", checkoutSession);
+
+          /*
+           * Mulai cek status backend segera setelah invoice dibuat.
+           * Ketika webhook SUCCESS masuk ke D1, frontend akan otomatis
+           * mengubah status lokal PENDING -> SUCCESS.
+           */
+          startPaymentPolling(
+            checkoutSession.invoice_number,
+            checkoutSession.created_at
+          );
 
           if (typeof window.loadJokulCheckout !== "function") {
             console.error("DOKU Checkout JS tidak tersedia.");
@@ -499,6 +708,8 @@
           buyNowButton.innerHTML = originalHTML;
         }
       });
+
+      restoreLastPaymentState();
     })();
   </script>
 
