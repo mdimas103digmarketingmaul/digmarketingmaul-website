@@ -1,8 +1,5 @@
-const DOKU_ENDPOINT =
-  "https://api-sandbox.doku.com/checkout/v1/payment";
-
+const DOKU_ENDPOINT = "https://api-sandbox.doku.com/checkout/v1/payment";
 const REQUEST_TARGET = "/checkout/v1/payment";
-
 const encoder = new TextEncoder();
 
 function toBase64(buffer) {
@@ -68,7 +65,7 @@ async function createPayment(env) {
 
   const payload = {
     order: {
-      amount: 20000,
+      amount: 100000,
       invoice_number: invoiceNumber,
     },
     payment: {
@@ -76,15 +73,9 @@ async function createPayment(env) {
     },
   };
 
-  // Body yang di-hash HARUS sama persis
-  // dengan body yang dikirim ke DOKU.
   const body = JSON.stringify(payload);
-
   const requestId = crypto.randomUUID();
-
-  const requestTimestamp =
-    new Date().toISOString().split(".")[0] + "Z";
-
+  const requestTimestamp = new Date().toISOString().split(".")[0] + "Z";
   const digest = await generateDigest(body);
 
   const componentSignature =
@@ -99,29 +90,15 @@ async function createPayment(env) {
     componentSignature
   );
 
-  // Aman untuk debugging:
-  // TIDAK mencetak Secret Key.
-  console.log(
-    JSON.stringify({
-      clientId,
-      requestId,
-      requestTimestamp,
-      requestTarget: REQUEST_TARGET,
-      digest,
-      secretLength: secretKey.length,
-      body,
-    })
-  );
-
   const response = await fetch(DOKU_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      "Accept": "application/json",
       "Client-Id": clientId,
       "Request-Id": requestId,
       "Request-Timestamp": requestTimestamp,
-      Signature: signature,
+      "Signature": signature,
     },
     body,
   });
@@ -129,7 +106,6 @@ async function createPayment(env) {
   const responseText = await response.text();
 
   let data;
-
   try {
     data = JSON.parse(responseText);
   } catch {
@@ -165,7 +141,7 @@ export default {
         return new Response("Method Not Allowed", {
           status: 405,
           headers: {
-            Allow: "POST",
+            "Allow": "POST",
           },
         });
       }
