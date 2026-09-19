@@ -5,7 +5,7 @@ const REQUEST_TARGET = "/checkout/v1/payment";
 
 const encoder = new TextEncoder();
 
-function arrayBufferToBase64(buffer) {
+function toBase64(buffer) {
   const bytes = new Uint8Array(buffer);
   let binary = "";
 
@@ -16,16 +16,16 @@ function arrayBufferToBase64(buffer) {
   return btoa(binary);
 }
 
-async function sha256Base64(text) {
+async function generateDigest(body) {
   const hash = await crypto.subtle.digest(
     "SHA-256",
-    encoder.encode(text)
+    encoder.encode(body)
   );
 
-  return arrayBufferToBase64(hash);
+  return toBase64(hash);
 }
 
-async function hmacSha256Base64(secret, text) {
+async function generateSignature(secret, component) {
   const key = await crypto.subtle.importKey(
     "raw",
     encoder.encode(secret),
@@ -37,17 +37,33 @@ async function hmacSha256Base64(secret, text) {
     ["sign"]
   );
 
-  const signature = await crypto.subtle.sign(
+  const result = await crypto.subtle.sign(
     "HMAC",
     key,
-    encoder.encode(text)
+    encoder.encode(component)
   );
 
-  return arrayBufferToBase64(signature);
+  return `HMACSHA256=${toBase64(result)}`;
 }
 
 async function createPayment(env) {
-  // Sandbox test product: Rp20.000
+  const clientId = String(env.DOKU_CLIENT_ID || "").trim();
+  const secretKey = String(env.DOKU_SECRET_KEY || "").trim();
+
+  if (!clientId) {
+    return Response.json(
+      { success: false, error: "DOKU_CLIENT_ID missing" },
+      { status: 500 }
+    );
+  }
+
+  if (!secretKey) {
+    return Response.json(
+      { success: false, error: "DOKU_SECRET_KEY missing" },
+      { status: 500 }
+    );
+  }
+
   const invoiceNumber = `INV${Date.now()}`;
 
   const payload = {
@@ -60,37 +76,49 @@ async function createPayment(env) {
     },
   };
 
+  // Body yang di-hash HARUS sama persis
+  // dengan body yang dikirim ke DOKU.
   const body = JSON.stringify(payload);
 
   const requestId = crypto.randomUUID();
 
-  // UTC / ISO8601, without milliseconds
-  const requestTimestamp = new Date()
-    .toISOString()
-    .replace(/\.\d{3}Z$/, "Z");
+  const requestTimestamp =
+    new Date().toISOString().split(".")[0] + "Z";
 
-  const digest = await sha256Base64(body);
+  const digest = await generateDigest(body);
 
-  const signatureComponent = [
-    `Client-Id:${env.DOKU_CLIENT_ID}`,
-    `Request-Id:${requestId}`,
-    `Request-Timestamp:${requestTimestamp}`,
-    `Request-Target:${REQUEST_TARGET}`,
-    `Digest:${digest}`,
-  ].join("\n");
+  const componentSignature =
+    `Client-Id:${clientId}\n` +
+    `Request-Id:${requestId}\n` +
+    `Request-Timestamp:${requestTimestamp}\n` +
+    `Request-Target:${REQUEST_TARGET}\n` +
+    `Digest:${digest}`;
 
-  const signatureHash = await hmacSha256Base64(
-    env.DOKU_SECRET_KEY,
-    signatureComponent
+  const signature = await generateSignature(
+    secretKey,
+    componentSignature
   );
 
-  const signature = `HMACSHA256=${signatureHash}`;
+  // Aman untuk debugging:
+  // TIDAK mencetak Secret Key.
+  console.log(
+    JSON.stringify({
+      clientId,
+      requestId,
+      requestTimestamp,
+      requestTarget: REQUEST_TARGET,
+      digest,
+      secretLength: secretKey.length,
+      body,
+    })
+  );
 
-  const dokuResponse = await fetch(DOKU_ENDPOINT, {
+  const response = await fetch(DOKU_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Client-Id": env.DOKU_CLIENT_ID,
+      Accept: "application/json",
+      "Client-Id": clientId,
       "Request-Id": requestId,
       "Request-Timestamp": requestTimestamp,
       Signature: signature,
@@ -98,29 +126,25 @@ async function createPayment(env) {
     body,
   });
 
-  const responseText = await dokuResponse.text();
+  const responseText = await response.text();
 
   let data;
 
   try {
     data = JSON.parse(responseText);
   } catch {
-    data = {
-      raw_response: responseText,
-    };
+    data = { raw_response: responseText };
   }
 
-  if (!dokuResponse.ok) {
+  if (!response.ok) {
     return Response.json(
       {
         success: false,
         error: "DOKU request failed",
-        doku_status: dokuResponse.status,
+        doku_status: response.status,
         doku_response: data,
       },
-      {
-        status: 502,
-      }
+      { status: 502 }
     );
   }
 
@@ -149,8 +173,6 @@ export default {
       return createPayment(env);
     }
 
-    // Semua request website lainnya tetap dilayani
-    // dari static assets seperti sebelumnya.
     return env.ASSETS.fetch(request);
   },
 };
