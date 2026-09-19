@@ -1,17 +1,26 @@
 const DOKU_ENDPOINT = "https://api-sandbox.doku.com/checkout/v1/payment";
 const CREATE_PAYMENT_REQUEST_TARGET = "/checkout/v1/payment";
 const DOKU_NOTIFICATION_PATH = "/api/doku-notification";
+const PAYMENT_STATUS_PATH = "/api/payment-status";
 const encoder = new TextEncoder();
 
 function toBase64(buffer) {
   const bytes = new Uint8Array(buffer);
   let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
+
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
   return btoa(binary);
 }
 
 async function generateDigest(body) {
-  const hash = await crypto.subtle.digest("SHA-256", encoder.encode(body));
+  const hash = await crypto.subtle.digest(
+    "SHA-256",
+    encoder.encode(body)
+  );
+
   return toBase64(hash);
 }
 
@@ -19,7 +28,10 @@ async function generateSignature(secret, component) {
   const key = await crypto.subtle.importKey(
     "raw",
     encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
+    {
+      name: "HMAC",
+      hash: "SHA-256",
+    },
     false,
     ["sign"]
   );
@@ -75,17 +87,20 @@ async function createPayment(env) {
     `Request-Target:${CREATE_PAYMENT_REQUEST_TARGET}\n` +
     `Digest:${digest}`;
 
-  const signature = await generateSignature(secretKey, componentSignature);
+  const signature = await generateSignature(
+    secretKey,
+    componentSignature
+  );
 
   const response = await fetch(DOKU_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      "Accept": "application/json",
       "Client-Id": clientId,
       "Request-Id": requestId,
       "Request-Timestamp": requestTimestamp,
-      Signature: signature,
+      "Signature": signature,
     },
     body,
   });
@@ -119,8 +134,86 @@ async function createPayment(env) {
   });
 }
 
+async function getPaymentStatus(request, env) {
+  if (!env.DB) {
+    return Response.json(
+      {
+        success: false,
+        error: "D1 binding DB is missing",
+      },
+      { status: 500 }
+    );
+  }
+
+  const url = new URL(request.url);
+  const invoiceNumber = String(
+    url.searchParams.get("invoice") || ""
+  ).trim();
+
+  if (!invoiceNumber) {
+    return Response.json(
+      {
+        success: false,
+        error: "invoice query parameter is required",
+      },
+      { status: 400 }
+    );
+  }
+
+  const payment = await env.DB.prepare(
+    `SELECT
+      invoice_number,
+      amount,
+      currency,
+      status,
+      paid_at
+    FROM payments
+    WHERE invoice_number = ?
+    LIMIT 1`
+  )
+    .bind(invoiceNumber)
+    .first();
+
+  if (!payment) {
+    return Response.json(
+      {
+        success: true,
+        found: false,
+        invoice_number: invoiceNumber,
+        status: "NOT_FOUND",
+      },
+      {
+        status: 404,
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      }
+    );
+  }
+
+  return Response.json(
+    {
+      success: true,
+      found: true,
+      invoice_number: payment.invoice_number,
+      amount: payment.amount,
+      currency: payment.currency,
+      status: payment.status,
+      paid_at: payment.paid_at,
+    },
+    {
+      status: 200,
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    }
+  );
+}
+
 async function saveSuccessfulPayment(notification, requestId, env) {
-  if (!env.DB) throw new Error("D1 binding DB is missing");
+  if (!env.DB) {
+    throw new Error("D1 binding DB is missing");
+  }
 
   const invoiceNumber = String(
     notification?.order?.invoice_number || ""
@@ -231,13 +324,22 @@ async function handleDokuNotification(request, env) {
 
   if (!expectedClientId || !secretKey) {
     console.error("DOKU webhook runtime credentials are missing");
+
     return Response.json(
-      { success: false, error: "Webhook configuration error" },
+      {
+        success: false,
+        error: "Webhook configuration error",
+      },
       { status: 500 }
     );
   }
 
-  if (!clientId || !requestId || !requestTimestamp || !receivedSignature) {
+  if (
+    !clientId ||
+    !requestId ||
+    !requestTimestamp ||
+    !receivedSignature
+  ) {
     console.error("DOKU webhook missing required headers", {
       hasClientId: Boolean(clientId),
       hasRequestId: Boolean(requestId),
@@ -246,7 +348,10 @@ async function handleDokuNotification(request, env) {
     });
 
     return Response.json(
-      { success: false, error: "Missing DOKU notification headers" },
+      {
+        success: false,
+        error: "Missing DOKU notification headers",
+      },
       { status: 400 }
     );
   }
@@ -257,7 +362,10 @@ async function handleDokuNotification(request, env) {
     });
 
     return Response.json(
-      { success: false, error: "Invalid Client-Id" },
+      {
+        success: false,
+        error: "Invalid Client-Id",
+      },
       { status: 401 }
     );
   }
@@ -284,8 +392,12 @@ async function handleDokuNotification(request, env) {
     notification = JSON.parse(rawBody);
   } catch {
     console.error("DOKU webhook body is not valid JSON");
+
     return Response.json(
-      { success: false, error: "Invalid JSON body" },
+      {
+        success: false,
+        error: "Invalid JSON body",
+      },
       { status: 400 }
     );
   }
@@ -309,8 +421,12 @@ async function handleDokuNotification(request, env) {
 
   if (!signatureValid) {
     console.error("DOKU webhook signature validation failed");
+
     return Response.json(
-      { success: false, error: "Invalid notification signature" },
+      {
+        success: false,
+        error: "Invalid notification signature",
+      },
       { status: 401 }
     );
   }
@@ -326,7 +442,10 @@ async function handleDokuNotification(request, env) {
     );
 
     return Response.json(
-      { success: true, message: "Notification received but not persisted" },
+      {
+        success: true,
+        message: "Notification received but not persisted",
+      },
       { status: 200 }
     );
   }
@@ -343,7 +462,10 @@ async function handleDokuNotification(request, env) {
     );
 
     return Response.json(
-      { success: false, error: "Failed to persist payment" },
+      {
+        success: false,
+        error: "Failed to persist payment",
+      },
       { status: 500 }
     );
   }
@@ -370,11 +492,26 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === PAYMENT_STATUS_PATH) {
+      if (request.method !== "GET") {
+        return new Response("Method Not Allowed", {
+          status: 405,
+          headers: {
+            "Allow": "GET",
+          },
+        });
+      }
+
+      return getPaymentStatus(request, env);
+    }
+
     if (url.pathname === DOKU_NOTIFICATION_PATH) {
       if (request.method !== "POST") {
         return new Response("Method Not Allowed", {
           status: 405,
-          headers: { Allow: "POST" },
+          headers: {
+            "Allow": "POST",
+          },
         });
       }
 
@@ -385,7 +522,9 @@ export default {
       if (request.method !== "POST") {
         return new Response("Method Not Allowed", {
           status: 405,
-          headers: { Allow: "POST" },
+          headers: {
+            "Allow": "POST",
+          },
         });
       }
 
