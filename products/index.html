@@ -448,11 +448,41 @@
 
           const data = await response.json();
 
-          if (!response.ok || !data.success || !data.payment_url) {
+          if (
+            !response.ok ||
+            !data.success ||
+            !data.payment_url ||
+            !data.invoice_number
+          ) {
             console.error("DOKU create-payment error:", data);
             alert("Checkout belum dapat dibuat. Silakan coba lagi.");
             return;
           }
+
+          /*
+           * Simpan transaksi terakhir di browser.
+           *
+           * Ini BUKAN sumber kebenaran pembayaran.
+           * Status final tetap berasal dari DOKU Notification -> D1.
+           * Data ini hanya membantu frontend mengingat invoice yang sedang dicek.
+           */
+          const checkoutSession = {
+            invoice_number: data.invoice_number,
+            product_id: "website-development",
+            amount: 100000,
+            currency: "IDR",
+            status: "PENDING",
+            payment_url: data.payment_url,
+            expired_date: data.expired_date || null,
+            created_at: new Date().toISOString()
+          };
+
+          localStorage.setItem(
+            "maulLastPayment",
+            JSON.stringify(checkoutSession)
+          );
+
+          console.log("Checkout session saved:", checkoutSession);
 
           if (typeof window.loadJokulCheckout !== "function") {
             console.error("DOKU Checkout JS tidak tersedia.");
