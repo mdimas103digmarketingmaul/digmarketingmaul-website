@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js"></script>
   <meta name="description" content="Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.">
   <meta name="theme-color" content="#07111f">
@@ -143,7 +142,7 @@
 
       <div class="commerce-product-grid">
 
-        <article class="commerce-product-card" data-product-id="website-development" data-price="1500000">
+        <article class="commerce-product-card" data-product-id="website-development" data-price="100000">
           <span class="card-sheen" aria-hidden="true"></span>
           <span class="topic-number">01</span>
 
@@ -163,11 +162,11 @@
           </p>
 
           <div class="commerce-card-footer">
-            <div class="commerce-price">Rp1.500.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
-            <button class="commerce-checkout-btn" type="button" disabled>
-              <span data-copy-lang="id">Checkout segera tersedia</span>
-              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            <div class="commerce-price">Rp100.000</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — test</div>
+            <button class="commerce-checkout-btn" id="buy-now-test" type="button">
+              <span data-copy-lang="id">Buy Now</span>
+              <span data-copy-lang="en" hidden>Buy Now</span>
             </button>
           </div>
         </article>
@@ -426,6 +425,52 @@
       </div>
     </footer>
   </main>
+
+  <script>
+    (function () {
+      const buyNowButton = document.getElementById("buy-now-test");
+
+      if (!buyNowButton) return;
+
+      buyNowButton.addEventListener("click", async function () {
+        const originalHTML = buyNowButton.innerHTML;
+
+        try {
+          buyNowButton.disabled = true;
+          buyNowButton.innerHTML = "<span>Memuat Checkout...</span>";
+
+          const response = await fetch("/api/create-payment", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success || !data.payment_url) {
+            console.error("DOKU create-payment error:", data);
+            alert("Checkout belum dapat dibuat. Silakan coba lagi.");
+            return;
+          }
+
+          if (typeof window.loadJokulCheckout !== "function") {
+            console.error("DOKU Checkout JS tidak tersedia.");
+            alert("DOKU Checkout belum berhasil dimuat.");
+            return;
+          }
+
+          window.loadJokulCheckout(data.payment_url);
+        } catch (error) {
+          console.error("Checkout error:", error);
+          alert("Terjadi kendala saat membuka checkout.");
+        } finally {
+          buyNowButton.disabled = false;
+          buyNowButton.innerHTML = originalHTML;
+        }
+      });
+    })();
+  </script>
 
   <script src="../script.js"></script>
 </body>
