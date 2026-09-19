@@ -2,6 +2,10 @@ const CREATE_PAYMENT_REQUEST_TARGET = "/checkout/v1/payment";
 const DOKU_NOTIFICATION_PATH = "/api/doku-notification";
 const PAYMENT_STATUS_PATH = "/api/payment-status";
 const DOKU_SDK_PATH = "/api/doku-checkout-sdk.js";
+const SITE_ORIGIN_DEFAULT = "https://digmarketingmaul.my.id";
+const RESEND_ENDPOINT = "https://api.resend.com/emails";
+const RESEND_FROM_DEFAULT = "Maul Digital <order@mail.digmarketingmaul.my.id>";
+const WHATSAPP_NUMBER = "6281296069566";
 const encoder = new TextEncoder();
 
 const DOKU_ENVIRONMENTS = Object.freeze({
@@ -80,6 +84,9 @@ const PRODUCT_CATALOG = Object.freeze({
     name: "Website Development",
     amount: 1500000,
     currency: "IDR",
+    emailSubject: "Pembayaran Berhasil — Website Development",
+    resourceUrl: null,
+    resourceLabel: null,
   },
   "website-building-advisory": {
     name: "Website Building Advisory 1 on 1",
@@ -106,6 +113,178 @@ function jsonResponse(body, status = 200, extraHeaders = {}) {
       ...extraHeaders,
     },
   });
+}
+
+
+function getSiteOrigin(env) {
+  return String(env.SITE_ORIGIN || SITE_ORIGIN_DEFAULT).trim().replace(/\/$/, "");
+}
+
+function buildSuccessPageUrl(invoiceNumber, statusToken, env) {
+  const origin = getSiteOrigin(env);
+  const hash = new URLSearchParams({ invoice: invoiceNumber, token: statusToken }).toString();
+  return `${origin}/payment/success/#${hash}`;
+}
+
+function normalizeEmail(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function isValidEmail(value) {
+  return Boolean(value) && value.length <= 128 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function normalizeCustomerName(value) {
+  return String(value || "").trim().replace(/\s+/g, " ").slice(0, 120);
+}
+
+function normalizePhone(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  let digits = raw.replace(/\D/g, "");
+  if (digits.startsWith("0")) digits = `62${digits.slice(1)}`;
+  return digits.slice(0, 16);
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function formatIdr(value) {
+  return `Rp${Number(value || 0).toLocaleString("id-ID")}`;
+}
+
+function maskEmail(email) {
+  const value = String(email || "").trim();
+  const at = value.indexOf("@");
+  if (at <= 0) return "";
+  const local = value.slice(0, at);
+  const domain = value.slice(at + 1);
+  const visible = local.slice(0, Math.min(2, local.length));
+  return `${visible}${"*".repeat(Math.max(2, Math.min(6, local.length - visible.length)))}@${domain}`;
+}
+
+function buildWhatsAppUrl(message) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+function buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl }) {
+  const greeting = order.customer_name ? `Halo ${escapeHtml(order.customer_name)},` : "Halo,";
+  const resourceBlock = product?.resourceUrl
+    ? `<div style="margin:24px 0;padding:18px;border:1px solid #e5e7eb;border-radius:12px;background:#f8fafc">
+         <p style="margin:0 0 12px;font-weight:700">Akses produk / materi</p>
+         <a href="${escapeHtml(product.resourceUrl)}" style="display:inline-block;padding:12px 18px;background:#0f172a;color:#fff;text-decoration:none;border-radius:8px;font-weight:700">${escapeHtml(product.resourceLabel || "Buka Produk")}</a>
+       </div>`
+    : "";
+
+  return `<!doctype html><html lang="id"><body style="margin:0;background:#f8fafc;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
+    <div style="max-width:620px;margin:0 auto;padding:32px 18px"><div style="background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:28px">
+      <div style="font-size:22px;font-weight:800;margin-bottom:20px">M<span style="color:#ff3158">.</span> Maul Digital</div>
+      <h1 style="font-size:24px;line-height:1.25;margin:0 0 18px">Pembayaran berhasil</h1>
+      <p style="font-size:16px;line-height:1.7;margin:0 0 16px">${greeting}</p>
+      <p style="font-size:16px;line-height:1.7;margin:0 0 22px">Terima kasih sudah membeli <strong>${escapeHtml(order.product_name)}</strong>. Pembayaranmu telah terkonfirmasi.</p>
+      <div style="padding:18px;border:1px solid #e5e7eb;border-radius:12px;background:#f8fafc;margin-bottom:22px">
+        <div style="margin-bottom:8px"><strong>Invoice:</strong> ${escapeHtml(order.invoice_number)}</div>
+        <div style="margin-bottom:8px"><strong>Produk:</strong> ${escapeHtml(order.product_name)}</div>
+        <div><strong>Total:</strong> ${escapeHtml(formatIdr(order.amount))}</div>
+      </div>
+      <p style="font-size:16px;line-height:1.7">Simpan halaman berikut. Kamu dapat membukanya kembali untuk melihat detail pembelian dan langkah berikutnya:</p>
+      <p style="margin:20px 0"><a href="${escapeHtml(successUrl)}" style="display:inline-block;padding:13px 20px;background:#ff3158;color:#fff;text-decoration:none;border-radius:8px;font-weight:700">Buka Halaman Pembelian</a></p>
+      ${resourceBlock}
+      <p style="font-size:16px;line-height:1.7;margin-top:24px">Untuk melanjutkan proses Website Development atau jika membutuhkan bantuan, kamu juga dapat menghubungi Maul melalui WhatsApp.</p>
+      <p style="margin:18px 0"><a href="${escapeHtml(whatsappUrl)}" style="display:inline-block;padding:12px 18px;border:1px solid #16a34a;color:#166534;text-decoration:none;border-radius:8px;font-weight:700">Hubungi Maul via WhatsApp</a></p>
+      <p style="font-size:12px;line-height:1.6;color:#64748b;margin-top:28px">Link halaman pembelian bersifat personal. Simpan dan jangan bagikan link tersebut kepada pihak lain.</p>
+    </div></div>
+  </body></html>`;
+}
+
+async function sendPurchaseSuccessEmail(invoiceNumber, env) {
+  const resendApiKey = String(env.RESEND_API_KEY || env.RESEND_KEY || "").trim();
+  if (!resendApiKey) {
+    console.error("RESEND_API_KEY is missing; payment email was not sent");
+    return { sent: false, reason: "missing_api_key" };
+  }
+
+  const order = await env.DB.prepare(
+    `SELECT invoice_number, product_id, product_name, amount, currency, status,
+            status_token, customer_name, customer_email, customer_phone, email_status
+     FROM payments WHERE invoice_number = ? LIMIT 1`
+  ).bind(invoiceNumber).first();
+
+  if (!order || order.status !== "SUCCESS" || !order.customer_email || !order.status_token) {
+    return { sent: false, reason: "order_not_eligible" };
+  }
+  if (order.email_status === "SENT" || order.email_status === "SENDING") {
+    return { sent: false, reason: "already_processed" };
+  }
+
+  const claim = await env.DB.prepare(
+    `UPDATE payments SET email_status = 'SENDING', updated_at = CURRENT_TIMESTAMP
+     WHERE invoice_number = ? AND customer_email IS NOT NULL AND TRIM(customer_email) <> ''
+       AND (email_status IS NULL OR email_status IN ('WAITING_PAYMENT','FAILED'))`
+  ).bind(invoiceNumber).run();
+  if ((claim?.meta?.changes ?? 0) === 0) return { sent: false, reason: "not_claimed" };
+
+  const product = PRODUCT_CATALOG[order.product_id] || {
+    name: order.product_name,
+    emailSubject: `Pembayaran Berhasil — ${order.product_name}`,
+    resourceUrl: null,
+    resourceLabel: null,
+  };
+  const successUrl = buildSuccessPageUrl(order.invoice_number, order.status_token, env);
+  const whatsappUrl = buildWhatsAppUrl(
+    `Halo Maul, saya sudah menyelesaikan pembayaran untuk ${order.product_name}. Invoice saya ${order.invoice_number}. Saya ingin melanjutkan proses berikutnya.`
+  );
+  const payload = {
+    from: String(env.RESEND_FROM || RESEND_FROM_DEFAULT).trim(),
+    to: [order.customer_email],
+    subject: product.emailSubject || `Pembayaran Berhasil — ${order.product_name}`,
+    html: buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl }),
+    tags: [
+      { name: "category", value: "payment_success" },
+      { name: "product", value: String(order.product_id || "unknown").replace(/[^a-zA-Z0-9_-]/g, "-").slice(0, 256) },
+    ],
+  };
+
+  try {
+    const response = await fetch(RESEND_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${resendApiKey}`,
+        "Idempotency-Key": `payment-success/${order.invoice_number}`,
+      },
+      body: JSON.stringify(payload),
+    });
+    const text = await response.text();
+    let data; try { data = JSON.parse(text); } catch { data = { raw: text }; }
+    if (!response.ok) {
+      const message = data?.message || data?.error?.message || `Resend HTTP ${response.status}`;
+      await env.DB.prepare(
+        `UPDATE payments SET email_status='FAILED', email_last_error=?, updated_at=CURRENT_TIMESTAMP WHERE invoice_number=?`
+      ).bind(String(message).slice(0,500), invoiceNumber).run();
+      console.error("Resend payment email failed", { invoiceNumber, status: response.status, data });
+      return { sent: false, reason: "resend_error" };
+    }
+    await env.DB.prepare(
+      `UPDATE payments SET email_status='SENT', email_sent_at=CURRENT_TIMESTAMP,
+       email_message_id=?, email_last_error=NULL, updated_at=CURRENT_TIMESTAMP WHERE invoice_number=?`
+    ).bind(String(data?.id || "").slice(0,200) || null, invoiceNumber).run();
+    console.log(JSON.stringify({ type: "PAYMENT_SUCCESS_EMAIL_SENT", invoiceNumber, emailMessageId: data?.id || null }));
+    return { sent: true, id: data?.id || null };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    await env.DB.prepare(
+      `UPDATE payments SET email_status='FAILED', email_last_error=?, updated_at=CURRENT_TIMESTAMP WHERE invoice_number=?`
+    ).bind(message.slice(0,500), invoiceNumber).run();
+    console.error("Resend payment email exception", { invoiceNumber, message });
+    return { sent: false, reason: "exception" };
+  }
 }
 
 function toBase64(buffer) {
@@ -186,6 +365,16 @@ async function createPayment(request, env) {
 
   const productId = String(input?.product_id || "").trim();
   const product = PRODUCT_CATALOG[productId];
+  const customerEmail = normalizeEmail(input?.customer_email);
+  const customerName = normalizeCustomerName(input?.customer_name);
+  const customerPhone = normalizePhone(input?.customer_phone);
+
+  if (!isValidEmail(customerEmail)) {
+    return jsonResponse({ success: false, error: "Email wajib diisi dengan format yang valid" }, 400);
+  }
+  if (customerPhone && (customerPhone.length < 9 || customerPhone.length > 16)) {
+    return jsonResponse({ success: false, error: "Nomor telepon tidak valid" }, 400);
+  }
 
   if (!product) {
     return jsonResponse(
@@ -199,12 +388,15 @@ async function createPayment(request, env) {
 
   const invoiceNumber = `INV${Date.now()}`;
   const statusToken = crypto.randomUUID();
+  const successPageUrl = buildSuccessPageUrl(invoiceNumber, statusToken, env);
 
   const payload = {
     order: {
       amount: product.amount,
       invoice_number: invoiceNumber,
       currency: product.currency,
+      callback_url_result: successPageUrl,
+      auto_redirect: false,
       line_items: [
         {
           name: product.name,
@@ -215,6 +407,12 @@ async function createPayment(request, env) {
     },
     payment: {
       payment_due_date: 60,
+    },
+    customer: {
+      email: customerEmail,
+      ...(customerName ? { name: customerName } : {}),
+      ...(customerPhone ? { phone: customerPhone } : {}),
+      country: "ID",
     },
   };
 
@@ -308,9 +506,13 @@ async function createPayment(request, env) {
         payment_url,
         expired_date,
         status_token,
+        customer_name,
+        customer_email,
+        customer_phone,
+        email_status,
         created_at,
         updated_at
-      ) VALUES (?, ?, ?, ?, 'PENDING', ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
+      ) VALUES (?, ?, ?, ?, 'PENDING', ?, ?, ?, ?, ?, ?, ?, ?, 'WAITING_PAYMENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
     )
       .bind(
         invoiceNumber,
@@ -321,7 +523,10 @@ async function createPayment(request, env) {
         product.name,
         paymentUrl,
         expiredDate,
-        statusToken
+        statusToken,
+        customerName || null,
+        customerEmail,
+        customerPhone || null
       )
       .run();
   } catch (error) {
@@ -365,6 +570,8 @@ async function createPayment(request, env) {
     status: "PENDING",
     payment_url: paymentUrl,
     expired_date: expiredDate,
+    success_page_url: successPageUrl,
+    customer_email_masked: maskEmail(customerEmail),
   });
 }
 
@@ -412,7 +619,13 @@ async function getPaymentStatus(request, env) {
       currency,
       status,
       paid_at,
-      expired_date
+      expired_date,
+      payment_channel,
+      acquirer,
+      customer_name,
+      customer_email,
+      email_status,
+      email_sent_at
     FROM payments
     WHERE invoice_number = ?
       AND status_token = ?
@@ -479,6 +692,13 @@ async function getPaymentStatus(request, env) {
     status: effectiveStatus,
     paid_at: payment.paid_at,
     expired_date: payment.expired_date,
+    payment_channel: payment.payment_channel,
+    acquirer: payment.acquirer,
+    customer_name: payment.customer_name,
+    customer_email_masked: maskEmail(payment.customer_email),
+    email_status: payment.email_status,
+    email_sent_at: payment.email_sent_at,
+    success_page_url: buildSuccessPageUrl(payment.invoice_number, statusToken, env),
   });
 }
 
@@ -773,10 +993,20 @@ async function handleDokuNotification(request, env) {
     );
   }
 
+  const successfulInvoice = String(notification?.order?.invoice_number || "").trim();
+  try {
+    await sendPurchaseSuccessEmail(successfulInvoice, env);
+  } catch (error) {
+    console.error("Post-payment email processing failed", {
+      invoiceNumber: successfulInvoice,
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+
   console.log(
     JSON.stringify({
       type: "DOKU_PAYMENT_SUCCESS",
-      invoiceNumber: notification?.order?.invoice_number || null,
+      invoiceNumber: successfulInvoice || null,
       amount: notification?.order?.amount || null,
       requestId,
     })

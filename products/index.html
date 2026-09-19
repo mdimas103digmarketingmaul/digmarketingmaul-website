@@ -171,7 +171,7 @@
 
       <div class="commerce-product-grid">
 
-        <article class="commerce-product-card" data-product-id="website-development" data-price="1500000">
+        <article class="commerce-product-card js-detail-card" data-product-id="website-development" data-price="1500000" data-detail-url="/products/website-development/" tabindex="0" role="link" aria-label="Lihat detail Website Development">
           <span class="card-sheen" aria-hidden="true"></span>
           <span class="topic-number">01</span>
 
@@ -194,10 +194,10 @@
             <div class="commerce-price">Rp1.500.000</div>
             <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
             <div class="payment-status-detail" hidden></div>
-            <button class="commerce-checkout-btn js-buy-now" data-checkout-product="website-development" type="button">
-              <span data-copy-lang="id">Buy Now</span>
-              <span data-copy-lang="en" hidden>Buy Now</span>
-            </button>
+            <a class="commerce-checkout-btn" href="/products/website-development/" style="text-decoration:none;text-align:center;display:block;">
+              <span data-copy-lang="id">Lihat Detail</span>
+              <span data-copy-lang="en" hidden>View Details</span>
+            </a>
           </div>
         </article>
 
@@ -846,6 +846,23 @@
       });
 
       restoreLastPaymentState();
+    })();
+  </script>
+
+  <script>
+    (function () {
+      document.querySelectorAll(".js-detail-card[data-detail-url]").forEach(function (card) {
+        card.addEventListener("click", function (event) {
+          if (event.target.closest("a,button,input,select,textarea")) return;
+          window.location.href = card.dataset.detailUrl;
+        });
+        card.addEventListener("keydown", function (event) {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            window.location.href = card.dataset.detailUrl;
+          }
+        });
+      });
     })();
   </script>
 
