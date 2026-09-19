@@ -1,5 +1,6 @@
 const DOKU_ENDPOINT = "https://api-sandbox.doku.com/checkout/v1/payment";
-const REQUEST_TARGET = "/checkout/v1/payment";
+const CREATE_PAYMENT_REQUEST_TARGET = "/checkout/v1/payment";
+const DOKU_NOTIFICATION_PATH = "/api/doku-notification";
 const encoder = new TextEncoder();
 
 function toBase64(buffer) {
@@ -82,7 +83,7 @@ async function createPayment(env) {
     `Client-Id:${clientId}\n` +
     `Request-Id:${requestId}\n` +
     `Request-Timestamp:${requestTimestamp}\n` +
-    `Request-Target:${REQUEST_TARGET}\n` +
+    `Request-Target:${CREATE_PAYMENT_REQUEST_TARGET}\n` +
     `Digest:${digest}`;
 
   const signature = await generateSignature(
@@ -132,9 +133,171 @@ async function createPayment(env) {
   });
 }
 
+async function handleDokuNotification(request, env) {
+  const clientId = String(request.headers.get("Client-Id") || "").trim();
+  const requestId = String(request.headers.get("Request-Id") || "").trim();
+  const requestTimestamp = String(
+    request.headers.get("Request-Timestamp") || ""
+  ).trim();
+  const receivedSignature = String(
+    request.headers.get("Signature") || ""
+  ).trim();
+
+  const expectedClientId = String(env.DOKU_CLIENT_ID || "").trim();
+  const secretKey = String(env.DOKU_SECRET_KEY || "").trim();
+
+  if (!expectedClientId || !secretKey) {
+    console.error("DOKU webhook runtime credentials are missing");
+
+    return Response.json(
+      {
+        success: false,
+        error: "Webhook configuration error",
+      },
+      { status: 500 }
+    );
+  }
+
+  if (
+    !clientId ||
+    !requestId ||
+    !requestTimestamp ||
+    !receivedSignature
+  ) {
+    console.error("DOKU webhook missing required headers", {
+      hasClientId: Boolean(clientId),
+      hasRequestId: Boolean(requestId),
+      hasRequestTimestamp: Boolean(requestTimestamp),
+      hasSignature: Boolean(receivedSignature),
+    });
+
+    return Response.json(
+      {
+        success: false,
+        error: "Missing DOKU notification headers",
+      },
+      { status: 400 }
+    );
+  }
+
+  if (clientId !== expectedClientId) {
+    console.error("DOKU webhook Client-Id mismatch", {
+      receivedClientId: clientId,
+    });
+
+    return Response.json(
+      {
+        success: false,
+        error: "Invalid Client-Id",
+      },
+      { status: 401 }
+    );
+  }
+
+  const rawBody = await request.text();
+  const digest = await generateDigest(rawBody);
+
+  const componentSignature =
+    `Client-Id:${clientId}\n` +
+    `Request-Id:${requestId}\n` +
+    `Request-Timestamp:${requestTimestamp}\n` +
+    `Request-Target:${DOKU_NOTIFICATION_PATH}\n` +
+    `Digest:${digest}`;
+
+  const expectedSignature = await generateSignature(
+    secretKey,
+    componentSignature
+  );
+
+  const signatureValid = receivedSignature === expectedSignature;
+
+  let notification = null;
+  try {
+    notification = JSON.parse(rawBody);
+  } catch {
+    console.error("DOKU webhook body is not valid JSON");
+
+    return Response.json(
+      {
+        success: false,
+        error: "Invalid JSON body",
+      },
+      { status: 400 }
+    );
+  }
+
+  console.log(
+    JSON.stringify({
+      type: "DOKU_NOTIFICATION",
+      signatureValid,
+      requestId,
+      transactionStatus: notification?.transaction?.status || null,
+      invoiceNumber: notification?.order?.invoice_number || null,
+      amount: notification?.order?.amount || null,
+      service: notification?.service?.id || null,
+      acquirer: notification?.acquirer?.id || null,
+      channel: notification?.channel?.id || null,
+      virtualAccountNumber:
+        notification?.virtual_account_info?.virtual_account_number || null,
+    })
+  );
+
+  if (!signatureValid) {
+    console.error("DOKU webhook signature validation failed");
+
+    return Response.json(
+      {
+        success: false,
+        error: "Invalid notification signature",
+      },
+      { status: 401 }
+    );
+  }
+
+  // Untuk tahap Sandbox saat ini kita hanya:
+  // 1. memvalidasi signature,
+  // 2. membaca status transaksi,
+  // 3. mencatat event ke Cloudflare Observability.
+  //
+  // Nanti saat production, status SUCCESS sebaiknya disimpan ke database
+  // secara idempotent berdasarkan Request-Id / invoice number.
+
+  if (notification?.transaction?.status === "SUCCESS") {
+    console.log(
+      JSON.stringify({
+        type: "DOKU_PAYMENT_SUCCESS",
+        invoiceNumber: notification?.order?.invoice_number || null,
+        amount: notification?.order?.amount || null,
+        requestId,
+      })
+    );
+  }
+
+  return Response.json(
+    {
+      success: true,
+      message: "DOKU notification received",
+    },
+    { status: 200 }
+  );
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.pathname === DOKU_NOTIFICATION_PATH) {
+      if (request.method !== "POST") {
+        return new Response("Method Not Allowed", {
+          status: 405,
+          headers: {
+            "Allow": "POST",
+          },
+        });
+      }
+
+      return handleDokuNotification(request, env);
+    }
 
     if (url.pathname === "/api/create-payment") {
       if (request.method !== "POST") {
