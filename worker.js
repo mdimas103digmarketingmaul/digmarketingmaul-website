@@ -175,15 +175,20 @@ async function getPaymentStatus(request, env) {
     .first();
 
   if (!payment) {
+    /*
+     * D1 saat ini hanya menyimpan pembayaran yang sudah SUCCESS.
+     * Jadi "belum ditemukan di D1" bukan error: untuk frontend artinya
+     * transaksi masih menunggu konfirmasi pembayaran.
+     */
     return Response.json(
       {
         success: true,
         found: false,
         invoice_number: invoiceNumber,
-        status: "NOT_FOUND",
+        status: "PENDING",
       },
       {
-        status: 404,
+        status: 200,
         headers: {
           "Cache-Control": "no-store",
         },
