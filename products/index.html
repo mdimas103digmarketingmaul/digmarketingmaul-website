@@ -31,6 +31,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="../styles.css">
+
+  <style>
+    .payment-status-detail {
+      margin-top: 8px;
+      font-family: "Roboto Mono", monospace;
+      font-size: 0.72rem;
+      line-height: 1.55;
+      color: var(--slate, #64748b);
+      word-break: break-word;
+    }
+
+    .payment-status-detail strong {
+      color: var(--navy, #0f172a);
+      font-weight: 600;
+    }
+
+    .payment-progress[data-payment-state="SUCCESS"] {
+      color: #15803d;
+    }
+
+    .payment-progress[data-payment-state="PENDING"] {
+      color: #b45309;
+    }
+
+    .payment-progress[data-payment-state="TIMEOUT"] {
+      color: #b91c1c;
+    }
+  </style>
+
 </head>
 
 <body data-page="products">
@@ -164,6 +193,7 @@
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp100.000</div>
             <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — test</div>
+            <div class="payment-status-detail" id="payment-status-detail" hidden></div>
             <button class="commerce-checkout-btn" id="buy-now-test" type="button">
               <span data-copy-lang="id">Buy Now</span>
               <span data-copy-lang="en" hidden>Buy Now</span>
@@ -435,6 +465,9 @@
       const paymentProgress = productCard
         ? productCard.querySelector(".payment-progress")
         : null;
+      const paymentStatusDetail = document.getElementById(
+        "payment-status-detail"
+      );
 
       const STORAGE_KEY = "maulLastPayment";
       const PRODUCT_ID = "website-development";
@@ -462,6 +495,14 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(payment));
       }
 
+      function formatRupiah(value) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          maximumFractionDigits: 0
+        }).format(Number(value || 0));
+      }
+
       function setProgressMessage(message, state) {
         if (!paymentProgress) return;
 
@@ -469,12 +510,29 @@
           '<span class="payment-progress-dot"></span>' + message;
 
         paymentProgress.dataset.paymentState = state || "";
+      }
 
-        if (state === "SUCCESS") {
-          paymentProgress.style.fontWeight = "600";
-        } else {
-          paymentProgress.style.fontWeight = "";
+      function setStatusDetail(payment) {
+        if (!paymentStatusDetail || !payment?.invoice_number) return;
+
+        paymentStatusDetail.hidden = false;
+
+        const amount = formatRupiah(payment.amount || 100000);
+
+        if (payment.status === "SUCCESS") {
+          paymentStatusDetail.innerHTML =
+            "<strong>Invoice:</strong> " +
+            payment.invoice_number +
+            "<br><strong>Status:</strong> SUCCESS · " +
+            amount;
+          return;
         }
+
+        paymentStatusDetail.innerHTML =
+          "<strong>Invoice:</strong> " +
+          payment.invoice_number +
+          "<br><strong>Status:</strong> menunggu konfirmasi · " +
+          amount;
       }
 
       function stopPaymentPolling() {
@@ -496,18 +554,6 @@
           }
         );
 
-        /*
-         * 404 = invoice belum ada di D1.
-         * Pada flow kita D1 baru menyimpan transaksi ketika DOKU mengirim SUCCESS,
-         * sehingga 404 di sini masih kita perlakukan sebagai PENDING.
-         */
-        if (response.status === 404) {
-          return {
-            found: false,
-            status: "PENDING"
-          };
-        }
-
         const data = await response.json();
 
         if (!response.ok) {
@@ -519,6 +565,29 @@
         }
 
         return data;
+      }
+
+      function markPaymentSuccess(result) {
+        const current = readStoredPayment() || {};
+
+        if (current.invoice_number !== result.invoice_number) return;
+
+        const updated = {
+          ...current,
+          status: "SUCCESS",
+          paid_at: result.paid_at || null,
+          confirmed_at: new Date().toISOString()
+        };
+
+        saveStoredPayment(updated);
+
+        setProgressMessage(
+          "Pembayaran berhasil ✓",
+          "SUCCESS"
+        );
+        setStatusDetail(updated);
+
+        console.log("Payment status updated to SUCCESS:", result);
       }
 
       function startPaymentPolling(invoiceNumber, startedAt) {
@@ -537,42 +606,38 @@
           try {
             const result = await checkPaymentStatus(invoiceNumber);
 
+            /*
+             * Backend sekarang selalu mengembalikan HTTP 200 untuk status normal:
+             * - found:false + PENDING = webhook SUCCESS belum masuk ke D1
+             * - found:true + SUCCESS = pembayaran sudah terkonfirmasi
+             */
             if (
               result &&
               result.found === true &&
               result.status === "SUCCESS"
             ) {
-              const current = readStoredPayment() || {};
-
-              if (current.invoice_number === invoiceNumber) {
-                const updated = {
-                  ...current,
-                  status: "SUCCESS",
-                  paid_at: result.paid_at || null,
-                  confirmed_at: new Date().toISOString()
-                };
-
-                saveStoredPayment(updated);
-              }
-
-              setProgressMessage(
-                "Pembayaran berhasil ✓",
-                "SUCCESS"
-              );
-
-              console.log("Payment status updated to SUCCESS:", result);
+              markPaymentSuccess(result);
               stopPaymentPolling();
               return;
             }
+
+            const current = readStoredPayment();
 
             setProgressMessage(
               "Menunggu pembayaran...",
               "PENDING"
             );
+
+            if (current) {
+              setStatusDetail({
+                ...current,
+                status: "PENDING"
+              });
+            }
           } catch (error) {
             /*
-             * Gangguan sementara saat polling tidak membatalkan checkout.
-             * Kita cukup log lalu mencoba lagi.
+             * Error teknis sungguhan (500/network/etc.) tidak mengubah status
+             * transaksi. Polling akan mencoba lagi.
              */
             console.warn("Payment status check failed:", error);
           }
@@ -609,6 +674,8 @@
         ) {
           return;
         }
+
+        setStatusDetail(stored);
 
         if (stored.status === "SUCCESS") {
           setProgressMessage(
@@ -659,9 +726,8 @@
           }
 
           /*
-           * localStorage hanya mengingat invoice yang sedang dipantau frontend.
-           * Sumber kebenaran pembayaran tetap:
-           * DOKU Notification -> Worker -> D1 -> /api/payment-status.
+           * Browser hanya menyimpan invoice terakhir supaya tahu transaksi
+           * mana yang perlu dicek. Sumber kebenaran tetap D1.
            */
           const checkoutSession = {
             invoice_number: data.invoice_number,
@@ -680,13 +746,13 @@
             "Menunggu pembayaran...",
             "PENDING"
           );
+          setStatusDetail(checkoutSession);
 
           console.log("Checkout session saved:", checkoutSession);
 
           /*
-           * Mulai cek status backend segera setelah invoice dibuat.
-           * Ketika webhook SUCCESS masuk ke D1, frontend akan otomatis
-           * mengubah status lokal PENDING -> SUCCESS.
+           * Polling dimulai langsung. Saat webhook DOKU menyimpan SUCCESS
+           * ke D1, polling berikutnya akan mengubah UI + localStorage.
            */
           startPaymentPolling(
             checkoutSession.invoice_number,
