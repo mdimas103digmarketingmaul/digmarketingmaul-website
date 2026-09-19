@@ -4,6 +4,46 @@ const DOKU_NOTIFICATION_PATH = "/api/doku-notification";
 const PAYMENT_STATUS_PATH = "/api/payment-status";
 const encoder = new TextEncoder();
 
+/*
+ * Product catalog is authoritative on the SERVER.
+ * Browser only sends product_id; price/name always come from this map.
+ *
+ * Only products with confirmed prices are enabled here.
+ * Products whose price is still "Rpx.xxx.xxx" remain unavailable.
+ */
+const PRODUCT_CATALOG = Object.freeze({
+  "website-development": {
+    name: "Website Development",
+    amount: 1500000,
+    currency: "IDR",
+  },
+  "website-building-advisory": {
+    name: "Website Building Advisory 1 on 1",
+    amount: 1200000,
+    currency: "IDR",
+  },
+  "meta-ads-advisory": {
+    name: "Meta Ads Advisory 1 on 1",
+    amount: 1200000,
+    currency: "IDR",
+  },
+  "google-ads-advisory": {
+    name: "Google Ads Advisory 1 on 1",
+    amount: 1200000,
+    currency: "IDR",
+  },
+});
+
+function jsonResponse(body, status = 200, extraHeaders = {}) {
+  return Response.json(body, {
+    status,
+    headers: {
+      "Cache-Control": "no-store",
+      ...extraHeaders,
+    },
+  });
+}
+
 function toBase64(buffer) {
   const bytes = new Uint8Array(buffer);
   let binary = "";
@@ -45,30 +85,69 @@ async function generateSignature(secret, component) {
   return `HMACSHA256=${toBase64(result)}`;
 }
 
-async function createPayment(env) {
+async function createPayment(request, env) {
   const clientId = String(env.DOKU_CLIENT_ID || "").trim();
   const secretKey = String(env.DOKU_SECRET_KEY || "").trim();
 
+  if (!env.DB) {
+    return jsonResponse(
+      { success: false, error: "D1 binding DB is missing" },
+      500
+    );
+  }
+
   if (!clientId) {
-    return Response.json(
+    return jsonResponse(
       { success: false, error: "DOKU_CLIENT_ID missing" },
-      { status: 500 }
+      500
     );
   }
 
   if (!secretKey) {
-    return Response.json(
+    return jsonResponse(
       { success: false, error: "DOKU_SECRET_KEY missing" },
-      { status: 500 }
+      500
+    );
+  }
+
+  let input;
+  try {
+    input = await request.json();
+  } catch {
+    return jsonResponse(
+      { success: false, error: "Request body must be valid JSON" },
+      400
+    );
+  }
+
+  const productId = String(input?.product_id || "").trim();
+  const product = PRODUCT_CATALOG[productId];
+
+  if (!product) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Invalid or unavailable product_id",
+      },
+      400
     );
   }
 
   const invoiceNumber = `INV${Date.now()}`;
+  const statusToken = crypto.randomUUID();
 
   const payload = {
     order: {
-      amount: 100000,
+      amount: product.amount,
       invoice_number: invoiceNumber,
+      currency: product.currency,
+      line_items: [
+        {
+          name: product.name,
+          quantity: 1,
+          price: product.amount,
+        },
+      ],
     },
     payment: {
       payment_due_date: 60,
@@ -115,104 +194,189 @@ async function createPayment(env) {
   }
 
   if (!response.ok) {
-    return Response.json(
+    return jsonResponse(
       {
         success: false,
         error: "DOKU request failed",
         doku_status: response.status,
         doku_response: data,
       },
-      { status: 502 }
+      502
     );
   }
 
-  return Response.json({
+  const paymentUrl = String(
+    data?.response?.payment?.url || ""
+  ).trim();
+
+  const expiredDate = String(
+    data?.response?.payment?.expired_date || ""
+  ).trim() || null;
+
+  if (!paymentUrl) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "DOKU response did not include payment URL",
+      },
+      502
+    );
+  }
+
+  /*
+   * Create PENDING row immediately.
+   *
+   * This gives D1 a complete order record BEFORE the user pays.
+   * DOKU webhook later upgrades this same row to SUCCESS.
+   */
+  try {
+    await env.DB.prepare(
+      `INSERT INTO payments (
+        invoice_number,
+        request_id,
+        amount,
+        currency,
+        status,
+        product_id,
+        product_name,
+        payment_url,
+        expired_date,
+        status_token,
+        created_at,
+        updated_at
+      ) VALUES (?, ?, ?, ?, 'PENDING', ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
+    )
+      .bind(
+        invoiceNumber,
+        requestId,
+        product.amount,
+        product.currency,
+        productId,
+        product.name,
+        paymentUrl,
+        expiredDate,
+        statusToken
+      )
+      .run();
+  } catch (error) {
+    console.error(
+      JSON.stringify({
+        type: "DOKU_PENDING_SAVE_FAILED",
+        invoiceNumber,
+        productId,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    );
+
+    return jsonResponse(
+      {
+        success: false,
+        error: "Checkout created but order could not be stored",
+      },
+      500
+    );
+  }
+
+  console.log(
+    JSON.stringify({
+      type: "DOKU_PAYMENT_CREATED",
+      invoiceNumber,
+      productId,
+      amount: product.amount,
+      status: "PENDING",
+    })
+  );
+
+  return jsonResponse({
     success: true,
     invoice_number: invoiceNumber,
-    payment_url: data?.response?.payment?.url,
-    expired_date: data?.response?.payment?.expired_date,
+    status_token: statusToken,
+    product_id: productId,
+    product_name: product.name,
+    amount: product.amount,
+    currency: product.currency,
+    status: "PENDING",
+    payment_url: paymentUrl,
+    expired_date: expiredDate,
   });
 }
 
 async function getPaymentStatus(request, env) {
   if (!env.DB) {
-    return Response.json(
+    return jsonResponse(
       {
         success: false,
         error: "D1 binding DB is missing",
       },
-      { status: 500 }
+      500
     );
   }
 
   const url = new URL(request.url);
+
   const invoiceNumber = String(
     url.searchParams.get("invoice") || ""
   ).trim();
 
-  if (!invoiceNumber) {
-    return Response.json(
+  const statusToken = String(
+    url.searchParams.get("token") || ""
+  ).trim();
+
+  if (!invoiceNumber || !statusToken) {
+    return jsonResponse(
       {
         success: false,
-        error: "invoice query parameter is required",
+        error: "invoice and token query parameters are required",
       },
-      { status: 400 }
+      400
     );
   }
 
+  /*
+   * status_token prevents arbitrary invoice-number lookup.
+   * The token is generated server-side and only returned to the checkout browser.
+   */
   const payment = await env.DB.prepare(
     `SELECT
       invoice_number,
+      product_id,
+      product_name,
       amount,
       currency,
       status,
-      paid_at
+      paid_at,
+      expired_date
     FROM payments
     WHERE invoice_number = ?
+      AND status_token = ?
     LIMIT 1`
   )
-    .bind(invoiceNumber)
+    .bind(invoiceNumber, statusToken)
     .first();
 
   if (!payment) {
-    /*
-     * D1 saat ini hanya menyimpan pembayaran yang sudah SUCCESS.
-     * Jadi "belum ditemukan di D1" bukan error: untuk frontend artinya
-     * transaksi masih menunggu konfirmasi pembayaran.
-     */
-    return Response.json(
+    return jsonResponse(
       {
-        success: true,
+        success: false,
         found: false,
-        invoice_number: invoiceNumber,
-        status: "PENDING",
+        error: "Payment not found",
       },
-      {
-        status: 200,
-        headers: {
-          "Cache-Control": "no-store",
-        },
-      }
+      404
     );
   }
 
-  return Response.json(
-    {
-      success: true,
-      found: true,
-      invoice_number: payment.invoice_number,
-      amount: payment.amount,
-      currency: payment.currency,
-      status: payment.status,
-      paid_at: payment.paid_at,
-    },
-    {
-      status: 200,
-      headers: {
-        "Cache-Control": "no-store",
-      },
-    }
-  );
+  return jsonResponse({
+    success: true,
+    found: true,
+    invoice_number: payment.invoice_number,
+    product_id: payment.product_id,
+    product_name: payment.product_name,
+    amount: payment.amount,
+    currency: payment.currency,
+    status: payment.status,
+    paid_at: payment.paid_at,
+    expired_date: payment.expired_date,
+  });
 }
 
 async function saveSuccessfulPayment(notification, requestId, env) {
@@ -225,6 +389,10 @@ async function saveSuccessfulPayment(notification, requestId, env) {
   ).trim();
 
   const amount = Number(notification?.order?.amount);
+
+  const currency =
+    String(notification?.order?.currency || "").trim() || "IDR";
+
   const status = String(
     notification?.transaction?.status || ""
   ).trim();
@@ -241,7 +409,30 @@ async function saveSuccessfulPayment(notification, requestId, env) {
     throw new Error(`Unexpected payment status: ${status || "EMPTY"}`);
   }
 
-  const currency = "IDR";
+  /*
+   * Verify the SUCCESS amount against the amount stored when checkout was created.
+   * This protects the business logic from accepting a mismatched amount.
+   */
+  const existing = await env.DB.prepare(
+    `SELECT amount, currency, product_id, product_name
+     FROM payments
+     WHERE invoice_number = ?
+     LIMIT 1`
+  )
+    .bind(invoiceNumber)
+    .first();
+
+  if (existing) {
+    if (
+      Number(existing.amount) !== amount ||
+      String(existing.currency || "IDR") !== currency
+    ) {
+      throw new Error(
+        `Payment amount/currency mismatch for ${invoiceNumber}`
+      );
+    }
+  }
+
   const service = String(notification?.service?.id || "").trim() || null;
   const paymentChannel =
     String(notification?.channel?.id || "").trim() || null;
@@ -256,6 +447,11 @@ async function saveSuccessfulPayment(notification, requestId, env) {
     String(notification?.transaction?.date || "").trim() ||
     new Date().toISOString();
 
+  /*
+   * Normally the PENDING row already exists.
+   * ON CONFLICT makes webhook retries idempotent.
+   * It also keeps product/status-token fields that were stored earlier.
+   */
   const result = await env.DB.prepare(
     `INSERT INTO payments (
       invoice_number,
@@ -301,6 +497,8 @@ async function saveSuccessfulPayment(notification, requestId, env) {
     JSON.stringify({
       type: "DOKU_PAYMENT_SAVED",
       invoiceNumber,
+      productId: existing?.product_id || null,
+      productName: existing?.product_name || null,
       amount,
       status,
       paymentChannel,
@@ -330,12 +528,12 @@ async function handleDokuNotification(request, env) {
   if (!expectedClientId || !secretKey) {
     console.error("DOKU webhook runtime credentials are missing");
 
-    return Response.json(
+    return jsonResponse(
       {
         success: false,
         error: "Webhook configuration error",
       },
-      { status: 500 }
+      500
     );
   }
 
@@ -352,12 +550,12 @@ async function handleDokuNotification(request, env) {
       hasSignature: Boolean(receivedSignature),
     });
 
-    return Response.json(
+    return jsonResponse(
       {
         success: false,
         error: "Missing DOKU notification headers",
       },
-      { status: 400 }
+      400
     );
   }
 
@@ -366,12 +564,12 @@ async function handleDokuNotification(request, env) {
       receivedClientId: clientId,
     });
 
-    return Response.json(
+    return jsonResponse(
       {
         success: false,
         error: "Invalid Client-Id",
       },
-      { status: 401 }
+      401
     );
   }
 
@@ -398,12 +596,12 @@ async function handleDokuNotification(request, env) {
   } catch {
     console.error("DOKU webhook body is not valid JSON");
 
-    return Response.json(
+    return jsonResponse(
       {
         success: false,
         error: "Invalid JSON body",
       },
-      { status: 400 }
+      400
     );
   }
 
@@ -427,12 +625,12 @@ async function handleDokuNotification(request, env) {
   if (!signatureValid) {
     console.error("DOKU webhook signature validation failed");
 
-    return Response.json(
+    return jsonResponse(
       {
         success: false,
         error: "Invalid notification signature",
       },
-      { status: 401 }
+      401
     );
   }
 
@@ -446,13 +644,10 @@ async function handleDokuNotification(request, env) {
       })
     );
 
-    return Response.json(
-      {
-        success: true,
-        message: "Notification received but not persisted",
-      },
-      { status: 200 }
-    );
+    return jsonResponse({
+      success: true,
+      message: "Notification received but not persisted as SUCCESS",
+    });
   }
 
   try {
@@ -466,12 +661,12 @@ async function handleDokuNotification(request, env) {
       })
     );
 
-    return Response.json(
+    return jsonResponse(
       {
         success: false,
         error: "Failed to persist payment",
       },
-      { status: 500 }
+      500
     );
   }
 
@@ -484,13 +679,10 @@ async function handleDokuNotification(request, env) {
     })
   );
 
-  return Response.json(
-    {
-      success: true,
-      message: "DOKU notification received and payment saved",
-    },
-    { status: 200 }
-  );
+  return jsonResponse({
+    success: true,
+    message: "DOKU notification received and payment saved",
+  });
 }
 
 export default {
@@ -533,7 +725,7 @@ export default {
         });
       }
 
-      return createPayment(env);
+      return createPayment(request, env);
     }
 
     return env.ASSETS.fetch(request);

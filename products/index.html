@@ -171,7 +171,7 @@
 
       <div class="commerce-product-grid">
 
-        <article class="commerce-product-card" data-product-id="website-development" data-price="100000">
+        <article class="commerce-product-card" data-product-id="website-development" data-price="1500000">
           <span class="card-sheen" aria-hidden="true"></span>
           <span class="topic-number">01</span>
 
@@ -191,10 +191,10 @@
           </p>
 
           <div class="commerce-card-footer">
-            <div class="commerce-price">Rp100.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — test</div>
-            <div class="payment-status-detail" id="payment-status-detail" hidden></div>
-            <button class="commerce-checkout-btn" id="buy-now-test" type="button">
+            <div class="commerce-price">Rp1.500.000</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — ready</div>
+            <div class="payment-status-detail" hidden></div>
+            <button class="commerce-checkout-btn js-buy-now" data-checkout-product="website-development" type="button">
               <span data-copy-lang="id">Buy Now</span>
               <span data-copy-lang="en" hidden>Buy Now</span>
             </button>
@@ -223,10 +223,11 @@
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp1.200.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
-            <button class="commerce-checkout-btn" type="button" disabled>
-              <span data-copy-lang="id">Checkout segera tersedia</span>
-              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — ready</div>
+            <div class="payment-status-detail" hidden></div>
+            <button class="commerce-checkout-btn js-buy-now" data-checkout-product="website-building-advisory" type="button">
+              <span data-copy-lang="id">Buy Now</span>
+              <span data-copy-lang="en" hidden>Buy Now</span>
             </button>
           </div>
         </article>
@@ -282,10 +283,11 @@
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp1.200.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
-            <button class="commerce-checkout-btn" type="button" disabled>
-              <span data-copy-lang="id">Checkout segera tersedia</span>
-              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — ready</div>
+            <div class="payment-status-detail" hidden></div>
+            <button class="commerce-checkout-btn js-buy-now" data-checkout-product="meta-ads-advisory" type="button">
+              <span data-copy-lang="id">Buy Now</span>
+              <span data-copy-lang="en" hidden>Buy Now</span>
             </button>
           </div>
         </article>
@@ -312,10 +314,11 @@
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp1.200.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
-            <button class="commerce-checkout-btn" type="button" disabled>
-              <span data-copy-lang="id">Checkout segera tersedia</span>
-              <span data-copy-lang="en" hidden>Checkout coming soon</span>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — ready</div>
+            <div class="payment-status-detail" hidden></div>
+            <button class="commerce-checkout-btn js-buy-now" data-checkout-product="google-ads-advisory" type="button">
+              <span data-copy-lang="id">Buy Now</span>
+              <span data-copy-lang="en" hidden>Buy Now</span>
             </button>
           </div>
         </article>
@@ -458,28 +461,34 @@
 
   <script>
     (function () {
-      const buyNowButton = document.getElementById("buy-now-test");
-      const productCard = document.querySelector(
-        '[data-product-id="website-development"]'
-      );
-      const paymentProgress = productCard
-        ? productCard.querySelector(".payment-progress")
-        : null;
-      const paymentStatusDetail = document.getElementById(
-        "payment-status-detail"
-      );
-
       const STORAGE_KEY = "maulLastPayment";
-      const PRODUCT_ID = "website-development";
       const POLL_FAST_MS = 4000;
       const POLL_SLOW_MS = 15000;
       const FAST_POLL_DURATION_MS = 5 * 60 * 1000;
       const MAX_POLL_DURATION_MS = 60 * 60 * 1000;
 
+      const buyButtons = Array.from(
+        document.querySelectorAll(".js-buy-now[data-checkout-product]")
+      );
+
       let pollTimer = null;
       let pollingInvoice = null;
 
-      if (!buyNowButton) return;
+      if (!buyButtons.length) return;
+
+      function getCard(productId) {
+        return document.querySelector(
+          '[data-product-id="' + CSS.escape(productId) + '"]'
+        );
+      }
+
+      function getProgressElement(productId) {
+        return getCard(productId)?.querySelector(".payment-progress") || null;
+      }
+
+      function getStatusDetailElement(productId) {
+        return getCard(productId)?.querySelector(".payment-status-detail") || null;
+      }
 
       function readStoredPayment() {
         try {
@@ -503,24 +512,28 @@
         }).format(Number(value || 0));
       }
 
-      function setProgressMessage(message, state) {
-        if (!paymentProgress) return;
+      function setProgressMessage(productId, message, state) {
+        const el = getProgressElement(productId);
+        if (!el) return;
 
-        paymentProgress.innerHTML =
+        el.innerHTML =
           '<span class="payment-progress-dot"></span>' + message;
 
-        paymentProgress.dataset.paymentState = state || "";
+        el.dataset.paymentState = state || "";
       }
 
       function setStatusDetail(payment) {
-        if (!paymentStatusDetail || !payment?.invoice_number) return;
+        if (!payment?.product_id || !payment?.invoice_number) return;
 
-        paymentStatusDetail.hidden = false;
+        const el = getStatusDetailElement(payment.product_id);
+        if (!el) return;
 
-        const amount = formatRupiah(payment.amount || 100000);
+        el.hidden = false;
+
+        const amount = formatRupiah(payment.amount);
 
         if (payment.status === "SUCCESS") {
-          paymentStatusDetail.innerHTML =
+          el.innerHTML =
             "<strong>Invoice:</strong> " +
             payment.invoice_number +
             "<br><strong>Status:</strong> SUCCESS · " +
@@ -528,7 +541,7 @@
           return;
         }
 
-        paymentStatusDetail.innerHTML =
+        el.innerHTML =
           "<strong>Invoice:</strong> " +
           payment.invoice_number +
           "<br><strong>Status:</strong> menunggu konfirmasi · " +
@@ -544,10 +557,15 @@
         pollingInvoice = null;
       }
 
-      async function checkPaymentStatus(invoiceNumber) {
+      async function checkPaymentStatus(payment) {
+        const query =
+          "?invoice=" +
+          encodeURIComponent(payment.invoice_number) +
+          "&token=" +
+          encodeURIComponent(payment.status_token);
+
         const response = await fetch(
-          "/api/payment-status?invoice=" +
-            encodeURIComponent(invoiceNumber),
+          "/api/payment-status" + query,
           {
             method: "GET",
             cache: "no-store"
@@ -574,6 +592,10 @@
 
         const updated = {
           ...current,
+          product_id: result.product_id || current.product_id,
+          product_name: result.product_name || current.product_name,
+          amount: result.amount ?? current.amount,
+          currency: result.currency || current.currency,
           status: "SUCCESS",
           paid_at: result.paid_at || null,
           confirmed_at: new Date().toISOString()
@@ -582,6 +604,7 @@
         saveStoredPayment(updated);
 
         setProgressMessage(
+          updated.product_id,
           "Pembayaran berhasil ✓",
           "SUCCESS"
         );
@@ -590,27 +613,22 @@
         console.log("Payment status updated to SUCCESS:", result);
       }
 
-      function startPaymentPolling(invoiceNumber, startedAt) {
+      function startPaymentPolling(payment) {
         stopPaymentPolling();
 
-        pollingInvoice = invoiceNumber;
+        pollingInvoice = payment.invoice_number;
 
         const pollingStartedAt =
-          startedAt && !Number.isNaN(Date.parse(startedAt))
-            ? Date.parse(startedAt)
+          payment.created_at && !Number.isNaN(Date.parse(payment.created_at))
+            ? Date.parse(payment.created_at)
             : Date.now();
 
         async function poll() {
-          if (pollingInvoice !== invoiceNumber) return;
+          if (pollingInvoice !== payment.invoice_number) return;
 
           try {
-            const result = await checkPaymentStatus(invoiceNumber);
+            const result = await checkPaymentStatus(payment);
 
-            /*
-             * Backend sekarang selalu mengembalikan HTTP 200 untuk status normal:
-             * - found:false + PENDING = webhook SUCCESS belum masuk ke D1
-             * - found:true + SUCCESS = pembayaran sudah terkonfirmasi
-             */
             if (
               result &&
               result.found === true &&
@@ -621,13 +639,13 @@
               return;
             }
 
-            const current = readStoredPayment();
-
             setProgressMessage(
+              payment.product_id,
               "Menunggu pembayaran...",
               "PENDING"
             );
 
+            const current = readStoredPayment();
             if (current) {
               setStatusDetail({
                 ...current,
@@ -635,10 +653,6 @@
               });
             }
           } catch (error) {
-            /*
-             * Error teknis sungguhan (500/network/etc.) tidak mengubah status
-             * transaksi. Polling akan mencoba lagi.
-             */
             console.warn("Payment status check failed:", error);
           }
 
@@ -646,6 +660,7 @@
 
           if (elapsed >= MAX_POLL_DURATION_MS) {
             setProgressMessage(
+              payment.product_id,
               "Status pembayaran belum terkonfirmasi",
               "TIMEOUT"
             );
@@ -669,8 +684,9 @@
 
         if (
           !stored ||
-          stored.product_id !== PRODUCT_ID ||
-          !stored.invoice_number
+          !stored.product_id ||
+          !stored.invoice_number ||
+          !stored.status_token
         ) {
           return;
         }
@@ -679,6 +695,7 @@
 
         if (stored.status === "SUCCESS") {
           setProgressMessage(
+            stored.product_id,
             "Pembayaran terakhir berhasil ✓",
             "SUCCESS"
           );
@@ -686,93 +703,99 @@
         }
 
         setProgressMessage(
+          stored.product_id,
           "Menunggu pembayaran...",
           "PENDING"
         );
 
-        startPaymentPolling(
-          stored.invoice_number,
-          stored.created_at
-        );
+        startPaymentPolling(stored);
       }
 
-      buyNowButton.addEventListener("click", async function () {
-        const originalHTML = buyNowButton.innerHTML;
+      buyButtons.forEach(function (button) {
+        button.addEventListener("click", async function () {
+          const productId = String(
+            button.dataset.checkoutProduct || ""
+          ).trim();
 
-        try {
-          stopPaymentPolling();
+          const originalHTML = button.innerHTML;
 
-          buyNowButton.disabled = true;
-          buyNowButton.innerHTML = "<span>Memuat Checkout...</span>";
+          try {
+            stopPaymentPolling();
 
-          const response = await fetch("/api/create-payment", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
+            button.disabled = true;
+            button.innerHTML = "<span>Memuat Checkout...</span>";
+
+            /*
+             * IMPORTANT:
+             * Browser only sends product_id.
+             * It does NOT send the price.
+             * Server looks up the official amount in PRODUCT_CATALOG.
+             */
+            const response = await fetch("/api/create-payment", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                product_id: productId
+              })
+            });
+
+            const data = await response.json();
+
+            if (
+              !response.ok ||
+              !data.success ||
+              !data.payment_url ||
+              !data.invoice_number ||
+              !data.status_token
+            ) {
+              console.error("DOKU create-payment error:", data);
+              alert("Checkout belum dapat dibuat. Silakan coba lagi.");
+              return;
             }
-          });
 
-          const data = await response.json();
+            const checkoutSession = {
+              invoice_number: data.invoice_number,
+              status_token: data.status_token,
+              product_id: data.product_id,
+              product_name: data.product_name,
+              amount: data.amount,
+              currency: data.currency,
+              status: data.status || "PENDING",
+              payment_url: data.payment_url,
+              expired_date: data.expired_date || null,
+              created_at: new Date().toISOString()
+            };
 
-          if (
-            !response.ok ||
-            !data.success ||
-            !data.payment_url ||
-            !data.invoice_number
-          ) {
-            console.error("DOKU create-payment error:", data);
-            alert("Checkout belum dapat dibuat. Silakan coba lagi.");
-            return;
+            saveStoredPayment(checkoutSession);
+
+            setProgressMessage(
+              checkoutSession.product_id,
+              "Menunggu pembayaran...",
+              "PENDING"
+            );
+            setStatusDetail(checkoutSession);
+
+            console.log("Checkout session saved:", checkoutSession);
+
+            startPaymentPolling(checkoutSession);
+
+            if (typeof window.loadJokulCheckout !== "function") {
+              console.error("DOKU Checkout JS tidak tersedia.");
+              alert("DOKU Checkout belum berhasil dimuat.");
+              return;
+            }
+
+            window.loadJokulCheckout(data.payment_url);
+          } catch (error) {
+            console.error("Checkout error:", error);
+            alert("Terjadi kendala saat membuka checkout.");
+          } finally {
+            button.disabled = false;
+            button.innerHTML = originalHTML;
           }
-
-          /*
-           * Browser hanya menyimpan invoice terakhir supaya tahu transaksi
-           * mana yang perlu dicek. Sumber kebenaran tetap D1.
-           */
-          const checkoutSession = {
-            invoice_number: data.invoice_number,
-            product_id: PRODUCT_ID,
-            amount: 100000,
-            currency: "IDR",
-            status: "PENDING",
-            payment_url: data.payment_url,
-            expired_date: data.expired_date || null,
-            created_at: new Date().toISOString()
-          };
-
-          saveStoredPayment(checkoutSession);
-
-          setProgressMessage(
-            "Menunggu pembayaran...",
-            "PENDING"
-          );
-          setStatusDetail(checkoutSession);
-
-          console.log("Checkout session saved:", checkoutSession);
-
-          /*
-           * Polling dimulai langsung. Saat webhook DOKU menyimpan SUCCESS
-           * ke D1, polling berikutnya akan mengubah UI + localStorage.
-           */
-          startPaymentPolling(
-            checkoutSession.invoice_number,
-            checkoutSession.created_at
-          );
-
-          if (typeof window.loadJokulCheckout !== "function") {
-            console.error("DOKU Checkout JS tidak tersedia.");
-            alert("DOKU Checkout belum berhasil dimuat.");
-            return;
-          }
-
-          window.loadJokulCheckout(data.payment_url);
-        } catch (error) {
-          console.error("Checkout error:", error);
-          alert("Terjadi kendala saat membuka checkout.");
-        } finally {
-          buyNowButton.disabled = false;
-          buyNowButton.innerHTML = originalHTML;
-        }
+        });
       });
 
       restoreLastPaymentState();
