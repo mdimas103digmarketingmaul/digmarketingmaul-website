@@ -1,8 +1,72 @@
-const DOKU_ENDPOINT = "https://api-sandbox.doku.com/checkout/v1/payment";
 const CREATE_PAYMENT_REQUEST_TARGET = "/checkout/v1/payment";
 const DOKU_NOTIFICATION_PATH = "/api/doku-notification";
 const PAYMENT_STATUS_PATH = "/api/payment-status";
+const DOKU_SDK_PATH = "/api/doku-checkout-sdk.js";
 const encoder = new TextEncoder();
+
+const DOKU_ENVIRONMENTS = Object.freeze({
+  sandbox: {
+    apiBaseUrl: "https://api-sandbox.doku.com",
+    checkoutJsUrl:
+      "https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js",
+  },
+  production: {
+    apiBaseUrl: "https://api.doku.com",
+    checkoutJsUrl:
+      "https://jokul.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js",
+  },
+});
+
+function getDokuEnvironment(env) {
+  const name = String(env.DOKU_ENV || "sandbox").trim().toLowerCase();
+
+  if (!DOKU_ENVIRONMENTS[name]) {
+    throw new Error(
+      `Invalid DOKU_ENV "${name}". Use "sandbox" or "production".`
+    );
+  }
+
+  return {
+    name,
+    ...DOKU_ENVIRONMENTS[name],
+  };
+}
+
+function getDokuPaymentEndpoint(env) {
+  const doku = getDokuEnvironment(env);
+  return `${doku.apiBaseUrl}${CREATE_PAYMENT_REQUEST_TARGET}`;
+}
+
+function parseDokuExpiredDate(expiredDate) {
+  const value = String(expiredDate || "").trim();
+
+  // DOKU Checkout expired_date format: yyyyMMddHHmmss, timezone UTC+7.
+  if (!/^\d{14}$/.test(value)) return null;
+
+  const year = value.slice(0, 4);
+  const month = value.slice(4, 6);
+  const day = value.slice(6, 8);
+  const hour = value.slice(8, 10);
+  const minute = value.slice(10, 12);
+  const second = value.slice(12, 14);
+
+  const parsed = new Date(
+    `${year}-${month}-${day}T${hour}:${minute}:${second}+07:00`
+  );
+
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+async function serveDokuCheckoutSdk(env) {
+  const doku = getDokuEnvironment(env);
+
+  /*
+   * HTML always loads this same first-party URL.
+   * DOKU_ENV decides whether the browser receives Sandbox or Production SDK.
+   * This means switching environment later does not require editing HTML.
+   */
+  return Response.redirect(doku.checkoutJsUrl, 302);
+}
 
 /*
  * Product catalog is authoritative on the SERVER.
@@ -171,7 +235,9 @@ async function createPayment(request, env) {
     componentSignature
   );
 
-  const response = await fetch(DOKU_ENDPOINT, {
+  const dokuEndpoint = getDokuPaymentEndpoint(env);
+
+  const response = await fetch(dokuEndpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -280,6 +346,7 @@ async function createPayment(request, env) {
   console.log(
     JSON.stringify({
       type: "DOKU_PAYMENT_CREATED",
+      dokuEnvironment: getDokuEnvironment(env).name,
       invoiceNumber,
       productId,
       amount: product.amount,
@@ -365,6 +432,42 @@ async function getPaymentStatus(request, env) {
     );
   }
 
+  let effectiveStatus = String(payment.status || "").trim();
+
+  /*
+   * DOKU returns expired_date in yyyyMMddHHmmss (UTC+7) specifically so
+   * merchants can maintain order expiry on their own side.
+   *
+   * If our stored order is still PENDING but its checkout due date has passed,
+   * we mark the row EXPIRED and return that final state to the frontend.
+   */
+  if (effectiveStatus === "PENDING") {
+    const expiresAt = parseDokuExpiredDate(payment.expired_date);
+
+    if (expiresAt && Date.now() >= expiresAt.getTime()) {
+      await env.DB.prepare(
+        `UPDATE payments
+         SET status = 'EXPIRED',
+             updated_at = CURRENT_TIMESTAMP
+         WHERE invoice_number = ?
+           AND status_token = ?
+           AND status = 'PENDING'`
+      )
+        .bind(invoiceNumber, statusToken)
+        .run();
+
+      effectiveStatus = "EXPIRED";
+
+      console.log(
+        JSON.stringify({
+          type: "DOKU_PAYMENT_EXPIRED_LOCAL",
+          invoiceNumber,
+          expiredDate: payment.expired_date,
+        })
+      );
+    }
+  }
+
   return jsonResponse({
     success: true,
     found: true,
@@ -373,7 +476,7 @@ async function getPaymentStatus(request, env) {
     product_name: payment.product_name,
     amount: payment.amount,
     currency: payment.currency,
-    status: payment.status,
+    status: effectiveStatus,
     paid_at: payment.paid_at,
     expired_date: payment.expired_date,
   });
@@ -688,6 +791,31 @@ async function handleDokuNotification(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.pathname === DOKU_SDK_PATH) {
+      if (request.method !== "GET") {
+        return new Response("Method Not Allowed", {
+          status: 405,
+          headers: {
+            "Allow": "GET",
+          },
+        });
+      }
+
+      try {
+        return serveDokuCheckoutSdk(env);
+      } catch (error) {
+        console.error("DOKU environment configuration error", error);
+
+        return jsonResponse(
+          {
+            success: false,
+            error: "DOKU environment configuration error",
+          },
+          500
+        );
+      }
+    }
 
     if (url.pathname === PAYMENT_STATUS_PATH) {
       if (request.method !== "GET") {

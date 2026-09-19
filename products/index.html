@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js"></script>
+<script src="/api/doku-checkout-sdk.js"></script>
   <meta name="description" content="Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.">
   <meta name="theme-color" content="#07111f">
 
@@ -192,7 +192,7 @@
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp1.500.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — ready</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
             <div class="payment-status-detail" hidden></div>
             <button class="commerce-checkout-btn js-buy-now" data-checkout-product="website-development" type="button">
               <span data-copy-lang="id">Buy Now</span>
@@ -223,7 +223,7 @@
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp1.200.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — ready</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
             <div class="payment-status-detail" hidden></div>
             <button class="commerce-checkout-btn js-buy-now" data-checkout-product="website-building-advisory" type="button">
               <span data-copy-lang="id">Buy Now</span>
@@ -283,7 +283,7 @@
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp1.200.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — ready</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
             <div class="payment-status-detail" hidden></div>
             <button class="commerce-checkout-btn js-buy-now" data-checkout-product="meta-ads-advisory" type="button">
               <span data-copy-lang="id">Buy Now</span>
@@ -314,7 +314,7 @@
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp1.200.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Sandbox checkout — ready</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
             <div class="payment-status-detail" hidden></div>
             <button class="commerce-checkout-btn js-buy-now" data-checkout-product="google-ads-advisory" type="button">
               <span data-copy-lang="id">Buy Now</span>
@@ -541,6 +541,15 @@
           return;
         }
 
+        if (payment.status === "EXPIRED") {
+          el.innerHTML =
+            "<strong>Invoice:</strong> " +
+            payment.invoice_number +
+            "<br><strong>Status:</strong> EXPIRED · " +
+            amount;
+          return;
+        }
+
         el.innerHTML =
           "<strong>Invoice:</strong> " +
           payment.invoice_number +
@@ -639,6 +648,35 @@
               return;
             }
 
+            if (
+              result &&
+              result.found === true &&
+              result.status === "EXPIRED"
+            ) {
+              const current = readStoredPayment() || {};
+
+              if (current.invoice_number === result.invoice_number) {
+                const updated = {
+                  ...current,
+                  status: "EXPIRED",
+                  confirmed_at: new Date().toISOString()
+                };
+
+                saveStoredPayment(updated);
+                setStatusDetail(updated);
+              }
+
+              setProgressMessage(
+                payment.product_id,
+                "Checkout kedaluwarsa — buat transaksi baru",
+                "TIMEOUT"
+              );
+
+              console.log("Payment status updated to EXPIRED:", result);
+              stopPaymentPolling();
+              return;
+            }
+
             setProgressMessage(
               payment.product_id,
               "Menunggu pembayaran...",
@@ -698,6 +736,15 @@
             stored.product_id,
             "Pembayaran terakhir berhasil ✓",
             "SUCCESS"
+          );
+          return;
+        }
+
+        if (stored.status === "EXPIRED") {
+          setProgressMessage(
+            stored.product_id,
+            "Checkout kedaluwarsa — buat transaksi baru",
+            "TIMEOUT"
           );
           return;
         }
