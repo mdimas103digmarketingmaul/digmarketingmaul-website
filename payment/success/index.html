@@ -52,6 +52,9 @@
   --accent-soft:#fff0f3;
   --green:#15803d;
   --green-soft:#ecfdf3;
+  --info-bg:#f4f8fc;
+  --info-border:#d8e4f0;
+  --info-text:#475467;
   --nav-bg:rgba(255,255,255,.9);
   --shadow:0 18px 55px rgba(15,23,42,.08);
   --shadow-soft:0 8px 28px rgba(15,23,42,.05);
@@ -70,6 +73,9 @@ html[data-theme="dark"]{
   --accent-soft:rgba(255,49,88,.09);
   --green:#4ade80;
   --green-soft:rgba(34,197,94,.09);
+  --info-bg:rgba(59,130,246,.065);
+  --info-border:rgba(125,211,252,.17);
+  --info-text:#b5c2d4;
   --nav-bg:rgba(7,17,31,.88);
   --shadow:0 24px 80px rgba(0,0,0,.28);
   --shadow-soft:0 8px 30px rgba(0,0,0,.18);
@@ -245,9 +251,12 @@ html[data-language="id"] .lang-id{display:revert!important}
 .email-status-value .email-address{display:inline!important;margin:0!important}
 .email-status-value .email-prefix{font-weight:400;color:var(--muted)}
 .email-status-value .email-address{font-weight:600;color:var(--text)}
-.save-url{padding:16px;border:1px solid rgba(255,49,88,.19);background:var(--accent-soft);border-radius:12px;color:var(--muted);line-height:1.7;font-size:14px;margin:24px 0}
-.next-step{padding:22px;margin-top:18px}
-.next-step p{margin:0;color:var(--muted);line-height:1.75;font-size:14px;font-weight:400}
+.completion-note{position:relative;overflow:hidden;padding:20px;border:1px solid var(--info-border);background:var(--info-bg);border-radius:14px;color:var(--info-text);line-height:1.75;font-size:14px;margin:24px 0 0}
+.completion-note::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.completion-note p{margin:0;color:var(--info-text);line-height:1.75;font-size:14px;font-weight:400}
+.completion-note strong{color:var(--text)}
+.next-step{padding:0;margin-top:18px;border:0;background:transparent;box-shadow:none}
+.next-step p{margin:0;color:var(--info-text);line-height:1.75;font-size:14px;font-weight:400}
 .next-step-copy{max-width:720px}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 .gate{max-width:830px;margin:auto;padding:32px}
@@ -317,40 +326,36 @@ html[data-language="id"] .lang-id{display:revert!important}
         </div>
       </div>
 
-      <div class="save-url">
-        <span class="lang-id">Simpan URL personal halaman ini apabila kamu perlu kembali lagi. Link yang sama juga dikirim melalui email. Jangan membagikan URL personal ini kepada pihak lain.</span>
-        <span class="lang-en">Save this personal page URL if you need to return later. The same link is also sent by email. Do not share this personal URL with others.</span>
+      <div class="completion-note" id="success-completion-note">
+        <p class="lang-id" id="success-completion-note-id">Halaman ini memiliki link personal yang bisa kamu buka kembali. Link yang sama juga dikirim melalui email.</p>
+        <p class="lang-en" id="success-completion-note-en">This page has a personal link you can reopen later. The same link is also sent by email.</p>
+
+        <div class="next-step" id="website-development-next" hidden>
+          <div class="actions">
+            <a class="btn btn-whatsapp" id="success-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
+              <span class="lang-id">Hubungi Maul via WhatsApp</span>
+              <span class="lang-en">Contact Maul via WhatsApp</span>
+            </a>
+            <a class="btn btn-secondary" href="/products/">
+              <span class="lang-id">Kembali ke Products</span>
+              <span class="lang-en">Back to Products</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="next-step" id="ebook-next" hidden>
+          <div class="actions">
+            <a class="btn btn-primary" id="ebook-resource-link" href="#" target="_blank" rel="noopener noreferrer">
+              <span class="lang-id">Buka Link Testing di Google Drive</span>
+              <span class="lang-en">Open Testing Link in Google Drive</span>
+            </a>
+            <a class="btn btn-secondary" href="/products/">
+              <span class="lang-id">Kembali ke Products</span>
+              <span class="lang-en">Back to Products</span>
+            </a>
+          </div>
+        </div>
       </div>
-
-      <div class="panel next-step" id="website-development-next" hidden>
-        <p class="lang-id next-step-copy">Langkah berikutnya untuk memulai diskusi kebutuhan dan proses pengerjaan Website Development, hubungi melalui link WA berikut:</p>
-        <p class="lang-en next-step-copy">For the next step, to start discussing requirements and the Website Development process, use the WhatsApp link below:</p>
-        <div class="actions">
-          <a class="btn btn-whatsapp" id="success-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
-            <span class="lang-id">Hubungi Maul via WhatsApp</span>
-            <span class="lang-en">Contact Maul via WhatsApp</span>
-          </a>
-          <a class="btn btn-secondary" href="/products/">
-            <span class="lang-id">Kembali ke Products</span>
-            <span class="lang-en">Back to Products</span>
-          </a>
-        </div>
-
-
-      <div class="panel next-step" id="ebook-next" hidden>
-        <p class="lang-id next-step-copy">Digital Marketing eBooks kamu sudah siap. Materi dapat diakses melalui link Google Drive berikut. Simpan URL personal halaman ini untuk membuka akses kembali.</p>
-        <p class="lang-en next-step-copy">Your Digital Marketing eBooks are ready. Access the materials through the Google Drive link below. Save this personal page URL to return to the access link.</p>
-        <div class="actions">
-          <a class="btn btn-primary" id="ebook-resource-link" href="#" target="_blank" rel="noopener noreferrer">
-            <span class="lang-id">Buka eBook di Google Drive</span>
-            <span class="lang-en">Open eBook in Google Drive</span>
-          </a>
-          <a class="btn btn-secondary" href="/products/">
-            <span class="lang-id">Kembali ke Products</span>
-            <span class="lang-en">Back to Products</span>
-          </a>
-        </div>
-      </div>      </div>
     </div>
   </section>
 </main>
@@ -526,10 +531,15 @@ html[data-language="id"] .lang-id{display:revert!important}
   function renderProductNextStep(data) {
     const websiteNext = document.getElementById("website-development-next");
     const ebookNext = document.getElementById("ebook-next");
+    const noteId = document.getElementById("success-completion-note-id");
+    const noteEn = document.getElementById("success-completion-note-en");
+
     websiteNext.hidden = true;
     ebookNext.hidden = true;
 
     if (data.product_id === "website-development") {
+      noteId.textContent = "Halaman ini memiliki link personal yang bisa kamu buka kembali dan link yang sama juga dikirim ke email. Langkah berikutnya untuk memulai diskusi kebutuhan dan proses pengerjaan Website Development, hubungi Maul melalui WhatsApp.";
+      noteEn.textContent = "This page has a personal link you can reopen, and the same link is also sent by email. For the next step, contact Maul via WhatsApp to start discussing your Website Development requirements and process.";
       websiteNext.hidden = false;
       document.getElementById("success-whatsapp").href =
         whatsappUrl(data.invoice_number, data.product_name || "Website Development");
@@ -537,6 +547,8 @@ html[data-language="id"] .lang-id{display:revert!important}
     }
 
     if (data.product_id === "digital-marketing-ebooks") {
+      noteId.textContent = "Halaman ini memiliki link personal yang bisa kamu buka kembali dan link yang sama juga dikirim ke email. Flow testing Digital Marketing eBooks berhasil. Produk eBook final belum tersedia; tombol Google Drive di bawah digunakan sebagai bagian dari simulasi akses pascapembayaran.";
+      noteEn.textContent = "This page has a personal link you can reopen, and the same link is also sent by email. The Digital Marketing eBooks test flow was completed successfully. The final eBook is not available yet; the Google Drive button below is part of the post-payment access simulation.";
       ebookNext.hidden = false;
       const link = document.getElementById("ebook-resource-link");
       if (data.resource_url) {

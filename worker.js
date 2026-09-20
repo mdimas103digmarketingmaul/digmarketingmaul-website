@@ -123,24 +123,6 @@ const PRODUCT_CATALOG = Object.freeze({
     // and available for this merchant/product.
     postPaymentType: "ebook",
   },
-  "website-building-advisory": {
-    name: "Website Building Advisory 1 on 1",
-    amount: 1200000,
-    currency: "IDR",
-    postPaymentType: "whatsapp",
-  },
-  "meta-ads-advisory": {
-    name: "Meta Ads Advisory 1 on 1",
-    amount: 1200000,
-    currency: "IDR",
-    postPaymentType: "whatsapp",
-  },
-  "google-ads-advisory": {
-    name: "Google Ads Advisory 1 on 1",
-    amount: 1200000,
-    currency: "IDR",
-    postPaymentType: "whatsapp",
-  },
 });
 
 
@@ -609,12 +591,12 @@ function buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl }) {
   let nextStepBlock = "";
 
   if (order.product_id === "digital-marketing-ebooks") {
-    // Important: the actual Google Drive URL is deliberately NOT included in email.
+    // Important: the Google Drive testing URL is deliberately NOT included in email.
     // The buyer must open the token-protected personal purchase page first.
     nextStepBlock = `
-      <div style="margin:24px 0;padding:18px;border:1px solid #e5e7eb;border-radius:12px;background:#f8fafc">
-        <p style="margin:0;font-size:15px;line-height:1.7"><strong>Akses eBook</strong><br>
-        Link materi tersedia di halaman pembelian personal di atas setelah pembayaran terverifikasi. Simpan link halaman tersebut untuk membuka kembali akses materi.</p>
+      <div style="margin:24px 0;padding:18px;border:1px solid #d8e4f0;border-radius:12px;background:#f4f8fc">
+        <p style="margin:0;font-size:15px;line-height:1.7"><strong>Live test Digital Marketing eBooks</strong><br>
+        Produk eBook final belum tersedia. Email ini hanya mengarahkan ke halaman pembelian personal untuk melanjutkan simulasi akses pascapembayaran. Simpan link halaman tersebut jika ingin membuka kembali flow testing.</p>
       </div>`;
   } else {
     nextStepBlock = `

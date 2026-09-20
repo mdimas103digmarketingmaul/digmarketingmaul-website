@@ -58,6 +58,38 @@
     .payment-progress[data-payment-state="TIMEOUT"] {
       color: #b91c1c;
     }
+
+
+    .commerce-product-card.js-detail-card{cursor:pointer}
+    .commerce-checkout-btn.is-ready{
+      cursor:pointer!important;
+      color:#fff!important;
+      background:#ff3158!important;
+      border-color:#ff3158!important;
+      box-shadow:0 10px 26px rgba(255,49,88,.16);
+    }
+    .commerce-checkout-btn.is-ready:hover{
+      background:#e92b50!important;
+      border-color:#e92b50!important;
+      transform:translateY(-1px);
+    }
+    .commerce-checkout-btn.is-coming-soon,
+    .commerce-checkout-btn.is-coming-soon:disabled{
+      cursor:default!important;
+      color:#667085!important;
+      background:#f2f4f7!important;
+      border-color:#e4e7ec!important;
+      box-shadow:none!important;
+      opacity:1!important;
+    }
+    html[data-products-theme="dark"] .commerce-checkout-btn.is-coming-soon,
+    html[data-products-theme="dark"] .commerce-checkout-btn.is-coming-soon:disabled{
+      color:#9aa8bd!important;
+      background:#101f33!important;
+      border-color:rgba(148,163,184,.18)!important;
+    }
+    br.desktop-break{display:block}
+    @media(max-width:760px){br.desktop-break{display:none}}
   </style>
 
 </head>
@@ -194,7 +226,7 @@
             <div class="commerce-price">Rp999.000</div>
             <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
             <div class="payment-status-detail" hidden></div>
-            <a class="commerce-checkout-btn" href="/products/website-development/" style="text-decoration:none;text-align:center;display:block;">
+            <a class="commerce-checkout-btn is-ready" href="/products/website-development/" style="text-decoration:none;text-align:center;display:block;">
               <span data-copy-lang="id">Lihat Detail</span>
               <span data-copy-lang="en" hidden>View Details</span>
             </a>
@@ -207,25 +239,25 @@
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-solid fa-book-open"></i></span>
-            <span class="commerce-category">Digital Resource</span>
+            <span class="commerce-category">Live Test / Digital Resource</span>
           </div>
 
           <h2>Digital Marketing<br>eBooks</h2>
 
           <p class="commerce-description" data-copy-lang="id">
-            Materi digital yang merangkum framework, pengalaman, dan pembelajaran praktis
-            seputar digital marketing.
+            Live test untuk mencoba flow pembelian Digital Marketing eBooks.
+            Produk final dan eBook sungguhan belum tersedia.
           </p>
           <p class="commerce-description" data-copy-lang="en" hidden>
-            Digital materials summarizing practical frameworks, experience, and learnings
-            across digital marketing.
+            A live test of the Digital Marketing eBooks purchase flow.
+            The final product and actual eBook are not available yet.
           </p>
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp10.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — live test</div>
             <div class="payment-status-detail" hidden></div>
-            <a class="commerce-checkout-btn" href="/products/digital-marketing-ebooks/" style="text-decoration:none;text-align:center;display:block;">
+            <a class="commerce-checkout-btn is-ready" href="/products/digital-marketing-ebooks/" style="text-decoration:none;text-align:center;display:block;">
               <span data-copy-lang="id">Lihat Detail</span>
               <span data-copy-lang="en" hidden>View Details</span>
             </a>
@@ -254,11 +286,11 @@
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp1.200.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
             <div class="payment-status-detail" hidden></div>
-            <button class="commerce-checkout-btn js-buy-now" data-checkout-product="website-building-advisory" type="button">
-              <span data-copy-lang="id">Buy Now</span>
-              <span data-copy-lang="en" hidden>Buy Now</span>
+            <button class="commerce-checkout-btn is-coming-soon" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
             </button>
           </div>
         </article>
@@ -285,7 +317,7 @@
           <div class="commerce-card-footer">
             <div class="commerce-price">Rpx.xxx.xxx</div>
             <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
-            <button class="commerce-checkout-btn" type="button" disabled>
+            <button class="commerce-checkout-btn is-coming-soon" type="button" disabled>
               <span data-copy-lang="id">Checkout segera tersedia</span>
               <span data-copy-lang="en" hidden>Checkout coming soon</span>
             </button>
@@ -301,7 +333,7 @@
             <span class="commerce-category">1 on 1 Advisory</span>
           </div>
 
-          <h2>Meta Ads Advisory 1 on 1</h2>
+          <h2>Meta Ads Advisory<br class="desktop-break">1 on 1</h2>
 
           <p class="commerce-description" data-copy-lang="id">
             Pendampingan praktis untuk memahami setup, campaign structure, creative
@@ -314,11 +346,11 @@
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp1.200.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
             <div class="payment-status-detail" hidden></div>
-            <button class="commerce-checkout-btn js-buy-now" data-checkout-product="meta-ads-advisory" type="button">
-              <span data-copy-lang="id">Buy Now</span>
-              <span data-copy-lang="en" hidden>Buy Now</span>
+            <button class="commerce-checkout-btn is-coming-soon" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
             </button>
           </div>
         </article>
@@ -345,11 +377,11 @@
 
           <div class="commerce-card-footer">
             <div class="commerce-price">Rp1.200.000</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
             <div class="payment-status-detail" hidden></div>
-            <button class="commerce-checkout-btn js-buy-now" data-checkout-product="google-ads-advisory" type="button">
-              <span data-copy-lang="id">Buy Now</span>
-              <span data-copy-lang="en" hidden>Buy Now</span>
+            <button class="commerce-checkout-btn is-coming-soon" type="button" disabled>
+              <span data-copy-lang="id">Checkout segera tersedia</span>
+              <span data-copy-lang="en" hidden>Checkout coming soon</span>
             </button>
           </div>
         </article>
@@ -363,8 +395,8 @@
             <span class="commerce-category">1 on 1 Discussion</span>
           </div>
 
-          <h2 data-copy-lang="id">Diskusi Eksklusif 1 on 1 Seputar Technical Digital Marketing</h2>
-          <h2 data-copy-lang="en" hidden>Exclusive 1 on 1 Technical Digital Marketing Discussion</h2>
+          <h2 data-copy-lang="id">Diskusi Eksklusif 1 on 1 Seputar<br class="desktop-break">Technical Digital Marketing</h2>
+          <h2 data-copy-lang="en" hidden>Exclusive 1 on 1<br class="desktop-break">Technical Digital Marketing Discussion</h2>
 
           <p class="commerce-description" data-copy-lang="id">
             Diskusi untuk panduan praktis dan insight teknis seputar digital marketing,
@@ -378,7 +410,7 @@
           <div class="commerce-card-footer">
             <div class="commerce-price">Rpx.xxx.xxx</div>
             <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
-            <button class="commerce-checkout-btn" type="button" disabled>
+            <button class="commerce-checkout-btn is-coming-soon" type="button" disabled>
               <span data-copy-lang="id">Checkout segera tersedia</span>
               <span data-copy-lang="en" hidden>Checkout coming soon</span>
             </button>
@@ -408,7 +440,7 @@
           <div class="commerce-card-footer">
             <div class="commerce-price">Rpx.xxx.xxx</div>
             <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
-            <button class="commerce-checkout-btn" type="button" disabled>
+            <button class="commerce-checkout-btn is-coming-soon" type="button" disabled>
               <span data-copy-lang="id">Checkout segera tersedia</span>
               <span data-copy-lang="en" hidden>Checkout coming soon</span>
             </button>
@@ -438,7 +470,7 @@
           <div class="commerce-card-footer">
             <div class="commerce-price">Rpx.xxx.xxx</div>
             <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
-            <button class="commerce-checkout-btn" type="button" disabled>
+            <button class="commerce-checkout-btn is-coming-soon" type="button" disabled>
               <span data-copy-lang="id">Checkout segera tersedia</span>
               <span data-copy-lang="en" hidden>Checkout coming soon</span>
             </button>

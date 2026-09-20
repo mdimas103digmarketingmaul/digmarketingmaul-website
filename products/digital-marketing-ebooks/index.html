@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f7f8fb">
-<meta name="description" content="Digital Marketing eBooks oleh Maul — materi digital berisi framework, pengalaman, dan pembelajaran praktis seputar digital marketing.">
+<meta name="description" content="Digital Marketing eBooks — live test flow checkout dan pascapembayaran. Produk eBook final belum tersedia.">
 <title>Digital Marketing eBooks — Maul Digital</title>
 <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
@@ -234,6 +234,12 @@ html[data-language="id"] .lang-id{display:revert!important}
 .lead{max-width:720px;color:var(--muted);font-size:clamp(18px,2vw,21px);line-height:1.72}
 .price{font:600 clamp(28px,4vw,40px)/1 "JetBrains Mono",monospace;margin:30px 0 10px}
 .note{color:var(--muted);font-size:14px;line-height:1.65}
+.test-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font:700 11px/1.2 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
+html[data-theme="dark"] .test-badge{background:rgba(245,158,11,.09);border-color:rgba(251,191,36,.2);color:#fcd34d}
+.test-notice{margin-top:24px;padding:18px 20px;border:1px solid #dbe7f4;border-radius:14px;background:#f5f9ff;color:var(--muted);line-height:1.75;font-size:14px;position:relative;overflow:hidden}
+.test-notice::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.test-notice strong{color:var(--text)}
+html[data-theme="dark"] .test-notice{background:rgba(59,130,246,.065);border-color:rgba(125,211,252,.16)}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
 .hero-card{padding:28px}
 .hero-card h3{margin:0 0 18px;font-size:18px}
@@ -295,8 +301,8 @@ html[data-language="id"] .lang-id{display:revert!important}
         <span class="lang-en">← Back to Products</span>
       </a>
       <a class="btn btn-primary sticky-payment" href="/checkout/?product=digital-marketing-ebooks">
-        <span class="lang-id">Lanjut ke Pembayaran</span>
-        <span class="lang-en">Proceed to Payment</span>
+        <span class="lang-id">Coba Checkout</span>
+        <span class="lang-en">Test Checkout</span>
       </a>
     </div>
   </div>
@@ -306,51 +312,56 @@ html[data-language="id"] .lang-id{display:revert!important}
   <section class="hero shell">
     <div class="hero-grid">
       <div>
+        <span class="test-badge">Live Test Product</span>
         <h1>Digital Marketing<br>eBooks<span style="color:var(--accent)">.</span></h1>
-        <p class="lead lang-id">Kumpulan materi digital yang merangkum framework, pengalaman, dan pembelajaran praktis seputar digital marketing—dibuat sebagai referensi yang bisa kamu baca ulang dan terapkan sesuai kebutuhan.</p>
-        <p class="lead lang-en">A collection of digital materials covering practical frameworks, experience, and learnings across digital marketing—designed as a reference you can revisit and apply when needed.</p>
+        <p class="lead lang-id">Produk ini saat ini masih berupa live test untuk mencoba end-to-end flow website yang saya buat—mulai dari product detail, checkout DOKU, konfirmasi pembayaran, email, hingga personal thank-you page.</p>
+        <p class="lead lang-en">This product is currently a live test of the end-to-end website flow—from product detail and DOKU Checkout to payment confirmation, email, and the personal thank-you page.</p>
         <div class="price">Rp10.000</div>
-        <p class="note lang-id">Format dan isi eBook dapat berkembang seiring pembaruan materi.</p>
-        <p class="note lang-en">The format and content may evolve as the materials are updated.</p>
+        <p class="note lang-id"><strong>Belum ada eBook sungguhan pada tahap ini.</strong> Produk final akan dibuat menyusul. Nominal Rp10.000 digunakan khusus untuk live testing flow transaksi.</p>
+        <p class="note lang-en"><strong>There is no actual eBook yet.</strong> The final product will be created later. The Rp10,000 amount is used specifically for live transaction-flow testing.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/checkout/?product=digital-marketing-ebooks">
-            <span class="lang-id">Lanjut ke Pembayaran</span>
-            <span class="lang-en">Proceed to Payment</span>
+            <span class="lang-id">Coba Checkout Rp10.000</span>
+            <span class="lang-en">Test Checkout Rp10,000</span>
           </a>
-          <a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20bertanya%20tentang%20Digital%20Marketing%20eBooks%20dan%20materi%20yang%20tersedia." target="_blank" rel="noopener noreferrer">
+          <a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20bertanya%20tentang%20live%20test%20Digital%20Marketing%20eBooks." target="_blank" rel="noopener noreferrer">
             <span class="lang-id">Tanya Maul via WhatsApp</span>
             <span class="lang-en">Ask Maul via WhatsApp</span>
           </a>
         </div>
+        <div class="test-notice">
+          <span class="lang-id"><strong>Harap dipahami sebelum melanjutkan:</strong> ini adalah transaksi testing. Pembayaran, invoice, email konfirmasi, dan thank-you page diproses sungguhan melalui flow website, tetapi belum ada eBook final yang dijual atau diberikan.</span>
+          <span class="lang-en"><strong>Please understand before continuing:</strong> this is a test transaction. Payment, invoice, confirmation email, and the thank-you page run through the real website flow, but there is no final eBook being sold or delivered yet.</span>
+        </div>
       </div>
 
       <aside class="panel hero-card">
-        <h3 class="lang-id">Yang kamu dapatkan</h3>
-        <h3 class="lang-en">What you get</h3>
-        <div class="feature"><i>01</i><div><span class="lang-id">Framework dan catatan praktis seputar digital marketing.</span><span class="lang-en">Practical digital marketing frameworks and notes.</span></div></div>
-        <div class="feature"><i>02</i><div><span class="lang-id">Materi ringkas yang bisa dibaca ulang kapan saja.</span><span class="lang-en">Concise materials you can revisit anytime.</span></div></div>
-        <div class="feature"><i>03</i><div><span class="lang-id">Akses personal melalui thank-you page setelah pembayaran terkonfirmasi.</span><span class="lang-en">Personal access through the thank-you page after payment is confirmed.</span></div></div>
-        <div class="feature"><i>04</i><div><span class="lang-id">Materi dapat diperbarui dan ditambahkan pada folder akses yang sama.</span><span class="lang-en">Materials may be updated or added to the same access folder.</span></div></div>
+        <h3 class="lang-id">Yang sedang diuji</h3>
+        <h3 class="lang-en">What this test covers</h3>
+        <div class="feature"><i>01</i><div><span class="lang-id">Journey dari halaman produk ke checkout.</span><span class="lang-en">The journey from product page to checkout.</span></div></div>
+        <div class="feature"><i>02</i><div><span class="lang-id">DOKU Checkout dengan metode pembayaran yang tersedia.</span><span class="lang-en">DOKU Checkout with the available payment methods.</span></div></div>
+        <div class="feature"><i>03</i><div><span class="lang-id">Konfirmasi status pembayaran, penyimpanan order, dan email otomatis.</span><span class="lang-en">Payment confirmation, order storage, and automated email.</span></div></div>
+        <div class="feature"><i>04</i><div><span class="lang-id">Personal thank-you page dan alur akses Google Drive sebagai bagian dari simulasi.</span><span class="lang-en">The personal thank-you page and Google Drive access flow as part of the simulation.</span></div></div>
       </aside>
     </div>
   </section>
 
   <section class="section shell compact-copy-section">
     <div class="domain-note">
-      <h3>Instant Access</h3>
-      <p class="lang-id">Setelah pembayaran terkonfirmasi, thank-you page personal akan menampilkan link akses materi. Email konfirmasi hanya mengarahkan kembali ke halaman pembelian personal tersebut.</p>
-      <p class="lang-en">After payment is confirmed, your personal thank-you page will show the material access link. The confirmation email only links back to that personal purchase page.</p>
+      <h3>Testing Notes</h3>
+      <p class="lang-id">Setelah pembayaran terkonfirmasi, email hanya akan mengarahkan kembali ke personal thank-you page. Link Google Drive ditampilkan di halaman tersebut sebagai bagian dari live test. Isi folder bukan representasi eBook final.</p>
+      <p class="lang-en">After payment is confirmed, the email only links back to the personal thank-you page. The Google Drive link is shown there as part of the live test. The folder contents do not represent the final eBook.</p>
     </div>
   </section>
 
   <section class="section shell discussion-section">
-    <div class="eyebrow">Questions before purchase?</div>
-    <h2 class="lang-id">Masih ada yang ingin ditanyakan?</h2>
-    <h2 class="lang-en">Have a question first?</h2>
-    <p class="section-intro lang-id">Kalau kamu ingin memastikan topik, format materi, atau proses aksesnya terlebih dahulu, hubungi Maul melalui WhatsApp.</p>
-    <p class="section-intro lang-en">If you would like to clarify the topics, material format, or access process first, contact Maul via WhatsApp.</p>
+    <div class="eyebrow">Questions before testing?</div>
+    <h2 class="lang-id">Masih ingin memastikan flow-nya?</h2>
+    <h2 class="lang-en">Want to clarify the test first?</h2>
+    <p class="section-intro lang-id">Kalau kamu ingin memahami tujuan testing, proses pembayaran, atau apa yang terjadi setelah transaksi, hubungi Maul melalui WhatsApp.</p>
+    <p class="section-intro lang-en">If you want to understand the purpose of the test, the payment process, or what happens after the transaction, contact Maul via WhatsApp.</p>
     <div class="actions">
-      <a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20bertanya%20tentang%20Digital%20Marketing%20eBooks%20dan%20materi%20yang%20tersedia." target="_blank" rel="noopener noreferrer">
+      <a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20bertanya%20tentang%20live%20test%20Digital%20Marketing%20eBooks." target="_blank" rel="noopener noreferrer">
         <span class="lang-id">Hubungi Maul via WhatsApp</span>
         <span class="lang-en">Contact Maul via WhatsApp</span>
       </a>
@@ -360,16 +371,16 @@ html[data-language="id"] .lang-id{display:revert!important}
   <section class="panel bottom-cta shell">
     <div class="bottom-cta-inner">
       <div class="bottom-cta-copy">
-        <p class="bottom-kicker">Ready to read?</p>
-        <h2 class="lang-id">Lanjutkan ke pembayaran.</h2>
-        <h2 class="lang-en">Proceed to payment.</h2>
-        <p class="bottom-subcopy lang-id">Setelah pembayaran berhasil, email konfirmasi dan link halaman pembelian personal akan dikirim otomatis. Akses eBook tersedia di thank-you page.</p>
-        <p class="bottom-subcopy lang-en">After successful payment, a confirmation email and personal purchase-page link will be sent automatically. eBook access is available on the thank-you page.</p>
+        <p class="bottom-kicker">Live transaction test</p>
+        <h2 class="lang-id">Coba flow pembayarannya.</h2>
+        <h2 class="lang-en">Test the payment flow.</h2>
+        <p class="bottom-subcopy lang-id">Dengan melanjutkan, kamu memahami bahwa produk eBook final belum tersedia. Transaksi Rp10.000 ini digunakan untuk menguji journey checkout sampai personal thank-you page.</p>
+        <p class="bottom-subcopy lang-en">By continuing, you understand that the final eBook is not available yet. This Rp10,000 transaction is used to test the checkout journey through the personal thank-you page.</p>
       </div>
       <div class="actions">
         <a class="btn btn-primary" href="/checkout/?product=digital-marketing-ebooks">
-          <span class="lang-id">Lanjut ke Pembayaran</span>
-          <span class="lang-en">Proceed to Payment</span>
+          <span class="lang-id">Coba Checkout Rp10.000</span>
+          <span class="lang-en">Test Checkout Rp10,000</span>
         </a>
       </div>
     </div>

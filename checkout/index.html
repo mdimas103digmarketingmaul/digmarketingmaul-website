@@ -53,6 +53,9 @@
   --accent-soft:#fff0f3;
   --green:#15803d;
   --green-soft:#ecfdf3;
+  --info-bg:#f4f8fc;
+  --info-border:#d8e4f0;
+  --info-text:#475467;
   --nav-bg:rgba(255,255,255,.9);
   --shadow:0 18px 55px rgba(15,23,42,.08);
   --shadow-soft:0 8px 28px rgba(15,23,42,.05);
@@ -71,6 +74,9 @@ html[data-theme="dark"]{
   --accent-soft:rgba(255,49,88,.09);
   --green:#4ade80;
   --green-soft:rgba(34,197,94,.09);
+  --info-bg:rgba(59,130,246,.065);
+  --info-border:rgba(125,211,252,.17);
+  --info-text:#b5c2d4;
   --nav-bg:rgba(7,17,31,.88);
   --shadow:0 24px 80px rgba(0,0,0,.28);
   --shadow-soft:0 8px 30px rgba(0,0,0,.18);
@@ -276,7 +282,9 @@ html[data-language="id"] .lang-id{display:revert!important}
 .email-status-value .email-address{display:inline!important;margin:0!important}
 .email-status-value .email-prefix{font-weight:400;color:var(--muted)}
 .email-status-value .email-address{font-weight:600;color:var(--text)}
-.save-url{padding:16px;border:1px solid rgba(255,49,88,.19);background:var(--accent-soft);border-radius:12px;color:var(--muted);line-height:1.7;font-size:14px;margin:24px 0}
+.save-url,.completion-note{position:relative;overflow:hidden;padding:18px 18px 18px 20px;border:1px solid var(--info-border);background:var(--info-bg);border-radius:12px;color:var(--info-text);line-height:1.72;font-size:14px;margin:24px 0}
+.save-url::before,.completion-note::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.completion-note strong{color:var(--text)}
 @media(max-width:700px){
   .checkout-view{padding-top:38px}
   .order-summary{flex-direction:column;align-items:flex-start}
@@ -399,14 +407,9 @@ html[data-language="id"] .lang-id{display:revert!important}
         </div>
       </div>
 
-      <div class="save-url">
-        <span class="lang-id">Halaman ini memiliki link personal yang bisa kamu buka kembali. Simpan URL halaman ini; link yang sama juga dikirim ke email.</span>
-        <span class="lang-en">This page has a personal link that you can reopen later. Save this URL; the same link is also sent to your email.</span>
-      </div>
-
-      <div class="save-url" id="ebook-access-note" hidden>
-        <span class="lang-id">Digital Marketing eBooks kamu sudah siap. Link akses materi tersedia melalui tombol Google Drive di bawah ini.</span>
-        <span class="lang-en">Your Digital Marketing eBooks are ready. Use the Google Drive button below to access the materials.</span>
+      <div class="completion-note" id="success-completion-note">
+        <span class="lang-id" id="success-completion-note-id">Halaman ini memiliki link personal yang bisa kamu buka kembali. Link yang sama juga dikirim ke email.</span>
+        <span class="lang-en" id="success-completion-note-en">This page has a personal link you can reopen later. The same link is also sent to your email.</span>
       </div>
 
       <div class="actions">
@@ -415,8 +418,8 @@ html[data-language="id"] .lang-id{display:revert!important}
           <span class="lang-en">Continue via WhatsApp</span>
         </a>
         <a class="btn btn-primary" id="success-resource" href="#" target="_blank" rel="noopener noreferrer" hidden>
-          <span class="lang-id">Buka eBook di Google Drive</span>
-          <span class="lang-en">Open eBook in Google Drive</span>
+          <span class="lang-id">Buka Link Testing di Google Drive</span>
+          <span class="lang-en">Open Testing Link in Google Drive</span>
         </a>
         <a class="btn btn-secondary" href="/products/">
           <span class="lang-id">Kembali ke Products</span>
@@ -527,8 +530,8 @@ html[data-language="id"] .lang-id{display:revert!important}
       name: "Digital Marketing eBooks",
       amount: 10000,
       detailUrl: "/products/digital-marketing-ebooks/",
-      summaryId: "Digital resource untuk pembelajaran digital marketing",
-      summaryEn: "Digital resources for practical digital marketing learning",
+      summaryId: "Live test flow pembelian — eBook final belum tersedia",
+      summaryEn: "Live purchase-flow test — the final eBook is not available yet",
       postPayment: "ebook"
     }
   });
@@ -679,6 +682,102 @@ html[data-language="id"] .lang-id{display:revert!important}
     }).toString();
   }
 
+
+  let dokuBodyOverflowBefore = "";
+
+  function findDokuCheckoutFrame() {
+    return Array.from(document.querySelectorAll("iframe")).find((frame) => {
+      const src = String(frame.getAttribute("src") || frame.src || "").toLowerCase();
+      return src.includes("doku") || src.includes("jokul") || src.includes("checkout");
+    }) || null;
+  }
+
+  function findDokuPopupRoot(frame) {
+    if (!frame) return null;
+    let node = frame;
+    while (node.parentElement && node.parentElement !== document.body) {
+      node = node.parentElement;
+    }
+    return node;
+  }
+
+  function closeDokuCheckoutPopup() {
+    const frame = findDokuCheckoutFrame();
+    if (!frame) return false;
+
+    const root = findDokuPopupRoot(frame);
+    const scope = root || document;
+    const closeCandidates = Array.from(
+      scope.querySelectorAll('button, [role="button"], a')
+    );
+
+    const closeControl = closeCandidates.find((element) => {
+      const aria = String(element.getAttribute("aria-label") || "").toLowerCase();
+      const title = String(element.getAttribute("title") || "").toLowerCase();
+      const text = String(element.textContent || "").trim().toLowerCase();
+      const classes = String(element.className || "").toLowerCase();
+      const id = String(element.id || "").toLowerCase();
+      return (
+        aria.includes("close") || aria.includes("tutup") ||
+        title.includes("close") || title.includes("tutup") ||
+        classes.includes("close") || id.includes("close") ||
+        text === "×" || text === "✕" || text === "x"
+      );
+    });
+
+    if (closeControl) {
+      closeControl.click();
+    }
+
+    // DOKU does not document an SDK close API. If the built-in control is
+    // inside the cross-origin iframe, we cannot click it from the merchant page.
+    // Remove only the top-level wrapper containing the DOKU iframe as fallback.
+    setTimeout(() => {
+      const remainingFrame = findDokuCheckoutFrame();
+      if (remainingFrame) {
+        const remainingRoot = findDokuPopupRoot(remainingFrame);
+        if (remainingRoot && remainingRoot !== document.body && remainingRoot.parentElement === document.body) {
+          remainingRoot.remove();
+        } else if (remainingFrame.parentElement) {
+          remainingFrame.remove();
+        }
+      }
+      document.body.style.overflow = dokuBodyOverflowBefore;
+    }, closeControl ? 180 : 0);
+
+    return true;
+  }
+
+  function openDokuCheckout(paymentUrl) {
+    if (typeof window.loadJokulCheckout !== "function") {
+      throw new Error("DOKU Checkout belum dimuat");
+    }
+    dokuBodyOverflowBefore = document.body.style.overflow || "";
+    window.loadJokulCheckout(paymentUrl);
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeDokuCheckoutPopup();
+    }
+  }, true);
+
+  document.addEventListener("pointerdown", (event) => {
+    const frame = findDokuCheckoutFrame();
+    if (!frame) return;
+
+    const rect = frame.getBoundingClientRect();
+    const outsideFrame =
+      event.clientX < rect.left || event.clientX > rect.right ||
+      event.clientY < rect.top || event.clientY > rect.bottom;
+
+    if (outsideFrame) {
+      event.preventDefault();
+      event.stopPropagation();
+      closeDokuCheckoutPopup();
+    }
+  }, true);
+
   function whatsappUrl(invoice) {
     return "https://wa.me/6281296069566?text=" + encodeURIComponent(
       "Halo Maul, saya sudah menyelesaikan pembayaran untuk " +
@@ -722,19 +821,22 @@ html[data-language="id"] .lang-id{display:revert!important}
   function renderPostPaymentAction(merged) {
     const wa = document.getElementById("success-whatsapp");
     const resource = document.getElementById("success-resource");
-    const note = document.getElementById("ebook-access-note");
+    const noteId = document.getElementById("success-completion-note-id");
+    const noteEn = document.getElementById("success-completion-note-en");
 
     wa.hidden = true;
     resource.hidden = true;
-    note.hidden = true;
 
     if (PRODUCT.postPayment === "ebook") {
+      noteId.textContent = "Halaman ini memiliki link personal yang bisa kamu buka kembali dan link yang sama juga dikirim ke email. Flow testing Digital Marketing eBooks berhasil. Produk eBook final belum tersedia; tombol Google Drive di bawah digunakan sebagai bagian dari simulasi akses pascapembayaran.";
+      noteEn.textContent = "This page has a personal link you can reopen, and the same link is also sent by email. The Digital Marketing eBooks test flow was completed successfully. The final eBook is not available yet; the Google Drive button below is part of the post-payment access simulation.";
       if (merged.resource_url) {
         resource.href = merged.resource_url;
         resource.hidden = false;
-        note.hidden = false;
       }
     } else {
+      noteId.textContent = "Halaman ini memiliki link personal yang bisa kamu buka kembali dan link yang sama juga dikirim ke email. Langkah berikutnya untuk memulai diskusi kebutuhan dan proses pengerjaan Website Development, hubungi Maul melalui WhatsApp.";
+      noteEn.textContent = "This page has a personal link you can reopen, and the same link is also sent by email. For the next step, contact Maul via WhatsApp to start discussing your Website Development requirements and process.";
       wa.href = whatsappUrl(merged.invoice_number);
       wa.hidden = false;
     }
@@ -790,7 +892,7 @@ html[data-language="id"] .lang-id{display:revert!important}
         return;
       }
       setStatus("active", "active", activePayment);
-      window.loadJokulCheckout(activePayment.payment_url);
+      openDokuCheckout(activePayment.payment_url);
       return;
     }
 
@@ -844,8 +946,7 @@ html[data-language="id"] .lang-id{display:revert!important}
       setActivePayment(payment, Boolean(data.reused));
       startPolling(payment);
 
-      if (typeof window.loadJokulCheckout !== "function") throw new Error("DOKU Checkout belum dimuat");
-      window.loadJokulCheckout(data.payment_url);
+      openDokuCheckout(data.payment_url);
     } catch (error) {
       console.error(error);
       statusBox.hidden = false;
