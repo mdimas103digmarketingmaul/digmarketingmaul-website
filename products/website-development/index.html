@@ -208,9 +208,9 @@ html[data-theme="dark"] .btn-whatsapp{color:#bbf7d0;background:rgba(34,197,94,.0
 }
 .lang-en{display:none}
 html[data-language="en"] .lang-id{display:none!important}
-html[data-language="en"] .lang-en{display:initial!important}
+html[data-language="en"] .lang-en{display:revert!important}
 html[data-language="id"] .lang-en{display:none!important}
-html[data-language="id"] .lang-id{display:initial!important}
+html[data-language="id"] .lang-id{display:revert!important}
 @media(max-width:840px){
   .shell{width:min(100% - 28px,1120px)}
   .topbar-inner{align-items:flex-start;padding:12px 0}
@@ -240,33 +240,36 @@ html[data-language="id"] .lang-id{display:initial!important}
 .feature:first-of-type{border-top:0}
 .feature i{font-style:normal;color:var(--accent);font-family:"JetBrains Mono",monospace;font-size:12px}
 .section{padding:46px 0}
-.section h2{font-size:clamp(30px,4vw,46px);letter-spacing:-.045em;margin:12px 0 16px}
-.section-intro{max-width:800px;color:var(--muted);line-height:1.78}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
-.mini{padding:22px}
-.mini .num{font:600 11px/1.2 "JetBrains Mono",monospace;color:var(--accent);letter-spacing:.12em}
-.mini h3{margin:12px 0 8px}
-.mini p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
-.full-bleed-callout{
-  width:100vw;
-  margin-left:calc(50% - 50vw);
-  margin-top:44px;
-  background:var(--accent-soft);
-  border-top:1px solid rgba(255,49,88,.16);
-  border-bottom:1px solid rgba(255,49,88,.16);
-}
-.full-bleed-inner{width:min(900px,calc(100% - 40px));margin:auto;padding:34px 0;text-align:center}
-.full-bleed-inner strong{display:block;font-size:22px;margin-bottom:12px}
-.full-bleed-inner p{max-width:820px;margin:0 auto;color:var(--muted);line-height:1.8;text-align:justify;text-align-last:center}
-.bottom-cta{margin:44px auto 76px;padding:38px;text-align:center}
-.bottom-cta h2{font-size:clamp(28px,4vw,42px);margin:10px 0 12px}
-.bottom-cta p{max-width:720px;margin:0 auto;color:var(--muted);line-height:1.75}
-.bottom-cta .actions{justify-content:center}
+.section .eyebrow + h2{margin-top:14px}
+.section h2 + .section-intro{margin-top:6px}
+.section h2{font-size:clamp(30px,4vw,46px);letter-spacing:-.045em;margin:14px 0 16px}
+.section-intro{max-width:840px;color:var(--muted);line-height:1.8;margin:0}
+.compact-copy-section{padding-top:18px;padding-bottom:34px}
+.domain-note{max-width:840px;margin:0;padding:0}
+.domain-note h3{font-size:22px;margin:0 0 12px;letter-spacing:-.02em}
+.domain-note p{margin:0;color:var(--muted);line-height:1.8}
+.discussion-section{padding-top:36px}
+.discussion-section .eyebrow{display:block;margin-bottom:16px}
+.discussion-section h2{display:block;margin:0 0 18px;line-height:1.08}
+.discussion-section .section-intro{display:block;margin:0 0 26px;max-width:820px}
+.discussion-section .actions{margin-top:0}
+.bottom-cta{margin:46px auto 76px;padding:38px 42px}
+.bottom-cta-inner{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:48px}
+.bottom-cta-copy{text-align:left;min-width:0}
+.bottom-kicker{display:block;margin:0 0 10px!important;color:var(--muted)!important;font-size:14px;font-weight:600;line-height:1.5}
+.bottom-cta h2{display:block;font-size:clamp(28px,4vw,42px);margin:0 0 14px;line-height:1.12}
+.bottom-subcopy{display:block;max-width:720px!important;margin:0!important;color:var(--muted)!important;line-height:1.7!important}
+.bottom-cta .actions{margin:0;justify-content:flex-end}
+.bottom-cta .actions .btn{white-space:nowrap;padding-inline:22px}
 @media(max-width:840px){
   .hero{padding-top:48px}
   .hero-grid{grid-template-columns:1fr;gap:30px}
   .cards{grid-template-columns:1fr}
   .actions .btn{flex:1 1 220px}
+  .bottom-cta{padding:28px}
+  .bottom-cta-inner{grid-template-columns:1fr;gap:24px}
+  .bottom-cta .actions{justify-content:flex-start}
+  .bottom-cta .actions .btn{flex:0 1 auto}
 }
 </style>
 </head>
@@ -302,13 +305,12 @@ html[data-language="id"] .lang-id{display:initial!important}
   <section class="hero shell">
     <div class="hero-grid">
       <div>
-        <div class="eyebrow">Website &amp; Build / Service</div>
         <h1>Website<br>Development<span style="color:var(--accent)">.</span></h1>
         <p class="lead lang-id">Jasa untuk kamu yang ingin dibantu membuat website dari tahap diskusi kebutuhan sampai website siap live—untuk kebutuhan personal, bisnis, maupun digital product.</p>
         <p class="lead lang-en">A website development service for personal, business, or digital-product needs—from discussing requirements through launch.</p>
         <div class="price">Rp999.000</div>
-        <p class="note lang-id">Scope final menyesuaikan kebutuhan yang disepakati bersama sebelum pengerjaan.</p>
-        <p class="note lang-en">The final scope will follow the requirements agreed together before development begins.</p>
+        <p class="note lang-id">Scope final menyesuaikan kebutuhan yang disepakati bersama.</p>
+        <p class="note lang-en">The final scope will follow the requirements agreed together.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/checkout/?product=website-development">
             <span class="lang-id">Lanjut ke Pembayaran</span>
@@ -332,49 +334,20 @@ html[data-language="id"] .lang-id{display:initial!important}
     </div>
   </section>
 
-  <section class="section shell">
-    <div class="eyebrow">How it works</div>
-    <h2 class="lang-id">Dari kebutuhan sampai live.</h2>
-    <h2 class="lang-en">From requirements to launch.</h2>
-    <p class="section-intro lang-id">Layanan ini cocok kalau kamu ingin punya website tetapi tidak ingin menangani seluruh proses teknis sendirian. Kita mulai dari memahami kebutuhan, menentukan struktur yang masuk akal, lalu membangun dan menyiapkan website sampai siap digunakan.</p>
-    <p class="section-intro lang-en">This service is designed for people who need a website without having to manage the entire technical process alone. We start by understanding the requirements, defining a sensible structure, then building and preparing the site for launch.</p>
-
-    <div class="cards">
-      <div class="panel mini">
-        <div class="num">01 / DISCUSS</div>
-        <h3 class="lang-id">Diskusi kebutuhan</h3><h3 class="lang-en">Discuss requirements</h3>
-        <p class="lang-id">Kita menyamakan tujuan, kebutuhan halaman, referensi, dan batas scope sebelum development dimulai.</p>
-        <p class="lang-en">We align on goals, required pages, references, and scope before development starts.</p>
-      </div>
-      <div class="panel mini">
-        <div class="num">02 / BUILD</div>
-        <h3 class="lang-id">Build &amp; review</h3><h3 class="lang-en">Build &amp; review</h3>
-        <p class="lang-id">Website dibangun berdasarkan scope yang disepakati, kemudian direview bersama untuk penyesuaian akhir.</p>
-        <p class="lang-en">The website is developed based on the agreed scope and reviewed together for final adjustments.</p>
-      </div>
-      <div class="panel mini">
-        <div class="num">03 / LAUNCH</div>
-        <h3 class="lang-id">Go live</h3><h3 class="lang-en">Go live</h3>
-        <p class="lang-id">Setelah final, website di-deploy dan dihubungkan dengan domain yang digunakan agar dapat diakses publik.</p>
-        <p class="lang-en">After final approval, the website is deployed and connected to its domain so it can be accessed publicly.</p>
-      </div>
-    </div>
-
-    <div class="full-bleed-callout">
-      <div class="full-bleed-inner">
-        <strong>Free domain*</strong>
-        <p class="lang-id">Gratis domain untuk beberapa pilihan domain tertentu tanpa biaya tambahan. Pilihan nama, ekstensi, availability, dan ketentuannya akan kita diskusikan bersama sebelum pengerjaan.</p>
-        <p class="lang-en">A free domain is included for selected domain options at no additional cost. The name, extension, availability, and applicable terms will be discussed together before development begins.</p>
-      </div>
+  <section class="section shell compact-copy-section">
+    <div class="domain-note">
+      <h3>Free Domain</h3>
+      <p class="lang-id">Gratis domain untuk beberapa pilihan domain tertentu. Pilihan nama, ekstensi, availability, dan ketentuan lainnya mari diskusikan dengan Maul.</p>
+      <p class="lang-en">A free domain is available for selected domain options. Let’s discuss the name, extension, availability, and other terms together with Maul.</p>
     </div>
   </section>
 
-  <section class="section shell">
+  <section class="section shell discussion-section">
     <div class="eyebrow">Need more information?</div>
     <h2 class="lang-id">Masih ingin diskusi dulu?</h2>
     <h2 class="lang-en">Want to discuss it first?</h2>
-    <p class="section-intro lang-id">Kalau kamu masih ingin memastikan kebutuhan, scope, atau proses pengerjaannya, kamu bisa menghubungi Maul terlebih dahulu.</p>
-    <p class="section-intro lang-en">If you would like to clarify the requirements, scope, or process first, you can contact Maul directly.</p>
+    <p class="section-intro lang-id">Kalau kamu masih ingin memastikan kebutuhan, scope, atau proses pengerjaannya, kamu bisa klik link WA di bawah ini.</p>
+    <p class="section-intro lang-en">If you would like to clarify the requirements, scope, or process first, you can use the WhatsApp link below.</p>
     <div class="actions">
       <a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20tertarik%20dengan%20layanan%20Website%20Development%20dan%20ingin%20mendapatkan%20informasi%20lebih%20lanjut%20terkait%20proses%2C%20scope%2C%20dan%20detail%20pengerjaannya." target="_blank" rel="noopener noreferrer">
         <span class="lang-id">Hubungi Maul via WhatsApp</span>
@@ -384,16 +357,21 @@ html[data-language="id"] .lang-id{display:initial!important}
   </section>
 
   <section class="panel bottom-cta shell">
-    <div class="eyebrow"><span class="lang-id">Siap memulai?</span><span class="lang-en">Ready to start?</span></div>
-    <h2 class="lang-id">Lanjutkan ke pembayaran.</h2>
-    <h2 class="lang-en">Proceed to payment.</h2>
-    <p class="lang-id">Setelah pembayaran berhasil, email konfirmasi dan link halaman pascapembayaran akan dikirim otomatis ke alamat email.</p>
-    <p class="lang-en">After payment is successful, a confirmation email and your post-payment page link will be sent automatically to your email address.</p>
-    <div class="actions">
-      <a class="btn btn-primary" href="/checkout/?product=website-development">
-        <span class="lang-id">Lanjut ke Pembayaran</span>
-        <span class="lang-en">Proceed to Payment</span>
-      </a>
+    <div class="bottom-cta-inner">
+      <div class="bottom-cta-copy">
+        <p class="bottom-kicker lang-id">Siap memulai?</p>
+        <p class="bottom-kicker lang-en">Ready to start?</p>
+        <h2 class="lang-id">Lanjutkan ke pembayaran.</h2>
+        <h2 class="lang-en">Proceed to payment.</h2>
+        <p class="bottom-subcopy lang-id">Setelah pembayaran berhasil, email konfirmasi dan link halaman pascapembayaran akan dikirim otomatis ke alamat email.</p>
+        <p class="bottom-subcopy lang-en">After payment is successful, a confirmation email and your post-payment page link will be sent automatically to your email address.</p>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary" href="/checkout/?product=website-development">
+          <span class="lang-id">Lanjut ke Pembayaran</span>
+          <span class="lang-en">Proceed to Payment</span>
+        </a>
+      </div>
     </div>
   </section>
 </main>

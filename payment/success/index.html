@@ -209,9 +209,9 @@ html[data-theme="dark"] .btn-whatsapp{color:#bbf7d0;background:rgba(34,197,94,.0
 }
 .lang-en{display:none}
 html[data-language="en"] .lang-id{display:none!important}
-html[data-language="en"] .lang-en{display:initial!important}
+html[data-language="en"] .lang-en{display:revert!important}
 html[data-language="id"] .lang-en{display:none!important}
-html[data-language="id"] .lang-id{display:initial!important}
+html[data-language="id"] .lang-id{display:revert!important}
 @media(max-width:840px){
   .shell{width:min(100% - 28px,1120px)}
   .topbar-inner{align-items:flex-start;padding:12px 0}
@@ -235,16 +235,24 @@ html[data-language="id"] .lang-id{display:initial!important}
 .lead{color:var(--muted);font-size:18px;line-height:1.75}
 .meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0}
 .meta-box{padding:17px;border:1px solid var(--line);border-radius:12px;background:var(--bg-soft)}
-.meta-box span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
-.meta-box strong{word-break:break-word}
+.meta-label{display:block;color:var(--muted);font-size:12px;line-height:1.4;margin:0 0 8px}
+.meta-label .lang-id,
+.meta-label .lang-en{display:inherit}
+.meta-value{display:block;font-weight:700;line-height:1.45;word-break:break-word}
+.email-status-value{display:block;font-size:14px;line-height:1.55;color:var(--text);word-break:break-word}
+.email-status-value .email-prefix,
+.email-status-value .email-address{display:inline!important;margin:0!important}
+.email-status-value .email-prefix{font-weight:400;color:var(--muted)}
+.email-status-value .email-address{font-weight:600;color:var(--text)}
 .save-url{padding:16px;border:1px solid rgba(255,49,88,.19);background:var(--accent-soft);border-radius:12px;color:var(--muted);line-height:1.7;font-size:14px;margin:24px 0}
 .next-step{padding:22px;margin-top:18px}
-.next-step h2{margin:0 0 10px;font-size:20px}
-.next-step p{margin:0;color:var(--muted);line-height:1.7}
+.next-step p{margin:0;color:var(--muted);line-height:1.75;font-size:14px;font-weight:400}
+.next-step-copy{max-width:720px}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 .gate{max-width:830px;margin:auto;padding:32px}
-.gate h1{margin:0 0 12px}
-.gate p{color:var(--muted);line-height:1.7}
+.gate .eyebrow{display:block;margin-bottom:16px}
+.gate h1{display:block;margin:0 0 18px;line-height:1.08}
+.gate p{display:block;margin:0;color:var(--muted);line-height:1.7;max-width:720px}
 #success-view{display:none}
 @media(max-width:700px){.card,.gate{padding:22px}.meta{grid-template-columns:1fr}}
 </style>
@@ -290,22 +298,32 @@ html[data-language="id"] .lang-id{display:initial!important}
       <p class="lead" id="success-greeting">Pembayaranmu sudah kami terima.</p>
 
       <div class="meta">
-        <div class="meta-box"><span>Invoice</span><strong id="success-invoice">—</strong></div>
-        <div class="meta-box"><span>Total</span><strong id="success-amount">—</strong></div>
-        <div class="meta-box"><span class="lang-id">Produk</span><span class="lang-en">Product</span><strong id="success-product">—</strong></div>
-        <div class="meta-box"><span>Email</span><strong id="success-email">—</strong></div>
+        <div class="meta-box">
+          <div class="meta-label">Invoice</div>
+          <strong class="meta-value" id="success-invoice">—</strong>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Total</div>
+          <strong class="meta-value" id="success-amount">—</strong>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label"><span class="lang-id">Produk</span><span class="lang-en">Product</span></div>
+          <strong class="meta-value" id="success-product">—</strong>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Email</div>
+          <div id="success-email" class="email-status-value">—</div>
+        </div>
       </div>
 
       <div class="save-url">
-        <span class="lang-id">Simpan URL personal halaman ini apabila kamu perlu kembali lagi. Link yang sama juga dikirim melalui email setelah pembayaran berhasil. Jangan membagikan URL personal ini kepada pihak lain.</span>
-        <span class="lang-en">Save this personal page URL if you need to return later. The same link is also sent by email after successful payment. Do not share this personal URL with others.</span>
+        <span class="lang-id">Simpan URL personal halaman ini apabila kamu perlu kembali lagi. Link yang sama juga dikirim melalui email. Jangan membagikan URL personal ini kepada pihak lain.</span>
+        <span class="lang-en">Save this personal page URL if you need to return later. The same link is also sent by email. Do not share this personal URL with others.</span>
       </div>
 
       <div class="panel next-step" id="website-development-next" hidden>
-        <h2 class="lang-id">Langkah berikutnya</h2>
-        <h2 class="lang-en">Next step</h2>
-        <p class="lang-id">Untuk memulai diskusi kebutuhan dan proses pengerjaan Website Development, hubungi Maul melalui WhatsApp.</p>
-        <p class="lang-en">To start discussing requirements and the Website Development process, contact Maul through WhatsApp.</p>
+        <p class="lang-id next-step-copy">Langkah berikutnya untuk memulai diskusi kebutuhan dan proses pengerjaan Website Development, hubungi melalui link WA berikut:</p>
+        <p class="lang-en next-step-copy">For the next step, to start discussing requirements and the Website Development process, use the WhatsApp link below:</p>
         <div class="actions">
           <a class="btn btn-whatsapp" id="success-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
             <span class="lang-id">Hubungi Maul via WhatsApp</span>
@@ -413,6 +431,10 @@ html[data-language="id"] .lang-id{display:initial!important}
 
   let currentData = null;
 
+  const localPreview =
+    (location.hostname === "127.0.0.1" || location.hostname === "localhost") &&
+    new URLSearchParams(location.search).get("preview") === "1";
+
   function language() {
     return window.MauldigitalUI?.getLanguage?.() === "en" ? "en" : "id";
   }
@@ -477,17 +499,46 @@ html[data-language="id"] .lang-id{display:initial!important}
             ? "Terima kasih, " + name + ". Pembayaranmu sudah kami terima."
             : "Pembayaranmu sudah kami terima.");
 
-    document.getElementById("success-email").textContent =
-      currentData.email_status === "SENT"
-        ? (lang === "en"
-            ? "Sent to " + (currentData.customer_email_masked || "buyer email")
-            : "Terkirim ke " + (currentData.customer_email_masked || "email pembeli"))
-        : (lang === "en"
-            ? "Confirmation to " + (currentData.customer_email_masked || "buyer email") + " is being processed"
-            : "Konfirmasi ke " + (currentData.customer_email_masked || "email pembeli") + " sedang diproses");
+    const emailEl = document.getElementById("success-email");
+    const email = currentData.customer_email_masked || (lang === "en" ? "buyer email" : "email pembeli");
+    const prefix = currentData.email_status === "SENT"
+      ? (lang === "en" ? "Sent to" : "Terkirim ke")
+      : (lang === "en" ? "Confirmation is being processed for" : "Konfirmasi sedang diproses ke");
+
+    emailEl.innerHTML =
+      '<span class="email-prefix">' + prefix + '</span> ' +
+      '<span class="email-address">' + email + '</span>';
+  }
+
+  function renderLocalPreview() {
+    currentData = {
+      invoice_number: "INV-PREVIEW-999000",
+      amount: 999000,
+      product_id: "website-development",
+      product_name: "Website Development",
+      customer_name: "Maul Test",
+      customer_email_masked: "m***@example.com",
+      email_status: "SENT",
+      status: "SUCCESS"
+    };
+
+    document.getElementById("success-invoice").textContent = currentData.invoice_number;
+    document.getElementById("success-amount").textContent = formatIdr(currentData.amount);
+    document.getElementById("success-product").textContent = currentData.product_name;
+    document.getElementById("website-development-next").hidden = false;
+    document.getElementById("success-whatsapp").href =
+      whatsappUrl(currentData.invoice_number, currentData.product_name);
+    renderDynamicCopy();
+    gate.style.display = "none";
+    view.style.display = "block";
   }
 
   async function run() {
+    if (localPreview) {
+      renderLocalPreview();
+      return;
+    }
+
     if (!invoice || !token) {
       setGateMessage("incomplete");
       return;

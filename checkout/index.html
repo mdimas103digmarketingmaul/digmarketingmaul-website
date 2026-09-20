@@ -210,9 +210,9 @@ html[data-theme="dark"] .btn-whatsapp{color:#bbf7d0;background:rgba(34,197,94,.0
 }
 .lang-en{display:none}
 html[data-language="en"] .lang-id{display:none!important}
-html[data-language="en"] .lang-en{display:initial!important}
+html[data-language="en"] .lang-en{display:revert!important}
 html[data-language="id"] .lang-en{display:none!important}
-html[data-language="id"] .lang-id{display:initial!important}
+html[data-language="id"] .lang-id{display:revert!important}
 @media(max-width:840px){
   .shell{width:min(100% - 28px,1120px)}
   .topbar-inner{align-items:flex-start;padding:12px 0}
@@ -231,12 +231,13 @@ html[data-language="id"] .lang-id{display:initial!important}
 <style>
 .checkout-view{padding:52px 0 84px}
 .form-shell{max-width:780px;margin:auto}
-.form-head{margin-bottom:24px}
-.form-head h1{font-size:clamp(38px,6vw,58px);letter-spacing:-.055em;margin:13px 0 14px}
-.intro{color:var(--muted);line-height:1.75}
+.form-head{margin-bottom:30px}
+.form-head .eyebrow{display:block;margin-bottom:18px}
+.form-head h1{display:block;font-size:clamp(38px,6vw,58px);letter-spacing:-.055em;margin:0 0 20px;line-height:1.06}
+.intro{display:block;color:var(--muted);line-height:1.75;margin:0;max-width:720px}
 .order-summary{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:22px;margin-bottom:18px}
-.order-summary h2{margin:0 0 7px;font-size:20px}
-.order-summary p{margin:0;color:var(--muted)}
+.order-summary h2{margin:0 0 10px;font-size:20px;line-height:1.3}
+.order-summary p{margin:0;color:var(--muted);line-height:1.55}
 .order-price{font:600 23px/1 "JetBrains Mono",monospace;white-space:nowrap}
 .form-card{padding:28px}
 .field{margin-bottom:20px}
@@ -264,8 +265,15 @@ html[data-language="id"] .lang-id{display:initial!important}
 .success-lead{color:var(--muted);font-size:18px;line-height:1.75}
 .success-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0}
 .meta-box{padding:17px;border:1px solid var(--line);border-radius:12px;background:var(--bg-soft)}
-.meta-box span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
-.meta-box strong{word-break:break-word}
+.meta-label{display:block;color:var(--muted);font-size:12px;line-height:1.4;margin:0 0 8px}
+.meta-label .lang-id,
+.meta-label .lang-en{display:inherit}
+.meta-value{display:block;font-weight:700;line-height:1.45;word-break:break-word}
+.email-status-value{display:block;font-size:14px;line-height:1.55;color:var(--text);word-break:break-word}
+.email-status-value .email-prefix,
+.email-status-value .email-address{display:inline!important;margin:0!important}
+.email-status-value .email-prefix{font-weight:400;color:var(--muted)}
+.email-status-value .email-address{font-weight:600;color:var(--text)}
 .save-url{padding:16px;border:1px solid rgba(255,49,88,.19);background:var(--accent-soft);border-radius:12px;color:var(--muted);line-height:1.7;font-size:14px;margin:24px 0}
 @media(max-width:700px){
   .checkout-view{padding-top:38px}
@@ -371,15 +379,27 @@ html[data-language="id"] .lang-id{display:initial!important}
       <p class="success-lead" id="success-greeting">Pembayaran untuk Website Development sudah kami terima.</p>
 
       <div class="success-meta">
-        <div class="meta-box"><span>Invoice</span><strong id="success-invoice">—</strong></div>
-        <div class="meta-box"><span>Total</span><strong id="success-amount">Rp999.000</strong></div>
-        <div class="meta-box"><span class="lang-id">Produk</span><span class="lang-en">Product</span><strong>Website Development</strong></div>
-        <div class="meta-box"><span>Email</span><strong id="success-email">—</strong></div>
+        <div class="meta-box">
+          <div class="meta-label">Invoice</div>
+          <strong class="meta-value" id="success-invoice">—</strong>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Total</div>
+          <strong class="meta-value" id="success-amount">Rp999.000</strong>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label"><span class="lang-id">Produk</span><span class="lang-en">Product</span></div>
+          <strong class="meta-value">Website Development</strong>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Email</div>
+          <div id="success-email" class="email-status-value">—</div>
+        </div>
       </div>
 
       <div class="save-url">
-        <span class="lang-id">Halaman ini memiliki link personal yang bisa kamu buka kembali. Simpan URL halaman ini; link yang sama juga dikirim ke email setelah pembayaran berhasil.</span>
-        <span class="lang-en">This page has a personal link that you can reopen later. Save this URL; the same link is also sent to your email after successful payment.</span>
+        <span class="lang-id">Halaman ini memiliki link personal yang bisa kamu buka kembali. Simpan URL halaman ini; link yang sama juga dikirim ke email.</span>
+        <span class="lang-en">This page has a personal link that you can reopen later. Save this URL; the same link is also sent to your email.</span>
       </div>
 
       <div class="actions">
@@ -592,14 +612,15 @@ html[data-language="id"] .lang-id{display:initial!important}
             ? "Terima kasih, " + name + ". Pembayaran untuk Website Development sudah kami terima."
             : "Pembayaran untuk Website Development sudah kami terima.");
 
-    document.getElementById("success-email").textContent =
-      currentSuccess.email_status === "SENT"
-        ? (lang === "en"
-            ? "Sent to " + (currentSuccess.customer_email_masked || "your email")
-            : "Sudah dikirim ke " + (currentSuccess.customer_email_masked || "email kamu"))
-        : (lang === "en"
-            ? "Will be sent to " + (currentSuccess.customer_email_masked || "your email")
-            : "Akan dikirim ke " + (currentSuccess.customer_email_masked || "email yang kamu isi"));
+    const emailEl = document.getElementById("success-email");
+    const email = currentSuccess.customer_email_masked || (lang === "en" ? "your email" : "email kamu");
+    const prefix = currentSuccess.email_status === "SENT"
+      ? (lang === "en" ? "Sent to" : "Terkirim ke")
+      : (lang === "en" ? "Will be sent to" : "Akan dikirim ke");
+
+    emailEl.innerHTML =
+      '<span class="email-prefix">' + prefix + '</span> ' +
+      '<span class="email-address">' + email + '</span>';
   }
 
   function renderSuccess(data, payment) {
