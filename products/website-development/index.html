@@ -1,22 +1,480 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Website Development oleh Maul — jasa pembuatan website untuk personal, bisnis, atau digital product sampai live."><meta name="theme-color" content="#07111f"><title>Website Development — Maul Digital</title>
+<html lang="id" data-theme="light" data-language="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f8fb">
+<meta name="description" content="Website Development oleh Maul — jasa pembuatan website untuk personal, bisnis, atau digital product sampai live.">
+<title>Website Development — Maul Digital</title>
+<link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+(function () {
+  const THEME_KEY = "maulCommerceTheme";
+  const LANG_KEY = "maulCommerceLanguage";
+
+  let theme = "light";
+  let language = "id";
+
+  try {
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    const savedLanguage = localStorage.getItem(LANG_KEY);
+
+    theme = savedTheme === "dark" ? "dark" : "light";
+    language = savedLanguage === "en" ? "en" : "id";
+  } catch (error) {}
+
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.dataset.language = language;
+  document.documentElement.lang = language;
+})();
+</script>
+
+
 <style>
-:root{--bg:#07111f;--panel:#0b1728;--text:#eef4ff;--muted:#9aa8bd;--line:rgba(148,163,184,.18);--accent:#ff3158;--accent2:#ff5575;--shadow:0 24px 80px rgba(0,0,0,.28)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 82% 10%,rgba(255,49,88,.12),transparent 26%),linear-gradient(180deg,#07111f 0%,#091524 100%);color:var(--text);min-height:100vh}.grid{position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(148,163,184,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.055) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,black,transparent 85%)}a{color:inherit}.shell{width:min(1120px,calc(100% - 40px));margin:auto}.header{height:84px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:relative;z-index:3}.brand{text-decoration:none;font-size:28px;font-weight:800;letter-spacing:-.04em}.brand b{color:var(--accent)}.back{text-decoration:none;color:var(--muted);font-size:14px}.back:hover{color:#fff}.eyebrow{font:500 12px/1 JetBrains Mono,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}.hero{padding:78px 0 46px;position:relative;z-index:2}.hero-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:56px;align-items:center}.hero h1{font-size:clamp(46px,7vw,84px);line-height:.96;letter-spacing:-.06em;margin:18px 0 22px}.lead{font-size:clamp(18px,2vw,22px);line-height:1.65;color:#b7c2d3;max-width:700px}.price{font:600 clamp(25px,4vw,40px)/1 JetBrains Mono,monospace;margin:30px 0 10px}.note{color:var(--muted);font-size:14px;line-height:1.6}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}.btn{display:inline-flex;justify-content:center;align-items:center;gap:10px;padding:14px 20px;border-radius:11px;text-decoration:none;font-weight:700;border:1px solid transparent;cursor:pointer;font:700 14px Inter,sans-serif}.btn-primary{background:var(--accent);color:#fff;box-shadow:0 14px 38px rgba(255,49,88,.24)}.btn-primary:hover{background:var(--accent2)}.btn-secondary{border-color:var(--line);background:rgba(255,255,255,.035);color:#fff}.btn-whatsapp{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08);color:#c6f6d5}.hero-card,.panel{background:linear-gradient(180deg,rgba(16,29,48,.96),rgba(10,22,38,.96));border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}.hero-card{padding:28px}.hero-card h3{margin:0 0 20px;font-size:17px}.feature{display:flex;gap:13px;padding:14px 0;border-top:1px solid var(--line);color:#c6d0df;line-height:1.55}.feature:first-of-type{border-top:0}.feature i{color:var(--accent);font-style:normal}.section{padding:42px 0}.section h2{font-size:clamp(28px,4vw,46px);letter-spacing:-.04em;margin:0 0 16px}.section-intro{color:var(--muted);line-height:1.7;max-width:760px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}.mini{padding:22px}.mini .num{font:500 11px JetBrains Mono,monospace;color:var(--accent);letter-spacing:.12em}.mini h3{margin:12px 0 8px;font-size:18px}.mini p{margin:0;color:var(--muted);line-height:1.65;font-size:14px}.domain-callout{padding:26px;margin-top:24px;border-left:3px solid var(--accent)}.domain-callout strong{display:block;font-size:18px;margin-bottom:8px}.bottom-cta{margin:50px 0 80px;padding:38px;text-align:center}.bottom-cta h2{margin:0 0 12px}.bottom-cta p{color:var(--muted);max-width:700px;margin:0 auto 22px;line-height:1.7}.footer{padding:26px 0 36px;border-top:1px solid var(--line);color:#7f8da2;font-size:13px}.form-shell{max-width:760px;margin:42px auto 80px}.form-head{margin-bottom:22px}.form-head h1{font-size:clamp(34px,6vw,56px);letter-spacing:-.05em;margin:12px 0}.order-summary{padding:22px;margin-bottom:18px;display:flex;justify-content:space-between;gap:20px;align-items:flex-end}.order-summary h2{margin:0 0 7px;font-size:20px}.order-summary p{margin:0;color:var(--muted)}.order-price{font:600 22px JetBrains Mono,monospace}.form-card{padding:28px}.field{margin-bottom:20px}.field label{display:block;font-weight:700;font-size:14px;margin-bottom:8px}.required{color:var(--accent)}.field input{width:100%;border:1px solid var(--line);background:#07111f;color:#fff;padding:14px 15px;border-radius:10px;font:500 16px Inter,sans-serif;outline:none}.field input:focus{border-color:rgba(255,49,88,.7);box-shadow:0 0 0 3px rgba(255,49,88,.1)}.field small{display:block;color:var(--muted);line-height:1.55;margin-top:7px}.privacy{padding:14px 16px;border-radius:10px;background:rgba(148,163,184,.07);color:#aab6c7;font-size:12px;line-height:1.6;margin:18px 0}.full{width:100%}.status-box{margin-top:18px;padding:14px 16px;border:1px solid var(--line);border-radius:10px;color:#c4cfdf;font-size:14px;line-height:1.6}.status-box.error{border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.08)}.success-view{display:none;min-height:calc(100vh - 84px);padding:70px 0 80px}.success-view.active{display:block}.checkout-view.hidden{display:none}.success-card{max-width:820px;margin:auto;padding:38px}.success-icon{width:72px;height:72px;border-radius:22px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);display:grid;place-items:center;font-size:34px;color:#4ade80;margin-bottom:26px}.success-card h1{font-size:clamp(36px,6vw,62px);letter-spacing:-.05em;margin:0 0 15px}.success-card .success-lead{color:#bac5d4;font-size:18px;line-height:1.7}.success-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0}.meta-box{padding:17px;border:1px solid var(--line);border-radius:12px}.meta-box span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.meta-box strong{font-size:15px;word-break:break-word}.save-url{padding:16px;border-radius:12px;background:rgba(255,49,88,.07);border:1px solid rgba(255,49,88,.2);color:#cdd6e4;line-height:1.65;font-size:14px;margin:24px 0}.loading{opacity:.7;pointer-events:none}.gate{max-width:820px;margin:80px auto;padding:32px}.gate h1{margin:0 0 12px}.gate p{color:var(--muted);line-height:1.7}@media(max-width:820px){.shell{width:min(100% - 28px,1120px)}.hero{padding-top:48px}.hero-grid{grid-template-columns:1fr;gap:28px}.cards{grid-template-columns:1fr}.header{height:72px}.order-summary{align-items:flex-start;flex-direction:column}.success-meta{grid-template-columns:1fr}.success-card,.form-card{padding:22px}.actions .btn{width:100%}}
-</style></head><body><div class="grid" aria-hidden="true"></div>
-<header class="header shell"><a class="brand" href="/">M<b>.</b></a><a class="back" href="/products/">← Kembali ke Products</a></header>
-<main><section class="hero shell"><div class="hero-grid"><div><div class="eyebrow">Website & Build / Service</div><h1>Website<br>Development<span style="color:var(--accent)">.</span></h1>
-<p class="lead">Jasa untuk kamu yang ingin dibantu membuat website dari tahap diskusi kebutuhan sampai website siap live—untuk kebutuhan personal, bisnis, maupun digital product.</p><div class="price">Rp1.500.000</div><p class="note">Scope final menyesuaikan kebutuhan yang disepakati bersama sebelum pengerjaan.</p>
-<div class="actions"><a class="btn btn-primary" href="/checkout/?product=website-development">Checkout Website Development</a><a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20tertarik%20dengan%20layanan%20Website%20Development%20dan%20ingin%20mendapatkan%20informasi%20lebih%20lanjut%20terkait%20proses%2C%20scope%2C%20dan%20detail%20pengerjaannya." target="_blank" rel="noopener noreferrer">Tanya Maul via WhatsApp</a></div></div>
-<aside class="hero-card"><h3>Yang akan kita kerjakan</h3><div class="feature"><i>01</i><div>Diskusi kebutuhan, tujuan website, dan struktur halaman yang diperlukan.</div></div><div class="feature"><i>02</i><div>Development website dengan tampilan yang responsif dan siap digunakan.</div></div><div class="feature"><i>03</i><div>Setup deployment, domain, dan proses sampai website dapat diakses secara live.</div></div><div class="feature"><i>04</i><div>Final review bersama sebelum proses pengerjaan dinyatakan selesai.</div></div></aside></div></section>
-<section class="section shell"><div class="eyebrow">How it works</div><h2>Dari kebutuhan sampai live.</h2><p class="section-intro">Layanan ini cocok kalau kamu ingin punya website tetapi tidak ingin menangani seluruh proses teknis sendirian. Kita mulai dari memahami kebutuhan, menentukan struktur yang masuk akal, lalu membangun dan menyiapkan website sampai siap digunakan.</p>
-<div class="cards"><div class="panel mini"><div class="num">01 / DISCUSS</div><h3>Diskusi kebutuhan</h3><p>Kita menyamakan tujuan, kebutuhan halaman, referensi, dan batas scope sebelum development dimulai.</p></div><div class="panel mini"><div class="num">02 / BUILD</div><h3>Build & review</h3><p>Website dibangun berdasarkan scope yang disepakati, kemudian direview bersama untuk penyesuaian akhir.</p></div><div class="panel mini"><div class="num">03 / LAUNCH</div><h3>Go live</h3><p>Setelah final, website di-deploy dan dihubungkan dengan domain yang digunakan agar dapat diakses publik.</p></div></div>
-<div class="panel domain-callout"><strong>Free domain untuk opsi domain tertentu.</strong><span class="note">Untuk beberapa pilihan ekstensi/domain tertentu, domain dapat termasuk dalam layanan tanpa biaya tambahan. Pilihan nama, ekstensi, availability, dan ketentuannya akan kita diskusikan bersama sebelum pengerjaan.</span></div></section>
-<section class="section shell"><div class="eyebrow">Need more information?</div><h2>Masih ingin diskusi dulu?</h2><p class="section-intro">Kalau kamu masih ingin memastikan kebutuhan, scope, atau proses pengerjaannya, kamu bisa menghubungi Maul terlebih dahulu. Pesan WhatsApp sudah disiapkan agar pembicaraan lebih mudah dimulai.</p><div class="actions"><a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20tertarik%20dengan%20layanan%20Website%20Development%20dan%20ingin%20mendapatkan%20informasi%20lebih%20lanjut%20terkait%20proses%2C%20scope%2C%20dan%20detail%20pengerjaannya." target="_blank" rel="noopener noreferrer">Hubungi Maul via WhatsApp</a></div></section>
-<section class="panel bottom-cta shell"><div class="eyebrow">Ready to start?</div><h2>Lanjutkan ke checkout.</h2><p>Di halaman berikutnya kamu hanya perlu mengisi email sebagai data wajib. Nama dan nomor telepon bersifat opsional. Setelah pembayaran berhasil, email konfirmasi dan link halaman pascapembayaran akan dikirim ke alamat email tersebut.</p><div class="actions" style="justify-content:center"><a class="btn btn-primary" href="/checkout/?product=website-development">Lanjutkan ke Pembayaran</a></div></section></main><footer class="footer shell">© 2026 Build and Design by Maul</footer></body></html>
+:root{
+  color-scheme:light;
+  --bg:#f7f8fb;
+  --bg-soft:#ffffff;
+  --panel:#ffffff;
+  --panel-2:#f3f5f8;
+  --text:#111827;
+  --muted:#667085;
+  --line:#e4e7ec;
+  --accent:#ff3158;
+  --accent-hover:#e92b50;
+  --accent-soft:#fff0f3;
+  --green:#15803d;
+  --green-soft:#ecfdf3;
+  --nav-bg:rgba(255,255,255,.9);
+  --shadow:0 18px 55px rgba(15,23,42,.08);
+  --shadow-soft:0 8px 28px rgba(15,23,42,.05);
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#07111f;
+  --bg-soft:#091524;
+  --panel:#0d1b2d;
+  --panel-2:#101f33;
+  --text:#eef4ff;
+  --muted:#9aa8bd;
+  --line:rgba(148,163,184,.18);
+  --accent:#ff3158;
+  --accent-hover:#ff5575;
+  --accent-soft:rgba(255,49,88,.09);
+  --green:#4ade80;
+  --green-soft:rgba(34,197,94,.09);
+  --nav-bg:rgba(7,17,31,.88);
+  --shadow:0 24px 80px rgba(0,0,0,.28);
+  --shadow-soft:0 8px 30px rgba(0,0,0,.18);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 84% 6%,rgba(255,49,88,.08),transparent 24%),
+    var(--bg);
+  transition:background .2s ease,color .2s ease;
+}
+a{color:inherit}
+button,input{font:inherit}
+.shell{width:min(1120px,calc(100% - 40px));margin-inline:auto}
+.grid-bg{
+  position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:
+    linear-gradient(rgba(148,163,184,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(148,163,184,.055) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:linear-gradient(to bottom,black,transparent 86%);
+}
+.topbar{
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid var(--line);
+  background:var(--nav-bg);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+.topbar-inner{
+  min-height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:10px 0;
+}
+.brand{
+  flex:none;
+  text-decoration:none;
+  font-size:28px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:-.055em;
+}
+.brand b{color:var(--accent)}
+.nav-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:9px;
+  flex-wrap:wrap;
+}
+.segmented{
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  padding:3px;
+  border:1px solid var(--line);
+  background:var(--panel-2);
+  border-radius:999px;
+}
+.segmented button{
+  min-height:32px;
+  border:0;
+  border-radius:999px;
+  padding:6px 10px;
+  cursor:pointer;
+  color:var(--muted);
+  background:transparent;
+  font-size:12px;
+  font-weight:700;
+  transition:.18s ease;
+}
+.segmented button:hover{color:var(--text)}
+.segmented button.active,
+.segmented button[aria-pressed="true"]{
+  color:var(--text);
+  background:var(--panel);
+  box-shadow:0 1px 5px rgba(15,23,42,.1);
+}
+.nav-link,.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:700;
+  border:1px solid var(--line);
+  min-height:40px;
+  padding:10px 14px;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.nav-link{
+  color:var(--muted);
+  background:var(--panel);
+  font-size:13px;
+}
+.nav-link:hover{color:var(--text);border-color:#cbd5e1}
+.btn-primary{
+  color:#fff;
+  background:var(--accent);
+  border-color:var(--accent);
+  box-shadow:0 10px 28px rgba(255,49,88,.18);
+}
+.btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);transform:translateY(-1px)}
+.btn-secondary{background:var(--panel);color:var(--text)}
+.btn-whatsapp{
+  border-color:rgba(22,163,74,.28);
+  color:#166534;
+  background:#f0fdf4;
+}
+html[data-theme="dark"] .btn-whatsapp{color:#bbf7d0;background:rgba(34,197,94,.08)}
+.eyebrow{
+  font:600 11px/1.2 "JetBrains Mono",monospace;
+  letter-spacing:.17em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:20px;
+  box-shadow:var(--shadow-soft);
+}
+.footer{
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  padding:26px 0 36px;
+  font-size:13px;
+}
+.lang-en{display:none}
+html[data-language="en"] .lang-id{display:none!important}
+html[data-language="en"] .lang-en{display:initial!important}
+html[data-language="id"] .lang-en{display:none!important}
+html[data-language="id"] .lang-id{display:initial!important}
+@media(max-width:840px){
+  .shell{width:min(100% - 28px,1120px)}
+  .topbar-inner{align-items:flex-start;padding:12px 0}
+  .nav-actions{gap:6px}
+  .nav-link{display:none}
+  .segmented button{padding-inline:8px}
+  .sticky-payment{padding-inline:11px;font-size:12px}
+}
+@media(max-width:560px){
+  .topbar-inner{display:grid;grid-template-columns:auto 1fr}
+  .nav-actions{justify-content:flex-end}
+  .segmented.theme-segment span.label{display:none}
+}
+</style>
+
+<style>
+.hero{padding:72px 0 52px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(330px,.8fr);gap:56px;align-items:center}
+.hero h1{font-size:clamp(48px,7vw,82px);line-height:.96;letter-spacing:-.06em;margin:18px 0 22px}
+.lead{max-width:720px;color:var(--muted);font-size:clamp(18px,2vw,21px);line-height:1.72}
+.price{font:600 clamp(28px,4vw,40px)/1 "JetBrains Mono",monospace;margin:30px 0 10px}
+.note{color:var(--muted);font-size:14px;line-height:1.65}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero-card{padding:28px}
+.hero-card h3{margin:0 0 18px;font-size:18px}
+.feature{display:flex;gap:13px;padding:14px 0;border-top:1px solid var(--line);color:var(--muted);line-height:1.55}
+.feature:first-of-type{border-top:0}
+.feature i{font-style:normal;color:var(--accent);font-family:"JetBrains Mono",monospace;font-size:12px}
+.section{padding:46px 0}
+.section h2{font-size:clamp(30px,4vw,46px);letter-spacing:-.045em;margin:12px 0 16px}
+.section-intro{max-width:800px;color:var(--muted);line-height:1.78}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+.mini{padding:22px}
+.mini .num{font:600 11px/1.2 "JetBrains Mono",monospace;color:var(--accent);letter-spacing:.12em}
+.mini h3{margin:12px 0 8px}
+.mini p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+.full-bleed-callout{
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  margin-top:44px;
+  background:var(--accent-soft);
+  border-top:1px solid rgba(255,49,88,.16);
+  border-bottom:1px solid rgba(255,49,88,.16);
+}
+.full-bleed-inner{width:min(900px,calc(100% - 40px));margin:auto;padding:34px 0;text-align:center}
+.full-bleed-inner strong{display:block;font-size:22px;margin-bottom:12px}
+.full-bleed-inner p{max-width:820px;margin:0 auto;color:var(--muted);line-height:1.8;text-align:justify;text-align-last:center}
+.bottom-cta{margin:44px auto 76px;padding:38px;text-align:center}
+.bottom-cta h2{font-size:clamp(28px,4vw,42px);margin:10px 0 12px}
+.bottom-cta p{max-width:720px;margin:0 auto;color:var(--muted);line-height:1.75}
+.bottom-cta .actions{justify-content:center}
+@media(max-width:840px){
+  .hero{padding-top:48px}
+  .hero-grid{grid-template-columns:1fr;gap:30px}
+  .cards{grid-template-columns:1fr}
+  .actions .btn{flex:1 1 220px}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="/">M<b>.</b></a>
+    <div class="nav-actions">
+      
+<div class="segmented language-segment" role="group" aria-label="Language">
+  <button type="button" data-language-choice="id" aria-pressed="true">ID</button>
+  <button type="button" data-language-choice="en" aria-pressed="false">EN</button>
+</div>
+<div class="segmented theme-segment" role="group" aria-label="Appearance">
+  <button type="button" data-theme-choice="light" aria-pressed="true" title="Light mode">☀ <span class="label">Light</span></button>
+  <button type="button" data-theme-choice="dark" aria-pressed="false" title="Dark mode">◐ <span class="label">Dark</span></button>
+</div>
+
+      <a class="nav-link" href="/products/">
+        <span class="lang-id">← Kembali ke Products</span>
+        <span class="lang-en">← Back to Products</span>
+      </a>
+      <a class="btn btn-primary sticky-payment" href="/checkout/?product=website-development">
+        <span class="lang-id">Lanjut ke Pembayaran</span>
+        <span class="lang-en">Proceed to Payment</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero shell">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Website &amp; Build / Service</div>
+        <h1>Website<br>Development<span style="color:var(--accent)">.</span></h1>
+        <p class="lead lang-id">Jasa untuk kamu yang ingin dibantu membuat website dari tahap diskusi kebutuhan sampai website siap live—untuk kebutuhan personal, bisnis, maupun digital product.</p>
+        <p class="lead lang-en">A website development service for personal, business, or digital-product needs—from discussing requirements through launch.</p>
+        <div class="price">Rp999.000</div>
+        <p class="note lang-id">Scope final menyesuaikan kebutuhan yang disepakati bersama sebelum pengerjaan.</p>
+        <p class="note lang-en">The final scope will follow the requirements agreed together before development begins.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/checkout/?product=website-development">
+            <span class="lang-id">Lanjut ke Pembayaran</span>
+            <span class="lang-en">Proceed to Payment</span>
+          </a>
+          <a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20tertarik%20dengan%20layanan%20Website%20Development%20dan%20ingin%20mendapatkan%20informasi%20lebih%20lanjut%20terkait%20proses%2C%20scope%2C%20dan%20detail%20pengerjaannya." target="_blank" rel="noopener noreferrer">
+            <span class="lang-id">Tanya Maul via WhatsApp</span>
+            <span class="lang-en">Ask Maul via WhatsApp</span>
+          </a>
+        </div>
+      </div>
+
+      <aside class="panel hero-card">
+        <h3 class="lang-id">Yang akan kita kerjakan</h3>
+        <h3 class="lang-en">What we'll work on</h3>
+        <div class="feature"><i>01</i><div><span class="lang-id">Diskusi kebutuhan, tujuan website, dan struktur halaman yang diperlukan.</span><span class="lang-en">Discuss website goals, requirements, and the page structure needed.</span></div></div>
+        <div class="feature"><i>02</i><div><span class="lang-id">Development website dengan tampilan responsif dan siap digunakan.</span><span class="lang-en">Develop a responsive website that is ready to use.</span></div></div>
+        <div class="feature"><i>03</i><div><span class="lang-id">Setup deployment, domain, dan proses sampai website dapat diakses secara live.</span><span class="lang-en">Set up deployment, domain, and everything required to make the site live.</span></div></div>
+        <div class="feature"><i>04</i><div><span class="lang-id">Final review bersama sebelum proses pengerjaan dinyatakan selesai.</span><span class="lang-en">Complete a final review together before the project is closed.</span></div></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section shell">
+    <div class="eyebrow">How it works</div>
+    <h2 class="lang-id">Dari kebutuhan sampai live.</h2>
+    <h2 class="lang-en">From requirements to launch.</h2>
+    <p class="section-intro lang-id">Layanan ini cocok kalau kamu ingin punya website tetapi tidak ingin menangani seluruh proses teknis sendirian. Kita mulai dari memahami kebutuhan, menentukan struktur yang masuk akal, lalu membangun dan menyiapkan website sampai siap digunakan.</p>
+    <p class="section-intro lang-en">This service is designed for people who need a website without having to manage the entire technical process alone. We start by understanding the requirements, defining a sensible structure, then building and preparing the site for launch.</p>
+
+    <div class="cards">
+      <div class="panel mini">
+        <div class="num">01 / DISCUSS</div>
+        <h3 class="lang-id">Diskusi kebutuhan</h3><h3 class="lang-en">Discuss requirements</h3>
+        <p class="lang-id">Kita menyamakan tujuan, kebutuhan halaman, referensi, dan batas scope sebelum development dimulai.</p>
+        <p class="lang-en">We align on goals, required pages, references, and scope before development starts.</p>
+      </div>
+      <div class="panel mini">
+        <div class="num">02 / BUILD</div>
+        <h3 class="lang-id">Build &amp; review</h3><h3 class="lang-en">Build &amp; review</h3>
+        <p class="lang-id">Website dibangun berdasarkan scope yang disepakati, kemudian direview bersama untuk penyesuaian akhir.</p>
+        <p class="lang-en">The website is developed based on the agreed scope and reviewed together for final adjustments.</p>
+      </div>
+      <div class="panel mini">
+        <div class="num">03 / LAUNCH</div>
+        <h3 class="lang-id">Go live</h3><h3 class="lang-en">Go live</h3>
+        <p class="lang-id">Setelah final, website di-deploy dan dihubungkan dengan domain yang digunakan agar dapat diakses publik.</p>
+        <p class="lang-en">After final approval, the website is deployed and connected to its domain so it can be accessed publicly.</p>
+      </div>
+    </div>
+
+    <div class="full-bleed-callout">
+      <div class="full-bleed-inner">
+        <strong>Free domain*</strong>
+        <p class="lang-id">Gratis domain untuk beberapa pilihan domain tertentu tanpa biaya tambahan. Pilihan nama, ekstensi, availability, dan ketentuannya akan kita diskusikan bersama sebelum pengerjaan.</p>
+        <p class="lang-en">A free domain is included for selected domain options at no additional cost. The name, extension, availability, and applicable terms will be discussed together before development begins.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section shell">
+    <div class="eyebrow">Need more information?</div>
+    <h2 class="lang-id">Masih ingin diskusi dulu?</h2>
+    <h2 class="lang-en">Want to discuss it first?</h2>
+    <p class="section-intro lang-id">Kalau kamu masih ingin memastikan kebutuhan, scope, atau proses pengerjaannya, kamu bisa menghubungi Maul terlebih dahulu.</p>
+    <p class="section-intro lang-en">If you would like to clarify the requirements, scope, or process first, you can contact Maul directly.</p>
+    <div class="actions">
+      <a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20tertarik%20dengan%20layanan%20Website%20Development%20dan%20ingin%20mendapatkan%20informasi%20lebih%20lanjut%20terkait%20proses%2C%20scope%2C%20dan%20detail%20pengerjaannya." target="_blank" rel="noopener noreferrer">
+        <span class="lang-id">Hubungi Maul via WhatsApp</span>
+        <span class="lang-en">Contact Maul via WhatsApp</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="panel bottom-cta shell">
+    <div class="eyebrow"><span class="lang-id">Siap memulai?</span><span class="lang-en">Ready to start?</span></div>
+    <h2 class="lang-id">Lanjutkan ke pembayaran.</h2>
+    <h2 class="lang-en">Proceed to payment.</h2>
+    <p class="lang-id">Setelah pembayaran berhasil, email konfirmasi dan link halaman pascapembayaran akan dikirim otomatis ke alamat email.</p>
+    <p class="lang-en">After payment is successful, a confirmation email and your post-payment page link will be sent automatically to your email address.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/checkout/?product=website-development">
+        <span class="lang-id">Lanjut ke Pembayaran</span>
+        <span class="lang-en">Proceed to Payment</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer shell">© 2026 Build and Design by Maul</footer>
+
+<script>
+(function () {
+  const THEME_KEY = "maulCommerceTheme";
+  const LANG_KEY = "maulCommerceLanguage";
+  const root = document.documentElement;
+
+  function currentTheme() {
+    return root.dataset.theme === "dark" ? "dark" : "light";
+  }
+
+  function currentLanguage() {
+    return root.dataset.language === "en" ? "en" : "id";
+  }
+
+  function applyTheme(theme, persist = true) {
+    const next = theme === "dark" ? "dark" : "light";
+    root.dataset.theme = next;
+
+    document.querySelectorAll("[data-theme-choice]").forEach((button) => {
+      const active = button.dataset.themeChoice === next;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", next === "dark" ? "#07111f" : "#f7f8fb");
+
+    if (persist) {
+      try { localStorage.setItem(THEME_KEY, next); } catch (error) {}
+    }
+  }
+
+  function applyLanguage(language, persist = true) {
+    const next = language === "en" ? "en" : "id";
+    root.dataset.language = next;
+    root.lang = next;
+
+    document.querySelectorAll("[data-language-choice]").forEach((button) => {
+      const active = button.dataset.languageChoice === next;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+
+    document.querySelectorAll("[data-placeholder-id][data-placeholder-en]").forEach((input) => {
+      input.placeholder = next === "en" ? input.dataset.placeholderEn : input.dataset.placeholderId;
+    });
+
+    document.dispatchEvent(new CustomEvent("commerce-language-change", {
+      detail: { language: next }
+    }));
+
+    if (persist) {
+      try { localStorage.setItem(LANG_KEY, next); } catch (error) {}
+    }
+  }
+
+  document.querySelectorAll("[data-theme-choice]").forEach((button) => {
+    button.addEventListener("click", () => applyTheme(button.dataset.themeChoice));
+  });
+
+  document.querySelectorAll("[data-language-choice]").forEach((button) => {
+    button.addEventListener("click", () => applyLanguage(button.dataset.languageChoice));
+  });
+
+  applyTheme(currentTheme(), false);
+  applyLanguage(currentLanguage(), false);
+
+  window.MauldigitalUI = {
+    getTheme: currentTheme,
+    getLanguage: currentLanguage,
+    applyTheme,
+    applyLanguage
+  };
+})();
+</script>
+
+</body>
+</html>

@@ -82,7 +82,7 @@ async function serveDokuCheckoutSdk(env) {
 const PRODUCT_CATALOG = Object.freeze({
   "website-development": {
     name: "Website Development",
-    amount: 1500000,
+    amount: 999000,
     currency: "IDR",
     emailSubject: "Pembayaran Berhasil — Website Development",
     resourceUrl: null,
