@@ -6,7 +6,12 @@ const SITE_ORIGIN_DEFAULT = "https://digmarketingmaul.my.id";
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 const RESEND_FROM_DEFAULT = "Maul Digital <order@mail.digmarketingmaul.my.id>";
 const WHATSAPP_NUMBER = "6281296069566";
+const ADMIN_ORDERS_API_PATH = "/admin/api/orders";
 const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+
+let accessJwksCache = null;
+let accessJwksFetchedAt = 0;
 
 const DOKU_ENVIRONMENTS = Object.freeze({
   sandbox: {
@@ -104,6 +109,376 @@ const PRODUCT_CATALOG = Object.freeze({
     currency: "IDR",
   },
 });
+
+
+function decodeBase64UrlToBytes(value) {
+  const normalized = String(value || "")
+    .replace(/-/g, "+")
+    .replace(/_/g, "/");
+
+  const padded =
+    normalized + "=".repeat((4 - (normalized.length % 4 || 4)) % 4);
+
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+
+  return bytes;
+}
+
+function decodeJwtJson(value) {
+  return JSON.parse(
+    decoder.decode(decodeBase64UrlToBytes(value))
+  );
+}
+
+function normalizeAccessTeamDomain(value) {
+  return String(value || "").trim().replace(/\/$/, "");
+}
+
+function getAdminEmails(env) {
+  return String(env.ADMIN_EMAILS || "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+async function getAccessJwks(env) {
+  const teamDomain = normalizeAccessTeamDomain(env.ACCESS_TEAM_DOMAIN);
+
+  if (!teamDomain) {
+    throw new Error("ACCESS_TEAM_DOMAIN is missing");
+  }
+
+  const now = Date.now();
+
+  if (
+    accessJwksCache &&
+    now - accessJwksFetchedAt < 10 * 60 * 1000
+  ) {
+    return accessJwksCache;
+  }
+
+  const response = await fetch(
+    `${teamDomain}/cdn-cgi/access/certs`,
+    {
+      headers: {
+        "Accept": "application/json",
+      },
+      cf: {
+        cacheEverything: true,
+        cacheTtl: 600,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Unable to load Cloudflare Access JWKS (${response.status})`
+    );
+  }
+
+  const jwks = await response.json();
+
+  if (!Array.isArray(jwks?.keys) || !jwks.keys.length) {
+    throw new Error("Cloudflare Access JWKS is empty");
+  }
+
+  accessJwksCache = jwks;
+  accessJwksFetchedAt = now;
+
+  return jwks;
+}
+
+async function verifyCloudflareAccess(request, env) {
+  const teamDomain = normalizeAccessTeamDomain(env.ACCESS_TEAM_DOMAIN);
+  const audience = String(env.ACCESS_AUD || "").trim();
+  const adminEmails = getAdminEmails(env);
+
+  if (!teamDomain || !audience || !adminEmails.length) {
+    throw new Error(
+      "Admin Access environment variables are not configured"
+    );
+  }
+
+  const token = String(
+    request.headers.get("Cf-Access-Jwt-Assertion") || ""
+  ).trim();
+
+  if (!token) {
+    throw new Error("Missing Cloudflare Access JWT");
+  }
+
+  const parts = token.split(".");
+
+  if (parts.length !== 3) {
+    throw new Error("Invalid Cloudflare Access JWT");
+  }
+
+  const [encodedHeader, encodedPayload, encodedSignature] = parts;
+  const header = decodeJwtJson(encodedHeader);
+  const payload = decodeJwtJson(encodedPayload);
+
+  if (header?.alg !== "RS256" || !header?.kid) {
+    throw new Error("Unsupported Cloudflare Access JWT");
+  }
+
+  const jwks = await getAccessJwks(env);
+  const jwk = jwks.keys.find((key) => key.kid === header.kid);
+
+  if (!jwk) {
+    accessJwksCache = null;
+    accessJwksFetchedAt = 0;
+
+    const refreshed = await getAccessJwks(env);
+    const refreshedJwk = refreshed.keys.find(
+      (key) => key.kid === header.kid
+    );
+
+    if (!refreshedJwk) {
+      throw new Error("Cloudflare Access signing key not found");
+    }
+
+    const key = await crypto.subtle.importKey(
+      "jwk",
+      refreshedJwk,
+      {
+        name: "RSASSA-PKCS1-v1_5",
+        hash: "SHA-256",
+      },
+      false,
+      ["verify"]
+    );
+
+    const valid = await crypto.subtle.verify(
+      "RSASSA-PKCS1-v1_5",
+      key,
+      decodeBase64UrlToBytes(encodedSignature),
+      encoder.encode(`${encodedHeader}.${encodedPayload}`)
+    );
+
+    if (!valid) {
+      throw new Error("Invalid Cloudflare Access JWT signature");
+    }
+  } else {
+    const key = await crypto.subtle.importKey(
+      "jwk",
+      jwk,
+      {
+        name: "RSASSA-PKCS1-v1_5",
+        hash: "SHA-256",
+      },
+      false,
+      ["verify"]
+    );
+
+    const valid = await crypto.subtle.verify(
+      "RSASSA-PKCS1-v1_5",
+      key,
+      decodeBase64UrlToBytes(encodedSignature),
+      encoder.encode(`${encodedHeader}.${encodedPayload}`)
+    );
+
+    if (!valid) {
+      throw new Error("Invalid Cloudflare Access JWT signature");
+    }
+  }
+
+  const now = Math.floor(Date.now() / 1000);
+  const issuer = String(payload?.iss || "").replace(/\/$/, "");
+  const tokenAudience = Array.isArray(payload?.aud)
+    ? payload.aud
+    : [payload?.aud].filter(Boolean);
+
+  if (issuer !== teamDomain) {
+    throw new Error("Invalid Cloudflare Access JWT issuer");
+  }
+
+  if (!tokenAudience.includes(audience)) {
+    throw new Error("Invalid Cloudflare Access JWT audience");
+  }
+
+  if (!payload?.exp || Number(payload.exp) <= now) {
+    throw new Error("Cloudflare Access JWT has expired");
+  }
+
+  if (payload?.nbf && Number(payload.nbf) > now + 30) {
+    throw new Error("Cloudflare Access JWT is not active yet");
+  }
+
+  const email = String(payload?.email || "").trim().toLowerCase();
+
+  if (!email || !adminEmails.includes(email)) {
+    throw new Error("This user is not an authorized admin");
+  }
+
+  return {
+    email,
+    payload,
+  };
+}
+
+async function getAdminOrders(request, env) {
+  if (!env.DB) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "D1 binding DB is missing",
+      },
+      500
+    );
+  }
+
+  let admin;
+
+  try {
+    admin = await verifyCloudflareAccess(request, env);
+  } catch (error) {
+    console.error("Admin Access verification failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+
+    return jsonResponse(
+      {
+        success: false,
+        error: "Unauthorized",
+      },
+      403
+    );
+  }
+
+  const url = new URL(request.url);
+  const rawStatus = String(
+    url.searchParams.get("status") || "ALL"
+  ).trim().toUpperCase();
+
+  const allowedStatuses = new Set([
+    "ALL",
+    "PENDING",
+    "SUCCESS",
+    "EXPIRED",
+    "FAILED",
+  ]);
+
+  const status = allowedStatuses.has(rawStatus)
+    ? rawStatus
+    : "ALL";
+
+  const search = String(
+    url.searchParams.get("q") || ""
+  ).trim().slice(0, 100);
+
+  const limit = Math.min(
+    200,
+    Math.max(
+      1,
+      Number.parseInt(url.searchParams.get("limit") || "100", 10) || 100
+    )
+  );
+
+  const offset = Math.max(
+    0,
+    Number.parseInt(url.searchParams.get("offset") || "0", 10) || 0
+  );
+
+  const conditions = [];
+  const bindings = [];
+
+  if (status !== "ALL") {
+    conditions.push("status = ?");
+    bindings.push(status);
+  }
+
+  if (search) {
+    const term = `%${search.toLowerCase()}%`;
+    conditions.push(`(
+      LOWER(COALESCE(invoice_number, '')) LIKE ?
+      OR LOWER(COALESCE(customer_name, '')) LIKE ?
+      OR LOWER(COALESCE(customer_email, '')) LIKE ?
+      OR LOWER(COALESCE(customer_phone, '')) LIKE ?
+      OR LOWER(COALESCE(product_name, '')) LIKE ?
+    )`);
+    bindings.push(term, term, term, term, term);
+  }
+
+  const where = conditions.length
+    ? `WHERE ${conditions.join(" AND ")}`
+    : "";
+
+  const ordersStatement = env.DB.prepare(
+    `SELECT
+      id,
+      invoice_number,
+      customer_name,
+      customer_email,
+      customer_phone,
+      product_id,
+      product_name,
+      amount,
+      currency,
+      status,
+      payment_channel,
+      acquirer,
+      created_at,
+      updated_at,
+      expires_at,
+      paid_at,
+      email_status,
+      email_sent_at
+    FROM payments
+    ${where}
+    ORDER BY id DESC
+    LIMIT ? OFFSET ?`
+  ).bind(...bindings, limit, offset);
+
+  const countStatement = env.DB.prepare(
+    `SELECT COUNT(*) AS total
+     FROM payments
+     ${where}`
+  ).bind(...bindings);
+
+  const summaryStatement = env.DB.prepare(
+    `SELECT
+      COUNT(*) AS total_orders,
+      SUM(CASE WHEN status = 'SUCCESS' THEN 1 ELSE 0 END) AS success_orders,
+      SUM(CASE WHEN status = 'PENDING' THEN 1 ELSE 0 END) AS pending_orders,
+      SUM(CASE WHEN status = 'EXPIRED' THEN 1 ELSE 0 END) AS expired_orders,
+      COALESCE(
+        SUM(CASE WHEN status = 'SUCCESS' THEN amount ELSE 0 END),
+        0
+      ) AS success_value
+    FROM payments`
+  );
+
+  const [ordersResult, countResult, summary] = await Promise.all([
+    ordersStatement.all(),
+    countStatement.first(),
+    summaryStatement.first(),
+  ]);
+
+  return jsonResponse({
+    success: true,
+    admin_email: admin.email,
+    filters: {
+      status,
+      q: search,
+      limit,
+      offset,
+    },
+    summary: {
+      total_orders: Number(summary?.total_orders || 0),
+      success_orders: Number(summary?.success_orders || 0),
+      pending_orders: Number(summary?.pending_orders || 0),
+      expired_orders: Number(summary?.expired_orders || 0),
+      success_value: Number(summary?.success_value || 0),
+    },
+    total: Number(countResult?.total || 0),
+    orders: ordersResult?.results || [],
+  });
+}
 
 function jsonResponse(body, status = 200, extraHeaders = {}) {
   return Response.json(body, {
@@ -1151,6 +1526,19 @@ async function handleDokuNotification(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.pathname === ADMIN_ORDERS_API_PATH) {
+      if (request.method !== "GET") {
+        return new Response("Method Not Allowed", {
+          status: 405,
+          headers: {
+            "Allow": "GET",
+          },
+        });
+      }
+
+      return getAdminOrders(request, env);
+    }
 
     if (url.pathname === DOKU_SDK_PATH) {
       if (request.method !== "GET") {

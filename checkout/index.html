@@ -588,14 +588,14 @@ html[data-language="id"] .lang-id{display:revert!important}
       const expiry = formatExpiry(payment.expires_at);
       const email = payment.customer_email_masked || "";
       text = language() === "en"
-        ? "You already have an active Website Development order. A new order was not created." +
-          (expiry ? " It is valid until " + expiry + "." : "") +
+        ? "You still have an active order for Website Development." +
+          (expiry ? " The active order is valid until " + expiry + " WIB." : "") +
           (email ? " The order is linked to " + email + "." : "") +
-          " Use the button below to continue the same payment."
-        : "Kamu masih memiliki order aktif untuk Website Development. Order baru tidak dibuat." +
-          (expiry ? " Order berlaku sampai " + expiry + " WIB." : "") +
+          " Use the button above to continue payment."
+        : "Kamu masih memiliki order aktif untuk Website Development." +
+          (expiry ? " Order aktif berlaku sampai " + expiry + " WIB." : "") +
           (email ? " Order terhubung ke " + email + "." : "") +
-          " Gunakan tombol di bawah untuk melanjutkan pembayaran yang sama.";
+          " Gunakan tombol di atas untuk melanjutkan pembayaran.";
     } else {
       const selected = messages[messageId];
       text = selected ? selected[language()] : messageId;
