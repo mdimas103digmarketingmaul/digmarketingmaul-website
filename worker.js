@@ -146,6 +146,26 @@ function normalizePhone(value) {
   return digits.slice(0, 16);
 }
 
+function normalizeDeviceId(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function isValidDeviceId(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    String(value || "").trim()
+  );
+}
+
+function getStoredExpiryDate(payment) {
+  const stored = String(payment?.expires_at || "").trim();
+  if (stored) {
+    const parsed = new Date(stored);
+    if (!Number.isNaN(parsed.getTime())) return parsed;
+  }
+
+  return parseDokuExpiredDate(payment?.expired_date);
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -368,6 +388,14 @@ async function createPayment(request, env) {
   const customerEmail = normalizeEmail(input?.customer_email);
   const customerName = normalizeCustomerName(input?.customer_name);
   const customerPhone = normalizePhone(input?.customer_phone);
+  const deviceId = normalizeDeviceId(input?.device_id);
+
+  if (!isValidDeviceId(deviceId)) {
+    return jsonResponse(
+      { success: false, error: "Device ID tidak valid. Refresh halaman lalu coba lagi." },
+      400
+    );
+  }
 
   if (!isValidEmail(customerEmail)) {
     return jsonResponse({ success: false, error: "Email wajib diisi dengan format yang valid" }, 400);
@@ -384,6 +412,90 @@ async function createPayment(request, env) {
       },
       400
     );
+  }
+
+  /*
+   * ACTIVE ORDER LOCK
+   * One browser/device + one product may only have one active PENDING order.
+   *
+   * First, locally expire old PENDING rows for this device/product.
+   * Then reuse an existing unexpired order instead of calling DOKU again.
+   */
+  const nowIso = new Date().toISOString();
+
+  await env.DB.prepare(
+    `UPDATE payments
+     SET status = 'EXPIRED',
+         updated_at = CURRENT_TIMESTAMP
+     WHERE device_id = ?
+       AND product_id = ?
+       AND status = 'PENDING'
+       AND expires_at IS NOT NULL
+       AND expires_at <= ?`
+  )
+    .bind(deviceId, productId, nowIso)
+    .run();
+
+  const activeOrder = await env.DB.prepare(
+    `SELECT
+       invoice_number,
+       status_token,
+       product_id,
+       product_name,
+       amount,
+       currency,
+       payment_url,
+       expired_date,
+       expires_at,
+       customer_email,
+       customer_name,
+       customer_phone
+     FROM payments
+     WHERE device_id = ?
+       AND product_id = ?
+       AND status = 'PENDING'
+       AND expires_at IS NOT NULL
+       AND expires_at > ?
+       AND payment_url IS NOT NULL
+       AND TRIM(payment_url) <> ''
+     ORDER BY id DESC
+     LIMIT 1`
+  )
+    .bind(deviceId, productId, nowIso)
+    .first();
+
+  if (activeOrder) {
+    console.log(
+      JSON.stringify({
+        type: "DOKU_ACTIVE_ORDER_REUSED",
+        invoiceNumber: activeOrder.invoice_number,
+        productId,
+        deviceId,
+        expiresAt: activeOrder.expires_at,
+      })
+    );
+
+    return jsonResponse({
+      success: true,
+      reused: true,
+      active_order: true,
+      invoice_number: activeOrder.invoice_number,
+      status_token: activeOrder.status_token,
+      product_id: activeOrder.product_id,
+      product_name: activeOrder.product_name,
+      amount: activeOrder.amount,
+      currency: activeOrder.currency,
+      status: "PENDING",
+      payment_url: activeOrder.payment_url,
+      expired_date: activeOrder.expired_date,
+      expires_at: activeOrder.expires_at,
+      success_page_url: buildSuccessPageUrl(
+        activeOrder.invoice_number,
+        activeOrder.status_token,
+        env
+      ),
+      customer_email_masked: maskEmail(activeOrder.customer_email),
+    });
   }
 
   const invoiceNumber = `INV${Date.now()}`;
@@ -477,6 +589,11 @@ async function createPayment(request, env) {
     data?.response?.payment?.expired_date || ""
   ).trim() || null;
 
+  const parsedExpiry = parseDokuExpiredDate(expiredDate);
+  const expiresAt = (
+    parsedExpiry || new Date(Date.now() + 60 * 60 * 1000)
+  ).toISOString();
+
   if (!paymentUrl) {
     return jsonResponse(
       {
@@ -510,9 +627,11 @@ async function createPayment(request, env) {
         customer_email,
         customer_phone,
         email_status,
+        device_id,
+        expires_at,
         created_at,
         updated_at
-      ) VALUES (?, ?, ?, ?, 'PENDING', ?, ?, ?, ?, ?, ?, ?, ?, 'WAITING_PAYMENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
+      ) VALUES (?, ?, ?, ?, 'PENDING', ?, ?, ?, ?, ?, ?, ?, ?, 'WAITING_PAYMENT', ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
     )
       .bind(
         invoiceNumber,
@@ -526,7 +645,9 @@ async function createPayment(request, env) {
         statusToken,
         customerName || null,
         customerEmail,
-        customerPhone || null
+        customerPhone || null,
+        deviceId,
+        expiresAt
       )
       .run();
   } catch (error) {
@@ -556,11 +677,15 @@ async function createPayment(request, env) {
       productId,
       amount: product.amount,
       status: "PENDING",
+      deviceId,
+      expiresAt,
     })
   );
 
   return jsonResponse({
     success: true,
+    reused: false,
+    active_order: true,
     invoice_number: invoiceNumber,
     status_token: statusToken,
     product_id: productId,
@@ -570,6 +695,7 @@ async function createPayment(request, env) {
     status: "PENDING",
     payment_url: paymentUrl,
     expired_date: expiredDate,
+    expires_at: expiresAt,
     success_page_url: successPageUrl,
     customer_email_masked: maskEmail(customerEmail),
   });
@@ -620,6 +746,8 @@ async function getPaymentStatus(request, env) {
       status,
       paid_at,
       expired_date,
+      expires_at,
+      payment_url,
       payment_channel,
       acquirer,
       customer_name,
@@ -655,7 +783,7 @@ async function getPaymentStatus(request, env) {
    * we mark the row EXPIRED and return that final state to the frontend.
    */
   if (effectiveStatus === "PENDING") {
-    const expiresAt = parseDokuExpiredDate(payment.expired_date);
+    const expiresAt = getStoredExpiryDate(payment);
 
     if (expiresAt && Date.now() >= expiresAt.getTime()) {
       await env.DB.prepare(
@@ -692,6 +820,8 @@ async function getPaymentStatus(request, env) {
     status: effectiveStatus,
     paid_at: payment.paid_at,
     expired_date: payment.expired_date,
+    expires_at: payment.expires_at,
+    payment_url: effectiveStatus === "PENDING" ? payment.payment_url : null,
     payment_channel: payment.payment_channel,
     acquirer: payment.acquirer,
     customer_name: payment.customer_name,

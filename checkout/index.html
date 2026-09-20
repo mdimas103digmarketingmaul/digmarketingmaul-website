@@ -254,6 +254,7 @@ html[data-language="id"] .lang-id{display:revert!important}
 .privacy{padding:14px 16px;border-radius:11px;background:var(--panel-2);color:var(--muted);font-size:12px;line-height:1.65;margin:20px 0}
 .full{width:100%}
 .status-box{margin-top:18px;padding:14px 16px;border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:14px;line-height:1.6}
+.status-box.active{border-color:rgba(255,49,88,.28);background:var(--accent-soft);color:var(--text)}
 .status-box.error{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.07);color:#b42318}
 .loading{opacity:.72;pointer-events:none}
 .success-view{display:none;padding:58px 0 82px;min-height:calc(100vh - 76px)}
@@ -501,6 +502,7 @@ html[data-language="id"] .lang-id{display:revert!important}
 (function () {
   const PRODUCT_ID = "website-development";
   const STORAGE_KEY = "maulWebsiteDevelopmentCheckout";
+  const DEVICE_KEY = "maulCheckoutDeviceId";
 
   const form = document.getElementById("checkout-form");
   const payButton = document.getElementById("pay-button");
@@ -510,6 +512,7 @@ html[data-language="id"] .lang-id{display:revert!important}
 
   let pollTimer = null;
   let currentSuccess = null;
+  let activePayment = null;
 
   const qs = new URLSearchParams(location.search);
   if (qs.get("product") && qs.get("product") !== PRODUCT_ID) {
@@ -529,30 +532,100 @@ html[data-language="id"] .lang-id{display:revert!important}
     }).format(Number(value || 0));
   }
 
+  function getOrCreateDeviceId() {
+    try {
+      const existing = String(localStorage.getItem(DEVICE_KEY) || "").trim();
+      if (existing) return existing;
+
+      const id = crypto.randomUUID();
+      localStorage.setItem(DEVICE_KEY, id);
+      return id;
+    } catch (error) {
+      return crypto.randomUUID();
+    }
+  }
+
+  function formatExpiry(value) {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+
+    return new Intl.DateTimeFormat(language() === "en" ? "en-GB" : "id-ID", {
+      dateStyle: "medium",
+      timeStyle: "short",
+      timeZone: "Asia/Jakarta"
+    }).format(date);
+  }
+
+  function buttonActiveText() {
+    return language() === "en"
+      ? "Continue Active Payment"
+      : "Lanjutkan Pembayaran Aktif";
+  }
+
   function buttonDefaultText() {
     return language() === "en" ? "Proceed to Payment" : "Lanjutkan ke Pembayaran";
   }
 
-  function setStatus(messageId, state = "") {
+  function setStatus(messageId, state = "", payment = null) {
     const messages = {
       creating: {
         id: "Membuat transaksi aman melalui DOKU…",
         en: "Creating a secure transaction through DOKU…"
       },
       waiting: {
-        id: "Checkout dibuat. Menunggu konfirmasi pembayaran dari DOKU…",
-        en: "Checkout created. Waiting for payment confirmation from DOKU…"
+        id: "Checkout aktif. Menunggu konfirmasi pembayaran dari DOKU…",
+        en: "Checkout is active. Waiting for payment confirmation from DOKU…"
       },
       expired: {
-        id: "Checkout kedaluwarsa. Silakan buat transaksi baru.",
-        en: "This checkout has expired. Please create a new transaction."
+        id: "Checkout sebelumnya sudah kedaluwarsa. Kamu sekarang dapat membuat order baru.",
+        en: "Your previous checkout has expired. You can now create a new order."
       }
     };
 
-    const selected = messages[messageId];
+    let text;
+    if (messageId === "active" && payment) {
+      const expiry = formatExpiry(payment.expires_at);
+      const email = payment.customer_email_masked || "";
+      text = language() === "en"
+        ? "You already have an active Website Development order. A new order was not created." +
+          (expiry ? " It is valid until " + expiry + "." : "") +
+          (email ? " The order is linked to " + email + "." : "") +
+          " Use the button below to continue the same payment."
+        : "Kamu masih memiliki order aktif untuk Website Development. Order baru tidak dibuat." +
+          (expiry ? " Order berlaku sampai " + expiry + " WIB." : "") +
+          (email ? " Order terhubung ke " + email + "." : "") +
+          " Gunakan tombol di bawah untuk melanjutkan pembayaran yang sama.";
+    } else {
+      const selected = messages[messageId];
+      text = selected ? selected[language()] : messageId;
+    }
+
     statusBox.hidden = false;
     statusBox.className = "status-box" + (state ? " " + state : "");
-    statusBox.textContent = selected ? selected[language()] : messageId;
+    statusBox.textContent = text;
+  }
+
+  function setActivePayment(payment, showMessage = true) {
+    activePayment = payment;
+    saveSession(payment);
+
+    if (!payButton.disabled) {
+      payButton.textContent = buttonActiveText();
+    }
+
+    if (showMessage) {
+      setStatus("active", "active", payment);
+    }
+  }
+
+  function clearActivePayment() {
+    activePayment = null;
+    try { localStorage.removeItem(STORAGE_KEY); } catch (error) {}
+
+    if (!payButton.disabled) {
+      payButton.textContent = buttonDefaultText();
+    }
   }
 
   function saveSession(data) {
@@ -653,11 +726,18 @@ html[data-language="id"] .lang-id{display:revert!important}
         }
 
         if (data.status === "EXPIRED") {
+          clearActivePayment();
           setStatus("expired", "error");
           return;
         }
 
-        setStatus("waiting");
+        const refreshed = {
+          ...payment,
+          ...data,
+          status: "PENDING"
+        };
+
+        setActivePayment(refreshed, true);
       } catch (error) {
         console.warn(error);
       }
@@ -670,6 +750,20 @@ html[data-language="id"] .lang-id{display:revert!important}
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
+
+    if (activePayment?.payment_url) {
+      if (typeof window.loadJokulCheckout !== "function") {
+        setStatus(
+          language() === "en" ? "DOKU Checkout is not ready yet." : "DOKU Checkout belum siap.",
+          "error"
+        );
+        return;
+      }
+
+      setStatus("active", "active", activePayment);
+      window.loadJokulCheckout(activePayment.payment_url);
+      return;
+    }
 
     const emailInput = document.getElementById("customer-email");
     const email = emailInput.value.trim();
@@ -694,7 +788,8 @@ html[data-language="id"] .lang-id{display:revert!important}
           product_id: PRODUCT_ID,
           customer_email: email,
           customer_name: name,
-          customer_phone: phone
+          customer_phone: phone,
+          device_id: getOrCreateDeviceId()
         })
       });
 
@@ -712,10 +807,15 @@ html[data-language="id"] .lang-id{display:revert!important}
         amount: data.amount,
         currency: data.currency,
         status: "PENDING",
+        payment_url: data.payment_url,
+        expired_date: data.expired_date || null,
+        expires_at: data.expires_at || null,
+        customer_email_masked: data.customer_email_masked || "",
+        reused: Boolean(data.reused),
         created_at: new Date().toISOString()
       };
 
-      saveSession(payment);
+      setActivePayment(payment, Boolean(data.reused));
       startPolling(payment);
 
       if (typeof window.loadJokulCheckout !== "function") {
@@ -733,14 +833,19 @@ html[data-language="id"] .lang-id{display:revert!important}
     } finally {
       payButton.disabled = false;
       payButton.classList.remove("loading");
-      payButton.textContent = buttonDefaultText();
+      payButton.textContent = activePayment ? buttonActiveText() : buttonDefaultText();
     }
   });
 
   document.addEventListener("commerce-language-change", function () {
-    if (!payButton.disabled) payButton.textContent = buttonDefaultText();
+    if (!payButton.disabled) {
+      payButton.textContent = activePayment ? buttonActiveText() : buttonDefaultText();
+    }
+    if (activePayment) setStatus("active", "active", activePayment);
     if (currentSuccess) renderSuccessCopy();
   });
+
+  getOrCreateDeviceId();
 
   const existing = readSession();
   if (
@@ -749,6 +854,10 @@ html[data-language="id"] .lang-id{display:revert!important}
     existing.status !== "SUCCESS" &&
     existing.status !== "EXPIRED"
   ) {
+    activePayment = existing;
+    if (existing.payment_url) {
+      setActivePayment(existing, true);
+    }
     startPolling(existing);
   }
 })();
