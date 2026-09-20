@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f7f8fb">
-<title>Checkout — Website Development</title>
+<title>Checkout — Maul Digital</title>
 <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,13 +16,14 @@
 <script>
 (function () {
   const THEME_KEY = "maulCommerceTheme";
+  const GLOBAL_THEME_KEY = "maulSiteTheme";
   const LANG_KEY = "maulCommerceLanguage";
 
   let theme = "light";
   let language = "id";
 
   try {
-    const savedTheme = localStorage.getItem(THEME_KEY);
+    const savedTheme = localStorage.getItem(GLOBAL_THEME_KEY) || localStorage.getItem(THEME_KEY);
     const savedLanguage = localStorage.getItem(LANG_KEY);
 
     theme = savedTheme === "dark" ? "dark" : "light";
@@ -300,7 +301,7 @@ html[data-language="id"] .lang-id{display:revert!important}
   <button type="button" data-theme-choice="dark" aria-pressed="false" title="Dark mode">◐ <span class="label">Dark</span></button>
 </div>
 
-      <a class="nav-link" href="/products/website-development/">
+      <a class="nav-link" id="back-detail-link" href="/products/">
         <span class="lang-id">← Detail layanan</span>
         <span class="lang-en">← Service details</span>
       </a>
@@ -321,11 +322,11 @@ html[data-language="id"] .lang-id{display:revert!important}
 
     <div class="panel order-summary">
       <div>
-        <h2>Website Development</h2>
-        <p class="lang-id">Pembuatan website sampai live</p>
-        <p class="lang-en">Website development through launch</p>
+        <h2 id="checkout-product-name">Website Development</h2>
+        <p class="lang-id" id="checkout-product-summary-id">Pembuatan website sampai live</p>
+        <p class="lang-en" id="checkout-product-summary-en">Website development through launch</p>
       </div>
-      <div class="order-price">Rp999.000</div>
+      <div class="order-price" id="checkout-product-price">Rp999.000</div>
     </div>
 
     <form class="panel form-card" id="checkout-form" novalidate>
@@ -377,7 +378,7 @@ html[data-language="id"] .lang-id{display:revert!important}
       <div class="eyebrow"><span class="lang-id">Pembayaran terkonfirmasi</span><span class="lang-en">Payment confirmed</span></div>
       <h1 class="lang-id">Terima kasih.<br>Pembayaran berhasil.</h1>
       <h1 class="lang-en">Thank you.<br>Payment successful.</h1>
-      <p class="success-lead" id="success-greeting">Pembayaran untuk Website Development sudah kami terima.</p>
+      <p class="success-lead" id="success-greeting">Pembayaranmu sudah kami terima.</p>
 
       <div class="success-meta">
         <div class="meta-box">
@@ -390,7 +391,7 @@ html[data-language="id"] .lang-id{display:revert!important}
         </div>
         <div class="meta-box">
           <div class="meta-label"><span class="lang-id">Produk</span><span class="lang-en">Product</span></div>
-          <strong class="meta-value">Website Development</strong>
+          <strong class="meta-value" id="success-product-name">Website Development</strong>
         </div>
         <div class="meta-box">
           <div class="meta-label">Email</div>
@@ -403,10 +404,19 @@ html[data-language="id"] .lang-id{display:revert!important}
         <span class="lang-en">This page has a personal link that you can reopen later. Save this URL; the same link is also sent to your email.</span>
       </div>
 
+      <div class="save-url" id="ebook-access-note" hidden>
+        <span class="lang-id">Digital Marketing eBooks kamu sudah siap. Link akses materi tersedia melalui tombol Google Drive di bawah ini.</span>
+        <span class="lang-en">Your Digital Marketing eBooks are ready. Use the Google Drive button below to access the materials.</span>
+      </div>
+
       <div class="actions">
-        <a class="btn btn-whatsapp" id="success-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
+        <a class="btn btn-whatsapp" id="success-whatsapp" href="#" target="_blank" rel="noopener noreferrer" hidden>
           <span class="lang-id">Lanjutkan via WhatsApp</span>
           <span class="lang-en">Continue via WhatsApp</span>
+        </a>
+        <a class="btn btn-primary" id="success-resource" href="#" target="_blank" rel="noopener noreferrer" hidden>
+          <span class="lang-id">Buka eBook di Google Drive</span>
+          <span class="lang-en">Open eBook in Google Drive</span>
         </a>
         <a class="btn btn-secondary" href="/products/">
           <span class="lang-id">Kembali ke Products</span>
@@ -424,6 +434,7 @@ html[data-language="id"] .lang-id{display:revert!important}
 <script>
 (function () {
   const THEME_KEY = "maulCommerceTheme";
+  const GLOBAL_THEME_KEY = "maulSiteTheme";
   const LANG_KEY = "maulCommerceLanguage";
   const root = document.documentElement;
 
@@ -449,7 +460,10 @@ html[data-language="id"] .lang-id{display:revert!important}
     if (meta) meta.setAttribute("content", next === "dark" ? "#07111f" : "#f7f8fb");
 
     if (persist) {
-      try { localStorage.setItem(THEME_KEY, next); } catch (error) {}
+      try {
+        localStorage.setItem(THEME_KEY, next);
+        localStorage.setItem(GLOBAL_THEME_KEY, next);
+      } catch (error) {}
     }
   }
 
@@ -500,8 +514,35 @@ html[data-language="id"] .lang-id{display:revert!important}
 
 <script>
 (function () {
-  const PRODUCT_ID = "website-development";
-  const STORAGE_KEY = "maulWebsiteDevelopmentCheckout";
+  const PRODUCT_CONFIG = Object.freeze({
+    "website-development": {
+      name: "Website Development",
+      amount: 999000,
+      detailUrl: "/products/website-development/",
+      summaryId: "Pembuatan website sampai live",
+      summaryEn: "Website development through launch",
+      postPayment: "whatsapp"
+    },
+    "digital-marketing-ebooks": {
+      name: "Digital Marketing eBooks",
+      amount: 10000,
+      detailUrl: "/products/digital-marketing-ebooks/",
+      summaryId: "Digital resource untuk pembelajaran digital marketing",
+      summaryEn: "Digital resources for practical digital marketing learning",
+      postPayment: "ebook"
+    }
+  });
+
+  const qs = new URLSearchParams(location.search);
+  const PRODUCT_ID = String(qs.get("product") || "website-development").trim();
+  const PRODUCT = PRODUCT_CONFIG[PRODUCT_ID];
+
+  if (!PRODUCT) {
+    location.replace("/products/");
+    return;
+  }
+
+  const STORAGE_KEY = "maulCheckout:" + PRODUCT_ID;
   const DEVICE_KEY = "maulCheckoutDeviceId";
 
   const form = document.getElementById("checkout-form");
@@ -513,12 +554,6 @@ html[data-language="id"] .lang-id{display:revert!important}
   let pollTimer = null;
   let currentSuccess = null;
   let activePayment = null;
-
-  const qs = new URLSearchParams(location.search);
-  if (qs.get("product") && qs.get("product") !== PRODUCT_ID) {
-    location.replace("/products/website-development/");
-    return;
-  }
 
   function language() {
     return window.MauldigitalUI?.getLanguage?.() === "en" ? "en" : "id";
@@ -532,11 +567,20 @@ html[data-language="id"] .lang-id{display:revert!important}
     }).format(Number(value || 0));
   }
 
+  function applyProductCopy() {
+    document.title = "Checkout — " + PRODUCT.name;
+    document.getElementById("back-detail-link").href = PRODUCT.detailUrl;
+    document.getElementById("checkout-product-name").textContent = PRODUCT.name;
+    document.getElementById("checkout-product-summary-id").textContent = PRODUCT.summaryId;
+    document.getElementById("checkout-product-summary-en").textContent = PRODUCT.summaryEn;
+    document.getElementById("checkout-product-price").textContent = formatIdr(PRODUCT.amount);
+    document.getElementById("success-product-name").textContent = PRODUCT.name;
+  }
+
   function getOrCreateDeviceId() {
     try {
       const existing = String(localStorage.getItem(DEVICE_KEY) || "").trim();
       if (existing) return existing;
-
       const id = crypto.randomUUID();
       localStorage.setItem(DEVICE_KEY, id);
       return id;
@@ -588,11 +632,11 @@ html[data-language="id"] .lang-id{display:revert!important}
       const expiry = formatExpiry(payment.expires_at);
       const email = payment.customer_email_masked || "";
       text = language() === "en"
-        ? "You still have an active order for Website Development." +
+        ? "You still have an active order for " + PRODUCT.name + "." +
           (expiry ? " The active order is valid until " + expiry + " WIB." : "") +
           (email ? " The order is linked to " + email + "." : "") +
           " Use the button above to continue payment."
-        : "Kamu masih memiliki order aktif untuk Website Development." +
+        : "Kamu masih memiliki order aktif untuk " + PRODUCT.name + "." +
           (expiry ? " Order aktif berlaku sampai " + expiry + " WIB." : "") +
           (email ? " Order terhubung ke " + email + "." : "") +
           " Gunakan tombol di atas untuk melanjutkan pembayaran.";
@@ -609,35 +653,23 @@ html[data-language="id"] .lang-id{display:revert!important}
   function setActivePayment(payment, showMessage = true) {
     activePayment = payment;
     saveSession(payment);
-
-    if (!payButton.disabled) {
-      payButton.textContent = buttonActiveText();
-    }
-
-    if (showMessage) {
-      setStatus("active", "active", payment);
-    }
+    if (!payButton.disabled) payButton.textContent = buttonActiveText();
+    if (showMessage) setStatus("active", "active", payment);
   }
 
   function clearActivePayment() {
     activePayment = null;
     try { localStorage.removeItem(STORAGE_KEY); } catch (error) {}
-
-    if (!payButton.disabled) {
-      payButton.textContent = buttonDefaultText();
-    }
+    if (!payButton.disabled) payButton.textContent = buttonDefaultText();
   }
 
   function saveSession(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (error) {}
   }
 
   function readSession() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-    } catch {
-      return null;
-    }
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); }
+    catch { return null; }
   }
 
   function successUrl(payment) {
@@ -648,23 +680,19 @@ html[data-language="id"] .lang-id{display:revert!important}
   }
 
   function whatsappUrl(invoice) {
-    return "https://wa.me/6281296069566?text=" +
-      encodeURIComponent(
-        "Halo Maul, saya sudah menyelesaikan pembayaran untuk Website Development. Invoice saya " +
-        invoice +
-        ". Saya ingin melanjutkan proses berikutnya."
-      );
+    return "https://wa.me/6281296069566?text=" + encodeURIComponent(
+      "Halo Maul, saya sudah menyelesaikan pembayaran untuk " +
+      PRODUCT.name + ". Invoice saya " + invoice +
+      ". Saya ingin melanjutkan proses berikutnya."
+    );
   }
 
   async function fetchStatus(payment) {
     const response = await fetch(
-      "/api/payment-status?invoice=" +
-        encodeURIComponent(payment.invoice_number) +
-        "&token=" +
-        encodeURIComponent(payment.status_token),
+      "/api/payment-status?invoice=" + encodeURIComponent(payment.invoice_number) +
+      "&token=" + encodeURIComponent(payment.status_token),
       { cache: "no-store" }
     );
-
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Failed to check payment");
     return data;
@@ -672,18 +700,13 @@ html[data-language="id"] .lang-id{display:revert!important}
 
   function renderSuccessCopy() {
     if (!currentSuccess) return;
-
     const lang = language();
     const name = currentSuccess.customer_name || "";
 
     document.getElementById("success-greeting").textContent =
       lang === "en"
-        ? (name
-            ? "Thank you, " + name + ". We have received your Website Development payment."
-            : "We have received your Website Development payment.")
-        : (name
-            ? "Terima kasih, " + name + ". Pembayaran untuk Website Development sudah kami terima."
-            : "Pembayaran untuk Website Development sudah kami terima.");
+        ? (name ? "Thank you, " + name + ". We have received your " + PRODUCT.name + " payment." : "We have received your " + PRODUCT.name + " payment.")
+        : (name ? "Terima kasih, " + name + ". Pembayaran untuk " + PRODUCT.name + " sudah kami terima." : "Pembayaran untuk " + PRODUCT.name + " sudah kami terima.");
 
     const emailEl = document.getElementById("success-email");
     const email = currentSuccess.customer_email_masked || (lang === "en" ? "your email" : "email kamu");
@@ -696,6 +719,27 @@ html[data-language="id"] .lang-id{display:revert!important}
       '<span class="email-address">' + email + '</span>';
   }
 
+  function renderPostPaymentAction(merged) {
+    const wa = document.getElementById("success-whatsapp");
+    const resource = document.getElementById("success-resource");
+    const note = document.getElementById("ebook-access-note");
+
+    wa.hidden = true;
+    resource.hidden = true;
+    note.hidden = true;
+
+    if (PRODUCT.postPayment === "ebook") {
+      if (merged.resource_url) {
+        resource.href = merged.resource_url;
+        resource.hidden = false;
+        note.hidden = false;
+      }
+    } else {
+      wa.href = whatsappUrl(merged.invoice_number);
+      wa.hidden = false;
+    }
+  }
+
   function renderSuccess(data, payment) {
     const merged = { ...payment, ...data, status: "SUCCESS" };
     currentSuccess = merged;
@@ -703,13 +747,13 @@ html[data-language="id"] .lang-id{display:revert!important}
 
     document.getElementById("success-invoice").textContent = merged.invoice_number;
     document.getElementById("success-amount").textContent = formatIdr(merged.amount);
-    document.getElementById("success-whatsapp").href = whatsappUrl(merged.invoice_number);
+    document.getElementById("success-product-name").textContent = merged.product_name || PRODUCT.name;
 
+    renderPostPaymentAction(merged);
     renderSuccessCopy();
 
     checkoutView.classList.add("hidden");
     successView.classList.add("active");
-
     history.replaceState({}, "", successUrl(merged));
   }
 
@@ -719,32 +763,21 @@ html[data-language="id"] .lang-id{display:revert!important}
     async function poll() {
       try {
         const data = await fetchStatus(payment);
-
         if (data.status === "SUCCESS") {
           renderSuccess(data, payment);
           return;
         }
-
         if (data.status === "EXPIRED") {
           clearActivePayment();
           setStatus("expired", "error");
           return;
         }
-
-        const refreshed = {
-          ...payment,
-          ...data,
-          status: "PENDING"
-        };
-
-        setActivePayment(refreshed, true);
+        setActivePayment({ ...payment, ...data, status: "PENDING" }, true);
       } catch (error) {
         console.warn(error);
       }
-
       pollTimer = setTimeout(poll, 4000);
     }
-
     poll();
   }
 
@@ -753,13 +786,9 @@ html[data-language="id"] .lang-id{display:revert!important}
 
     if (activePayment?.payment_url) {
       if (typeof window.loadJokulCheckout !== "function") {
-        setStatus(
-          language() === "en" ? "DOKU Checkout is not ready yet." : "DOKU Checkout belum siap.",
-          "error"
-        );
+        setStatus(language() === "en" ? "DOKU Checkout is not ready yet." : "DOKU Checkout belum siap.", "error");
         return;
       }
-
       setStatus("active", "active", activePayment);
       window.loadJokulCheckout(activePayment.payment_url);
       return;
@@ -794,10 +823,7 @@ html[data-language="id"] .lang-id{display:revert!important}
       });
 
       const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || "Checkout tidak dapat dibuat");
-      }
+      if (!response.ok || !data.success) throw new Error(data.error || "Checkout tidak dapat dibuat");
 
       const payment = {
         invoice_number: data.invoice_number,
@@ -818,18 +844,13 @@ html[data-language="id"] .lang-id{display:revert!important}
       setActivePayment(payment, Boolean(data.reused));
       startPolling(payment);
 
-      if (typeof window.loadJokulCheckout !== "function") {
-        throw new Error("DOKU Checkout belum dimuat");
-      }
-
+      if (typeof window.loadJokulCheckout !== "function") throw new Error("DOKU Checkout belum dimuat");
       window.loadJokulCheckout(data.payment_url);
     } catch (error) {
       console.error(error);
       statusBox.hidden = false;
       statusBox.className = "status-box error";
-      statusBox.textContent = error.message || (language() === "en"
-        ? "There was a problem opening checkout."
-        : "Terjadi kendala saat membuka checkout.");
+      statusBox.textContent = error.message || (language() === "en" ? "There was a problem opening checkout." : "Terjadi kendala saat membuka checkout.");
     } finally {
       payButton.disabled = false;
       payButton.classList.remove("loading");
@@ -838,13 +859,12 @@ html[data-language="id"] .lang-id{display:revert!important}
   });
 
   document.addEventListener("commerce-language-change", function () {
-    if (!payButton.disabled) {
-      payButton.textContent = activePayment ? buttonActiveText() : buttonDefaultText();
-    }
+    if (!payButton.disabled) payButton.textContent = activePayment ? buttonActiveText() : buttonDefaultText();
     if (activePayment) setStatus("active", "active", activePayment);
     if (currentSuccess) renderSuccessCopy();
   });
 
+  applyProductCopy();
   getOrCreateDeviceId();
 
   const existing = readSession();
@@ -855,9 +875,7 @@ html[data-language="id"] .lang-id{display:revert!important}
     existing.status !== "EXPIRED"
   ) {
     activePayment = existing;
-    if (existing.payment_url) {
-      setActivePayment(existing, true);
-    }
+    if (existing.payment_url) setActivePayment(existing, true);
     startPolling(existing);
   }
 })();

@@ -84,29 +84,62 @@ async function serveDokuCheckoutSdk(env) {
  * Only products with confirmed prices are enabled here.
  * Products whose price is still "Rpx.xxx.xxx" remain unavailable.
  */
+const WEBSITE_DEVELOPMENT_PAYMENT_METHODS = Object.freeze([
+  // Virtual Account / bank-transfer options
+  "VIRTUAL_ACCOUNT_BCA",
+  "VIRTUAL_ACCOUNT_BANK_MANDIRI",
+  "VIRTUAL_ACCOUNT_BANK_SYARIAH_MANDIRI",
+  "VIRTUAL_ACCOUNT_DOKU",
+  "VIRTUAL_ACCOUNT_BRI",
+  "VIRTUAL_ACCOUNT_BNI",
+  "VIRTUAL_ACCOUNT_BANK_PERMATA",
+  "VIRTUAL_ACCOUNT_BANK_CIMB",
+  "VIRTUAL_ACCOUNT_BANK_DANAMON",
+  "VIRTUAL_ACCOUNT_MAYBANK",
+  "VIRTUAL_ACCOUNT_BNC",
+  "VIRTUAL_ACCOUNT_BTN",
+  "VIRTUAL_ACCOUNT_SINARMAS",
+
+  // Convenience Store
+  "ONLINE_TO_OFFLINE_ALFA",
+  "ONLINE_TO_OFFLINE_INDOMARET",
+]);
+
 const PRODUCT_CATALOG = Object.freeze({
   "website-development": {
     name: "Website Development",
     amount: 999000,
     currency: "IDR",
     emailSubject: "Pembayaran Berhasil — Website Development",
-    resourceUrl: null,
-    resourceLabel: null,
+    paymentMethodTypes: WEBSITE_DEVELOPMENT_PAYMENT_METHODS,
+    postPaymentType: "whatsapp",
+  },
+  "digital-marketing-ebooks": {
+    name: "Digital Marketing eBooks",
+    amount: 10000,
+    currency: "IDR",
+    emailSubject: "Pembayaran Berhasil — Digital Marketing eBooks",
+    // Intentionally no paymentMethodTypes: DOKU shows all methods enabled
+    // and available for this merchant/product.
+    postPaymentType: "ebook",
   },
   "website-building-advisory": {
     name: "Website Building Advisory 1 on 1",
     amount: 1200000,
     currency: "IDR",
+    postPaymentType: "whatsapp",
   },
   "meta-ads-advisory": {
     name: "Meta Ads Advisory 1 on 1",
     amount: 1200000,
     currency: "IDR",
+    postPaymentType: "whatsapp",
   },
   "google-ads-advisory": {
     name: "Google Ads Advisory 1 on 1",
     amount: 1200000,
     currency: "IDR",
+    postPaymentType: "whatsapp",
   },
 });
 
@@ -569,13 +602,25 @@ function buildWhatsAppUrl(message) {
 }
 
 function buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl }) {
-  const greeting = order.customer_name ? `Halo ${escapeHtml(order.customer_name)},` : "Halo,";
-  const resourceBlock = product?.resourceUrl
-    ? `<div style="margin:24px 0;padding:18px;border:1px solid #e5e7eb;border-radius:12px;background:#f8fafc">
-         <p style="margin:0 0 12px;font-weight:700">Akses produk / materi</p>
-         <a href="${escapeHtml(product.resourceUrl)}" style="display:inline-block;padding:12px 18px;background:#0f172a;color:#fff;text-decoration:none;border-radius:8px;font-weight:700">${escapeHtml(product.resourceLabel || "Buka Produk")}</a>
-       </div>`
-    : "";
+  const greeting = order.customer_name
+    ? `Halo ${escapeHtml(order.customer_name)},`
+    : "Halo,";
+
+  let nextStepBlock = "";
+
+  if (order.product_id === "digital-marketing-ebooks") {
+    // Important: the actual Google Drive URL is deliberately NOT included in email.
+    // The buyer must open the token-protected personal purchase page first.
+    nextStepBlock = `
+      <div style="margin:24px 0;padding:18px;border:1px solid #e5e7eb;border-radius:12px;background:#f8fafc">
+        <p style="margin:0;font-size:15px;line-height:1.7"><strong>Akses eBook</strong><br>
+        Link materi tersedia di halaman pembelian personal di atas setelah pembayaran terverifikasi. Simpan link halaman tersebut untuk membuka kembali akses materi.</p>
+      </div>`;
+  } else {
+    nextStepBlock = `
+      <p style="font-size:16px;line-height:1.7;margin-top:24px">Jika membutuhkan bantuan atau ingin melanjutkan proses berikutnya, kamu dapat menghubungi Maul melalui WhatsApp.</p>
+      <p style="margin:18px 0"><a href="${escapeHtml(whatsappUrl)}" style="display:inline-block;padding:12px 18px;border:1px solid #16a34a;color:#166534;text-decoration:none;border-radius:8px;font-weight:700">Hubungi Maul via WhatsApp</a></p>`;
+  }
 
   return `<!doctype html><html lang="id"><body style="margin:0;background:#f8fafc;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
     <div style="max-width:620px;margin:0 auto;padding:32px 18px"><div style="background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:28px">
@@ -590,9 +635,7 @@ function buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl }) {
       </div>
       <p style="font-size:16px;line-height:1.7">Simpan halaman berikut. Kamu dapat membukanya kembali untuk melihat detail pembelian dan langkah berikutnya:</p>
       <p style="margin:20px 0"><a href="${escapeHtml(successUrl)}" style="display:inline-block;padding:13px 20px;background:#ff3158;color:#fff;text-decoration:none;border-radius:8px;font-weight:700">Buka Halaman Pembelian</a></p>
-      ${resourceBlock}
-      <p style="font-size:16px;line-height:1.7;margin-top:24px">Untuk melanjutkan proses Website Development atau jika membutuhkan bantuan, kamu juga dapat menghubungi Maul melalui WhatsApp.</p>
-      <p style="margin:18px 0"><a href="${escapeHtml(whatsappUrl)}" style="display:inline-block;padding:12px 18px;border:1px solid #16a34a;color:#166534;text-decoration:none;border-radius:8px;font-weight:700">Hubungi Maul via WhatsApp</a></p>
+      ${nextStepBlock}
       <p style="font-size:12px;line-height:1.6;color:#64748b;margin-top:28px">Link halaman pembelian bersifat personal. Simpan dan jangan bagikan link tersebut kepada pihak lain.</p>
     </div></div>
   </body></html>`;
@@ -628,8 +671,7 @@ async function sendPurchaseSuccessEmail(invoiceNumber, env) {
   const product = PRODUCT_CATALOG[order.product_id] || {
     name: order.product_name,
     emailSubject: `Pembayaran Berhasil — ${order.product_name}`,
-    resourceUrl: null,
-    resourceLabel: null,
+    postPaymentType: "whatsapp",
   };
   const successUrl = buildSuccessPageUrl(order.invoice_number, order.status_token, env);
   const whatsappUrl = buildWhatsAppUrl(
@@ -894,6 +936,9 @@ async function createPayment(request, env) {
     },
     payment: {
       payment_due_date: 60,
+      ...(Array.isArray(product.paymentMethodTypes) && product.paymentMethodTypes.length
+        ? { payment_method_types: product.paymentMethodTypes }
+        : {}),
     },
     customer: {
       email: customerEmail,
@@ -1203,6 +1248,11 @@ async function getPaymentStatus(request, env) {
     customer_email_masked: maskEmail(payment.customer_email),
     email_status: payment.email_status,
     email_sent_at: payment.email_sent_at,
+    resource_url:
+      effectiveStatus === "SUCCESS" &&
+      payment.product_id === "digital-marketing-ebooks"
+        ? (String(env.EBOOK_GDRIVE_URL || "").trim() || null)
+        : null,
     success_page_url: buildSuccessPageUrl(payment.invoice_number, statusToken, env),
   });
 }
@@ -1523,6 +1573,57 @@ async function handleDokuNotification(request, env) {
   });
 }
 
+
+const SITE_THEME_SCRIPT_TAG =
+  '<script src="/assets/site-theme.js" data-maul-site-theme-runtime defer></script>';
+
+function isThemeManagedStaticPath(pathname) {
+  return (
+    pathname === "/" ||
+    pathname === "/index.html" ||
+    /^\/[^/]+\.html$/.test(pathname) ||
+    pathname === "/frameworks" ||
+    pathname.startsWith("/frameworks/") ||
+    pathname === "/blog" ||
+    pathname.startsWith("/blog/") ||
+    pathname === "/profile" ||
+    pathname.startsWith("/profile/")
+  );
+}
+
+async function serveStaticAsset(request, env) {
+  const response = await env.ASSETS.fetch(request);
+
+  if (
+    request.method !== "GET" ||
+    !response.ok ||
+    !isThemeManagedStaticPath(new URL(request.url).pathname) ||
+    !String(response.headers.get("content-type") || "").toLowerCase().includes("text/html")
+  ) {
+    return response;
+  }
+
+  const html = await response.text();
+
+  if (html.includes("data-maul-site-theme-runtime")) {
+    return new Response(html, response);
+  }
+
+  const injected = html.includes("</body>")
+    ? html.replace("</body>", `${SITE_THEME_SCRIPT_TAG}\n</body>`)
+    : `${html}\n${SITE_THEME_SCRIPT_TAG}`;
+
+  const headers = new Headers(response.headers);
+  headers.delete("content-length");
+  headers.delete("content-encoding");
+
+  return new Response(injected, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -1604,6 +1705,6 @@ export default {
       return createPayment(request, env);
     }
 
-    return env.ASSETS.fetch(request);
+    return serveStaticAsset(request, env);
   },
 };

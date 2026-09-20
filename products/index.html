@@ -17,7 +17,7 @@
   <script>
     (function () {
       try {
-        const savedTheme = localStorage.getItem("maulProductsTheme");
+        const savedTheme = localStorage.getItem("maulSiteTheme") || localStorage.getItem("maulProductsTheme");
         document.documentElement.dataset.productsTheme =
           savedTheme === "light" ? "light" : "dark";
       } catch (error) {
@@ -201,9 +201,40 @@
           </div>
         </article>
 
-        <article class="commerce-product-card" data-product-id="website-building-advisory" data-price="1200000">
+        <article class="commerce-product-card js-detail-card" data-product-id="digital-marketing-ebooks" data-price="10000" data-detail-url="/products/digital-marketing-ebooks/" tabindex="0" role="link" aria-label="Lihat detail Digital Marketing eBooks">
           <span class="card-sheen" aria-hidden="true"></span>
           <span class="topic-number">02</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-solid fa-book-open"></i></span>
+            <span class="commerce-category">Digital Resource</span>
+          </div>
+
+          <h2>Digital Marketing<br>eBooks</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Materi digital yang merangkum framework, pengalaman, dan pembelajaran praktis
+            seputar digital marketing.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            Digital materials summarizing practical frameworks, experience, and learnings
+            across digital marketing.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price">Rp10.000</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
+            <div class="payment-status-detail" hidden></div>
+            <a class="commerce-checkout-btn" href="/products/digital-marketing-ebooks/" style="text-decoration:none;text-align:center;display:block;">
+              <span data-copy-lang="id">Lihat Detail</span>
+              <span data-copy-lang="en" hidden>View Details</span>
+            </a>
+          </div>
+        </article>
+
+        <article class="commerce-product-card" data-product-id="website-building-advisory" data-price="1200000">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">03</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-regular fa-comments"></i></span>
@@ -234,7 +265,7 @@
 
         <article class="commerce-product-card" data-product-id="digital-ads-management">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">03</span>
+          <span class="topic-number">04</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-solid fa-chart-column"></i></span>
@@ -263,7 +294,7 @@
 
         <article class="commerce-product-card" data-product-id="meta-ads-advisory" data-price="1200000">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">04</span>
+          <span class="topic-number">05</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-brands fa-meta"></i></span>
@@ -294,7 +325,7 @@
 
         <article class="commerce-product-card" data-product-id="google-ads-advisory" data-price="1200000">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">05</span>
+          <span class="topic-number">06</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-brands fa-google"></i></span>
@@ -325,7 +356,7 @@
 
         <article class="commerce-product-card" data-product-id="exclusive-technical-digital-marketing-discussion">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">06</span>
+          <span class="topic-number">07</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-regular fa-message"></i></span>
@@ -356,7 +387,7 @@
 
         <article class="commerce-product-card" data-product-id="digital-marketing-reporting-templates">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">07</span>
+          <span class="topic-number">08</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-solid fa-table-columns"></i></span>
@@ -372,36 +403,6 @@
           <p class="commerce-description" data-copy-lang="en" hidden>
             Practical templates to support more structured monitoring, review,
             and performance marketing reporting.
-          </p>
-
-          <div class="commerce-card-footer">
-            <div class="commerce-price">Rpx.xxx.xxx</div>
-            <div class="payment-progress"><span class="payment-progress-dot"></span>Payment gateway setup in progress</div>
-            <button class="commerce-checkout-btn" type="button" disabled>
-              <span data-copy-lang="id">Checkout segera tersedia</span>
-              <span data-copy-lang="en" hidden>Checkout coming soon</span>
-            </button>
-          </div>
-        </article>
-
-        <article class="commerce-product-card" data-product-id="digital-marketing-ebooks">
-          <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">08</span>
-
-          <div class="commerce-card-top">
-            <span class="product-icon"><i class="fa-solid fa-book-open"></i></span>
-            <span class="commerce-category">Digital Resource</span>
-          </div>
-
-          <h2>Digital Marketing<br>eBooks</h2>
-
-          <p class="commerce-description" data-copy-lang="id">
-            Materi praktis yang merangkum framework, pengalaman,<br>
-            dan pembelajaran mengenai digital marketing.
-          </p>
-          <p class="commerce-description" data-copy-lang="en" hidden>
-            Practical materials summarizing frameworks, experiences, and learnings in
-            digital marketing.
           </p>
 
           <div class="commerce-card-footer">
@@ -861,6 +862,17 @@
             event.preventDefault();
             window.location.href = card.dataset.detailUrl;
           }
+        });
+      });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      document.querySelectorAll("[data-products-theme]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          const next = button.dataset.productsTheme === "light" ? "light" : "dark";
+          try { localStorage.setItem("maulSiteTheme", next); } catch (error) {}
         });
       });
     })();

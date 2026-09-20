@@ -16,13 +16,14 @@
 <script>
 (function () {
   const THEME_KEY = "maulCommerceTheme";
+  const GLOBAL_THEME_KEY = "maulSiteTheme";
   const LANG_KEY = "maulCommerceLanguage";
 
   let theme = "light";
   let language = "id";
 
   try {
-    const savedTheme = localStorage.getItem(THEME_KEY);
+    const savedTheme = localStorage.getItem(GLOBAL_THEME_KEY) || localStorage.getItem(THEME_KEY);
     const savedLanguage = localStorage.getItem(LANG_KEY);
 
     theme = savedTheme === "dark" ? "dark" : "light";
@@ -334,7 +335,22 @@ html[data-language="id"] .lang-id{display:revert!important}
             <span class="lang-en">Back to Products</span>
           </a>
         </div>
-      </div>
+
+
+      <div class="panel next-step" id="ebook-next" hidden>
+        <p class="lang-id next-step-copy">Digital Marketing eBooks kamu sudah siap. Materi dapat diakses melalui link Google Drive berikut. Simpan URL personal halaman ini untuk membuka akses kembali.</p>
+        <p class="lang-en next-step-copy">Your Digital Marketing eBooks are ready. Access the materials through the Google Drive link below. Save this personal page URL to return to the access link.</p>
+        <div class="actions">
+          <a class="btn btn-primary" id="ebook-resource-link" href="#" target="_blank" rel="noopener noreferrer">
+            <span class="lang-id">Buka eBook di Google Drive</span>
+            <span class="lang-en">Open eBook in Google Drive</span>
+          </a>
+          <a class="btn btn-secondary" href="/products/">
+            <span class="lang-id">Kembali ke Products</span>
+            <span class="lang-en">Back to Products</span>
+          </a>
+        </div>
+      </div>      </div>
     </div>
   </section>
 </main>
@@ -345,6 +361,7 @@ html[data-language="id"] .lang-id{display:revert!important}
 <script>
 (function () {
   const THEME_KEY = "maulCommerceTheme";
+  const GLOBAL_THEME_KEY = "maulSiteTheme";
   const LANG_KEY = "maulCommerceLanguage";
   const root = document.documentElement;
 
@@ -370,7 +387,10 @@ html[data-language="id"] .lang-id{display:revert!important}
     if (meta) meta.setAttribute("content", next === "dark" ? "#07111f" : "#f7f8fb");
 
     if (persist) {
-      try { localStorage.setItem(THEME_KEY, next); } catch (error) {}
+      try {
+        localStorage.setItem(THEME_KEY, next);
+        localStorage.setItem(GLOBAL_THEME_KEY, next);
+      } catch (error) {}
     }
   }
 
@@ -431,9 +451,10 @@ html[data-language="id"] .lang-id{display:revert!important}
 
   let currentData = null;
 
+  const query = new URLSearchParams(location.search);
   const localPreview =
     (location.hostname === "127.0.0.1" || location.hostname === "localhost") &&
-    new URLSearchParams(location.search).get("preview") === "1";
+    query.get("preview") === "1";
 
   function language() {
     return window.MauldigitalUI?.getLanguage?.() === "en" ? "en" : "id";
@@ -448,14 +469,10 @@ html[data-language="id"] .lang-id{display:revert!important}
   }
 
   function whatsappUrl(invoiceNumber, productName) {
-    return "https://wa.me/6281296069566?text=" +
-      encodeURIComponent(
-        "Halo Maul, saya sudah menyelesaikan pembayaran untuk " +
-        productName +
-        ". Invoice saya " +
-        invoiceNumber +
-        ". Saya ingin melanjutkan proses berikutnya."
-      );
+    return "https://wa.me/6281296069566?text=" + encodeURIComponent(
+      "Halo Maul, saya sudah menyelesaikan pembayaran untuk " + productName +
+      ". Invoice saya " + invoiceNumber + ". Saya ingin melanjutkan proses berikutnya."
+    );
   }
 
   function setGateMessage(kind) {
@@ -492,12 +509,8 @@ html[data-language="id"] .lang-id{display:revert!important}
 
     document.getElementById("success-greeting").textContent =
       lang === "en"
-        ? (name
-            ? "Thank you, " + name + ". We have received your payment."
-            : "We have received your payment.")
-        : (name
-            ? "Terima kasih, " + name + ". Pembayaranmu sudah kami terima."
-            : "Pembayaranmu sudah kami terima.");
+        ? (name ? "Thank you, " + name + ". We have received your payment." : "We have received your payment.")
+        : (name ? "Terima kasih, " + name + ". Pembayaranmu sudah kami terima." : "Pembayaranmu sudah kami terima.");
 
     const emailEl = document.getElementById("success-email");
     const email = currentData.customer_email_masked || (lang === "en" ? "buyer email" : "email pembeli");
@@ -510,8 +523,49 @@ html[data-language="id"] .lang-id{display:revert!important}
       '<span class="email-address">' + email + '</span>';
   }
 
+  function renderProductNextStep(data) {
+    const websiteNext = document.getElementById("website-development-next");
+    const ebookNext = document.getElementById("ebook-next");
+    websiteNext.hidden = true;
+    ebookNext.hidden = true;
+
+    if (data.product_id === "website-development") {
+      websiteNext.hidden = false;
+      document.getElementById("success-whatsapp").href =
+        whatsappUrl(data.invoice_number, data.product_name || "Website Development");
+      return;
+    }
+
+    if (data.product_id === "digital-marketing-ebooks") {
+      ebookNext.hidden = false;
+      const link = document.getElementById("ebook-resource-link");
+      if (data.resource_url) {
+        link.href = data.resource_url;
+        link.removeAttribute("aria-disabled");
+        link.style.pointerEvents = "";
+        link.style.opacity = "";
+      } else {
+        link.href = "#";
+        link.setAttribute("aria-disabled", "true");
+        link.style.pointerEvents = "none";
+        link.style.opacity = ".55";
+      }
+    }
+  }
+
   function renderLocalPreview() {
-    currentData = {
+    const ebookPreview = query.get("product") === "digital-marketing-ebooks";
+    currentData = ebookPreview ? {
+      invoice_number: "INV-PREVIEW-EBOOK-10000",
+      amount: 10000,
+      product_id: "digital-marketing-ebooks",
+      product_name: "Digital Marketing eBooks",
+      customer_name: "Maul Test",
+      customer_email_masked: "m***@example.com",
+      email_status: "SENT",
+      status: "SUCCESS",
+      resource_url: "#"
+    } : {
       invoice_number: "INV-PREVIEW-999000",
       amount: 999000,
       product_id: "website-development",
@@ -525,9 +579,7 @@ html[data-language="id"] .lang-id{display:revert!important}
     document.getElementById("success-invoice").textContent = currentData.invoice_number;
     document.getElementById("success-amount").textContent = formatIdr(currentData.amount);
     document.getElementById("success-product").textContent = currentData.product_name;
-    document.getElementById("website-development-next").hidden = false;
-    document.getElementById("success-whatsapp").href =
-      whatsappUrl(currentData.invoice_number, currentData.product_name);
+    renderProductNextStep(currentData);
     renderDynamicCopy();
     gate.style.display = "none";
     view.style.display = "block";
@@ -546,39 +598,27 @@ html[data-language="id"] .lang-id{display:revert!important}
 
     try {
       const response = await fetch(
-        "/api/payment-status?invoice=" +
-          encodeURIComponent(invoice) +
-          "&token=" +
-          encodeURIComponent(token),
+        "/api/payment-status?invoice=" + encodeURIComponent(invoice) +
+        "&token=" + encodeURIComponent(token),
         { cache: "no-store" }
       );
-
       const data = await response.json();
 
       if (!response.ok || !data.found) {
         setGateMessage("invalid");
         return;
       }
-
       if (data.status !== "SUCCESS") {
         setGateMessage(data.status === "EXPIRED" ? "expired" : "pending");
         return;
       }
 
       currentData = data;
-
       document.getElementById("success-invoice").textContent = data.invoice_number;
       document.getElementById("success-amount").textContent = formatIdr(data.amount);
-      document.getElementById("success-product").textContent = data.product_name || "Website Development";
-
-      if (data.product_id === "website-development") {
-        document.getElementById("website-development-next").hidden = false;
-        document.getElementById("success-whatsapp").href =
-          whatsappUrl(data.invoice_number, data.product_name || "Website Development");
-      }
-
+      document.getElementById("success-product").textContent = data.product_name || "Product";
+      renderProductNextStep(data);
       renderDynamicCopy();
-
       gate.style.display = "none";
       view.style.display = "block";
     } catch (error) {

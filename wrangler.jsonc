@@ -3,6 +3,13 @@
   "name": "digmarketingmaul-website",
   "main": "worker.js",
   "compatibility_date": "2026-09-20",
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "digmarketingmaul.my.id",
+      "custom_domain": true
+    }
+  ],
   "observability": {
     "enabled": true
   },
@@ -11,7 +18,16 @@
     "binding": "ASSETS",
     "run_worker_first": [
       "/api/*",
-      "/admin/*"
+      "/admin/*",
+      "/",
+      "/index.html",
+      "/*.html",
+      "/frameworks",
+      "/frameworks/*",
+      "/blog",
+      "/blog/*",
+      "/profile",
+      "/profile/*"
     ]
   },
   "d1_databases": [
