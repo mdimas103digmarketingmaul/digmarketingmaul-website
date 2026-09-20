@@ -19,7 +19,6 @@
     const declared = root.dataset.theme || root.dataset.productsTheme || root.dataset.siteTheme;
     if (declared === "light" || declared === "dark") return declared;
 
-    // Preserve the original portfolio default unless the user has chosen a theme.
     return "dark";
   }
 
@@ -46,11 +45,6 @@
         background:#fff;color:#111827;box-shadow:0 1px 5px rgba(15,23,42,.14)
       }
 
-      /* ----------------------------------------------------------
-         LIGHT MODE
-         Visual language follows Products: soft canvas, white cards,
-         neutral borders, high-contrast type, red only as an accent.
-         ---------------------------------------------------------- */
       html[data-site-theme="light"]{
         color-scheme:light;
         --navy:#111827!important;
@@ -66,9 +60,12 @@
       html[data-site-theme="light"] body{
         color:#111827!important;
         background:
-          radial-gradient(circle at 88% 8%,rgba(255,49,88,.075),transparent 25%),
-          radial-gradient(circle at 12% 40%,rgba(59,130,246,.045),transparent 30%),
+          linear-gradient(rgba(148,163,184,.16) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(148,163,184,.16) 1px, transparent 1px),
+          radial-gradient(circle at 88% 8%,rgba(255,49,88,.08),transparent 26%),
+          radial-gradient(circle at 12% 40%,rgba(59,130,246,.05),transparent 30%),
           #f7f8fb!important;
+        background-size:72px 72px,72px 72px,auto,auto,auto!important;
       }
       html[data-site-theme="light"] main,
       html[data-site-theme="light"] section{background-color:transparent}
@@ -98,14 +95,12 @@
       html[data-site-theme="light"] main small,
       html[data-site-theme="light"] .subpage-intro,
       html[data-site-theme="light"] [class*="description"],
-      html[data-site-theme="light"] [class*="location"],
       html[data-site-theme="light"] .hero-location,
       html[data-site-theme="light"] .based-in,
       html[data-site-theme="light"] [class*="based-in"]{
         color:#475467!important;
       }
 
-      /* Main portfolio surfaces */
       html[data-site-theme="light"] .topic-card,
       html[data-site-theme="light"] .framework-card,
       html[data-site-theme="light"] .article-card,
@@ -136,7 +131,22 @@
         box-shadow:0 12px 38px rgba(15,23,42,.055)!important;
       }
 
-      /* Smaller boxes / workflow chips inside Frameworks */
+      html[data-site-theme="light"] .maul-light-surface-strong{
+        background:linear-gradient(135deg, rgba(255,255,255,.97), rgba(244,247,251,.95))!important;
+        border:1px solid #e4e7ec!important;
+        color:#111827!important;
+        box-shadow:0 16px 44px rgba(15,23,42,.08)!important;
+      }
+      html[data-site-theme="light"] .maul-light-surface-strong h2,
+      html[data-site-theme="light"] .maul-light-surface-strong h3,
+      html[data-site-theme="light"] .maul-light-surface-strong h4,
+      html[data-site-theme="light"] .maul-light-surface-strong strong,
+      html[data-site-theme="light"] .maul-light-surface-strong .title{color:#111827!important}
+      html[data-site-theme="light"] .maul-light-surface-strong p,
+      html[data-site-theme="light"] .maul-light-surface-strong li,
+      html[data-site-theme="light"] .maul-light-surface-strong span,
+      html[data-site-theme="light"] .maul-light-surface-strong small{color:#475467!important}
+
       html[data-site-theme="light"] .step,
       html[data-site-theme="light"] .workflow-node,
       html[data-site-theme="light"] .workflow-stage,
@@ -150,6 +160,64 @@
         background:#f8fafc!important;
         border-color:#dfe4ea!important;
         color:#344054!important;
+      }
+
+      html[data-site-theme="light"] .maul-light-pill,
+      html[data-site-theme="light"] .maul-light-pill a,
+      html[data-site-theme="light"] a.maul-light-pill,
+      html[data-site-theme="light"] button.maul-light-pill{
+        background:#eef2f6!important;
+        border:1px solid #d7dde5!important;
+        color:#344054!important;
+        box-shadow:none!important;
+      }
+      html[data-site-theme="light"] .maul-light-pill:hover,
+      html[data-site-theme="light"] .maul-light-pill:hover a,
+      html[data-site-theme="light"] a.maul-light-pill:hover,
+      html[data-site-theme="light"] button.maul-light-pill:hover{
+        background:#fff1f4!important;
+        border-color:#ffc2ce!important;
+        color:#ff3158!important;
+      }
+
+      html[data-site-theme="light"] .maul-light-location-badge{
+        background:linear-gradient(135deg, rgba(15,23,42,.92), rgba(51,65,85,.92))!important;
+        border:1px solid rgba(255,255,255,.08)!important;
+        box-shadow:0 14px 30px rgba(15,23,42,.18)!important;
+      }
+      html[data-site-theme="light"] .maul-light-location-badge,
+      html[data-site-theme="light"] .maul-light-location-badge *,
+      html[data-site-theme="light"] .maul-light-location-badge p,
+      html[data-site-theme="light"] .maul-light-location-badge span,
+      html[data-site-theme="light"] .maul-light-location-badge small{
+        color:#ffffff!important;
+        opacity:1!important;
+      }
+      html[data-site-theme="light"] .maul-light-location-badge [class*="meta"],
+      html[data-site-theme="light"] .maul-light-location-badge [class*="label"]{
+        color:#cbd5e1!important;
+      }
+
+      html[data-site-theme="light"] .maul-light-cert-row{
+        background:transparent!important;
+        border:0!important;
+        border-radius:0!important;
+        box-shadow:none!important;
+        border-top:1px solid #e7ebf1!important;
+      }
+      html[data-site-theme="light"] .maul-light-cert-link,
+      html[data-site-theme="light"] .maul-light-cert-row .maul-light-cert-link,
+      html[data-site-theme="light"] .maul-light-cert-row a,
+      html[data-site-theme="light"] .maul-light-cert-row span,
+      html[data-site-theme="light"] .maul-light-cert-row strong{
+        color:#111827!important;
+      }
+      html[data-site-theme="light"] .maul-light-cert-row:hover .maul-light-cert-link,
+      html[data-site-theme="light"] .maul-light-cert-row:hover a,
+      html[data-site-theme="light"] .maul-light-cert-row:hover span,
+      html[data-site-theme="light"] .maul-light-cert-row:hover strong,
+      html[data-site-theme="light"] .maul-light-cert-link:hover{
+        color:#ff3158!important;
       }
 
       html[data-site-theme="light"] main a:not(.btn):not(.button):not([class*="nav"]):not([class*="social"]){
@@ -178,10 +246,10 @@
       html[data-site-theme="light"] [class*="border"],
       html[data-site-theme="light"] hr{border-color:#e4e7ec!important}
 
-      html[data-site-theme="light"] .grid-layer{opacity:.22!important}
-      html[data-site-theme="light"] .grain-layer{opacity:.045!important}
+      html[data-site-theme="light"] .grid-layer{opacity:.34!important}
+      html[data-site-theme="light"] .grain-layer{opacity:.05!important}
       html[data-site-theme="light"] .aurora-layer{opacity:.34!important}
-      html[data-site-theme="light"] .cursor-grid-light{opacity:.28}
+      html[data-site-theme="light"] .cursor-grid-light{opacity:.34}
       html[data-site-theme="light"] footer{color:#667085!important;border-color:#e4e7ec!important}
       html[data-site-theme="light"] .maul-site-theme-toggle{
         background:rgba(243,245,248,.94);border-color:#e4e7ec
@@ -205,8 +273,6 @@
   }
 
   function decorateKnownSurfaces() {
-    // These text anchors make the light-mode fix robust even when the legacy
-    // pages use different class names for their cards/workflow boxes.
     const surfaceKeywords = [
       "creative & brand",
       "acquire",
@@ -225,32 +291,81 @@
       "launch system"
     ];
 
+    const strongSurfaceKeywords = [
+      "creative & brand",
+      "brand guidelines & creative production.",
+      "digital marketing stack",
+      "graphic design",
+      "social content",
+      "brand identity & guidelines",
+      "creative project management",
+      "video editing"
+    ];
+
+    const pillKeywords = [
+      "read framework",
+      "automation system",
+      "workflow",
+      "brief",
+      "produce",
+      "launch",
+      "test",
+      "analyze",
+      "iterate",
+      "idea",
+      "planning",
+      "build",
+      "measurement",
+      "testing",
+      "launch system"
+    ];
+
     const candidates = Array.from(
-      document.querySelectorAll("main h2, main h3, main h4, main h5, main strong, main .title, main .label, main [class*='title']")
+      document.querySelectorAll("main h1, main h2, main h3, main h4, main h5, main p, main strong, main span, main a, main button, main .title, main .label, main [class*='title']")
     );
 
     candidates.forEach((node) => {
       const text = normalizeText(node.textContent);
-      if (!text || !surfaceKeywords.some((keyword) => text === keyword || text.includes(keyword))) return;
+      if (!text) return;
 
       const surface = node.closest(
-        "article, li, [class*='card'], [class*='box'], [class*='step'], [class*='item'], [class*='node'], [class*='tile'], [class*='phase'], [class*='workflow']"
+        "article, li, [class*='card'], [class*='box'], [class*='step'], [class*='item'], [class*='node'], [class*='tile'], [class*='phase'], [class*='workflow'], [class*='panel']"
       );
 
-      if (surface && surface !== document.body && surface !== document.documentElement) {
-        surface.classList.add("maul-light-surface");
+      if (surfaceKeywords.some((keyword) => text === keyword || text.includes(keyword))) {
+        if (surface && surface !== document.body && surface !== document.documentElement) {
+          surface.classList.add("maul-light-surface");
+        }
       }
-    });
 
-    document.querySelectorAll("main a, main p, main span").forEach((node) => {
-      const text = normalizeText(node.textContent);
-      if (text.includes("meta blueprint badges obtained as part of the process")) {
-        node.classList.add("maul-light-readable");
-        const surface = node.closest("article, li, [class*='card'], [class*='item']");
-        if (surface) surface.classList.add("maul-light-surface");
+      if (strongSurfaceKeywords.some((keyword) => text === keyword || text.includes(keyword))) {
+        if (surface && surface !== document.body && surface !== document.documentElement) {
+          surface.classList.add("maul-light-surface", "maul-light-surface-strong");
+        }
       }
-      if (text.includes("based in indonesia") || text === "based in indonesia, bekasi") {
+
+      if (pillKeywords.some((keyword) => text === keyword)) {
+        const pill = node.closest("a, button, [role='button'], [class*='chip'], [class*='pill'], [class*='tag'], [class*='badge']");
+        if (pill) {
+          pill.classList.add("maul-light-pill");
+        } else {
+          node.classList.add("maul-light-pill");
+          if (node.parentElement) node.parentElement.classList.add("maul-light-pill");
+        }
+      }
+
+      if (text.includes("meta blueprint badges obtained as part of the process")) {
+        node.classList.add("maul-light-cert-link", "maul-light-readable");
+        const row = node.closest("article, li, [class*='card'], [class*='item'], [class*='row']");
+        if (row) row.classList.add("maul-light-cert-row");
+      }
+
+      if (text.includes("based in indonesia") || text === "based in indonesia, bekasi" || text.includes("indonesia, bekasi")) {
         node.classList.add("maul-light-readable");
+        if (node.parentElement) node.parentElement.classList.add("maul-light-location-badge");
+        if (node.parentElement && node.parentElement.parentElement) {
+          node.parentElement.parentElement.classList.add("maul-light-location-badge");
+        }
       }
     });
   }
