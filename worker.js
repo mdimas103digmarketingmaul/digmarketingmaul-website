@@ -1560,14 +1560,18 @@ const SITE_THEME_SCRIPT_TAG =
   '<script src="/assets/site-theme.js" data-maul-site-theme-runtime defer></script>';
 
 function isThemeManagedStaticPath(pathname) {
+  /*
+   * Keep the legacy portfolio pages in their original dark-only theme.
+   * Do NOT inject /assets/site-theme.js into Home, Frameworks, Blog,
+   * or Framework detail pages.
+   *
+   * Products keeps its own native Light/Dark implementation and is
+   * intentionally untouched here.
+   *
+   * Profile keeps the current runtime theme behavior because it was not
+   * included in this rollback request.
+   */
   return (
-    pathname === "/" ||
-    pathname === "/index.html" ||
-    /^\/[^/]+\.html$/.test(pathname) ||
-    pathname === "/frameworks" ||
-    pathname.startsWith("/frameworks/") ||
-    pathname === "/blog" ||
-    pathname.startsWith("/blog/") ||
     pathname === "/profile" ||
     pathname.startsWith("/profile/")
   );
