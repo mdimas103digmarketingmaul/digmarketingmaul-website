@@ -534,7 +534,7 @@ html[data-language="id"] .lang-id{display:revert!important}
     const email = currentData.customer_email_masked || (lang === "en" ? "buyer email" : "email pembeli");
     const prefix = currentData.email_status === "SENT"
       ? (lang === "en" ? "Sent to" : "Terkirim ke")
-      : (lang === "en" ? "Confirmation is being processed for" : "Konfirmasi sedang diproses ke");
+      : (lang === "en" ? "Confirmation is being processed for" : "Konfirmasi diproses ke");
 
     emailEl.innerHTML =
       '<span class="email-prefix">' + prefix + '</span> ' +
