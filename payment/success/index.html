@@ -330,6 +330,19 @@ html[data-language="id"] .lang-id{display:revert!important}
         <p class="lang-id" id="success-completion-note-id">Halaman ini memiliki link personal yang bisa kamu buka kembali. Link yang sama juga dikirim melalui email.</p>
         <p class="lang-en" id="success-completion-note-en">This page has a personal link you can reopen later. The same link is also sent by email.</p>
 
+        <div class="next-step" id="course-next" hidden>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://course.digmarketingmaul.com/request-access/">
+              <span class="lang-id">Akses Course</span>
+              <span class="lang-en">Access Course</span>
+            </a>
+            <a class="btn btn-secondary" href="/products/">
+              <span class="lang-id">Kembali ke Products</span>
+              <span class="lang-en">Back to Products</span>
+            </a>
+          </div>
+        </div>
+
         <div class="next-step" id="website-development-next" hidden>
           <div class="actions">
             <a class="btn btn-whatsapp" id="success-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
@@ -529,13 +542,22 @@ html[data-language="id"] .lang-id{display:revert!important}
   }
 
   function renderProductNextStep(data) {
+    const courseNext = document.getElementById("course-next");
     const websiteNext = document.getElementById("website-development-next");
     const ebookNext = document.getElementById("ebook-next");
     const noteId = document.getElementById("success-completion-note-id");
     const noteEn = document.getElementById("success-completion-note-en");
 
+    courseNext.hidden = true;
     websiteNext.hidden = true;
     ebookNext.hidden = true;
+
+    if (data.product_id === "website-course") {
+      noteId.textContent = "Pembayaran berhasil dan akses course sudah diaktifkan untuk email pembelian kamu. Klik Akses Course, masukkan email yang sama saat checkout, lalu request magic link. Cek Spam/Junk apabila email akses tidak masuk inbox utama.";
+      noteEn.textContent = "Payment is successful and course access has been activated for your purchase email. Click Access Course, enter the same checkout email, then request a magic link. Check Spam/Junk if the access email does not appear in your main inbox.";
+      courseNext.hidden = false;
+      return;
+    }
 
     if (data.product_id === "website-development") {
       noteId.textContent = "Halaman ini memiliki link personal yang bisa kamu buka kembali dan link yang sama juga dikirim ke email. Langkah berikutnya untuk memulai diskusi kebutuhan dan proses pengerjaan Website Development, hubungi Maul melalui WhatsApp.";
@@ -566,27 +588,43 @@ html[data-language="id"] .lang-id{display:revert!important}
   }
 
   function renderLocalPreview() {
-    const ebookPreview = query.get("product") === "digital-marketing-ebooks";
-    currentData = ebookPreview ? {
-      invoice_number: "INV-PREVIEW-EBOOK-10000",
-      amount: 10000,
-      product_id: "digital-marketing-ebooks",
-      product_name: "Digital Marketing eBooks",
-      customer_name: "Maul Test",
-      customer_email_masked: "m***@example.com",
-      email_status: "SENT",
-      status: "SUCCESS",
-      resource_url: "#"
-    } : {
-      invoice_number: "INV-PREVIEW-999000",
-      amount: 999000,
-      product_id: "website-development",
-      product_name: "Website Development",
-      customer_name: "Maul Test",
-      customer_email_masked: "m***@example.com",
-      email_status: "SENT",
-      status: "SUCCESS"
-    };
+    const previewProduct = query.get("product") || "website-development";
+
+    if (previewProduct === "website-course") {
+      currentData = {
+        invoice_number: "INV-PREVIEW-COURSE-899000",
+        amount: 899000,
+        product_id: "website-course",
+        product_name: "Panduan Membuat Website Pertama Kamu Live dari 0",
+        customer_name: "Maul Test",
+        customer_email_masked: "m***@example.com",
+        email_status: "SENT",
+        status: "SUCCESS"
+      };
+    } else if (previewProduct === "digital-marketing-ebooks") {
+      currentData = {
+        invoice_number: "INV-PREVIEW-EBOOK-10000",
+        amount: 10000,
+        product_id: "digital-marketing-ebooks",
+        product_name: "Digital Marketing eBooks",
+        customer_name: "Maul Test",
+        customer_email_masked: "m***@example.com",
+        email_status: "SENT",
+        status: "SUCCESS",
+        resource_url: "#"
+      };
+    } else {
+      currentData = {
+        invoice_number: "INV-PREVIEW-999000",
+        amount: 999000,
+        product_id: "website-development",
+        product_name: "Website Development",
+        customer_name: "Maul Test",
+        customer_email_masked: "m***@example.com",
+        email_status: "SENT",
+        status: "SUCCESS"
+      };
+    }
 
     document.getElementById("success-invoice").textContent = currentData.invoice_number;
     document.getElementById("success-amount").textContent = formatIdr(currentData.amount);

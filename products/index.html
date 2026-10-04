@@ -89,6 +89,10 @@
       background:#101f33!important;
       border-color:rgba(148,163,184,.18)!important;
     }
+    .commerce-price-stack{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .commerce-original-price{font-family:"JetBrains Mono",monospace;font-size:.82rem;color:#98a2b3;text-decoration:line-through;text-decoration-thickness:1.5px}
+    .commerce-promo-note{margin-top:7px;font-size:.75rem;line-height:1.45;color:#ff3158;font-weight:700}
+    html[data-products-theme="dark"] .commerce-original-price{color:#7f8da3}
     br.desktop-break{display:block}
     @media(max-width:760px){br.desktop-break{display:none}}
   </style>
@@ -204,9 +208,43 @@
 
       <div class="commerce-product-grid">
 
-        <article class="commerce-product-card js-detail-card" data-product-id="website-development" data-price="999000" data-detail-url="/products/website-development/" tabindex="0" role="link" aria-label="Lihat detail Website Development">
+        <article class="commerce-product-card js-detail-card" data-product-id="website-course" data-price="899000" data-detail-url="/products/website-course/" tabindex="0" role="link" aria-label="Lihat detail Panduan Membuat Website Pertama Kamu Live dari 0">
           <span class="card-sheen" aria-hidden="true"></span>
           <span class="topic-number">01</span>
+
+          <div class="commerce-card-top">
+            <span class="product-icon"><i class="fa-solid fa-laptop-code"></i></span>
+            <span class="commerce-category">Course / Website</span>
+          </div>
+
+          <h2>Panduan Membuat Website<br> Pertama Kamu Live dari 0</h2>
+
+          <p class="commerce-description" data-copy-lang="id">
+            Course step-by-step untuk membangun dan mempublikasikan website pertama kamu dari nol sampai live.
+          </p>
+          <p class="commerce-description" data-copy-lang="en" hidden>
+            A step-by-step course to build and publish your first website from zero to live.
+          </p>
+
+          <div class="commerce-card-footer">
+            <div class="commerce-price-stack">
+              <div class="commerce-price">Rp899.000</div>
+              <div class="commerce-original-price">Rp4.000.000</div>
+            </div>
+            <div class="commerce-promo-note" data-copy-lang="id">Harga Oktober 2026 · Segera checkout sebelum harga naik.</div>
+            <div class="commerce-promo-note" data-copy-lang="en" hidden>October 2026 price · Checkout before the price increases.</div>
+            <div class="payment-progress"><span class="payment-progress-dot"></span>DOKU Checkout — ready</div>
+            <div class="payment-status-detail" hidden></div>
+            <a class="commerce-checkout-btn is-ready" href="/products/website-course/" style="text-decoration:none;text-align:center;display:block;">
+              <span data-copy-lang="id">Lihat Detail Course</span>
+              <span data-copy-lang="en" hidden>View Course Details</span>
+            </a>
+          </div>
+        </article>
+
+        <article class="commerce-product-card js-detail-card" data-product-id="website-development" data-price="999000" data-detail-url="/products/website-development/" tabindex="0" role="link" aria-label="Lihat detail Website Development">
+          <span class="card-sheen" aria-hidden="true"></span>
+          <span class="topic-number">02</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-solid fa-code"></i></span>
@@ -236,7 +274,7 @@
 
         <article class="commerce-product-card js-detail-card" data-product-id="digital-marketing-ebooks" data-price="10000" data-detail-url="/products/digital-marketing-ebooks/" tabindex="0" role="link" aria-label="Lihat detail Digital Marketing eBooks">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">02</span>
+          <span class="topic-number">03</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-solid fa-book-open"></i></span>
@@ -267,7 +305,7 @@
 
         <article class="commerce-product-card" data-product-id="website-building-advisory" data-price="1200000">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">03</span>
+          <span class="topic-number">04</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-regular fa-comments"></i></span>
@@ -298,7 +336,7 @@
 
         <article class="commerce-product-card" data-product-id="digital-ads-management">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">04</span>
+          <span class="topic-number">05</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-solid fa-chart-column"></i></span>
@@ -327,7 +365,7 @@
 
         <article class="commerce-product-card" data-product-id="meta-ads-advisory" data-price="1200000">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">05</span>
+          <span class="topic-number">06</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-brands fa-meta"></i></span>
@@ -358,7 +396,7 @@
 
         <article class="commerce-product-card" data-product-id="google-ads-advisory" data-price="1200000">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">06</span>
+          <span class="topic-number">07</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-brands fa-google"></i></span>
@@ -389,7 +427,7 @@
 
         <article class="commerce-product-card" data-product-id="exclusive-technical-digital-marketing-discussion">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">07</span>
+          <span class="topic-number">08</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-regular fa-message"></i></span>
@@ -420,7 +458,7 @@
 
         <article class="commerce-product-card" data-product-id="digital-marketing-reporting-templates">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">08</span>
+          <span class="topic-number">09</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-solid fa-table-columns"></i></span>
@@ -450,7 +488,7 @@
 
         <article class="commerce-product-card" data-product-id="conversion-tracking-measurement-setup">
           <span class="card-sheen" aria-hidden="true"></span>
-          <span class="topic-number">09</span>
+          <span class="topic-number">10</span>
 
           <div class="commerce-card-top">
             <span class="product-icon"><i class="fa-solid fa-chart-line"></i></span>

@@ -6,6 +6,7 @@ const SITE_ORIGIN_DEFAULT = "https://digmarketingmaul.com";
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 const RESEND_FROM_DEFAULT = "Maul Digital <order@mail.digmarketingmaul.com>";
 const WHATSAPP_NUMBER = "6281296069566";
+const COURSE_ACCESS_URL_DEFAULT = "https://course.digmarketingmaul.com/request-access/";
 const ADMIN_ORDERS_API_PATH = "/admin/api/orders";
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -106,6 +107,15 @@ const WEBSITE_DEVELOPMENT_PAYMENT_METHODS = Object.freeze([
 ]);
 
 const PRODUCT_CATALOG = Object.freeze({
+  "website-course": {
+    name: "Panduan Membuat Website Pertama Kamu Live dari 0",
+    amount: 899000,
+    currency: "IDR",
+    emailSubject: "Pembayaran Berhasil — Panduan Membuat Website Pertama Kamu Live dari 0",
+    // No paymentMethodTypes: DOKU will show every payment method
+    // that is active and available for the Production merchant account.
+    postPaymentType: "course",
+  },
   "website-development": {
     name: "Website Development",
     amount: 999000,
@@ -583,7 +593,7 @@ function buildWhatsAppUrl(message) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-function buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl }) {
+function buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl, env }) {
   const greeting = order.customer_name
     ? `Halo ${escapeHtml(order.customer_name)},`
     : "Halo,";
@@ -597,6 +607,14 @@ function buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl }) {
       <div style="margin:24px 0;padding:18px;border:1px solid #d8e4f0;border-radius:12px;background:#f4f8fc">
         <p style="margin:0;font-size:15px;line-height:1.7"><strong>Live test Digital Marketing eBooks</strong><br>
         Produk eBook final belum tersedia. Email ini hanya mengarahkan ke halaman pembelian personal untuk melanjutkan simulasi akses pascapembayaran. Simpan link halaman tersebut jika ingin membuka kembali flow testing.</p>
+      </div>`;
+  } else if (order.product_id === "website-course") {
+    const courseAccessUrl = String(env.COURSE_ACCESS_URL || COURSE_ACCESS_URL_DEFAULT).trim();
+    nextStepBlock = `
+      <div style="margin:24px 0;padding:18px;border:1px solid #d8e4f0;border-radius:12px;background:#f4f8fc">
+        <p style="margin:0 0 14px;font-size:15px;line-height:1.7"><strong>Akses course sudah aktif untuk email pembelian ini.</strong><br>
+        Klik tombol di bawah, masukkan email yang sama dengan email saat checkout, lalu request magic link. Jika email tidak muncul di inbox utama, cek folder Spam/Junk.</p>
+        <p style="margin:0"><a href="${escapeHtml(courseAccessUrl)}" style="display:inline-block;padding:12px 18px;background:#111827;color:#fff;text-decoration:none;border-radius:8px;font-weight:700">Akses Course</a></p>
       </div>`;
   } else {
     nextStepBlock = `
@@ -663,7 +681,7 @@ async function sendPurchaseSuccessEmail(invoiceNumber, env) {
     from: String(env.RESEND_FROM || RESEND_FROM_DEFAULT).trim(),
     to: [order.customer_email],
     subject: product.emailSubject || `Pembayaran Berhasil — ${order.product_name}`,
-    html: buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl }),
+    html: buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl, env }),
     tags: [
       { name: "category", value: "payment_success" },
       { name: "product", value: String(order.product_id || "unknown").replace(/[^a-zA-Z0-9_-]/g, "-").slice(0, 256) },

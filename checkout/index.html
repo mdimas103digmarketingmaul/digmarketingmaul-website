@@ -246,6 +246,9 @@ html[data-language="id"] .lang-id{display:revert!important}
 .order-summary h2{margin:0 0 10px;font-size:20px;line-height:1.3}
 .order-summary p{margin:0;color:var(--muted);line-height:1.55}
 .order-price{font:600 23px/1 "JetBrains Mono",monospace;white-space:nowrap}
+.order-price-wrap{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+.order-original-price{font:500 13px/1 "JetBrains Mono",monospace;color:var(--muted);text-decoration:line-through;text-decoration-thickness:1.4px}
+.order-promo-note{font-size:11px;line-height:1.45;color:var(--accent);font-weight:750;max-width:250px;text-align:right}
 .form-card{padding:28px}
 .field{margin-bottom:20px}
 .field label{display:block;margin-bottom:8px;font-size:14px;font-weight:700}
@@ -334,7 +337,12 @@ html[data-language="id"] .lang-id{display:revert!important}
         <p class="lang-id" id="checkout-product-summary-id">Pembuatan website sampai live</p>
         <p class="lang-en" id="checkout-product-summary-en">Website development through launch</p>
       </div>
-      <div class="order-price" id="checkout-product-price">Rp999.000</div>
+      <div class="order-price-wrap">
+        <div class="order-original-price" id="checkout-original-price" hidden></div>
+        <div class="order-price" id="checkout-product-price">Rp999.000</div>
+        <div class="order-promo-note lang-id" id="checkout-promo-note-id" hidden></div>
+        <div class="order-promo-note lang-en" id="checkout-promo-note-en" hidden></div>
+      </div>
     </div>
 
     <form class="panel form-card" id="checkout-form" novalidate>
@@ -416,6 +424,10 @@ html[data-language="id"] .lang-id{display:revert!important}
         <a class="btn btn-whatsapp" id="success-whatsapp" href="#" target="_blank" rel="noopener noreferrer" hidden>
           <span class="lang-id">Lanjutkan via WhatsApp</span>
           <span class="lang-en">Continue via WhatsApp</span>
+        </a>
+        <a class="btn btn-primary" id="success-course" href="https://course.digmarketingmaul.com/request-access/" hidden>
+          <span class="lang-id">Akses Course</span>
+          <span class="lang-en">Access Course</span>
         </a>
         <a class="btn btn-primary" id="success-resource" href="#" target="_blank" rel="noopener noreferrer" hidden>
           <span class="lang-id">Buka Link Testing di Google Drive</span>
@@ -518,6 +530,17 @@ html[data-language="id"] .lang-id{display:revert!important}
 <script>
 (function () {
   const PRODUCT_CONFIG = Object.freeze({
+    "website-course": {
+      name: "Panduan Membuat Website Pertama Kamu Live dari 0",
+      amount: 899000,
+      originalAmount: 4000000,
+      detailUrl: "/products/website-course/",
+      summaryId: "Course 9 bab step-by-step dari dasar website sampai live",
+      summaryEn: "A 9-chapter step-by-step course from website fundamentals to launch",
+      promoId: "Harga Oktober 2026 · Segera checkout sebelum harga naik.",
+      promoEn: "October 2026 price · Checkout before the price increases.",
+      postPayment: "course"
+    },
     "website-development": {
       name: "Website Development",
       amount: 999000,
@@ -537,7 +560,7 @@ html[data-language="id"] .lang-id{display:revert!important}
   });
 
   const qs = new URLSearchParams(location.search);
-  const PRODUCT_ID = String(qs.get("product") || "website-development").trim();
+  const PRODUCT_ID = String(qs.get("product") || "website-course").trim();
   const PRODUCT = PRODUCT_CONFIG[PRODUCT_ID];
 
   if (!PRODUCT) {
@@ -577,6 +600,24 @@ html[data-language="id"] .lang-id{display:revert!important}
     document.getElementById("checkout-product-summary-id").textContent = PRODUCT.summaryId;
     document.getElementById("checkout-product-summary-en").textContent = PRODUCT.summaryEn;
     document.getElementById("checkout-product-price").textContent = formatIdr(PRODUCT.amount);
+
+    const originalPrice = document.getElementById("checkout-original-price");
+    const promoId = document.getElementById("checkout-promo-note-id");
+    const promoEn = document.getElementById("checkout-promo-note-en");
+
+    if (PRODUCT.originalAmount) {
+      originalPrice.textContent = formatIdr(PRODUCT.originalAmount);
+      originalPrice.hidden = false;
+      promoId.textContent = PRODUCT.promoId || "";
+      promoEn.textContent = PRODUCT.promoEn || "";
+      promoId.hidden = !PRODUCT.promoId;
+      promoEn.hidden = !PRODUCT.promoEn;
+    } else {
+      originalPrice.hidden = true;
+      promoId.hidden = true;
+      promoEn.hidden = true;
+    }
+
     document.getElementById("success-product-name").textContent = PRODUCT.name;
   }
 
@@ -820,12 +861,21 @@ html[data-language="id"] .lang-id{display:revert!important}
 
   function renderPostPaymentAction(merged) {
     const wa = document.getElementById("success-whatsapp");
+    const course = document.getElementById("success-course");
     const resource = document.getElementById("success-resource");
     const noteId = document.getElementById("success-completion-note-id");
     const noteEn = document.getElementById("success-completion-note-en");
 
     wa.hidden = true;
+    course.hidden = true;
     resource.hidden = true;
+
+    if (PRODUCT.postPayment === "course") {
+      noteId.textContent = "Pembayaran berhasil dan akses course sudah diaktifkan untuk email pembelian kamu. Klik Akses Course, masukkan email yang sama saat checkout, lalu request magic link. Cek Spam/Junk apabila email akses tidak masuk inbox utama.";
+      noteEn.textContent = "Payment is successful and course access has been activated for your purchase email. Click Access Course, enter the same checkout email, then request a magic link. Check Spam/Junk if the access email does not appear in your main inbox.";
+      course.hidden = false;
+      return;
+    }
 
     if (PRODUCT.postPayment === "ebook") {
       noteId.textContent = "Halaman ini memiliki link personal yang bisa kamu buka kembali dan link yang sama juga dikirim ke email. Flow testing Digital Marketing eBooks berhasil. Produk eBook final belum tersedia; tombol Google Drive di bawah digunakan sebagai bagian dari simulasi akses pascapembayaran.";
