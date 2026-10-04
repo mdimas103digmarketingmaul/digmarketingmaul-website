@@ -614,6 +614,20 @@ async function ensureCourseAdminTables(env) {
       )`
     ),
     env.DB.prepare(
+      `CREATE TABLE IF NOT EXISTS course_payment_access_delivery (
+        invoice_number TEXT PRIMARY KEY,
+        email TEXT NOT NULL,
+        product_id TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'SENDING',
+        magic_link_id TEXT,
+        resend_message_id TEXT,
+        error TEXT,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        sent_at TEXT
+      )`
+    ),
+    env.DB.prepare(
       `CREATE INDEX IF NOT EXISTS idx_course_admin_audit_target
        ON course_admin_audit(target_email, created_at)`
     ),
@@ -2351,8 +2365,8 @@ function buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl, env }
     nextStepBlock = `
       <div style="margin:24px 0;padding:18px;border:1px solid #d8e4f0;border-radius:12px;background:#f4f8fc">
         <p style="margin:0 0 14px;font-size:15px;line-height:1.7"><strong>Akses course sudah aktif untuk email pembelian ini.</strong><br>
-        Klik tombol di bawah, masukkan email yang sama dengan email saat checkout, lalu request magic link. Jika email tidak muncul di inbox utama, cek folder Spam/Junk.</p>
-        <p style="margin:0"><a href="${escapeHtml(courseAccessUrl)}" style="display:inline-block;padding:12px 18px;background:#111827;color:#fff;text-decoration:none;border-radius:8px;font-weight:700">Akses Course</a></p>
+        Magic link akses course dikirim otomatis melalui email terpisah dari <strong>course@mail.digmarketingmaul.com</strong>. Jika belum terlihat di inbox utama, cek folder Spam/Junk.</p>
+        <p style="margin:0"><a href="${escapeHtml(courseAccessUrl)}" style="display:inline-block;padding:12px 18px;background:#111827;color:#fff;text-decoration:none;border-radius:8px;font-weight:700">Request Link Baru</a></p>
       </div>`;
   } else {
     nextStepBlock = `
@@ -2471,6 +2485,152 @@ function toBase64(buffer) {
   }
 
   return btoa(binary);
+}
+
+
+async function ensureAutomaticCourseDeliveryTable(env) {
+  await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS course_payment_access_delivery (
+      invoice_number TEXT PRIMARY KEY,
+      email TEXT NOT NULL,
+      product_id TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'SENDING',
+      magic_link_id TEXT,
+      resend_message_id TEXT,
+      error TEXT,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      sent_at TEXT
+    )`
+  ).run();
+}
+
+async function sendAutomaticCourseAccessEmail(invoiceNumber, env) {
+  if (!env.DB || !invoiceNumber) {
+    return { sent: false, reason: "invalid_input" };
+  }
+
+  const order = await env.DB.prepare(
+    `SELECT invoice_number, product_id, status, customer_email
+     FROM payments
+     WHERE invoice_number = ?
+     LIMIT 1`
+  )
+    .bind(invoiceNumber)
+    .first();
+
+  const courseProductId = adminCourseProductId(env);
+  if (
+    !order ||
+    order.status !== "SUCCESS" ||
+    order.product_id !== courseProductId ||
+    !isValidEmail(normalizeEmail(order.customer_email))
+  ) {
+    return { sent: false, reason: "order_not_eligible" };
+  }
+
+  await ensureAutomaticCourseDeliveryTable(env);
+
+  const email = normalizeEmail(order.customer_email);
+  const existing = await env.DB.prepare(
+    `SELECT status
+     FROM course_payment_access_delivery
+     WHERE invoice_number = ?
+     LIMIT 1`
+  )
+    .bind(invoiceNumber)
+    .first();
+
+  if (existing?.status === "SENT") {
+    return { sent: false, reason: "already_sent" };
+  }
+
+  let claimed = false;
+  if (!existing) {
+    const inserted = await env.DB.prepare(
+      `INSERT OR IGNORE INTO course_payment_access_delivery
+        (invoice_number, email, product_id, status)
+       VALUES (?, ?, ?, 'SENDING')`
+    )
+      .bind(invoiceNumber, email, courseProductId)
+      .run();
+    claimed = Number(inserted?.meta?.changes || 0) > 0;
+  } else if (existing.status === "FAILED") {
+    const retried = await env.DB.prepare(
+      `UPDATE course_payment_access_delivery
+       SET status = 'SENDING', error = NULL, updated_at = CURRENT_TIMESTAMP
+       WHERE invoice_number = ? AND status = 'FAILED'`
+    )
+      .bind(invoiceNumber)
+      .run();
+    claimed = Number(retried?.meta?.changes || 0) > 0;
+  }
+
+  if (!claimed) {
+    return { sent: false, reason: "already_processing" };
+  }
+
+  try {
+    // The D1 entitlement trigger runs synchronously when the payment becomes SUCCESS,
+    // so the entitlement should already be ACTIVE at this point.
+    const magic = await createAdminMagicLink(env, email, courseProductId);
+    const emailResult = await sendAdminCourseMagicLinkEmail(env, email, magic.url);
+
+    if (!emailResult?.sent) {
+      const message = String(emailResult?.error || "Failed to send course access email");
+      await env.DB.prepare(
+        `UPDATE course_payment_access_delivery
+         SET status = 'FAILED', magic_link_id = ?, error = ?, updated_at = CURRENT_TIMESTAMP
+         WHERE invoice_number = ?`
+      )
+        .bind(magic.id, message.slice(0, 1000), invoiceNumber)
+        .run();
+
+      console.error("Automatic course access email failed", {
+        invoiceNumber,
+        email,
+        error: message,
+      });
+      return { sent: false, reason: "email_failed", error: message };
+    }
+
+    await env.DB.prepare(
+      `UPDATE course_payment_access_delivery
+       SET status = 'SENT', magic_link_id = ?, resend_message_id = ?,
+           error = NULL, sent_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+       WHERE invoice_number = ?`
+    )
+      .bind(magic.id, emailResult.id || null, invoiceNumber)
+      .run();
+
+    console.log(
+      JSON.stringify({
+        type: "COURSE_ACCESS_EMAIL_SENT",
+        invoiceNumber,
+        email,
+        magicLinkId: magic.id,
+        resendMessageId: emailResult.id || null,
+      })
+    );
+
+    return { sent: true, id: emailResult.id || null };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    await env.DB.prepare(
+      `UPDATE course_payment_access_delivery
+       SET status = 'FAILED', error = ?, updated_at = CURRENT_TIMESTAMP
+       WHERE invoice_number = ?`
+    )
+      .bind(message.slice(0, 1000), invoiceNumber)
+      .run();
+
+    console.error("Automatic course access processing failed", {
+      invoiceNumber,
+      email,
+      error: message,
+    });
+    return { sent: false, reason: "exception", error: message };
+  }
 }
 
 async function generateDigest(body) {
@@ -3291,6 +3451,17 @@ async function handleDokuNotification(request, env) {
     await sendPurchaseSuccessEmail(successfulInvoice, env);
   } catch (error) {
     console.error("Post-payment email processing failed", {
+      invoiceNumber: successfulInvoice,
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+
+  try {
+    await sendAutomaticCourseAccessEmail(successfulInvoice, env);
+  } catch (error) {
+    // Payment has already been persisted as SUCCESS. Never fail the DOKU webhook
+    // only because the separate course-access email could not be delivered.
+    console.error("Automatic course access email processing failed", {
       invoiceNumber: successfulInvoice,
       error: error instanceof Error ? error.message : String(error),
     });
