@@ -90,6 +90,11 @@
     .commerce-original-price{font-family:"JetBrains Mono",monospace;font-size:.82rem;color:#98a2b3;text-decoration:line-through;text-decoration-thickness:1.5px}
     .commerce-promo-note{margin-top:7px;font-size:.75rem;line-height:1.45;color:#ff3158;font-weight:700}
     html[data-products-theme="dark"] .commerce-original-price{color:#7f8da3}
+
+    .international-paypal{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:.76rem;font-weight:750;color:#475467}
+    .international-paypal[hidden]{display:none!important}
+    .international-paypal-logo{display:block;flex:0 0 auto}
+    html[data-products-theme="dark"] .international-paypal{color:#b6c2d4}
     br.desktop-break{display:block}
     @media(max-width:760px){br.desktop-break{display:none}}
   </style>
@@ -214,7 +219,8 @@ html[data-international="true"] .commerce-checkout-btn.international-whatsapp:ho
 <span class="product-icon"><i class="fa-solid fa-laptop-code"></i></span>
 <span class="commerce-category">Course / Website</span>
 </div>
-<h2>Panduan Membuat Website<br/> Pertama Kamu Live dari 0</h2>
+<h2 data-copy-lang="id">Panduan Membuat<br/>Website Pertama Kamu<br/>Live dari 0</h2>
+<h2 data-copy-lang="en" hidden>Your First Website<br/>Live from Zero</h2>
 <p class="commerce-description" data-copy-lang="id">
             Course step-by-step untuk membangun dan mempublikasikan website pertama kamu dari nol sampai live.
           </p>
@@ -229,6 +235,10 @@ html[data-international="true"] .commerce-checkout-btn.international-whatsapp:ho
 <div class="commerce-promo-note" data-copy-lang="id">Harga Oktober 2026 · Segera checkout sebelum harga naik.</div>
 <div class="commerce-promo-note" data-copy-lang="en" hidden="">October 2026 price · Checkout before the price increases.</div>
 <div class="payment-progress"><span class="payment-progress-dot"></span>Secure payment gateway</div>
+<div class="international-paypal" hidden aria-label="Payment with PayPal">
+  <svg class="international-paypal-logo" viewBox="0 0 110 34" width="86" height="27" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg>
+  <span>Payment with PayPal</span>
+</div>
 <div class="payment-status-detail" hidden=""></div>
 <a class="commerce-checkout-btn is-ready" href="/products/website-course/" style="text-decoration:none;text-align:center;display:block;">
 <span data-copy-lang="id">Lihat Detail Course</span>
@@ -915,7 +925,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   function productName(card){
-    const title=card?.querySelector('h2');
+    const title=card?.querySelector('h2:not([hidden])') || card?.querySelector('h2');
     return title ? title.textContent.replace(/\s+/g,' ').trim() : 'a product';
   }
   function waUrl(card){
@@ -962,6 +972,7 @@ document.addEventListener('DOMContentLoaded', function(){
       setCopyLanguage(regularLanguage);
     }
     priceEls.forEach(el=>{el.textContent=active?el.dataset.priceUsd:el.dataset.priceId;});
+    document.querySelectorAll('.international-paypal').forEach(el=>{el.hidden=!active;});
     ctas.forEach(cta=>{
       const idSpan=cta.querySelector('[data-copy-lang="id"]');
       const enSpan=cta.querySelector('[data-copy-lang="en"]');

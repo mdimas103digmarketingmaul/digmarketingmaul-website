@@ -3,6 +3,7 @@
   'use strict';
   const translations = {
   "Lewati ke konten": "Skip to content",
+  "Beranda": "Homepage",
   "Materi": "Curriculum",
   "Pendampingan": "Support",
   "Ikuti course": "Join the course",
