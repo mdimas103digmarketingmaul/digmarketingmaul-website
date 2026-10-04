@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f7f8fb">
+  <title>Magic Links — Maul Digital Admin</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+  <script>
+    (function(){const s=localStorage.getItem("maulAdminTheme");document.documentElement.dataset.theme=s==="dark"?"dark":"light";})();
+  </script>
+  
+</head>
+<body>
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="/admin/">M<b>.</b> Admin</a>
+    <div class="top-actions">
+      <button class="btn optional-mobile" id="theme-button" type="button">Dark mode</button>
+      <a class="btn" href="/cdn-cgi/access/logout">Logout</a>
+    </div>
+  </div>
+  <div class="nav-wrap">
+    <nav class="shell nav">
+      <a data-nav href="/admin/">Overview</a>
+      <a data-nav href="/admin/customers/">Customers</a>
+      <a data-nav href="/admin/sessions/">Sessions</a>
+      <a data-nav href="/admin/magic-links/">Magic Links</a>
+      <a data-nav href="/admin/orders/">Orders</a>
+      <a data-nav href="/admin/activity/">Activity</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page shell">
+  <div class="heading">
+    <div>
+      <div class="eyebrow">Private / Cloudflare Access</div>
+      <h1>Magic Links</h1>
+      <p class="lead">Lihat link aktif, used, expired, dan invalidasi link yang tidak lagi diizinkan.</p>
+    </div>
+    <div class="heading-actions"></div>
+  </div>
+  
+<section class="card toolbar">
+  <div class="search"><input id="q" type="search" placeholder="Cari email…"></div>
+  <div class="filter"><select id="status"><option value="ALL">All status</option><option value="ACTIVE">ACTIVE</option><option value="USED">USED</option><option value="EXPIRED">EXPIRED</option></select></div>
+  <button class="btn" id="refresh" type="button">Refresh</button>
+</section>
+<section class="card table-card">
+  <div class="table-scroll"><table>
+    <thead><tr><th>Customer</th><th>Status</th><th>Created</th><th>Expires</th><th>Used</th><th>Link ID</th><th>Action</th></tr></thead>
+    <tbody id="body"><tr><td colspan="7" class="empty">Loading magic links…</td></tr></tbody>
+  </table></div>
+  <div class="footer-row"><span id="count">—</span><span data-admin-email class="admin-email"></span></div>
+</section>
+
+</main>
+<script src="/admin/assets/admin.js"></script>
+<script>
+
+const q=document.getElementById("q"),status=document.getElementById("status"),body=document.getElementById("body");
+async function loadData(){
+  try{
+    const p=new URLSearchParams({q:q.value.trim(),status:status.value});
+    const data=await Admin.api(`/admin/api/magic-links?${p}`);Admin.setAdminEmail(data.admin_email);
+    const rows=data.magic_links||[];document.getElementById("count").textContent=`${rows.length} magic link`;
+    body.innerHTML=rows.length?rows.map(l=>`<tr>
+      <td class="customer"><strong>${Admin.escapeHtml(l.email)}</strong></td>
+      <td><span class="badge ${String(l.display_status).toLowerCase()}">${Admin.escapeHtml(l.display_status)}</span></td>
+      <td>${Admin.formatDate(l.created_at)}</td><td>${Admin.formatDate(l.expires_at)}</td><td>${Admin.formatDate(l.used_at)}</td>
+      <td class="mono">${Admin.escapeHtml(l.id)}</td>
+      <td>${l.display_status==="ACTIVE"?`<button class="btn small danger" data-revoke="${Admin.escapeHtml(l.id)}">Invalidate</button>`:"—"}</td>
+    </tr>`).join(""):'<tr><td colspan="7" class="empty">Tidak ada magic link.</td></tr>';
+  }catch(err){body.innerHTML=`<tr><td colspan="7" class="error">${Admin.escapeHtml(err.message)}</td></tr>`}
+}
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-revoke]");if(!b)return;
+  if(!confirm("Invalidate magic link ini?"))return;
+  try{await Admin.post("/admin/api/course/revoke-magic-link",{magic_link_id:b.dataset.revoke});Admin.toast("Magic link dinonaktifkan.");loadData()}catch(err){Admin.toast(err.message,"error")}
+});
+q.addEventListener("input",Admin.debounce(loadData,300));status.addEventListener("change",loadData);document.getElementById("refresh").addEventListener("click",loadData);
+document.addEventListener("DOMContentLoaded",loadData);
+
+</script>
+</body>
+</html>

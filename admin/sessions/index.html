@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f7f8fb">
+  <title>Sessions — Maul Digital Admin</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+  <script>
+    (function(){const s=localStorage.getItem("maulAdminTheme");document.documentElement.dataset.theme=s==="dark"?"dark":"light";})();
+  </script>
+  
+</head>
+<body>
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="/admin/">M<b>.</b> Admin</a>
+    <div class="top-actions">
+      <button class="btn optional-mobile" id="theme-button" type="button">Dark mode</button>
+      <a class="btn" href="/cdn-cgi/access/logout">Logout</a>
+    </div>
+  </div>
+  <div class="nav-wrap">
+    <nav class="shell nav">
+      <a data-nav href="/admin/">Overview</a>
+      <a data-nav href="/admin/customers/">Customers</a>
+      <a data-nav href="/admin/sessions/">Sessions</a>
+      <a data-nav href="/admin/magic-links/">Magic Links</a>
+      <a data-nav href="/admin/orders/">Orders</a>
+      <a data-nav href="/admin/activity/">Activity</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page shell">
+  <div class="heading">
+    <div>
+      <div class="eyebrow">Private / Cloudflare Access</div>
+      <h1>Sessions</h1>
+      <p class="lead">Pantau perpindahan session dan revoke perangkat yang tidak lagi dipercaya.</p>
+    </div>
+    <div class="heading-actions"></div>
+  </div>
+  
+<section class="card toolbar">
+  <div class="search"><input id="q" type="search" placeholder="Cari email atau browser/device…"></div>
+  <div class="filter"><select id="status"><option value="ALL">All status</option><option value="ACTIVE">ACTIVE</option><option value="REVOKED">REVOKED / EXPIRED</option></select></div>
+  <button class="btn" id="refresh" type="button">Refresh</button>
+</section>
+<section class="card table-card">
+  <div class="table-scroll"><table>
+    <thead><tr><th>Customer</th><th>Device / Browser</th><th>Status</th><th>Created</th><th>Last Activity</th><th>Expires</th><th>Action</th></tr></thead>
+    <tbody id="body"><tr><td colspan="7" class="empty">Loading sessions…</td></tr></tbody>
+  </table></div>
+  <div class="footer-row"><span id="count">—</span><span data-admin-email class="admin-email"></span></div>
+</section>
+
+</main>
+<script src="/admin/assets/admin.js"></script>
+<script>
+
+const q=document.getElementById("q"),status=document.getElementById("status"),body=document.getElementById("body");
+async function loadData(){
+  try{
+    const p=new URLSearchParams({q:q.value.trim(),status:status.value});
+    const data=await Admin.api(`/admin/api/sessions?${p}`);Admin.setAdminEmail(data.admin_email);
+    const rows=data.sessions||[];document.getElementById("count").textContent=`${rows.length} session`;
+    body.innerHTML=rows.length?rows.map(s=>`<tr>
+      <td class="customer"><strong>${Admin.escapeHtml(s.email)}</strong><div class="sub mono">${Admin.escapeHtml(s.id)}</div></td>
+      <td><strong>${Admin.escapeHtml(Admin.device(s.user_agent))}</strong><div class="sub">${Admin.escapeHtml((s.user_agent||"").slice(0,150))}</div></td>
+      <td><span class="badge ${String(s.display_status).toLowerCase()}">${Admin.escapeHtml(s.display_status)}</span></td>
+      <td>${Admin.formatDate(s.created_at)}</td><td>${Admin.formatDate(s.last_seen_at)}</td><td>${Admin.formatDate(s.expires_at)}</td>
+      <td>${s.display_status==="ACTIVE"?`<button class="btn small danger" data-revoke="${Admin.escapeHtml(s.id)}">Revoke</button>`:"—"}</td>
+    </tr>`).join(""):'<tr><td colspan="7" class="empty">Tidak ada session.</td></tr>';
+  }catch(err){body.innerHTML=`<tr><td colspan="7" class="error">${Admin.escapeHtml(err.message)}</td></tr>`}
+}
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-revoke]");if(!b)return;
+  if(!confirm("Revoke session ini?"))return;
+  try{await Admin.post("/admin/api/course/revoke-session",{session_id:b.dataset.revoke});Admin.toast("Session direvoke.");loadData()}catch(err){Admin.toast(err.message,"error")}
+});
+q.addEventListener("input",Admin.debounce(loadData,300));status.addEventListener("change",loadData);document.getElementById("refresh").addEventListener("click",loadData);
+document.addEventListener("DOMContentLoaded",loadData);
+
+</script>
+</body>
+</html>

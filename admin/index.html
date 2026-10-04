@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f7f8fb">
+  <title>Course Overview — Maul Digital Admin</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+  <script>
+    (function(){const s=localStorage.getItem("maulAdminTheme");document.documentElement.dataset.theme=s==="dark"?"dark":"light";})();
+  </script>
+  
+</head>
+<body>
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="/admin/">M<b>.</b> Admin</a>
+    <div class="top-actions">
+      <button class="btn optional-mobile" id="theme-button" type="button">Dark mode</button>
+      <a class="btn" href="/cdn-cgi/access/logout">Logout</a>
+    </div>
+  </div>
+  <div class="nav-wrap">
+    <nav class="shell nav">
+      <a data-nav href="/admin/">Overview</a>
+      <a data-nav href="/admin/customers/">Customers</a>
+      <a data-nav href="/admin/sessions/">Sessions</a>
+      <a data-nav href="/admin/magic-links/">Magic Links</a>
+      <a data-nav href="/admin/orders/">Orders</a>
+      <a data-nav href="/admin/activity/">Activity</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page shell">
+  <div class="heading">
+    <div>
+      <div class="eyebrow">Private / Cloudflare Access</div>
+      <h1>Course Admin</h1>
+      <p class="lead">Kelola akses pembeli, session, magic link, dan signal keamanan dari satu tempat.</p>
+    </div>
+    <div class="heading-actions"><button class="btn primary" type="button" data-open-grant>+ Grant Access</button></div>
+  </div>
+  
+<dialog id="grant-dialog">
+  <div class="dialog-head">
+    <div>
+      <h2>Grant Course Access</h2>
+      <p class="sub" style="margin:5px 0 0">Berikan akses gratis/manual dan kirim magic link.</p>
+    </div>
+    <button class="icon-btn" type="button" data-close-dialog="grant-dialog">×</button>
+  </div>
+  <form id="grant-form">
+    <div class="dialog-body">
+      <div class="form-row">
+        <label for="grant-email">Email</label>
+        <input id="grant-email" type="email" required placeholder="arsya@gmail.com">
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="grant-type">Access source</label>
+          <select id="grant-type">
+            <option value="GIFT">GIFT — Gratis / hadiah</option>
+            <option value="MANUAL">MANUAL — Akses manual</option>
+            <option value="PROMO">PROMO — Promo / campaign</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="grant-send">Magic link</label>
+          <select id="grant-send">
+            <option value="yes">Grant + kirim magic link</option>
+            <option value="no">Grant saja</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="grant-note">Catatan admin (opsional)</label>
+        <textarea id="grant-note" placeholder="Contoh: Free access untuk teman"></textarea>
+      </div>
+      <div class="security-callout">
+        Payment tidak akan dibuat. Akses diberikan langsung melalui entitlement course dan dicatat sebagai tindakan admin.
+      </div>
+    </div>
+    <div class="dialog-foot">
+      <button class="btn" type="button" data-close-dialog="grant-dialog">Batal</button>
+      <button class="btn primary" id="grant-submit" type="submit">Grant Access</button>
+    </div>
+  </form>
+</dialog>
+
+<section class="summary">
+  <div class="card metric"><span>Active customers</span><strong id="m-active">—</strong><small id="m-total">— total entitlement</small></div>
+  <div class="card metric"><span>Active sessions</span><strong id="m-sessions">—</strong><small id="m-sessions30">— session baru / 30 hari</small></div>
+  <div class="card metric"><span>Magic links</span><strong id="m-magic">—</strong><small id="m-magic30">— request / 30 hari</small></div>
+  <div class="card metric"><span>Security review</span><strong id="m-review">—</strong><small>Review + high activity</small></div>
+</section>
+
+<div class="grid-2">
+  <section class="card section-card">
+    <div class="section-head">
+      <div><h2>Recent Customers</h2><p>Entitlement dan aktivitas terbaru pembeli course.</p></div>
+      <a class="btn small" href="/admin/customers/">View all</a>
+    </div>
+    <div id="recent-list" class="list"><div class="empty">Loading…</div></div>
+  </section>
+
+  <section class="card section-card">
+    <div class="section-head">
+      <div><h2>Course Security</h2><p>Signal untuk membantu review, bukan bukti fraud otomatis.</p></div>
+    </div>
+    <div class="kpis" style="margin-bottom:14px">
+      <div class="kpi"><span>Manual/Gift active</span><strong id="m-grants">—</strong></div>
+      <div class="kpi"><span>Review</span><strong id="m-review-only">—</strong></div>
+      <div class="kpi"><span>High activity</span><strong id="m-high">—</strong></div>
+      <div class="kpi"><span>Inactive access</span><strong id="m-inactive">—</strong></div>
+    </div>
+    <div class="security-callout">
+      Session berpindah berkali-kali akan terlihat pada Customers dan Sessions. Gunakan indikator sebagai bahan review sebelum melakukan revoke.
+    </div>
+  </section>
+</div>
+
+</main>
+<script src="/admin/assets/admin.js"></script>
+<script>
+
+const grantDialog=document.getElementById("grant-dialog");
+document.querySelectorAll("[data-open-grant]").forEach(btn=>btn.addEventListener("click",()=>grantDialog.showModal()));
+document.querySelectorAll("[data-close-dialog]").forEach(btn=>btn.addEventListener("click",()=>{
+  document.getElementById(btn.dataset.closeDialog)?.close();
+}));
+document.getElementById("grant-form")?.addEventListener("submit",async(e)=>{
+  e.preventDefault();
+  const submit=document.getElementById("grant-submit");
+  const email=document.getElementById("grant-email").value.trim();
+  const access_type=document.getElementById("grant-type").value;
+  const note=document.getElementById("grant-note").value.trim();
+  const send_magic_link=document.getElementById("grant-send").value==="yes";
+  submit.disabled=true; submit.textContent="Processing…";
+  try{
+    const data=await Admin.post("/admin/api/course/grant-access",{email,access_type,note,send_magic_link});
+    grantDialog.close();
+    e.target.reset();
+    Admin.toast(data.magic_link_sent
+      ? `Akses ${email} aktif dan magic link terkirim.`
+      : `Akses ${email} sudah aktif${data.email_error?`, tetapi email gagal: ${data.email_error}`:"."}`,
+      data.email_error?"error":"ok");
+    if(typeof loadData==="function") await loadData();
+    if(typeof loadCustomers==="function") await loadCustomers();
+  }catch(err){Admin.toast(err.message,"error")}
+  finally{submit.disabled=false;submit.textContent="Grant Access"}
+});
+
+async function loadData(){
+  try{
+    const data=await Admin.api("/admin/api/overview");
+    Admin.setAdminEmail(data.admin_email);
+    const s=data.summary||{};
+    document.getElementById("m-active").textContent=s.customers_active??0;
+    document.getElementById("m-total").textContent=`${s.customers_total??0} total entitlement`;
+    document.getElementById("m-sessions").textContent=s.sessions_active??0;
+    document.getElementById("m-sessions30").textContent=`${s.sessions_30d??0} session baru / 30 hari`;
+    document.getElementById("m-magic").textContent=s.magic_links_active??0;
+    document.getElementById("m-magic30").textContent=`${s.magic_links_30d??0} request / 30 hari`;
+    document.getElementById("m-review").textContent=(s.review_customers??0)+(s.high_activity_customers??0);
+    document.getElementById("m-grants").textContent=s.manual_grants_active??0;
+    document.getElementById("m-review-only").textContent=s.review_customers??0;
+    document.getElementById("m-high").textContent=s.high_activity_customers??0;
+    document.getElementById("m-inactive").textContent=s.customers_inactive??0;
+
+    const list=document.getElementById("recent-list");
+    const rows=data.recent_customers||[];
+    if(!rows.length){list.innerHTML='<div class="empty">Belum ada customer course.</div>';return}
+    list.innerHTML=rows.map(r=>`
+      <a class="list-item" style="text-decoration:none" href="/admin/customers/?email=${encodeURIComponent(r.email)}">
+        <div class="list-main">
+          <strong>${Admin.escapeHtml(r.email)}</strong>
+          <div class="list-meta">${Admin.escapeHtml(r.access_type||"PAID")} · ${Admin.escapeHtml(r.entitlement_status||"—")}</div>
+        </div>
+        <div class="list-meta" style="text-align:right">${Admin.formatDate(r.last_seen_at||r.granted_at||r.paid_at)}</div>
+      </a>`).join("");
+  }catch(err){
+    Admin.toast(err.message,"error");
+    document.getElementById("recent-list").innerHTML=`<div class="error">${Admin.escapeHtml(err.message)}</div>`;
+  }
+}
+document.addEventListener("DOMContentLoaded",loadData);
+
+</script>
+</body>
+</html>

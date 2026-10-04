@@ -8,6 +8,22 @@ const RESEND_FROM_DEFAULT = "Maul Digital <order@mail.digmarketingmaul.com>";
 const WHATSAPP_NUMBER = "6281296069566";
 const COURSE_ACCESS_URL_DEFAULT = "https://course.digmarketingmaul.com/request-access/";
 const ADMIN_ORDERS_API_PATH = "/admin/api/orders";
+const ADMIN_OVERVIEW_API_PATH = "/admin/api/overview";
+const ADMIN_CUSTOMERS_API_PATH = "/admin/api/customers";
+const ADMIN_CUSTOMER_API_PATH = "/admin/api/customer";
+const ADMIN_SESSIONS_API_PATH = "/admin/api/sessions";
+const ADMIN_MAGIC_LINKS_API_PATH = "/admin/api/magic-links";
+const ADMIN_ACTIVITY_API_PATH = "/admin/api/activity";
+const ADMIN_GRANT_ACCESS_API_PATH = "/admin/api/course/grant-access";
+const ADMIN_SEND_MAGIC_LINK_API_PATH = "/admin/api/course/send-magic-link";
+const ADMIN_REVOKE_SESSION_API_PATH = "/admin/api/course/revoke-session";
+const ADMIN_REVOKE_ACCESS_API_PATH = "/admin/api/course/revoke-access";
+const ADMIN_RESTORE_ACCESS_API_PATH = "/admin/api/course/restore-access";
+const ADMIN_REVOKE_MAGIC_LINK_API_PATH = "/admin/api/course/revoke-magic-link";
+const COURSE_PRODUCT_ID_DEFAULT = "website-course";
+const COURSE_BASE_URL_ADMIN_DEFAULT = "https://course.digmarketingmaul.com";
+const COURSE_FROM_EMAIL_ADMIN_DEFAULT =
+  "Maul Digital Course <course@mail.digmarketingmaul.com>";
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
@@ -504,6 +520,1728 @@ async function getAdminOrders(request, env) {
     orders: ordersResult?.results || [],
   });
 }
+
+
+async function authorizeAdminRequest(request, env) {
+  if (!env.DB) {
+    return {
+      response: jsonResponse(
+        { success: false, error: "D1 binding DB is missing" },
+        500
+      ),
+    };
+  }
+
+  try {
+    const admin = await verifyCloudflareAccess(request, env);
+    return { admin };
+  } catch (error) {
+    console.error("Admin Access verification failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+
+    return {
+      response: jsonResponse(
+        { success: false, error: "Unauthorized" },
+        403
+      ),
+    };
+  }
+}
+
+function adminCourseProductId(env) {
+  return String(
+    env.COURSE_PRODUCT_ID || COURSE_PRODUCT_ID_DEFAULT
+  ).trim() || COURSE_PRODUCT_ID_DEFAULT;
+}
+
+function adminCourseBaseUrl(env) {
+  return String(
+    env.COURSE_BASE_URL || COURSE_BASE_URL_ADMIN_DEFAULT
+  ).trim().replace(/\/$/, "");
+}
+
+function randomTokenBase64Url(bytes = 32) {
+  const data = new Uint8Array(bytes);
+  crypto.getRandomValues(data);
+
+  let binary = "";
+  for (const byte of data) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+async function sha256HexAdmin(value) {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    encoder.encode(String(value || ""))
+  );
+
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+async function ensureCourseAdminTables(env) {
+  await env.DB.batch([
+    env.DB.prepare(
+      `CREATE TABLE IF NOT EXISTS course_admin_grants (
+        id TEXT PRIMARY KEY,
+        email TEXT NOT NULL,
+        product_id TEXT NOT NULL,
+        access_type TEXT NOT NULL DEFAULT 'MANUAL',
+        note TEXT,
+        granted_by TEXT NOT NULL,
+        granted_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        revoked_at TEXT,
+        UNIQUE(email, product_id)
+      )`
+    ),
+    env.DB.prepare(
+      `CREATE TABLE IF NOT EXISTS course_admin_audit (
+        id TEXT PRIMARY KEY,
+        admin_email TEXT NOT NULL,
+        action TEXT NOT NULL,
+        target_email TEXT,
+        product_id TEXT,
+        details TEXT,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      )`
+    ),
+    env.DB.prepare(
+      `CREATE INDEX IF NOT EXISTS idx_course_admin_audit_target
+       ON course_admin_audit(target_email, created_at)`
+    ),
+    env.DB.prepare(
+      `CREATE INDEX IF NOT EXISTS idx_course_admin_grants_email
+       ON course_admin_grants(email, product_id)`
+    ),
+  ]);
+}
+
+async function writeCourseAdminAudit(
+  env,
+  adminEmail,
+  action,
+  targetEmail,
+  productId,
+  details = {}
+) {
+  await ensureCourseAdminTables(env);
+
+  await env.DB.prepare(
+    `INSERT INTO course_admin_audit
+      (id, admin_email, action, target_email, product_id, details)
+     VALUES (?, ?, ?, ?, ?, ?)`
+  )
+    .bind(
+      crypto.randomUUID(),
+      String(adminEmail || "").toLowerCase(),
+      String(action || "").slice(0, 80),
+      targetEmail ? normalizeEmail(targetEmail) : null,
+      productId || null,
+      JSON.stringify(details || {}).slice(0, 4000)
+    )
+    .run();
+}
+
+async function getTableInfo(env, tableName) {
+  if (!/^[a-z0-9_]+$/i.test(tableName)) {
+    throw new Error("Invalid table name");
+  }
+
+  const result = await env.DB.prepare(
+    `PRAGMA table_info(${tableName})`
+  ).all();
+
+  return result?.results || [];
+}
+
+async function activateCourseEntitlement(env, email, productId) {
+  const normalized = normalizeEmail(email);
+
+  const existing = await env.DB.prepare(
+    `SELECT *
+     FROM course_entitlements
+     WHERE lower(email) = lower(?)
+       AND product_id = ?
+     LIMIT 1`
+  )
+    .bind(normalized, productId)
+    .first();
+
+  const columns = await getTableInfo(env, "course_entitlements");
+  const columnNames = new Set(columns.map((column) => column.name));
+
+  if (existing) {
+    const sets = ["status = 'ACTIVE'"];
+    if (columnNames.has("updated_at")) {
+      sets.push("updated_at = CURRENT_TIMESTAMP");
+    }
+
+    await env.DB.prepare(
+      `UPDATE course_entitlements
+       SET ${sets.join(", ")}
+       WHERE lower(email) = lower(?)
+         AND product_id = ?`
+    )
+      .bind(normalized, productId)
+      .run();
+
+    return { created: false };
+  }
+
+  const insertColumns = [];
+  const valueSql = [];
+  const bindings = [];
+  const manualReference = `ADMIN-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
+
+  function addValue(name, value) {
+    if (!columnNames.has(name)) return;
+    insertColumns.push(name);
+    valueSql.push("?");
+    bindings.push(value);
+  }
+
+  function addSql(name, sql) {
+    if (!columnNames.has(name)) return;
+    insertColumns.push(name);
+    valueSql.push(sql);
+  }
+
+  addValue("email", normalized);
+  addValue("product_id", productId);
+  addValue("status", "ACTIVE");
+
+  const idColumn = columns.find((column) => column.name === "id");
+  if (
+    idColumn &&
+    !String(idColumn.type || "").toUpperCase().includes("INT") &&
+    !idColumn.dflt_value
+  ) {
+    addValue("id", crypto.randomUUID());
+  }
+
+  for (const invoiceColumn of [
+    "invoice_number",
+    "payment_invoice",
+    "source_invoice",
+    "invoice",
+  ]) {
+    addValue(invoiceColumn, manualReference);
+  }
+
+  for (const sourceColumn of [
+    "source",
+    "access_source",
+    "grant_source",
+  ]) {
+    addValue(sourceColumn, "MANUAL");
+  }
+
+  addSql("created_at", "CURRENT_TIMESTAMP");
+  addSql("updated_at", "CURRENT_TIMESTAMP");
+
+  const handled = new Set(insertColumns);
+  for (const column of columns) {
+    const name = String(column.name || "");
+    const type = String(column.type || "").toUpperCase();
+    const isIntegerPrimaryKey =
+      Number(column.pk || 0) === 1 && type.includes("INT");
+
+    if (
+      handled.has(name) ||
+      isIntegerPrimaryKey ||
+      column.dflt_value != null ||
+      Number(column.notnull || 0) !== 1
+    ) {
+      continue;
+    }
+
+    if (type.includes("TEXT") || type === "") {
+      insertColumns.push(name);
+      valueSql.push("?");
+      bindings.push(
+        name.toLowerCase().includes("invoice")
+          ? manualReference
+          : "ADMIN"
+      );
+      handled.add(name);
+      continue;
+    }
+
+    throw new Error(
+      `course_entitlements column "${name}" requires a value before manual grants can be created`
+    );
+  }
+
+  if (
+    !insertColumns.includes("email") ||
+    !insertColumns.includes("product_id") ||
+    !insertColumns.includes("status")
+  ) {
+    throw new Error(
+      "course_entitlements schema is missing email, product_id, or status"
+    );
+  }
+
+  await env.DB.prepare(
+    `INSERT INTO course_entitlements
+      (${insertColumns.join(", ")})
+     VALUES
+      (${valueSql.join(", ")})`
+  )
+    .bind(...bindings)
+    .run();
+
+  return { created: true };
+}
+
+async function setCourseEntitlementStatus(
+  env,
+  email,
+  productId,
+  status
+) {
+  const columns = await getTableInfo(env, "course_entitlements");
+  const columnNames = new Set(columns.map((column) => column.name));
+  const sets = ["status = ?"];
+  const bindings = [status];
+
+  if (columnNames.has("updated_at")) {
+    sets.push("updated_at = CURRENT_TIMESTAMP");
+  }
+
+  const result = await env.DB.prepare(
+    `UPDATE course_entitlements
+     SET ${sets.join(", ")}
+     WHERE lower(email) = lower(?)
+       AND product_id = ?`
+  )
+    .bind(...bindings, normalizeEmail(email), productId)
+    .run();
+
+  return Number(result?.meta?.changes || 0);
+}
+
+async function createAdminMagicLink(env, email, productId) {
+  const normalized = normalizeEmail(email);
+
+  const entitlement = await env.DB.prepare(
+    `SELECT id
+     FROM course_entitlements
+     WHERE lower(email) = lower(?)
+       AND product_id = ?
+       AND status = 'ACTIVE'
+     LIMIT 1`
+  )
+    .bind(normalized, productId)
+    .first();
+
+  if (!entitlement) {
+    throw new Error("Customer does not have ACTIVE course access");
+  }
+
+  // Keep the same single-current-link behavior as the course Worker.
+  await env.DB.prepare(
+    `UPDATE course_magic_links
+     SET used_at = COALESCE(used_at, CURRENT_TIMESTAMP)
+     WHERE lower(email) = lower(?)
+       AND product_id = ?
+       AND used_at IS NULL`
+  )
+    .bind(normalized, productId)
+    .run();
+
+  const token = randomTokenBase64Url(32);
+  const tokenHash = await sha256HexAdmin(token);
+  const id = crypto.randomUUID();
+
+  await env.DB.prepare(
+    `INSERT INTO course_magic_links
+      (id, email, product_id, token_hash, expires_at)
+     VALUES
+      (?, ?, ?, ?, datetime('now', '+86400 seconds'))`
+  )
+    .bind(id, normalized, productId, tokenHash)
+    .run();
+
+  return {
+    id,
+    url:
+      `${adminCourseBaseUrl(env)}/auth/verify?token=${encodeURIComponent(token)}`,
+  };
+}
+
+async function sendAdminCourseMagicLinkEmail(env, email, magicUrl) {
+  if (!env.RESEND_API_KEY) {
+    return {
+      sent: false,
+      error: "RESEND_API_KEY is not configured on digmarketingmaul-website",
+    };
+  }
+
+  const from =
+    env.COURSE_FROM_EMAIL ||
+    COURSE_FROM_EMAIL_ADMIN_DEFAULT;
+
+  const subject = "Link Akses Course — Website Pertama Kamu";
+
+  const html = `<!doctype html>
+<html lang="id">
+  <body style="margin:0;padding:0;background:#f5f7fb;font-family:Arial,Helvetica,sans-serif;color:#111827">
+    <div style="max-width:620px;margin:0 auto;padding:36px 20px">
+      <div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:18px;padding:32px">
+        <div style="font-size:20px;font-weight:800;margin-bottom:26px">M. Maul Digital</div>
+        <h1 style="font-size:28px;line-height:1.2;margin:0 0 16px">Link akses course kamu</h1>
+        <p style="font-size:16px;line-height:1.7;margin:0 0 18px">
+          Gunakan tombol di bawah untuk membuka course <strong>Website Pertama Kamu</strong>.
+        </p>
+        <p style="font-size:16px;line-height:1.7;margin:0 0 26px">
+          Magic link ini hanya dapat digunakan satu kali dan berlaku selama <strong>24 jam</strong>.
+        </p>
+        <p style="margin:0 0 28px">
+          <a href="${escapeHtml(magicUrl)}"
+             style="display:inline-block;background:#111827;color:#ffffff;text-decoration:none;font-weight:700;padding:14px 20px;border-radius:10px">
+            Buka Course
+          </a>
+        </p>
+        <div style="border-top:1px solid #e5e7eb;padding-top:20px;font-size:13px;line-height:1.6;color:#6b7280">
+          Jika kamu tidak meminta link ini, abaikan email ini. Jangan teruskan magic link kepada orang lain.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>`;
+
+  const text = [
+    "Link akses course kamu",
+    "",
+    "Gunakan link berikut untuk membuka course Website Pertama Kamu:",
+    magicUrl,
+    "",
+    "Magic link hanya dapat digunakan satu kali dan berlaku selama 24 jam.",
+    "Jika kamu tidak meminta link ini, abaikan email ini.",
+  ].join("\n");
+
+  try {
+    const response = await fetch(RESEND_ENDPOINT, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from,
+        to: [normalizeEmail(email)],
+        subject,
+        html,
+        text,
+      }),
+    });
+
+    const raw = await response.text();
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      data = { raw };
+    }
+
+    if (!response.ok) {
+      return {
+        sent: false,
+        error:
+          data?.message ||
+          data?.error?.message ||
+          `Resend HTTP ${response.status}`,
+      };
+    }
+
+    return {
+      sent: true,
+      id: data?.id || null,
+    };
+  } catch (error) {
+    return {
+      sent: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+function adminRiskFromCustomer(row) {
+  const sessions7d = Number(row?.sessions_7d || 0);
+  const sessions30d = Number(row?.sessions_30d || 0);
+  const devices30d = Number(row?.devices_30d || 0);
+  const magic30d = Number(row?.magic_links_30d || 0);
+
+  if (
+    sessions7d >= 8 ||
+    sessions30d >= 15 ||
+    devices30d >= 7 ||
+    magic30d >= 15
+  ) {
+    return "HIGH_ACTIVITY";
+  }
+
+  if (
+    sessions7d >= 5 ||
+    sessions30d >= 10 ||
+    devices30d >= 4 ||
+    magic30d >= 9
+  ) {
+    return "REVIEW";
+  }
+
+  return "NORMAL";
+}
+
+async function getAdminCourseCustomers(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  await ensureCourseAdminTables(env);
+
+  const url = new URL(request.url);
+  const search = String(url.searchParams.get("q") || "")
+    .trim()
+    .toLowerCase()
+    .slice(0, 120);
+  const requestedStatus = String(
+    url.searchParams.get("status") || "ALL"
+  ).toUpperCase();
+  const requestedRisk = String(
+    url.searchParams.get("risk") || "ALL"
+  ).toUpperCase();
+
+  const status =
+    requestedStatus === "ACTIVE" || requestedStatus === "REVOKED"
+      ? requestedStatus
+      : "ALL";
+
+  const productId = adminCourseProductId(env);
+
+  const result = await env.DB.prepare(
+    `WITH session_stats AS (
+       SELECT
+         lower(email) AS email_key,
+         product_id,
+         COUNT(*) AS total_sessions,
+         SUM(CASE
+           WHEN created_at >= datetime('now', '-7 days') THEN 1 ELSE 0
+         END) AS sessions_7d,
+         SUM(CASE
+           WHEN created_at >= datetime('now', '-30 days') THEN 1 ELSE 0
+         END) AS sessions_30d,
+         COUNT(DISTINCT CASE
+           WHEN created_at >= datetime('now', '-30 days')
+           THEN COALESCE(NULLIF(user_agent, ''), 'unknown')
+           ELSE NULL
+         END) AS devices_30d,
+         SUM(CASE
+           WHEN status = 'ACTIVE'
+             AND expires_at > CURRENT_TIMESTAMP
+           THEN 1 ELSE 0
+         END) AS active_sessions,
+         MAX(last_seen_at) AS last_seen_at,
+         MAX(created_at) AS latest_session_at
+       FROM course_sessions
+       GROUP BY lower(email), product_id
+     ),
+     magic_stats AS (
+       SELECT
+         lower(email) AS email_key,
+         product_id,
+         COUNT(*) AS total_magic_links,
+         SUM(CASE
+           WHEN created_at >= datetime('now', '-30 days') THEN 1 ELSE 0
+         END) AS magic_links_30d,
+         MAX(created_at) AS latest_magic_link_at
+       FROM course_magic_links
+       GROUP BY lower(email), product_id
+     ),
+     latest_payment AS (
+       SELECT p.*
+       FROM payments p
+       INNER JOIN (
+         SELECT
+           lower(customer_email) AS email_key,
+           product_id,
+           MAX(id) AS max_id
+         FROM payments
+         WHERE status = 'SUCCESS'
+           AND product_id = ?
+         GROUP BY lower(customer_email), product_id
+       ) latest
+         ON p.id = latest.max_id
+     )
+     SELECT
+       ce.id AS entitlement_id,
+       ce.email,
+       ce.product_id,
+       ce.status AS entitlement_status,
+       p.invoice_number,
+       p.amount AS paid_amount,
+       p.paid_at,
+       p.customer_name,
+       g.access_type,
+       g.note AS access_note,
+       g.granted_by,
+       g.granted_at,
+       g.revoked_at AS admin_grant_revoked_at,
+       COALESCE(ss.total_sessions, 0) AS total_sessions,
+       COALESCE(ss.sessions_7d, 0) AS sessions_7d,
+       COALESCE(ss.sessions_30d, 0) AS sessions_30d,
+       COALESCE(ss.devices_30d, 0) AS devices_30d,
+       COALESCE(ss.active_sessions, 0) AS active_sessions,
+       ss.last_seen_at,
+       ss.latest_session_at,
+       COALESCE(ms.total_magic_links, 0) AS total_magic_links,
+       COALESCE(ms.magic_links_30d, 0) AS magic_links_30d,
+       ms.latest_magic_link_at
+     FROM course_entitlements ce
+     LEFT JOIN latest_payment p
+       ON lower(p.customer_email) = lower(ce.email)
+      AND p.product_id = ce.product_id
+     LEFT JOIN course_admin_grants g
+       ON lower(g.email) = lower(ce.email)
+      AND g.product_id = ce.product_id
+     LEFT JOIN session_stats ss
+       ON ss.email_key = lower(ce.email)
+      AND ss.product_id = ce.product_id
+     LEFT JOIN magic_stats ms
+       ON ms.email_key = lower(ce.email)
+      AND ms.product_id = ce.product_id
+     WHERE ce.product_id = ?
+     ORDER BY
+       CASE WHEN ce.status = 'ACTIVE' THEN 0 ELSE 1 END,
+       COALESCE(ss.last_seen_at, g.granted_at, p.paid_at) DESC,
+       ce.email ASC`
+  )
+    .bind(productId, productId)
+    .all();
+
+  let customers = (result?.results || []).map((row) => {
+    const accessSource =
+      row.access_type ||
+      (row.invoice_number ? "PAID" : "MANUAL");
+
+    return {
+      ...row,
+      access_source: accessSource,
+      risk: adminRiskFromCustomer(row),
+    };
+  });
+
+  if (status !== "ALL") {
+    customers = customers.filter(
+      (row) =>
+        String(row.entitlement_status || "").toUpperCase() === status
+    );
+  }
+
+  if (requestedRisk !== "ALL") {
+    customers = customers.filter(
+      (row) => row.risk === requestedRisk
+    );
+  }
+
+  if (search) {
+    customers = customers.filter((row) =>
+      [
+        row.email,
+        row.customer_name,
+        row.invoice_number,
+        row.access_source,
+      ]
+        .map((value) => String(value || "").toLowerCase())
+        .some((value) => value.includes(search))
+    );
+  }
+
+  const summary = {
+    total: customers.length,
+    active: customers.filter(
+      (row) => row.entitlement_status === "ACTIVE"
+    ).length,
+    review: customers.filter(
+      (row) => row.risk === "REVIEW"
+    ).length,
+    high_activity: customers.filter(
+      (row) => row.risk === "HIGH_ACTIVITY"
+    ).length,
+  };
+
+  return jsonResponse({
+    success: true,
+    admin_email: auth.admin.email,
+    summary,
+    customers,
+  });
+}
+
+async function getAdminCourseCustomer(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  await ensureCourseAdminTables(env);
+
+  const url = new URL(request.url);
+  const email = normalizeEmail(url.searchParams.get("email"));
+  const productId = adminCourseProductId(env);
+
+  if (!isValidEmail(email)) {
+    return jsonResponse(
+      { success: false, error: "Valid customer email is required" },
+      400
+    );
+  }
+
+  const entitlement = await env.DB.prepare(
+    `SELECT *
+     FROM course_entitlements
+     WHERE lower(email) = lower(?)
+       AND product_id = ?
+     LIMIT 1`
+  )
+    .bind(email, productId)
+    .first();
+
+  if (!entitlement) {
+    return jsonResponse(
+      { success: false, error: "Customer entitlement not found" },
+      404
+    );
+  }
+
+  const [payments, sessions, magicLinks, grant, audit] =
+    await Promise.all([
+      env.DB.prepare(
+        `SELECT
+           invoice_number,
+           product_name,
+           amount,
+           currency,
+           status,
+           payment_channel,
+           created_at,
+           paid_at
+         FROM payments
+         WHERE lower(customer_email) = lower(?)
+           AND product_id = ?
+         ORDER BY id DESC
+         LIMIT 30`
+      )
+        .bind(email, productId)
+        .all(),
+      env.DB.prepare(
+        `SELECT
+           id,
+           status,
+           created_at,
+           expires_at,
+           last_seen_at,
+           revoked_at,
+           user_agent
+         FROM course_sessions
+         WHERE lower(email) = lower(?)
+           AND product_id = ?
+         ORDER BY created_at DESC
+         LIMIT 100`
+      )
+        .bind(email, productId)
+        .all(),
+      env.DB.prepare(
+        `SELECT
+           id,
+           created_at,
+           expires_at,
+           used_at,
+           CASE
+             WHEN used_at IS NOT NULL THEN 'USED'
+             WHEN expires_at <= CURRENT_TIMESTAMP THEN 'EXPIRED'
+             ELSE 'ACTIVE'
+           END AS link_status
+         FROM course_magic_links
+         WHERE lower(email) = lower(?)
+           AND product_id = ?
+         ORDER BY created_at DESC
+         LIMIT 100`
+      )
+        .bind(email, productId)
+        .all(),
+      env.DB.prepare(
+        `SELECT *
+         FROM course_admin_grants
+         WHERE lower(email) = lower(?)
+           AND product_id = ?
+         LIMIT 1`
+      )
+        .bind(email, productId)
+        .first(),
+      env.DB.prepare(
+        `SELECT
+           id,
+           admin_email,
+           action,
+           details,
+           created_at
+         FROM course_admin_audit
+         WHERE lower(target_email) = lower(?)
+           AND product_id = ?
+         ORDER BY created_at DESC
+         LIMIT 100`
+      )
+        .bind(email, productId)
+        .all(),
+    ]);
+
+  const sessionRows = sessions?.results || [];
+  const magicRows = magicLinks?.results || [];
+  const riskRow = {
+    sessions_7d: sessionRows.filter(
+      (row) => adminDateIsWithinDays(row.created_at, 7)
+    ).length,
+    sessions_30d: sessionRows.filter(
+      (row) => adminDateIsWithinDays(row.created_at, 30)
+    ).length,
+    devices_30d: new Set(
+      sessionRows
+        .filter((row) => adminDateIsWithinDays(row.created_at, 30))
+        .map((row) => row.user_agent || "unknown")
+    ).size,
+    magic_links_30d: magicRows.filter(
+      (row) => adminDateIsWithinDays(row.created_at, 30)
+    ).length,
+  };
+
+  return jsonResponse({
+    success: true,
+    admin_email: auth.admin.email,
+    customer: {
+      email,
+      product_id: productId,
+      entitlement,
+      grant: grant || null,
+      access_source:
+        grant?.access_type ||
+        ((payments?.results || []).some(
+          (row) => row.status === "SUCCESS"
+        )
+          ? "PAID"
+          : "MANUAL"),
+      risk: adminRiskFromCustomer(riskRow),
+      risk_metrics: {
+        ...riskRow,
+        total_sessions: sessionRows.length,
+        total_magic_links: magicRows.length,
+      },
+      payments: payments?.results || [],
+      sessions: sessionRows,
+      magic_links: magicRows,
+      audit: audit?.results || [],
+    },
+  });
+}
+
+function adminDateIsWithinDays(value, days) {
+  if (!value) return false;
+  const normalized = String(value).includes("T")
+    ? String(value)
+    : `${String(value).replace(" ", "T")}Z`;
+  const date = new Date(normalized);
+  if (Number.isNaN(date.getTime())) return false;
+  return Date.now() - date.getTime() <= days * 86400000;
+}
+
+async function getAdminCourseSessions(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  const url = new URL(request.url);
+  const q = String(url.searchParams.get("q") || "")
+    .trim()
+    .toLowerCase()
+    .slice(0, 120);
+  const requestedStatus = String(
+    url.searchParams.get("status") || "ALL"
+  ).toUpperCase();
+
+  const status = ["ALL", "ACTIVE", "REVOKED"].includes(
+    requestedStatus
+  )
+    ? requestedStatus
+    : "ALL";
+
+  const conditions = ["product_id = ?"];
+  const bindings = [adminCourseProductId(env)];
+
+  if (status === "ACTIVE") {
+    conditions.push(
+      "status = 'ACTIVE' AND expires_at > CURRENT_TIMESTAMP"
+    );
+  } else if (status === "REVOKED") {
+    conditions.push(
+      "(status = 'REVOKED' OR expires_at <= CURRENT_TIMESTAMP)"
+    );
+  }
+
+  if (q) {
+    conditions.push(
+      `(lower(email) LIKE ? OR lower(COALESCE(user_agent, '')) LIKE ?)`
+    );
+    const term = `%${q}%`;
+    bindings.push(term, term);
+  }
+
+  const result = await env.DB.prepare(
+    `SELECT
+       id,
+       email,
+       product_id,
+       status,
+       created_at,
+       expires_at,
+       last_seen_at,
+       revoked_at,
+       user_agent,
+       CASE
+         WHEN status = 'ACTIVE'
+          AND expires_at > CURRENT_TIMESTAMP
+         THEN 'ACTIVE'
+         WHEN status = 'REVOKED' THEN 'REVOKED'
+         ELSE 'EXPIRED'
+       END AS display_status
+     FROM course_sessions
+     WHERE ${conditions.join(" AND ")}
+     ORDER BY created_at DESC
+     LIMIT 500`
+  )
+    .bind(...bindings)
+    .all();
+
+  return jsonResponse({
+    success: true,
+    admin_email: auth.admin.email,
+    sessions: result?.results || [],
+  });
+}
+
+async function getAdminCourseMagicLinks(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  const url = new URL(request.url);
+  const q = String(url.searchParams.get("q") || "")
+    .trim()
+    .toLowerCase()
+    .slice(0, 120);
+  const requestedStatus = String(
+    url.searchParams.get("status") || "ALL"
+  ).toUpperCase();
+  const allowed = ["ALL", "ACTIVE", "USED", "EXPIRED"];
+  const status = allowed.includes(requestedStatus)
+    ? requestedStatus
+    : "ALL";
+
+  const conditions = ["product_id = ?"];
+  const bindings = [adminCourseProductId(env)];
+
+  if (q) {
+    conditions.push("lower(email) LIKE ?");
+    bindings.push(`%${q}%`);
+  }
+
+  const result = await env.DB.prepare(
+    `SELECT
+       id,
+       email,
+       product_id,
+       created_at,
+       expires_at,
+       used_at,
+       CASE
+         WHEN used_at IS NOT NULL THEN 'USED'
+         WHEN expires_at <= CURRENT_TIMESTAMP THEN 'EXPIRED'
+         ELSE 'ACTIVE'
+       END AS display_status
+     FROM course_magic_links
+     WHERE ${conditions.join(" AND ")}
+     ORDER BY created_at DESC
+     LIMIT 500`
+  )
+    .bind(...bindings)
+    .all();
+
+  let links = result?.results || [];
+
+  if (status !== "ALL") {
+    links = links.filter(
+      (row) => row.display_status === status
+    );
+  }
+
+  return jsonResponse({
+    success: true,
+    admin_email: auth.admin.email,
+    magic_links: links,
+  });
+}
+
+async function getAdminCourseActivity(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  await ensureCourseAdminTables(env);
+
+  const url = new URL(request.url);
+  const q = String(url.searchParams.get("q") || "")
+    .trim()
+    .toLowerCase()
+    .slice(0, 120);
+
+  const conditions = [];
+  const bindings = [];
+
+  if (q) {
+    conditions.push(
+      `(lower(COALESCE(target_email, '')) LIKE ?
+        OR lower(COALESCE(admin_email, '')) LIKE ?
+        OR lower(COALESCE(action, '')) LIKE ?)`
+    );
+    const term = `%${q}%`;
+    bindings.push(term, term, term);
+  }
+
+  const where = conditions.length
+    ? `WHERE ${conditions.join(" AND ")}`
+    : "";
+
+  const result = await env.DB.prepare(
+    `SELECT
+       id,
+       admin_email,
+       action,
+       target_email,
+       product_id,
+       details,
+       created_at
+     FROM course_admin_audit
+     ${where}
+     ORDER BY created_at DESC
+     LIMIT 500`
+  )
+    .bind(...bindings)
+    .all();
+
+  return jsonResponse({
+    success: true,
+    admin_email: auth.admin.email,
+    activity: result?.results || [],
+  });
+}
+
+async function getAdminCourseOverview(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  await ensureCourseAdminTables(env);
+
+  const productId = adminCourseProductId(env);
+
+  const [
+    entitlementSummary,
+    sessionSummary,
+    magicSummary,
+    grantSummary,
+    recentEntitlements,
+    securityRows,
+  ] = await Promise.all([
+    env.DB.prepare(
+      `SELECT
+         COUNT(*) AS total,
+         SUM(CASE WHEN status = 'ACTIVE' THEN 1 ELSE 0 END) AS active,
+         SUM(CASE WHEN status <> 'ACTIVE' THEN 1 ELSE 0 END) AS inactive
+       FROM course_entitlements
+       WHERE product_id = ?`
+    )
+      .bind(productId)
+      .first(),
+    env.DB.prepare(
+      `SELECT
+         COUNT(*) AS total,
+         SUM(CASE
+           WHEN status = 'ACTIVE' AND expires_at > CURRENT_TIMESTAMP
+           THEN 1 ELSE 0
+         END) AS active,
+         SUM(CASE
+           WHEN created_at >= datetime('now', '-30 days')
+           THEN 1 ELSE 0
+         END) AS created_30d
+       FROM course_sessions
+       WHERE product_id = ?`
+    )
+      .bind(productId)
+      .first(),
+    env.DB.prepare(
+      `SELECT
+         COUNT(*) AS total,
+         SUM(CASE
+           WHEN created_at >= datetime('now', '-30 days')
+           THEN 1 ELSE 0
+         END) AS created_30d,
+         SUM(CASE
+           WHEN used_at IS NULL AND expires_at > CURRENT_TIMESTAMP
+           THEN 1 ELSE 0
+         END) AS active
+       FROM course_magic_links
+       WHERE product_id = ?`
+    )
+      .bind(productId)
+      .first(),
+    env.DB.prepare(
+      `SELECT
+         COUNT(*) AS total,
+         SUM(CASE WHEN revoked_at IS NULL THEN 1 ELSE 0 END) AS active
+       FROM course_admin_grants
+       WHERE product_id = ?`
+    )
+      .bind(productId)
+      .first(),
+    env.DB.prepare(
+      `SELECT
+         ce.email,
+         ce.status AS entitlement_status,
+         g.access_type,
+         g.granted_at,
+         (
+           SELECT MAX(p.paid_at)
+           FROM payments p
+           WHERE lower(p.customer_email) = lower(ce.email)
+             AND p.product_id = ce.product_id
+             AND p.status = 'SUCCESS'
+         ) AS paid_at,
+         (
+           SELECT MAX(cs.last_seen_at)
+           FROM course_sessions cs
+           WHERE lower(cs.email) = lower(ce.email)
+             AND cs.product_id = ce.product_id
+         ) AS last_seen_at
+       FROM course_entitlements ce
+       LEFT JOIN course_admin_grants g
+         ON lower(g.email) = lower(ce.email)
+        AND g.product_id = ce.product_id
+       WHERE ce.product_id = ?
+       ORDER BY COALESCE(
+         last_seen_at,
+         g.granted_at,
+         paid_at
+       ) DESC
+       LIMIT 8`
+    )
+      .bind(productId)
+      .all(),
+    env.DB.prepare(
+      `SELECT
+         email,
+         COUNT(*) AS total_sessions,
+         SUM(CASE
+           WHEN created_at >= datetime('now', '-7 days') THEN 1 ELSE 0
+         END) AS sessions_7d,
+         SUM(CASE
+           WHEN created_at >= datetime('now', '-30 days') THEN 1 ELSE 0
+         END) AS sessions_30d,
+         COUNT(DISTINCT CASE
+           WHEN created_at >= datetime('now', '-30 days')
+           THEN COALESCE(NULLIF(user_agent, ''), 'unknown')
+           ELSE NULL
+         END) AS devices_30d
+       FROM course_sessions
+       WHERE product_id = ?
+       GROUP BY lower(email)`
+    )
+      .bind(productId)
+      .all(),
+  ]);
+
+  const security = (securityRows?.results || []).map((row) => ({
+    ...row,
+    risk: adminRiskFromCustomer(row),
+  }));
+
+  return jsonResponse({
+    success: true,
+    admin_email: auth.admin.email,
+    summary: {
+      customers_total: Number(entitlementSummary?.total || 0),
+      customers_active: Number(entitlementSummary?.active || 0),
+      customers_inactive: Number(entitlementSummary?.inactive || 0),
+      sessions_total: Number(sessionSummary?.total || 0),
+      sessions_active: Number(sessionSummary?.active || 0),
+      sessions_30d: Number(sessionSummary?.created_30d || 0),
+      magic_links_total: Number(magicSummary?.total || 0),
+      magic_links_active: Number(magicSummary?.active || 0),
+      magic_links_30d: Number(magicSummary?.created_30d || 0),
+      manual_grants_total: Number(grantSummary?.total || 0),
+      manual_grants_active: Number(grantSummary?.active || 0),
+      review_customers: security.filter(
+        (row) => row.risk === "REVIEW"
+      ).length,
+      high_activity_customers: security.filter(
+        (row) => row.risk === "HIGH_ACTIVITY"
+      ).length,
+    },
+    recent_customers: recentEntitlements?.results || [],
+  });
+}
+
+async function handleAdminGrantAccess(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  const sameOrigin = validateAdminMutationOrigin(request);
+  if (!sameOrigin.ok) return sameOrigin.response;
+
+  await ensureCourseAdminTables(env);
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return jsonResponse(
+      { success: false, error: "Invalid JSON body" },
+      400
+    );
+  }
+
+  const email = normalizeEmail(payload?.email);
+  const accessType = String(
+    payload?.access_type || "GIFT"
+  )
+    .trim()
+    .toUpperCase()
+    .slice(0, 24);
+  const note = String(payload?.note || "").trim().slice(0, 500);
+  const sendMagicLink = payload?.send_magic_link !== false;
+  const productId = adminCourseProductId(env);
+
+  if (!isValidEmail(email)) {
+    return jsonResponse(
+      { success: false, error: "Valid email is required" },
+      400
+    );
+  }
+
+  if (!["GIFT", "MANUAL", "PROMO"].includes(accessType)) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "access_type must be GIFT, MANUAL, or PROMO",
+      },
+      400
+    );
+  }
+
+  try {
+    const entitlementResult =
+      await activateCourseEntitlement(env, email, productId);
+
+    await env.DB.prepare(
+      `INSERT INTO course_admin_grants
+        (id, email, product_id, access_type, note, granted_by, granted_at, revoked_at)
+       VALUES
+        (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, NULL)
+       ON CONFLICT(email, product_id) DO UPDATE SET
+         access_type = excluded.access_type,
+         note = excluded.note,
+         granted_by = excluded.granted_by,
+         granted_at = CURRENT_TIMESTAMP,
+         revoked_at = NULL`
+    )
+      .bind(
+        crypto.randomUUID(),
+        email,
+        productId,
+        accessType,
+        note || null,
+        auth.admin.email
+      )
+      .run();
+
+    let emailResult = null;
+
+    if (sendMagicLink) {
+      const magic = await createAdminMagicLink(
+        env,
+        email,
+        productId
+      );
+      emailResult = await sendAdminCourseMagicLinkEmail(
+        env,
+        email,
+        magic.url
+      );
+    }
+
+    await writeCourseAdminAudit(
+      env,
+      auth.admin.email,
+      sendMagicLink
+        ? "GRANT_ACCESS_AND_SEND_MAGIC_LINK"
+        : "GRANT_ACCESS",
+      email,
+      productId,
+      {
+        access_type: accessType,
+        note: note || null,
+        entitlement_created: entitlementResult.created,
+        email_sent: emailResult?.sent ?? null,
+        email_error: emailResult?.error || null,
+      }
+    );
+
+    return jsonResponse({
+      success: true,
+      email,
+      access_type: accessType,
+      entitlement_created: entitlementResult.created,
+      magic_link_sent: emailResult?.sent ?? false,
+      email_error: emailResult?.error || null,
+    });
+  } catch (error) {
+    console.error("Admin grant access failed", error);
+    return jsonResponse(
+      {
+        success: false,
+        error: error instanceof Error
+          ? error.message
+          : "Failed to grant course access",
+      },
+      500
+    );
+  }
+}
+
+async function handleAdminSendMagicLink(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  const sameOrigin = validateAdminMutationOrigin(request);
+  if (!sameOrigin.ok) return sameOrigin.response;
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return jsonResponse(
+      { success: false, error: "Invalid JSON body" },
+      400
+    );
+  }
+
+  const email = normalizeEmail(payload?.email);
+  const productId = adminCourseProductId(env);
+
+  if (!isValidEmail(email)) {
+    return jsonResponse(
+      { success: false, error: "Valid email is required" },
+      400
+    );
+  }
+
+  try {
+    const magic = await createAdminMagicLink(
+      env,
+      email,
+      productId
+    );
+    const emailResult = await sendAdminCourseMagicLinkEmail(
+      env,
+      email,
+      magic.url
+    );
+
+    await writeCourseAdminAudit(
+      env,
+      auth.admin.email,
+      "SEND_MAGIC_LINK",
+      email,
+      productId,
+      {
+        email_sent: emailResult.sent,
+        email_error: emailResult.error || null,
+      }
+    );
+
+    return jsonResponse({
+      success: emailResult.sent,
+      magic_link_created: true,
+      email_sent: emailResult.sent,
+      error: emailResult.sent
+        ? undefined
+        : emailResult.error || "Email delivery failed",
+    }, emailResult.sent ? 200 : 502);
+  } catch (error) {
+    return jsonResponse(
+      {
+        success: false,
+        error: error instanceof Error
+          ? error.message
+          : "Failed to send magic link",
+      },
+      400
+    );
+  }
+}
+
+async function handleAdminRevokeSession(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  const sameOrigin = validateAdminMutationOrigin(request);
+  if (!sameOrigin.ok) return sameOrigin.response;
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return jsonResponse(
+      { success: false, error: "Invalid JSON body" },
+      400
+    );
+  }
+
+  const sessionId = String(payload?.session_id || "").trim();
+  if (!sessionId) {
+    return jsonResponse(
+      { success: false, error: "session_id is required" },
+      400
+    );
+  }
+
+  const session = await env.DB.prepare(
+    `SELECT id, email, product_id, status
+     FROM course_sessions
+     WHERE id = ?
+     LIMIT 1`
+  )
+    .bind(sessionId)
+    .first();
+
+  if (!session) {
+    return jsonResponse(
+      { success: false, error: "Session not found" },
+      404
+    );
+  }
+
+  await env.DB.prepare(
+    `UPDATE course_sessions
+     SET status = 'REVOKED',
+         revoked_at = COALESCE(revoked_at, CURRENT_TIMESTAMP),
+         last_seen_at = CURRENT_TIMESTAMP
+     WHERE id = ?`
+  )
+    .bind(sessionId)
+    .run();
+
+  await writeCourseAdminAudit(
+    env,
+    auth.admin.email,
+    "REVOKE_SESSION",
+    session.email,
+    session.product_id,
+    { session_id: sessionId }
+  );
+
+  return jsonResponse({ success: true });
+}
+
+async function handleAdminRevokeAccess(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  const sameOrigin = validateAdminMutationOrigin(request);
+  if (!sameOrigin.ok) return sameOrigin.response;
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return jsonResponse(
+      { success: false, error: "Invalid JSON body" },
+      400
+    );
+  }
+
+  const email = normalizeEmail(payload?.email);
+  const reason = String(payload?.reason || "")
+    .trim()
+    .slice(0, 500);
+  const productId = adminCourseProductId(env);
+
+  if (!isValidEmail(email)) {
+    return jsonResponse(
+      { success: false, error: "Valid email is required" },
+      400
+    );
+  }
+
+  const changed = await setCourseEntitlementStatus(
+    env,
+    email,
+    productId,
+    "REVOKED"
+  );
+
+  if (!changed) {
+    return jsonResponse(
+      { success: false, error: "Course entitlement not found" },
+      404
+    );
+  }
+
+  await env.DB.batch([
+    env.DB.prepare(
+      `UPDATE course_sessions
+       SET status = 'REVOKED',
+           revoked_at = COALESCE(revoked_at, CURRENT_TIMESTAMP),
+           last_seen_at = CURRENT_TIMESTAMP
+       WHERE lower(email) = lower(?)
+         AND product_id = ?
+         AND status = 'ACTIVE'`
+    ).bind(email, productId),
+    env.DB.prepare(
+      `UPDATE course_magic_links
+       SET used_at = COALESCE(used_at, CURRENT_TIMESTAMP)
+       WHERE lower(email) = lower(?)
+         AND product_id = ?
+         AND used_at IS NULL`
+    ).bind(email, productId),
+    env.DB.prepare(
+      `UPDATE course_admin_grants
+       SET revoked_at = CURRENT_TIMESTAMP
+       WHERE lower(email) = lower(?)
+         AND product_id = ?`
+    ).bind(email, productId),
+  ]);
+
+  await writeCourseAdminAudit(
+    env,
+    auth.admin.email,
+    "REVOKE_COURSE_ACCESS",
+    email,
+    productId,
+    { reason: reason || null }
+  );
+
+  return jsonResponse({ success: true });
+}
+
+async function handleAdminRestoreAccess(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  const sameOrigin = validateAdminMutationOrigin(request);
+  if (!sameOrigin.ok) return sameOrigin.response;
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return jsonResponse(
+      { success: false, error: "Invalid JSON body" },
+      400
+    );
+  }
+
+  const email = normalizeEmail(payload?.email);
+  const productId = adminCourseProductId(env);
+
+  if (!isValidEmail(email)) {
+    return jsonResponse(
+      { success: false, error: "Valid email is required" },
+      400
+    );
+  }
+
+  const changed = await setCourseEntitlementStatus(
+    env,
+    email,
+    productId,
+    "ACTIVE"
+  );
+
+  if (!changed) {
+    return jsonResponse(
+      { success: false, error: "Course entitlement not found" },
+      404
+    );
+  }
+
+  await env.DB.prepare(
+    `UPDATE course_admin_grants
+     SET revoked_at = NULL
+     WHERE lower(email) = lower(?)
+       AND product_id = ?`
+  )
+    .bind(email, productId)
+    .run();
+
+  await writeCourseAdminAudit(
+    env,
+    auth.admin.email,
+    "RESTORE_COURSE_ACCESS",
+    email,
+    productId
+  );
+
+  return jsonResponse({ success: true });
+}
+
+async function handleAdminRevokeMagicLink(request, env) {
+  const auth = await authorizeAdminRequest(request, env);
+  if (auth.response) return auth.response;
+
+  const sameOrigin = validateAdminMutationOrigin(request);
+  if (!sameOrigin.ok) return sameOrigin.response;
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return jsonResponse(
+      { success: false, error: "Invalid JSON body" },
+      400
+    );
+  }
+
+  const magicLinkId = String(payload?.magic_link_id || "").trim();
+  if (!magicLinkId) {
+    return jsonResponse(
+      { success: false, error: "magic_link_id is required" },
+      400
+    );
+  }
+
+  const link = await env.DB.prepare(
+    `SELECT id, email, product_id, used_at, expires_at
+     FROM course_magic_links
+     WHERE id = ?
+     LIMIT 1`
+  )
+    .bind(magicLinkId)
+    .first();
+
+  if (!link) {
+    return jsonResponse(
+      { success: false, error: "Magic link not found" },
+      404
+    );
+  }
+
+  await env.DB.prepare(
+    `UPDATE course_magic_links
+     SET used_at = COALESCE(used_at, CURRENT_TIMESTAMP)
+     WHERE id = ?`
+  )
+    .bind(magicLinkId)
+    .run();
+
+  await writeCourseAdminAudit(
+    env,
+    auth.admin.email,
+    "REVOKE_MAGIC_LINK",
+    link.email,
+    link.product_id,
+    { magic_link_id: magicLinkId }
+  );
+
+  return jsonResponse({ success: true });
+}
+
+function validateAdminMutationOrigin(request) {
+  const origin = request.headers.get("Origin");
+  if (!origin) return { ok: true };
+
+  const expectedOrigin = new URL(request.url).origin;
+  if (origin !== expectedOrigin) {
+    return {
+      ok: false,
+      response: jsonResponse(
+        { success: false, error: "Invalid request origin" },
+        403
+      ),
+    };
+  }
+
+  return { ok: true };
+}
+
+async function handleAdminApi(request, env, url) {
+  const path = url.pathname;
+
+  if (path === ADMIN_ORDERS_API_PATH) {
+    if (request.method !== "GET") {
+      return methodNotAllowed(["GET"]);
+    }
+    return getAdminOrders(request, env);
+  }
+
+  const getRoutes = new Map([
+    [ADMIN_OVERVIEW_API_PATH, getAdminCourseOverview],
+    [ADMIN_CUSTOMERS_API_PATH, getAdminCourseCustomers],
+    [ADMIN_CUSTOMER_API_PATH, getAdminCourseCustomer],
+    [ADMIN_SESSIONS_API_PATH, getAdminCourseSessions],
+    [ADMIN_MAGIC_LINKS_API_PATH, getAdminCourseMagicLinks],
+    [ADMIN_ACTIVITY_API_PATH, getAdminCourseActivity],
+  ]);
+
+  if (getRoutes.has(path)) {
+    if (request.method !== "GET") {
+      return methodNotAllowed(["GET"]);
+    }
+    return getRoutes.get(path)(request, env);
+  }
+
+  const postRoutes = new Map([
+    [ADMIN_GRANT_ACCESS_API_PATH, handleAdminGrantAccess],
+    [ADMIN_SEND_MAGIC_LINK_API_PATH, handleAdminSendMagicLink],
+    [ADMIN_REVOKE_SESSION_API_PATH, handleAdminRevokeSession],
+    [ADMIN_REVOKE_ACCESS_API_PATH, handleAdminRevokeAccess],
+    [ADMIN_RESTORE_ACCESS_API_PATH, handleAdminRestoreAccess],
+    [ADMIN_REVOKE_MAGIC_LINK_API_PATH, handleAdminRevokeMagicLink],
+  ]);
+
+  if (postRoutes.has(path)) {
+    if (request.method !== "POST") {
+      return methodNotAllowed(["POST"]);
+    }
+    return postRoutes.get(path)(request, env);
+  }
+
+  return jsonResponse(
+    { success: false, error: "Admin API endpoint not found" },
+    404
+  );
+}
+
+function methodNotAllowed(allowed) {
+  return new Response("Method Not Allowed", {
+    status: 405,
+    headers: {
+      "Allow": allowed.join(", "),
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
 
 function jsonResponse(body, status = 200, extraHeaders = {}) {
   return Response.json(body, {
@@ -1632,17 +3370,8 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.pathname === ADMIN_ORDERS_API_PATH) {
-      if (request.method !== "GET") {
-        return new Response("Method Not Allowed", {
-          status: 405,
-          headers: {
-            "Allow": "GET",
-          },
-        });
-      }
-
-      return getAdminOrders(request, env);
+    if (url.pathname.startsWith("/admin/api/")) {
+      return handleAdminApi(request, env, url);
     }
 
     if (url.pathname === DOKU_SDK_PATH) {

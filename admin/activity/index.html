@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f7f8fb">
+  <title>Activity — Maul Digital Admin</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+  <script>
+    (function(){const s=localStorage.getItem("maulAdminTheme");document.documentElement.dataset.theme=s==="dark"?"dark":"light";})();
+  </script>
+  
+</head>
+<body>
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="/admin/">M<b>.</b> Admin</a>
+    <div class="top-actions">
+      <button class="btn optional-mobile" id="theme-button" type="button">Dark mode</button>
+      <a class="btn" href="/cdn-cgi/access/logout">Logout</a>
+    </div>
+  </div>
+  <div class="nav-wrap">
+    <nav class="shell nav">
+      <a data-nav href="/admin/">Overview</a>
+      <a data-nav href="/admin/customers/">Customers</a>
+      <a data-nav href="/admin/sessions/">Sessions</a>
+      <a data-nav href="/admin/magic-links/">Magic Links</a>
+      <a data-nav href="/admin/orders/">Orders</a>
+      <a data-nav href="/admin/activity/">Activity</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page shell">
+  <div class="heading">
+    <div>
+      <div class="eyebrow">Private / Cloudflare Access</div>
+      <h1>Admin Activity</h1>
+      <p class="lead">Audit trail untuk grant, resend magic link, revoke session, dan perubahan akses.</p>
+    </div>
+    <div class="heading-actions"></div>
+  </div>
+  
+<section class="card toolbar">
+  <div class="search"><input id="q" type="search" placeholder="Cari email, admin, atau action…"></div>
+  <button class="btn" id="refresh" type="button">Refresh</button>
+</section>
+<section class="card table-card">
+  <div class="table-scroll"><table>
+    <thead><tr><th>Time</th><th>Action</th><th>Customer</th><th>Admin</th><th>Details</th></tr></thead>
+    <tbody id="body"><tr><td colspan="5" class="empty">Loading activity…</td></tr></tbody>
+  </table></div>
+  <div class="footer-row"><span id="count">—</span><span data-admin-email class="admin-email"></span></div>
+</section>
+
+</main>
+<script src="/admin/assets/admin.js"></script>
+<script>
+
+const q=document.getElementById("q"),body=document.getElementById("body");
+async function loadData(){
+  try{
+    const p=new URLSearchParams({q:q.value.trim()});
+    const data=await Admin.api(`/admin/api/activity?${p}`);Admin.setAdminEmail(data.admin_email);
+    const rows=data.activity||[];document.getElementById("count").textContent=`${rows.length} activity`;
+    body.innerHTML=rows.length?rows.map(a=>{
+      let details="—";try{const obj=JSON.parse(a.details||"{}");details=Object.entries(obj).filter(([,v])=>v!==null&&v!=="").map(([k,v])=>`${k}: ${typeof v==="object"?JSON.stringify(v):v}`).join(" · ")||"—"}catch{details=a.details||"—"}
+      return `<tr><td>${Admin.formatDate(a.created_at)}</td><td><strong>${Admin.escapeHtml(a.action)}</strong></td><td>${Admin.escapeHtml(a.target_email||"—")}</td><td class="mono">${Admin.escapeHtml(a.admin_email||"—")}</td><td class="sub">${Admin.escapeHtml(details)}</td></tr>`
+    }).join(""):'<tr><td colspan="5" class="empty">Belum ada tindakan admin yang tercatat.</td></tr>';
+  }catch(err){body.innerHTML=`<tr><td colspan="5" class="error">${Admin.escapeHtml(err.message)}</td></tr>`}
+}
+q.addEventListener("input",Admin.debounce(loadData,300));document.getElementById("refresh").addEventListener("click",loadData);document.addEventListener("DOMContentLoaded",loadData);
+
+</script>
+</body>
+</html>

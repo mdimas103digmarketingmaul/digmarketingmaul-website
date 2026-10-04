@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f7f8fb">
+  <title>Customers — Maul Digital Admin</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+  <script>
+    (function(){const s=localStorage.getItem("maulAdminTheme");document.documentElement.dataset.theme=s==="dark"?"dark":"light";})();
+  </script>
+  
+</head>
+<body>
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="/admin/">M<b>.</b> Admin</a>
+    <div class="top-actions">
+      <button class="btn optional-mobile" id="theme-button" type="button">Dark mode</button>
+      <a class="btn" href="/cdn-cgi/access/logout">Logout</a>
+    </div>
+  </div>
+  <div class="nav-wrap">
+    <nav class="shell nav">
+      <a data-nav href="/admin/">Overview</a>
+      <a data-nav href="/admin/customers/">Customers</a>
+      <a data-nav href="/admin/sessions/">Sessions</a>
+      <a data-nav href="/admin/magic-links/">Magic Links</a>
+      <a data-nav href="/admin/orders/">Orders</a>
+      <a data-nav href="/admin/activity/">Activity</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page shell">
+  <div class="heading">
+    <div>
+      <div class="eyebrow">Private / Cloudflare Access</div>
+      <h1>Customers</h1>
+      <p class="lead">Kelola entitlement, payment, riwayat session, magic link, dan security signal setiap pembeli.</p>
+    </div>
+    <div class="heading-actions"><button class="btn primary" type="button" data-open-grant>+ Grant Access</button></div>
+  </div>
+  
+<dialog id="grant-dialog">
+  <div class="dialog-head">
+    <div>
+      <h2>Grant Course Access</h2>
+      <p class="sub" style="margin:5px 0 0">Berikan akses gratis/manual dan kirim magic link.</p>
+    </div>
+    <button class="icon-btn" type="button" data-close-dialog="grant-dialog">×</button>
+  </div>
+  <form id="grant-form">
+    <div class="dialog-body">
+      <div class="form-row">
+        <label for="grant-email">Email</label>
+        <input id="grant-email" type="email" required placeholder="arsya@gmail.com">
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="grant-type">Access source</label>
+          <select id="grant-type">
+            <option value="GIFT">GIFT — Gratis / hadiah</option>
+            <option value="MANUAL">MANUAL — Akses manual</option>
+            <option value="PROMO">PROMO — Promo / campaign</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="grant-send">Magic link</label>
+          <select id="grant-send">
+            <option value="yes">Grant + kirim magic link</option>
+            <option value="no">Grant saja</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="grant-note">Catatan admin (opsional)</label>
+        <textarea id="grant-note" placeholder="Contoh: Free access untuk teman"></textarea>
+      </div>
+      <div class="security-callout">
+        Payment tidak akan dibuat. Akses diberikan langsung melalui entitlement course dan dicatat sebagai tindakan admin.
+      </div>
+    </div>
+    <div class="dialog-foot">
+      <button class="btn" type="button" data-close-dialog="grant-dialog">Batal</button>
+      <button class="btn primary" id="grant-submit" type="submit">Grant Access</button>
+    </div>
+  </form>
+</dialog>
+
+<section class="card toolbar">
+  <div class="search"><input id="q" type="search" placeholder="Cari email, nama, invoice, atau source…"></div>
+  <div class="filter">
+    <select id="status">
+      <option value="ALL">All access</option>
+      <option value="ACTIVE">ACTIVE</option>
+      <option value="REVOKED">REVOKED</option>
+    </select>
+  </div>
+  <div class="filter">
+    <select id="risk">
+      <option value="ALL">All security</option>
+      <option value="NORMAL">Normal</option>
+      <option value="REVIEW">Review</option>
+      <option value="HIGH_ACTIVITY">High activity</option>
+    </select>
+  </div>
+</section>
+
+<section class="summary">
+  <div class="card metric"><span>Customers</span><strong id="sum-total">—</strong></div>
+  <div class="card metric"><span>Active access</span><strong id="sum-active">—</strong></div>
+  <div class="card metric"><span>Review</span><strong id="sum-review">—</strong></div>
+  <div class="card metric"><span>High activity</span><strong id="sum-high">—</strong></div>
+</section>
+
+<section class="card table-card">
+  <div class="table-scroll">
+    <table>
+      <thead><tr>
+        <th>Customer</th><th>Access</th><th>Payment</th><th>Sessions</th>
+        <th>Magic Links</th><th>Security</th><th>Last Activity</th><th>Actions</th>
+      </tr></thead>
+      <tbody id="customers-body"><tr><td colspan="8" class="empty">Loading customers…</td></tr></tbody>
+    </table>
+  </div>
+  <div class="footer-row"><span id="result-count">—</span><span data-admin-email class="admin-email"></span></div>
+</section>
+
+<dialog id="customer-drawer" class="drawer">
+  <div class="dialog-head">
+    <div><h2 id="drawer-email">Customer</h2><p class="sub" id="drawer-sub" style="margin:5px 0 0"></p></div>
+    <button class="icon-btn" type="button" data-close-dialog="customer-drawer">×</button>
+  </div>
+  <div class="dialog-body" id="drawer-body"><div class="empty">Loading…</div></div>
+  <div class="dialog-foot" id="drawer-actions"></div>
+</dialog>
+
+</main>
+<script src="/admin/assets/admin.js"></script>
+<script>
+
+const grantDialog=document.getElementById("grant-dialog");
+document.querySelectorAll("[data-open-grant]").forEach(btn=>btn.addEventListener("click",()=>grantDialog.showModal()));
+document.querySelectorAll("[data-close-dialog]").forEach(btn=>btn.addEventListener("click",()=>{
+  document.getElementById(btn.dataset.closeDialog)?.close();
+}));
+document.getElementById("grant-form")?.addEventListener("submit",async(e)=>{
+  e.preventDefault();
+  const submit=document.getElementById("grant-submit");
+  const email=document.getElementById("grant-email").value.trim();
+  const access_type=document.getElementById("grant-type").value;
+  const note=document.getElementById("grant-note").value.trim();
+  const send_magic_link=document.getElementById("grant-send").value==="yes";
+  submit.disabled=true; submit.textContent="Processing…";
+  try{
+    const data=await Admin.post("/admin/api/course/grant-access",{email,access_type,note,send_magic_link});
+    grantDialog.close();
+    e.target.reset();
+    Admin.toast(data.magic_link_sent
+      ? `Akses ${email} aktif dan magic link terkirim.`
+      : `Akses ${email} sudah aktif${data.email_error?`, tetapi email gagal: ${data.email_error}`:"."}`,
+      data.email_error?"error":"ok");
+    if(typeof loadData==="function") await loadData();
+    if(typeof loadCustomers==="function") await loadCustomers();
+  }catch(err){Admin.toast(err.message,"error")}
+  finally{submit.disabled=false;submit.textContent="Grant Access"}
+});
+
+const body=document.getElementById("customers-body");
+const q=document.getElementById("q");
+const status=document.getElementById("status");
+const risk=document.getElementById("risk");
+const drawer=document.getElementById("customer-drawer");
+let currentEmail="";
+
+function badge(value,kind){
+  const v=String(value||"—");
+  return `<span class="badge ${String(kind||v).toLowerCase()}">${Admin.escapeHtml(v)}</span>`;
+}
+function riskBadge(value){
+  const v=String(value||"NORMAL").toUpperCase();
+  return `<span class="badge ${v.toLowerCase()}"><span class="risk-dot ${v.toLowerCase()}"></span>${Admin.riskLabel(v)}</span>`;
+}
+async function loadCustomers(){
+  const params=new URLSearchParams({q:q.value.trim(),status:status.value,risk:risk.value});
+  try{
+    const data=await Admin.api(`/admin/api/customers?${params}`);
+    Admin.setAdminEmail(data.admin_email);
+    const rows=data.customers||[],s=data.summary||{};
+    document.getElementById("sum-total").textContent=s.total??0;
+    document.getElementById("sum-active").textContent=s.active??0;
+    document.getElementById("sum-review").textContent=s.review??0;
+    document.getElementById("sum-high").textContent=s.high_activity??0;
+    document.getElementById("result-count").textContent=`${rows.length} customer`;
+    if(!rows.length){body.innerHTML='<tr><td colspan="8" class="empty">Tidak ada customer untuk filter ini.</td></tr>';return}
+    body.innerHTML=rows.map(r=>`
+      <tr>
+        <td class="customer">
+          <strong>${Admin.escapeHtml(r.customer_name||r.email)}</strong>
+          <div class="sub">${Admin.escapeHtml(r.email)}</div>
+        </td>
+        <td>
+          ${badge(r.entitlement_status,r.entitlement_status)}
+          <div class="sub" style="margin-top:5px">${badge(Admin.sourceLabel(r.access_source),r.access_source)}</div>
+        </td>
+        <td>${r.invoice_number?`<div class="mono">${Admin.escapeHtml(r.invoice_number)}</div><div class="sub">${Admin.formatIdr(r.paid_amount)}</div>`:"<span class='muted'>—</span>"}</td>
+        <td><strong>${Number(r.active_sessions||0)} active</strong><div class="sub">${Number(r.total_sessions||0)} lifetime · ${Number(r.sessions_30d||0)} / 30d</div></td>
+        <td><strong>${Number(r.total_magic_links||0)}</strong><div class="sub">${Number(r.magic_links_30d||0)} / 30d</div></td>
+        <td>${riskBadge(r.risk)}<div class="sub" style="margin-top:5px">${Number(r.devices_30d||0)} browser/device pattern / 30d</div></td>
+        <td>${Admin.formatDate(r.last_seen_at||r.latest_session_at||r.latest_magic_link_at||r.granted_at||r.paid_at)}</td>
+        <td><div class="actions">
+          <button class="btn small" data-view="${Admin.escapeHtml(r.email)}">View</button>
+          <button class="btn small" data-send="${Admin.escapeHtml(r.email)}">Send Link</button>
+          ${String(r.entitlement_status)==="ACTIVE"
+            ?`<button class="btn small danger" data-revoke-access="${Admin.escapeHtml(r.email)}">Revoke</button>`
+            :`<button class="btn small good" data-restore="${Admin.escapeHtml(r.email)}">Restore</button>`}
+        </div></td>
+      </tr>`).join("");
+  }catch(err){body.innerHTML=`<tr><td colspan="8" class="error">${Admin.escapeHtml(err.message)}</td></tr>`}
+}
+
+async function openCustomer(email){
+  currentEmail=email;
+  drawer.showModal();
+  document.getElementById("drawer-email").textContent=email;
+  document.getElementById("drawer-sub").textContent="Loading customer detail…";
+  document.getElementById("drawer-body").innerHTML='<div class="empty">Loading…</div>';
+  document.getElementById("drawer-actions").innerHTML='';
+  try{
+    const data=await Admin.api(`/admin/api/customer?email=${encodeURIComponent(email)}`);
+    const c=data.customer;
+    document.getElementById("drawer-sub").textContent=`${Admin.sourceLabel(c.access_source)} · ${c.entitlement.status}`;
+    const sessions=c.sessions||[],links=c.magic_links||[],payments=c.payments||[],audit=c.audit||[];
+    const latestActive=sessions.find(s=>s.status==="ACTIVE" && new Date((s.expires_at||"").replace(" ","T")+"Z")>new Date());
+    document.getElementById("drawer-body").innerHTML=`
+      <section class="detail-section">
+        <h3>Course Access</h3>
+        <div class="detail-grid">
+          <div class="detail-box"><span>Status</span><strong>${Admin.escapeHtml(c.entitlement.status)}</strong></div>
+          <div class="detail-box"><span>Source</span><strong>${Admin.escapeHtml(Admin.sourceLabel(c.access_source))}</strong></div>
+          <div class="detail-box"><span>Payment</span><strong>${payments.some(p=>p.status==="SUCCESS")?"SUCCESS":"—"}</strong></div>
+        </div>
+        ${c.grant?.note?`<div class="sub" style="margin-top:9px">Admin note: ${Admin.escapeHtml(c.grant.note)}</div>`:""}
+      </section>
+
+      <section class="detail-section">
+        <h3>Security Signals</h3>
+        <div class="detail-grid">
+          <div class="detail-box"><span>Risk signal</span><strong>${Admin.riskLabel(c.risk)}</strong></div>
+          <div class="detail-box"><span>Sessions lifetime</span><strong>${c.risk_metrics.total_sessions}</strong></div>
+          <div class="detail-box"><span>Sessions 30d</span><strong>${c.risk_metrics.sessions_30d}</strong></div>
+          <div class="detail-box"><span>Sessions 7d</span><strong>${c.risk_metrics.sessions_7d}</strong></div>
+          <div class="detail-box"><span>Device patterns 30d</span><strong>${c.risk_metrics.devices_30d}</strong></div>
+          <div class="detail-box"><span>Magic links 30d</span><strong>${c.risk_metrics.magic_links_30d}</strong></div>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <div class="section-head"><div><h3>Session History</h3><p>Riwayat session tetap tersimpan setelah revoke.</p></div></div>
+        <div class="list">${sessions.length?sessions.map(s=>`
+          <div class="list-item">
+            <div class="list-main"><strong>${Admin.escapeHtml(Admin.device(s.user_agent))}</strong>
+              <div class="list-meta">Created ${Admin.formatDate(s.created_at)} · Last ${Admin.formatDate(s.last_seen_at)}<br>${Admin.escapeHtml((s.user_agent||"").slice(0,150))}</div>
+            </div>
+            <div style="text-align:right">${badge(s.status,s.status)}
+              ${s.status==="ACTIVE"?`<div style="margin-top:7px"><button class="btn small danger" data-revoke-session="${Admin.escapeHtml(s.id)}">Revoke session</button></div>`:""}
+            </div>
+          </div>`).join(""):'<div class="empty">Belum ada session.</div>'}</div>
+      </section>
+
+      <section class="detail-section">
+        <h3>Magic Link History</h3>
+        <div class="list">${links.length?links.map(l=>`
+          <div class="list-item"><div class="list-main"><strong>${Admin.escapeHtml(l.link_status)}</strong>
+            <div class="list-meta">Created ${Admin.formatDate(l.created_at)} · Expires ${Admin.formatDate(l.expires_at)}</div></div>
+            ${l.link_status==="ACTIVE"?`<button class="btn small danger" data-revoke-link="${Admin.escapeHtml(l.id)}">Invalidate</button>`:""}
+          </div>`).join(""):'<div class="empty">Belum ada magic link.</div>'}</div>
+      </section>
+
+      <section class="detail-section">
+        <h3>Payment History</h3>
+        <div class="list">${payments.length?payments.map(p=>`
+          <div class="list-item"><div class="list-main"><strong>${Admin.escapeHtml(p.invoice_number||"—")}</strong>
+            <div class="list-meta">${Admin.escapeHtml(p.status)} · ${Admin.formatIdr(p.amount)} · ${Admin.formatDate(p.paid_at||p.created_at)}</div></div></div>`).join(""):'<div class="empty">Tidak ada payment terkait.</div>'}</div>
+      </section>
+
+      <section class="detail-section">
+        <h3>Admin Activity</h3>
+        <div class="timeline">${audit.length?audit.map(a=>`
+          <div class="timeline-item"><strong>${Admin.escapeHtml(a.action)}</strong><div>${Admin.formatDate(a.created_at)} · ${Admin.escapeHtml(a.admin_email)}</div></div>`).join(""):'<div class="empty">Belum ada tindakan admin.</div>'}</div>
+      </section>`;
+    document.getElementById("drawer-actions").innerHTML=`
+      <button class="btn" data-send="${Admin.escapeHtml(email)}">Send Magic Link</button>
+      ${c.entitlement.status==="ACTIVE"
+        ?`<button class="btn danger" data-revoke-access="${Admin.escapeHtml(email)}">Revoke Course Access</button>`
+        :`<button class="btn good" data-restore="${Admin.escapeHtml(email)}">Restore Access</button>`}`;
+  }catch(err){
+    document.getElementById("drawer-body").innerHTML=`<div class="error">${Admin.escapeHtml(err.message)}</div>`;
+  }
+}
+
+document.addEventListener("click",async(e)=>{
+  const view=e.target.closest("[data-view]"); if(view) return openCustomer(view.dataset.view);
+  const send=e.target.closest("[data-send]");
+  if(send){
+    const email=send.dataset.send;
+    if(!confirm(`Kirim magic link baru ke ${email}? Link aktif sebelumnya akan dinonaktifkan.`)) return;
+    try{await Admin.post("/admin/api/course/send-magic-link",{email});Admin.toast(`Magic link terkirim ke ${email}.`);if(currentEmail===email)openCustomer(email)}
+    catch(err){Admin.toast(err.message,"error")} return;
+  }
+  const revokeSession=e.target.closest("[data-revoke-session]");
+  if(revokeSession){
+    if(!confirm("Revoke session ini sekarang?")) return;
+    try{await Admin.post("/admin/api/course/revoke-session",{session_id:revokeSession.dataset.revokeSession});Admin.toast("Session direvoke.");if(currentEmail)openCustomer(currentEmail);loadCustomers()}
+    catch(err){Admin.toast(err.message,"error")} return;
+  }
+  const revokeLink=e.target.closest("[data-revoke-link]");
+  if(revokeLink){
+    if(!confirm("Invalidate magic link ini?")) return;
+    try{await Admin.post("/admin/api/course/revoke-magic-link",{magic_link_id:revokeLink.dataset.revokeLink});Admin.toast("Magic link dinonaktifkan.");if(currentEmail)openCustomer(currentEmail)}
+    catch(err){Admin.toast(err.message,"error")} return;
+  }
+  const revokeAccess=e.target.closest("[data-revoke-access]");
+  if(revokeAccess){
+    const email=revokeAccess.dataset.revokeAccess;
+    const reason=prompt(`Alasan revoke akses ${email} (opsional):`,"");
+    if(reason===null) return;
+    if(!confirm(`Revoke seluruh course access ${email}? Active session dan magic link juga akan dinonaktifkan.`)) return;
+    try{await Admin.post("/admin/api/course/revoke-access",{email,reason});Admin.toast(`Akses ${email} direvoke.`);if(currentEmail===email)openCustomer(email);loadCustomers()}
+    catch(err){Admin.toast(err.message,"error")} return;
+  }
+  const restore=e.target.closest("[data-restore]");
+  if(restore){
+    const email=restore.dataset.restore;
+    if(!confirm(`Restore course access ${email}? User tetap perlu magic link untuk membuat session baru.`)) return;
+    try{await Admin.post("/admin/api/course/restore-access",{email});Admin.toast(`Akses ${email} aktif kembali.`);if(currentEmail===email)openCustomer(email);loadCustomers()}
+    catch(err){Admin.toast(err.message,"error")} return;
+  }
+});
+q.addEventListener("input",Admin.debounce(loadCustomers,300));
+status.addEventListener("change",loadCustomers);
+risk.addEventListener("change",loadCustomers);
+document.addEventListener("DOMContentLoaded",()=>{
+  const preset=new URLSearchParams(location.search).get("email");
+  if(preset){q.value=preset;loadCustomers().then(()=>openCustomer(preset));}
+  else loadCustomers();
+});
+
+</script>
+</body>
+</html>
