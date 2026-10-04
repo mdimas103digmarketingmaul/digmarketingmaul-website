@@ -6,6 +6,10 @@
   "workers_dev": true,
   "routes": [
     {
+      "pattern": "digmarketingmaul.com",
+      "custom_domain": true
+    },
+    {
       "pattern": "digmarketingmaul.my.id",
       "custom_domain": true
     }
