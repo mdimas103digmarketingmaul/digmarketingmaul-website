@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="id" data-products-theme="dark" data-international="false">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Products &amp; Services — M. Dimas Maulana</title>
+  <meta name="description" content="Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.">
+  <meta name="theme-color" content="#07111f">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="https://digmarketingmaul.com/assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="https://digmarketingmaul.com/assets/images/favicon-32.png" sizes="32x32" type="image/png">
+  <script>
+    /* Pre-paint state: same storage keys as production so the prototype mirrors the live site. */
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        var theme = localStorage.getItem("maulSiteTheme") || localStorage.getItem("maulProductsTheme");
+        root.dataset.productsTheme = theme === "light" ? "light" : "dark";
+        var intl = localStorage.getItem("maulProductsInternational") === "true" ||
+                   localStorage.getItem("maulCourseInternational") === "true";
+        root.dataset.international = intl ? "true" : "false";
+      } catch (e) {
+        root.dataset.productsTheme = "dark";
+        root.dataset.international = "false";
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body data-page="products">
+  <a class="skip-link" href="#main">
+    <span data-copy-lang="id">Langsung ke konten</span><span data-copy-lang="en" hidden>Skip to content</span>
+  </a>
+
+  <div class="atmos" aria-hidden="true">
+    <span class="aurora aurora-1"></span>
+    <span class="aurora aurora-2"></span>
+    <span class="aurora aurora-3"></span>
+  </div>
+  <div class="grid-layer" aria-hidden="true"></div>
+  <div class="cursor-grid-light" id="cursor-grid-light" aria-hidden="true"></div>
+  <div class="grain-layer" aria-hidden="true"></div>
+
+  <aside class="rail rail-left" aria-label="Social media links">
+    <div class="rail-links">
+      <a class="rail-link" href="https://www.instagram.com/dig.marketing.maul/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+      <a class="rail-link" href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+      <a class="rail-link is-placeholder" href="#" data-placeholder-social="true" aria-label="TikTok — coming soon"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
+    </div>
+    <span class="rail-line" aria-hidden="true"></span>
+  </aside>
+  <aside class="rail rail-right" aria-label="Email">
+    <a class="rail-email" href="mailto:mdimas103@gmail.com">mdimas103@gmail.com</a>
+    <span class="rail-line" aria-hidden="true"></span>
+  </aside>
+
+  <header class="site-header" id="site-header">
+    <div class="wrap header-inner">
+      <div class="header-left">
+        <a class="brand" href="https://digmarketingmaul.com/#home" aria-label="M. Dimas Maulana Home"><span>M</span><span class="brand-dot">.</span></a>
+        <div class="controls" role="group" aria-label="Display controls">
+          <button class="intl" type="button" role="switch" aria-checked="false" aria-label="International mode" title="International mode">
+            <i class="fa-solid fa-earth-asia intl-globe" aria-hidden="true"></i>
+            <span class="intl-label" aria-hidden="true">International</span>
+            <span class="intl-track" aria-hidden="true"><span></span></span>
+          </button>
+          <span class="controls-sep" aria-hidden="true"></span>
+          <div class="seg" role="group" aria-label="Language">
+            <button class="seg-btn" type="button" data-lang="id" aria-pressed="true">ID</button>
+            <button class="seg-btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+          </div>
+          <span class="controls-sep" aria-hidden="true"></span>
+          <div class="seg seg--icons" role="group" aria-label="Appearance">
+            <button class="seg-btn" type="button" data-theme="dark" aria-pressed="true" aria-label="Dark" title="Dark"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+            <button class="seg-btn" type="button" data-theme="light" aria-pressed="false" aria-label="Light" title="Light"><i class="fa-solid fa-sun" aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+      <nav class="main-nav" aria-label="Primary Navigation">
+        <a class="nav-link" href="https://digmarketingmaul.com/#home"><span class="nav-num">01.</span>Home</a>
+        <a class="nav-link" href="https://digmarketingmaul.com/frameworks/"><span class="nav-num">02.</span>Frameworks</a>
+        <a class="nav-link is-active" href="./" aria-current="page"><span class="nav-num">03.</span>Products</a>
+        <a class="nav-link" href="https://digmarketingmaul.com/blog/"><span class="nav-num">04.</span>Blog</a>
+        <a class="nav-link" href="https://digmarketingmaul.com/#profile"><span class="nav-num">05.</span>Profile</a>
+      </nav>
+    </div>
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+  </header>
+
+  <p class="sr-only" id="state-announcer" aria-live="polite"></p>
+
+  <main id="main">
+    <!-- HERO ─ headline + product map -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="kicker"><span class="kicker-line" aria-hidden="true"></span>Products / Services</p>
+          <h1 class="hero-title" id="hero-title">
+            <span class="line"><span class="line-in">Build, Run &amp;</span></span>
+            <span class="line"><span class="line-in accent">Grow Together.</span></span>
+          </h1>
+          <div class="hero-intro">
+            <p data-copy-lang="id">Layanan dan resource praktis untuk membantu membangun, menjalankan, mengukur, dan mengembangkan aktivitas digital marketing.</p>
+            <p data-copy-lang="en" hidden>Practical services and resources to help build, run, measure, and grow digital marketing activities.</p>
+          </div>
+          <ul class="hero-jumps" role="list">
+            <li><a class="jump jump--live" href="#available"><span class="jump-dot" aria-hidden="true"></span><span class="jump-count">03</span><span data-copy-lang="id">Tersedia sekarang</span><span data-copy-lang="en" hidden>Available now</span></a></li>
+            <li><a class="jump jump--soon" href="#coming-soon"><span class="jump-dot" aria-hidden="true"></span><span class="jump-count">07</span><span data-copy-lang="id">Segera tersedia</span><span data-copy-lang="en" hidden>Coming soon</span></a></li>
+          </ul>
+        </div>
+
+        <div class="hero-map">
+          <div class="constellation" data-constellation>
+            <svg class="const-svg" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+              <circle class="ring-deco" cx="300" cy="300" r="282"/>
+              <circle class="ring-orbit-dot" cx="300" cy="18" r="3.5"/>
+              <circle class="ring ring-1" cx="300" cy="300" r="104" pathLength="1"/><circle class="ring ring-2" cx="300" cy="300" r="172" pathLength="1"/><circle class="ring ring-3" cx="300" cy="300" r="240" pathLength="1"/>
+              <g class="spokes"><line class="spoke is-live" data-for="p-website-course" x1="260.2" y1="277.0" x2="221.2" y2="254.5"/><line class="spoke is-live" data-for="p-website-development" x1="326.4" y1="262.3" x2="391.2" y2="169.8"/><line class="spoke is-live" data-for="p-digital-marketing-ebooks" x1="344.4" y1="288.1" x2="387.9" y2="276.4"/><line class="spoke is-soon" data-for="p-website-building-advisory" x1="280.6" y1="258.3" x2="204.1" y2="94.3"/><line class="spoke is-soon" data-for="p-digital-ads-management" x1="329.6" y1="335.2" x2="402.2" y2="421.8"/><line class="spoke is-soon" data-for="p-meta-ads-advisory" x1="345.3" y1="308.0" x2="523.6" y2="339.4"/><line class="spoke is-soon" data-for="p-google-ads-advisory" x1="308.0" y1="345.3" x2="339.4" y2="523.6"/><line class="spoke is-soon" data-for="p-exclusive-technical-digital-marketing-discussion" x1="254.0" y1="300.0" x2="73.0" y2="300.0"/><line class="spoke is-soon" data-for="p-digital-marketing-reporting-templates" x1="288.1" y1="344.4" x2="276.4" y2="387.9"/><line class="spoke is-soon" data-for="p-conversion-tracking-measurement-setup" x1="255.6" y1="311.9" x2="146.4" y2="341.2"/></g>
+              <circle class="core" cx="300" cy="300" r="40"/>
+            </svg>
+            <span class="core-mark" aria-hidden="true">M<span>.</span></span>
+            <div class="ring-labels" aria-hidden="true"><span class="ring-label ring-label-1" style="--ty:32.67%"><span data-copy-lang="id">Produk digital</span><span data-copy-lang="en" hidden>Digital products</span></span><span class="ring-label ring-label-2" style="--ty:21.33%"><span data-copy-lang="id">Layanan</span><span data-copy-lang="en" hidden>Services</span></span><span class="ring-label ring-label-3" style="--ty:10.00%"><span>1 on 1</span></span></div>
+            <ul class="nodes" role="list"><li><a class="node is-live" href="#p-website-course" data-target="p-website-course" data-ring="1" style="--x:34.99%;--y:41.33%;--lx:-0.87;--ly:-0.50;--i:0"><span class="node-dot" aria-hidden="true"></span><span class="node-id" aria-hidden="true">01</span><span class="sr-only" data-copy-lang="id">01, Panduan Membuat Website Pertama Kamu Live dari 0 — Produk digital, Tersedia sekarang</span><span class="sr-only" data-copy-lang="en" hidden>01, Your First Website Live from Zero — Digital products, Available now</span></a></li><li><a class="node is-live" href="#p-website-development" data-target="p-website-development" data-ring="2" style="--x:66.44%;--y:26.52%;--lx:0.57;--ly:-0.82;--i:1"><span class="node-dot" aria-hidden="true"></span><span class="node-id" aria-hidden="true">02</span><span class="sr-only" data-copy-lang="id">02, Website Development — Layanan, Tersedia sekarang</span><span class="sr-only" data-copy-lang="en" hidden>02, Website Development — Services, Available now</span></a></li><li><a class="node is-live" href="#p-digital-marketing-ebooks" data-target="p-digital-marketing-ebooks" data-ring="1" style="--x:66.74%;--y:45.51%;--lx:0.97;--ly:-0.26;--i:2"><span class="node-dot" aria-hidden="true"></span><span class="node-id" aria-hidden="true">03</span><span class="sr-only" data-copy-lang="id">03, Digital Marketing eBooks — Produk digital, Tersedia sekarang</span><span class="sr-only" data-copy-lang="en" hidden>03, Digital Marketing eBooks — Digital products, Available now</span></a></li><li><a class="node is-soon" href="#p-website-building-advisory" data-target="p-website-building-advisory" data-ring="3" style="--x:33.10%;--y:13.75%;--lx:-0.42;--ly:-0.91;--i:3"><span class="node-dot" aria-hidden="true"></span><span class="node-id" aria-hidden="true">04</span><span class="sr-only" data-copy-lang="id">04, Website Building Advisory 1 on 1 — 1 on 1, Segera tersedia</span><span class="sr-only" data-copy-lang="en" hidden>04, Website Building Advisory 1 on 1 — 1 on 1, Coming soon</span></a></li><li><a class="node is-soon" href="#p-digital-ads-management" data-target="p-digital-ads-management" data-ring="2" style="--x:68.43%;--y:71.96%;--lx:0.64;--ly:0.77;--i:4"><span class="node-dot" aria-hidden="true"></span><span class="node-id" aria-hidden="true">05</span><span class="sr-only" data-copy-lang="id">05, Digital Ads Management — Layanan, Segera tersedia</span><span class="sr-only" data-copy-lang="en" hidden>05, Digital Ads Management — Services, Coming soon</span></a></li><li><a class="node is-soon" href="#p-meta-ads-advisory" data-target="p-meta-ads-advisory" data-ring="3" style="--x:89.39%;--y:56.95%;--lx:0.98;--ly:0.17;--i:5"><span class="node-dot" aria-hidden="true"></span><span class="node-id" aria-hidden="true">06</span><span class="sr-only" data-copy-lang="id">06, Meta Ads Advisory 1 on 1 — 1 on 1, Segera tersedia</span><span class="sr-only" data-copy-lang="en" hidden>06, Meta Ads Advisory 1 on 1 — 1 on 1, Coming soon</span></a></li><li><a class="node is-soon" href="#p-google-ads-advisory" data-target="p-google-ads-advisory" data-ring="3" style="--x:56.95%;--y:89.39%;--lx:0.17;--ly:0.98;--i:6"><span class="node-dot" aria-hidden="true"></span><span class="node-id" aria-hidden="true">07</span><span class="sr-only" data-copy-lang="id">07, Google Ads Advisory 1 on 1 — 1 on 1, Segera tersedia</span><span class="sr-only" data-copy-lang="en" hidden>07, Google Ads Advisory 1 on 1 — 1 on 1, Coming soon</span></a></li><li><a class="node is-soon" href="#p-exclusive-technical-digital-marketing-discussion" data-target="p-exclusive-technical-digital-marketing-discussion" data-ring="3" style="--x:10.00%;--y:50.00%;--lx:-1.00;--ly:0.00;--i:7"><span class="node-dot" aria-hidden="true"></span><span class="node-id" aria-hidden="true">08</span><span class="sr-only" data-copy-lang="id">08, Diskusi Eksklusif 1 on 1 Seputar Technical Digital Marketing — 1 on 1, Segera tersedia</span><span class="sr-only" data-copy-lang="en" hidden>08, Exclusive 1 on 1 Technical Digital Marketing Discussion — 1 on 1, Coming soon</span></a></li><li><a class="node is-soon" href="#p-digital-marketing-reporting-templates" data-target="p-digital-marketing-reporting-templates" data-ring="1" style="--x:45.51%;--y:66.74%;--lx:-0.26;--ly:0.97;--i:8"><span class="node-dot" aria-hidden="true"></span><span class="node-id" aria-hidden="true">09</span><span class="sr-only" data-copy-lang="id">09, Digital Marketing Reporting Templates — Produk digital, Segera tersedia</span><span class="sr-only" data-copy-lang="en" hidden>09, Digital Marketing Reporting Templates — Digital products, Coming soon</span></a></li><li><a class="node is-soon" href="#p-conversion-tracking-measurement-setup" data-target="p-conversion-tracking-measurement-setup" data-ring="2" style="--x:22.31%;--y:57.42%;--lx:-0.97;--ly:0.26;--i:9"><span class="node-dot" aria-hidden="true"></span><span class="node-id" aria-hidden="true">10</span><span class="sr-only" data-copy-lang="id">10, Conversion Tracking &amp; Measurement Setup — Layanan, Segera tersedia</span><span class="sr-only" data-copy-lang="en" hidden>10, Conversion Tracking &amp; Measurement Setup — Services, Coming soon</span></a></li></ul>
+          </div>
+          <div class="readout" aria-hidden="true">
+            <span class="ro-id">01</span>
+            <span class="ro-body">
+              <span class="ro-title"></span>
+              <span class="ro-meta"><span class="ro-ring"></span><span class="ro-status"></span></span>
+            </span>
+            <span class="ro-price"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AVAILABLE NOW ─ featured spec panel -->
+    <section class="section section--available" id="available" aria-labelledby="available-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title" id="available-title"><span data-copy-lang="id">Tersedia sekarang</span><span data-copy-lang="en" hidden>Available now</span><sup class="section-count">03</sup></h2>
+          <p class="market">
+            <span class="market-dot" aria-hidden="true"></span>
+            <span class="when-local"><span data-copy-lang="id">Harga dalam Rupiah</span><span data-copy-lang="en" hidden>Prices in IDR</span></span>
+            <span class="when-intl">International · USD</span>
+          </p>
+        </div>
+        <div class="feature-panel">
+            <article class="feature feature--flagship" id="p-website-course" data-product-id="website-course" data-available="true">
+              <span class="feature-light" aria-hidden="true"></span>
+              <div class="mock" aria-hidden="true">
+                <div class="mock-bar"><span></span><span></span><span></span>
+                  <div class="mock-url"><i class="fa-solid fa-lock"></i><span class="mock-caret"></span></div>
+                </div>
+                <div class="mock-body">
+                  <span class="sk sk-a"></span><span class="sk sk-b"></span>
+                  <div class="mock-cols"><span></span><span></span><span></span></div>
+                </div>
+                <div class="mock-progress">
+                  <span class="mp-zero">0</span>
+                  <span class="mp-track"><span class="mp-fill"></span></span>
+                  <span class="mp-live"><span class="mp-dot"></span>live</span>
+                </div>
+              </div>
+              <div class="feature-head">
+                <span class="pid"><span class="pid-dot" aria-hidden="true"></span>01</span>
+                <span class="fmt"><i class="fa-solid fa-laptop-code" aria-hidden="true"></i>Course / Website</span>
+              </div>
+              <h3 class="feature-title"><a class="stretch" href="https://digmarketingmaul.com/products/website-course/"><span data-copy-lang="id">Panduan Membuat Website Pertama Kamu Live dari 0</span><span data-copy-lang="en" hidden>Your First Website Live from Zero</span></a></h3>
+              <p class="feature-desc" data-copy-lang="id">Course step-by-step untuk membangun dan mempublikasikan website pertama kamu dari nol sampai live.</p><p class="feature-desc" data-copy-lang="en" hidden>A step-by-step course to build and publish your first website from zero to live.</p>
+              <div class="feature-foot">
+                <div class="price-block">
+                  <span class="price js-price" data-price-id="Rp899.000" data-price-usd="USD 56">Rp899.000</span>
+                  <del class="price-was"><span class="sr-only" data-copy-lang="id">Harga sebelumnya </span><span class="sr-only" data-copy-lang="en" hidden>Previous price </span><span class="js-price" data-price-id="Rp4.000.000" data-price-usd="USD 229">Rp4.000.000</span></del>
+                </div>
+                <p class="promo" data-copy-lang="id">Harga Oktober 2026 · Segera checkout sebelum harga naik.</p><p class="promo" data-copy-lang="en" hidden>October 2026 price · Checkout before the price increases.</p>
+                <div class="pay-row">
+                  <span class="pay when-local"><span class="pay-dot" aria-hidden="true"></span>Secure payment gateway</span>
+                  <span class="pay pay--paypal when-intl" aria-label="Payment with PayPal"><span class="paypal-badge"><svg class="paypal-logo" viewBox="0 0 110 34" width="72" height="22" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg></span><span>Payment with PayPal</span></span>
+                </div>
+                <a class="cta js-cta" href="https://digmarketingmaul.com/products/website-course/" data-detail-url="https://digmarketingmaul.com/products/website-course/">
+                  <span class="when-local"><span data-copy-lang="id">Lihat Detail Course</span><span data-copy-lang="en" hidden>View Course Details</span></span>
+                  <span class="when-intl"><span data-copy-lang="id">Hubungi via WhatsApp</span><span data-copy-lang="en" hidden>Contact via WhatsApp</span></span>
+                  <i class="cta-icon when-local fa-solid fa-arrow-right" aria-hidden="true"></i>
+                  <i class="cta-icon when-intl fa-brands fa-whatsapp" aria-hidden="true"></i>
+                </a>
+              </div>
+            </article>
+            <article class="feature" id="p-website-development" data-product-id="website-development" data-available="true">
+              <span class="feature-light" aria-hidden="true"></span>
+              <div class="feature-head">
+                <span class="pid"><span class="pid-dot" aria-hidden="true"></span>02</span>
+                <span class="fmt"><i class="fa-solid fa-code" aria-hidden="true"></i>Website &amp; Build</span>
+              </div>
+              <h3 class="feature-title"><a class="stretch" href="https://digmarketingmaul.com/products/website-development/"><span>Website Development</span></a></h3>
+              <p class="feature-desc" data-copy-lang="id">Membangun website untuk kebutuhan personal, bisnis, atau digital product.</p><p class="feature-desc" data-copy-lang="en" hidden>Building websites for personal, business, or digital product needs.</p>
+              <div class="feature-foot">
+                <div class="price-block">
+                  <span class="price js-price" data-price-id="Rp999.000" data-price-usd="USD 61">Rp999.000</span>
+                  
+                </div>
+                
+                <div class="pay-row">
+                  <span class="pay when-local"><span class="pay-dot" aria-hidden="true"></span>Secure payment gateway</span>
+                  <span class="pay pay--paypal when-intl" aria-label="Payment with PayPal"><span class="paypal-badge"><svg class="paypal-logo" viewBox="0 0 110 34" width="72" height="22" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg></span><span>Payment with PayPal</span></span>
+                </div>
+                <a class="cta js-cta" href="https://digmarketingmaul.com/products/website-development/" data-detail-url="https://digmarketingmaul.com/products/website-development/">
+                  <span class="when-local"><span data-copy-lang="id">Lihat Detail</span><span data-copy-lang="en" hidden>View Details</span></span>
+                  <span class="when-intl"><span data-copy-lang="id">Hubungi via WhatsApp</span><span data-copy-lang="en" hidden>Contact via WhatsApp</span></span>
+                  <i class="cta-icon when-local fa-solid fa-arrow-right" aria-hidden="true"></i>
+                  <i class="cta-icon when-intl fa-brands fa-whatsapp" aria-hidden="true"></i>
+                </a>
+              </div>
+            </article>
+            <article class="feature" id="p-digital-marketing-ebooks" data-product-id="digital-marketing-ebooks" data-available="true">
+              <span class="feature-light" aria-hidden="true"></span>
+              <div class="feature-head">
+                <span class="pid"><span class="pid-dot" aria-hidden="true"></span>03</span>
+                <span class="fmt"><i class="fa-solid fa-book-open" aria-hidden="true"></i>Live Test / Digital Resource</span>
+              </div>
+              <h3 class="feature-title"><a class="stretch" href="https://digmarketingmaul.com/products/digital-marketing-ebooks/"><span>Digital Marketing eBooks</span></a></h3>
+              <p class="feature-desc" data-copy-lang="id">Live test untuk mencoba flow pembelian Digital Marketing eBooks. Produk final dan eBook sungguhan belum tersedia.</p><p class="feature-desc" data-copy-lang="en" hidden>A live test of the Digital Marketing eBooks purchase flow. The final product and actual eBook are not available yet.</p>
+              <div class="feature-foot">
+                <div class="price-block">
+                  <span class="price js-price" data-price-id="Rp10.000" data-price-usd="USD 6">Rp10.000</span>
+                  
+                </div>
+                
+                <div class="pay-row">
+                  <span class="pay when-local"><span class="pay-dot" aria-hidden="true"></span>Secure payment gateway — live test</span>
+                  <span class="pay pay--paypal when-intl" aria-label="Payment with PayPal"><span class="paypal-badge"><svg class="paypal-logo" viewBox="0 0 110 34" width="72" height="22" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg></span><span>Payment with PayPal</span></span>
+                </div>
+                <a class="cta js-cta" href="https://digmarketingmaul.com/products/digital-marketing-ebooks/" data-detail-url="https://digmarketingmaul.com/products/digital-marketing-ebooks/">
+                  <span class="when-local"><span data-copy-lang="id">Lihat Detail</span><span data-copy-lang="en" hidden>View Details</span></span>
+                  <span class="when-intl"><span data-copy-lang="id">Hubungi via WhatsApp</span><span data-copy-lang="en" hidden>Contact via WhatsApp</span></span>
+                  <i class="cta-icon when-local fa-solid fa-arrow-right" aria-hidden="true"></i>
+                  <i class="cta-icon when-intl fa-brands fa-whatsapp" aria-hidden="true"></i>
+                </a>
+              </div>
+            </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMING SOON ─ index list -->
+    <section class="section section--soon" id="coming-soon" aria-labelledby="soon-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title" id="soon-title"><span data-copy-lang="id">Segera tersedia</span><span data-copy-lang="en" hidden>Coming soon</span><sup class="section-count">07</sup></h2>
+          <p class="section-note"><span class="soon-dot" aria-hidden="true"></span>Payment gateway setup in progress</p>
+        </div>
+        <div class="idx-head" aria-hidden="true">
+          <span></span>
+          <span data-copy-lang="id">Produk</span><span data-copy-lang="en" hidden>Product</span>
+          <span>Format</span>
+          <span data-copy-lang="id">Harga</span><span data-copy-lang="en" hidden>Price</span>
+          <span>Status</span>
+        </div>
+        <ol class="idx" role="list">
+            <li class="idx-row" id="p-website-building-advisory" data-product-id="website-building-advisory" data-available="false">
+              <span class="pid">04</span>
+              <div class="idx-main">
+                <h3 class="idx-title"><i class="idx-icon fa-regular fa-comments" aria-hidden="true"></i><span>Website Building Advisory 1 on 1</span></h3>
+                <p class="idx-desc" data-copy-lang="id">Pendampingan untuk membantu kamu memahami dan membangun website sendiri, dari perencanaan sampai launch.</p><p class="idx-desc" data-copy-lang="en" hidden>1 on 1 guidance to help you understand and build your own website, from planning through launch.</p>
+              </div>
+              <span class="fmt">1 on 1 Advisory</span>
+              <span class="idx-price"><span class="sr-only" data-copy-lang="id">Harga: </span><span class="sr-only" data-copy-lang="en" hidden>Price: </span><span class="price price--tbd js-price" data-price-id="Rpx.xxx.xxx" data-price-usd="USD xxx">Rpx.xxx.xxx</span></span>
+              <span class="status-chip">
+                <span class="when-local"><i class="fa-regular fa-clock" aria-hidden="true"></i><span data-copy-lang="id">Checkout segera tersedia</span><span data-copy-lang="en" hidden>Checkout coming soon</span></span>
+                <span class="when-intl"><i class="fa-solid fa-earth-asia" aria-hidden="true"></i><span data-copy-lang="id">Belum tersedia untuk International</span><span data-copy-lang="en" hidden>Not available internationally</span></span>
+              </span>
+            </li>
+            <li class="idx-row" id="p-digital-ads-management" data-product-id="digital-ads-management" data-available="false">
+              <span class="pid">05</span>
+              <div class="idx-main">
+                <h3 class="idx-title"><i class="idx-icon fa-solid fa-chart-column" aria-hidden="true"></i><span>Digital Ads Management</span></h3>
+                <p class="idx-desc" data-copy-lang="id">Membantu merencanakan, menjalankan, mengukur, dan mengoptimalkan campaign digital ads secara terstruktur.</p><p class="idx-desc" data-copy-lang="en" hidden>Helping plan, run, measure, and optimize digital ads campaigns in a structured way.</p>
+              </div>
+              <span class="fmt">Digital Ads</span>
+              <span class="idx-price"><span class="sr-only" data-copy-lang="id">Harga: </span><span class="sr-only" data-copy-lang="en" hidden>Price: </span><span class="price price--tbd js-price" data-price-id="Rpx.xxx.xxx" data-price-usd="USD xxx">Rpx.xxx.xxx</span></span>
+              <span class="status-chip">
+                <span class="when-local"><i class="fa-regular fa-clock" aria-hidden="true"></i><span data-copy-lang="id">Checkout segera tersedia</span><span data-copy-lang="en" hidden>Checkout coming soon</span></span>
+                <span class="when-intl"><i class="fa-solid fa-earth-asia" aria-hidden="true"></i><span data-copy-lang="id">Belum tersedia untuk International</span><span data-copy-lang="en" hidden>Not available internationally</span></span>
+              </span>
+            </li>
+            <li class="idx-row" id="p-meta-ads-advisory" data-product-id="meta-ads-advisory" data-available="false">
+              <span class="pid">06</span>
+              <div class="idx-main">
+                <h3 class="idx-title"><i class="idx-icon fa-brands fa-meta" aria-hidden="true"></i><span>Meta Ads Advisory 1 on 1</span></h3>
+                <p class="idx-desc" data-copy-lang="id">Pendampingan praktis untuk memahami setup, campaign structure, creative testing, dan optimization di Meta Ads.</p><p class="idx-desc" data-copy-lang="en" hidden>Practical guidance to understand setup, campaign structure, creative testing, and optimization in Meta Ads.</p>
+              </div>
+              <span class="fmt">1 on 1 Advisory</span>
+              <span class="idx-price"><span class="sr-only" data-copy-lang="id">Harga: </span><span class="sr-only" data-copy-lang="en" hidden>Price: </span><span class="price price--tbd js-price" data-price-id="Rpx.xxx.xxx" data-price-usd="USD xxx">Rpx.xxx.xxx</span></span>
+              <span class="status-chip">
+                <span class="when-local"><i class="fa-regular fa-clock" aria-hidden="true"></i><span data-copy-lang="id">Checkout segera tersedia</span><span data-copy-lang="en" hidden>Checkout coming soon</span></span>
+                <span class="when-intl"><i class="fa-solid fa-earth-asia" aria-hidden="true"></i><span data-copy-lang="id">Belum tersedia untuk International</span><span data-copy-lang="en" hidden>Not available internationally</span></span>
+              </span>
+            </li>
+            <li class="idx-row" id="p-google-ads-advisory" data-product-id="google-ads-advisory" data-available="false">
+              <span class="pid">07</span>
+              <div class="idx-main">
+                <h3 class="idx-title"><i class="idx-icon fa-brands fa-google" aria-hidden="true"></i><span>Google Ads Advisory 1 on 1</span></h3>
+                <p class="idx-desc" data-copy-lang="id">Pendampingan untuk memahami dan menjalankan Google Ads, termasuk Search, campaign setup, dan optimization.</p><p class="idx-desc" data-copy-lang="en" hidden>Guidance to understand and run Google Ads, including Search, campaign setup, and optimization.</p>
+              </div>
+              <span class="fmt">1 on 1 Advisory</span>
+              <span class="idx-price"><span class="sr-only" data-copy-lang="id">Harga: </span><span class="sr-only" data-copy-lang="en" hidden>Price: </span><span class="price price--tbd js-price" data-price-id="Rpx.xxx.xxx" data-price-usd="USD xxx">Rpx.xxx.xxx</span></span>
+              <span class="status-chip">
+                <span class="when-local"><i class="fa-regular fa-clock" aria-hidden="true"></i><span data-copy-lang="id">Checkout segera tersedia</span><span data-copy-lang="en" hidden>Checkout coming soon</span></span>
+                <span class="when-intl"><i class="fa-solid fa-earth-asia" aria-hidden="true"></i><span data-copy-lang="id">Belum tersedia untuk International</span><span data-copy-lang="en" hidden>Not available internationally</span></span>
+              </span>
+            </li>
+            <li class="idx-row" id="p-exclusive-technical-digital-marketing-discussion" data-product-id="exclusive-technical-digital-marketing-discussion" data-available="false">
+              <span class="pid">08</span>
+              <div class="idx-main">
+                <h3 class="idx-title"><i class="idx-icon fa-regular fa-message" aria-hidden="true"></i><span data-copy-lang="id">Diskusi Eksklusif 1 on 1 Seputar Technical Digital Marketing</span><span data-copy-lang="en" hidden>Exclusive 1 on 1 Technical Digital Marketing Discussion</span></h3>
+                <p class="idx-desc" data-copy-lang="id">Diskusi untuk panduan praktis dan insight teknis seputar digital marketing, berdasarkan pengalaman langsung yang saya jalani.</p><p class="idx-desc" data-copy-lang="en" hidden>A personalized discussion on practical guidance and technical insights on digital marketing, based on my hands-on experience.</p>
+              </div>
+              <span class="fmt">1 on 1 Discussion</span>
+              <span class="idx-price"><span class="sr-only" data-copy-lang="id">Harga: </span><span class="sr-only" data-copy-lang="en" hidden>Price: </span><span class="price price--tbd js-price" data-price-id="Rpx.xxx.xxx" data-price-usd="USD xxx">Rpx.xxx.xxx</span></span>
+              <span class="status-chip">
+                <span class="when-local"><i class="fa-regular fa-clock" aria-hidden="true"></i><span data-copy-lang="id">Checkout segera tersedia</span><span data-copy-lang="en" hidden>Checkout coming soon</span></span>
+                <span class="when-intl"><i class="fa-solid fa-earth-asia" aria-hidden="true"></i><span data-copy-lang="id">Belum tersedia untuk International</span><span data-copy-lang="en" hidden>Not available internationally</span></span>
+              </span>
+            </li>
+            <li class="idx-row" id="p-digital-marketing-reporting-templates" data-product-id="digital-marketing-reporting-templates" data-available="false">
+              <span class="pid">09</span>
+              <div class="idx-main">
+                <h3 class="idx-title"><i class="idx-icon fa-solid fa-table-columns" aria-hidden="true"></i><span>Digital Marketing Reporting Templates</span></h3>
+                <p class="idx-desc" data-copy-lang="id">Template praktis untuk membantu monitoring, review, dan reporting performance marketing dengan lebih terstruktur.</p><p class="idx-desc" data-copy-lang="en" hidden>Practical templates to support more structured monitoring, review, and performance marketing reporting.</p>
+              </div>
+              <span class="fmt">Templates</span>
+              <span class="idx-price"><span class="sr-only" data-copy-lang="id">Harga: </span><span class="sr-only" data-copy-lang="en" hidden>Price: </span><span class="price price--tbd js-price" data-price-id="Rpx.xxx.xxx" data-price-usd="USD xxx">Rpx.xxx.xxx</span></span>
+              <span class="status-chip">
+                <span class="when-local"><i class="fa-regular fa-clock" aria-hidden="true"></i><span data-copy-lang="id">Checkout segera tersedia</span><span data-copy-lang="en" hidden>Checkout coming soon</span></span>
+                <span class="when-intl"><i class="fa-solid fa-earth-asia" aria-hidden="true"></i><span data-copy-lang="id">Belum tersedia untuk International</span><span data-copy-lang="en" hidden>Not available internationally</span></span>
+              </span>
+            </li>
+            <li class="idx-row" id="p-conversion-tracking-measurement-setup" data-product-id="conversion-tracking-measurement-setup" data-available="false">
+              <span class="pid">10</span>
+              <div class="idx-main">
+                <h3 class="idx-title"><i class="idx-icon fa-solid fa-chart-line" aria-hidden="true"></i><span>Conversion Tracking &amp; Measurement Setup</span></h3>
+                <p class="idx-desc" data-copy-lang="id">Pemasangan event tracking dan conversion measurement agar aktivitas digital marketing dapat diukur dan dioptimasi lebih baik.</p><p class="idx-desc" data-copy-lang="en" hidden>Implementation of event tracking and conversion measurement so digital marketing activities can be measured and optimized more effectively.</p>
+              </div>
+              <span class="fmt">Measurement</span>
+              <span class="idx-price"><span class="sr-only" data-copy-lang="id">Harga: </span><span class="sr-only" data-copy-lang="en" hidden>Price: </span><span class="price price--tbd js-price" data-price-id="Rpx.xxx.xxx" data-price-usd="USD xxx">Rpx.xxx.xxx</span></span>
+              <span class="status-chip">
+                <span class="when-local"><i class="fa-regular fa-clock" aria-hidden="true"></i><span data-copy-lang="id">Checkout segera tersedia</span><span data-copy-lang="en" hidden>Checkout coming soon</span></span>
+                <span class="when-intl"><i class="fa-solid fa-earth-asia" aria-hidden="true"></i><span data-copy-lang="id">Belum tersedia untuk International</span><span data-copy-lang="en" hidden>Not available internationally</span></span>
+              </span>
+            </li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap foot-grid">
+      <a class="foot-mark" href="#main" aria-label="Back to top">M<span>.</span></a>
+      <dl class="foot-contact">
+        <div>
+          <dt>Email</dt>
+          <dd><a class="foot-email" href="mailto:mdimas103@gmail.com">mdimas103@gmail.com</a></dd>
+        </div>
+        <div>
+          <dt>Social</dt>
+          <dd class="foot-socials">
+            <a href="https://www.instagram.com/dig.marketing.maul/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+            <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+            <a class="is-placeholder" href="#" data-placeholder-social="true" aria-label="TikTok — coming soon"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
+            <a href="mailto:mdimas103@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope" aria-hidden="true"></i></a>
+          </dd>
+        </div>
+      </dl>
+      <div class="foot-base">
+        <p>© 2026 Build and Design by Maul</p>
+        <a class="to-top" href="#main"><span data-copy-lang="id">Kembali ke atas</span><span data-copy-lang="en" hidden>Back to top</span><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

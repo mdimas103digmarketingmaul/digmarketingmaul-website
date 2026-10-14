@@ -307,8 +307,8 @@ img {
   color: var(--text-secondary);
 }
 
-.social-rail-left { left: 34px; }
-.social-rail-right { right: 34px; }
+.social-rail-left { left: clamp(6px, 1vw, 16px); }
+.social-rail-right { right: clamp(6px, 1vw, 16px); }
 
 .social-rail-links {
   display: flex;
@@ -357,6 +357,54 @@ img {
   color: var(--accent);
   transform: translateY(-3px);
 }
+
+/* Keep the fixed side rails inside a dedicated outer gutter on laptop screens.
+   This prevents the icons / vertical email from touching the main content on
+   13-inch displays while preserving the generous spacing on larger monitors. */
+@media (max-height: 1100px) and (min-width: 821px) {
+  .social-rail-left { left: 6px; }
+  .social-rail-right { right: 6px; }
+
+  .social-rail-links {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .social-link {
+    width: 26px;
+    height: 26px;
+    font-size: 15px;
+  }
+
+  .social-rail-line {
+    height: 44px;
+  }
+
+  .email-rail-link {
+    margin-bottom: 10px;
+    font-size: 9px;
+    letter-spacing: 0.055em;
+  }
+}
+
+/* On narrower desktop widths reserve a little more breathing room between the
+   fixed rails and the page canvas. This is intentionally global because these
+   rails are shared across the site. */
+@media (min-width: 821px) and (max-width: 1360px) {
+  .site-header-inner,
+  .hero-section,
+  .stack-section,
+  .profile-section,
+  .subpage-hero,
+  .topic-section,
+  .site-footer {
+    width: min(calc(100% - 88px), var(--container));
+  }
+
+  .social-rail-left { left: 4px; }
+  .social-rail-right { right: 4px; }
+}
+
 
 /* REVEAL */
 
@@ -1546,8 +1594,8 @@ summary:focus-visible,
   }
 
   .main-nav { gap: 24px; }
-  .social-rail-left { left: 18px; }
-  .social-rail-right { right: 18px; }
+  .social-rail-left { left: 4px; }
+  .social-rail-right { right: 4px; }
 
   .hero-section {
     grid-template-columns: minmax(0,1.15fr) minmax(300px,0.85fr);
@@ -3284,9 +3332,9 @@ body[data-page="products"] .commerce-product-hero .subpage-hero-inner {
   z-index: 3;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  width: min(100%, 760px);
+  justify-content: flex-start;
+  gap: 16px;
+  width: 100%;
   margin-bottom: 20px;
 }
 
