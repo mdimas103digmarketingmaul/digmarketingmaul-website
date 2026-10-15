@@ -1,6 +1,8 @@
 const CREATE_PAYMENT_REQUEST_TARGET = "/checkout/v1/payment";
 const DOKU_NOTIFICATION_PATH = "/api/doku-notification";
 const PAYMENT_STATUS_PATH = "/api/payment-status";
+const MIDTRANS_NOTIFICATION_PATH = "/api/midtrans-notification";
+const MIDTRANS_CREATE_PAYMENT_PATH = "/api/create-midtrans-payment";
 const DOKU_SDK_PATH = "/api/doku-checkout-sdk.js";
 const SITE_ORIGIN_DEFAULT = "https://digmarketingmaul.com";
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
@@ -61,6 +63,36 @@ function getDokuEnvironment(env) {
 function getDokuPaymentEndpoint(env) {
   const doku = getDokuEnvironment(env);
   return `${doku.apiBaseUrl}${CREATE_PAYMENT_REQUEST_TARGET}`;
+}
+
+
+const MIDTRANS_ENVIRONMENTS = Object.freeze({
+  sandbox: {
+    name: "sandbox",
+    snapTransactionUrl: "https://app.sandbox.midtrans.com/snap/v1/transactions",
+  },
+  production: {
+    name: "production",
+    snapTransactionUrl: "https://app.midtrans.com/snap/v1/transactions",
+  },
+});
+
+function getMidtransEnvironment(env) {
+  const name = String(env.MIDTRANS_ENV || "sandbox").trim().toLowerCase();
+  if (!MIDTRANS_ENVIRONMENTS[name]) {
+    throw new Error(`Invalid MIDTRANS_ENV "${name}". Use "sandbox" or "production".`);
+  }
+  return MIDTRANS_ENVIRONMENTS[name];
+}
+
+function getMidtransServerKey(env) {
+  const key = String(env.MIDTRANS_SERVER_KEY || "").trim();
+  if (!key) throw new Error("MIDTRANS_SERVER_KEY missing");
+  return key;
+}
+
+function midtransAuthorizationHeader(serverKey) {
+  return `Basic ${btoa(`${serverKey}:`)}`;
 }
 
 function parseDokuExpiredDate(expiredDate) {
@@ -130,6 +162,7 @@ const PRODUCT_CATALOG = Object.freeze({
     emailSubject: "Pembayaran Berhasil — Panduan Membuat Website Pertama Kamu Live dari 0",
     // No paymentMethodTypes: DOKU will show every payment method
     // that is active and available for the Production merchant account.
+    paymentProvider: "doku",
     postPaymentType: "course",
   },
   "website-development": {
@@ -138,6 +171,7 @@ const PRODUCT_CATALOG = Object.freeze({
     currency: "IDR",
     emailSubject: "Pembayaran Berhasil — Website Development",
     paymentMethodTypes: WEBSITE_DEVELOPMENT_PAYMENT_METHODS,
+    paymentProvider: "doku",
     postPaymentType: "whatsapp",
   },
   "digital-marketing-ebooks": {
@@ -147,6 +181,15 @@ const PRODUCT_CATALOG = Object.freeze({
     emailSubject: "Pembayaran Berhasil — Digital Marketing eBooks",
     // Intentionally no paymentMethodTypes: DOKU shows all methods enabled
     // and available for this merchant/product.
+    paymentProvider: "doku",
+    postPaymentType: "ebook",
+  },
+  "digital-marketing-ebooks-midtrans": {
+    name: "Digital Marketing eBooks",
+    amount: 11000,
+    currency: "IDR",
+    emailSubject: "Pembayaran Berhasil — Digital Marketing eBooks",
+    paymentProvider: "midtrans",
     postPaymentType: "ebook",
   },
 });
@@ -2278,6 +2321,12 @@ function buildSuccessPageUrl(invoiceNumber, statusToken, env) {
   return `${origin}/payment/success/#${hash}`;
 }
 
+function buildMidtransFinishUrl(invoiceNumber, statusToken, env) {
+  const origin = getSiteOrigin(env);
+  const query = new URLSearchParams({ invoice: invoiceNumber, token: statusToken }).toString();
+  return `${origin}/payment/success/?${query}`;
+}
+
 function normalizeEmail(value) {
   return String(value || "").trim().toLowerCase();
 }
@@ -2352,7 +2401,7 @@ function buildPurchaseEmailHtml({ order, product, successUrl, whatsappUrl, env }
 
   let nextStepBlock = "";
 
-  if (order.product_id === "digital-marketing-ebooks") {
+  if (["digital-marketing-ebooks", "digital-marketing-ebooks-midtrans"].includes(order.product_id)) {
     // Important: the Google Drive testing URL is deliberately NOT included in email.
     // The buyer must open the token-protected personal purchase page first.
     nextStepBlock = `
@@ -2729,6 +2778,13 @@ async function createPayment(request, env) {
     );
   }
 
+  if (product.paymentProvider === "midtrans") {
+    return jsonResponse(
+      { success: false, error: "This product must use the Midtrans payment endpoint" },
+      400
+    );
+  }
+
   /*
    * ACTIVE ORDER LOCK
    * One browser/device + one product may only have one active PENDING order.
@@ -3019,6 +3075,328 @@ async function createPayment(request, env) {
   });
 }
 
+
+async function sha512Hex(value) {
+  const digest = await crypto.subtle.digest("SHA-512", encoder.encode(String(value || "")));
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function mapMidtransStatus(notification) {
+  const status = String(notification?.transaction_status || "").trim().toLowerCase();
+  const fraud = String(notification?.fraud_status || "").trim().toLowerCase();
+
+  if (status === "settlement") return "SUCCESS";
+  if (status === "capture" && (!fraud || fraud === "accept")) return "SUCCESS";
+  if (["deny", "failure"].includes(status)) return "FAILED";
+  if (status === "cancel") return "CANCELLED";
+  if (status === "expire") return "EXPIRED";
+  if (["refund", "partial_refund", "chargeback", "partial_chargeback"].includes(status)) return "REFUNDED";
+  return "PENDING";
+}
+
+async function createMidtransPayment(request, env) {
+  if (!env.DB) {
+    return jsonResponse({ success: false, error: "D1 binding DB is missing" }, 500);
+  }
+
+  let serverKey;
+  let midtrans;
+  try {
+    serverKey = getMidtransServerKey(env);
+    midtrans = getMidtransEnvironment(env);
+  } catch (error) {
+    return jsonResponse({ success: false, error: error instanceof Error ? error.message : String(error) }, 500);
+  }
+
+  let input;
+  try {
+    input = await request.json();
+  } catch {
+    return jsonResponse({ success: false, error: "Request body must be valid JSON" }, 400);
+  }
+
+  const productId = String(input?.product_id || "").trim();
+  const product = PRODUCT_CATALOG[productId];
+  const customerEmail = normalizeEmail(input?.customer_email);
+  const customerName = normalizeCustomerName(input?.customer_name);
+  const customerPhone = normalizePhone(input?.customer_phone);
+  const deviceId = normalizeDeviceId(input?.device_id);
+
+  if (!product || product.paymentProvider !== "midtrans") {
+    return jsonResponse({ success: false, error: "Invalid or unavailable Midtrans product_id" }, 400);
+  }
+  if (!isValidDeviceId(deviceId)) {
+    return jsonResponse({ success: false, error: "Device ID tidak valid. Refresh halaman lalu coba lagi." }, 400);
+  }
+  if (!isValidEmail(customerEmail)) {
+    return jsonResponse({ success: false, error: "Email wajib diisi dengan format yang valid" }, 400);
+  }
+  if (customerPhone && (customerPhone.length < 9 || customerPhone.length > 16)) {
+    return jsonResponse({ success: false, error: "Nomor telepon tidak valid" }, 400);
+  }
+
+  const nowIso = new Date().toISOString();
+  await env.DB.prepare(
+    `UPDATE payments
+     SET status = 'EXPIRED', updated_at = CURRENT_TIMESTAMP
+     WHERE device_id = ? AND product_id = ? AND status = 'PENDING'
+       AND expires_at IS NOT NULL AND expires_at <= ?`
+  ).bind(deviceId, productId, nowIso).run();
+
+  const activeOrder = await env.DB.prepare(
+    `SELECT invoice_number, status_token, product_id, product_name, amount, currency,
+            payment_url, expired_date, expires_at, customer_email, customer_name, customer_phone
+     FROM payments
+     WHERE device_id = ? AND product_id = ? AND status = 'PENDING'
+       AND expires_at IS NOT NULL AND expires_at > ?
+       AND payment_url IS NOT NULL AND TRIM(payment_url) <> ''
+     ORDER BY id DESC LIMIT 1`
+  ).bind(deviceId, productId, nowIso).first();
+
+  if (activeOrder) {
+    return jsonResponse({
+      success: true,
+      reused: true,
+      active_order: true,
+      payment_provider: "midtrans",
+      invoice_number: activeOrder.invoice_number,
+      status_token: activeOrder.status_token,
+      product_id: activeOrder.product_id,
+      product_name: activeOrder.product_name,
+      amount: activeOrder.amount,
+      currency: activeOrder.currency,
+      status: "PENDING",
+      payment_url: activeOrder.payment_url,
+      expired_date: activeOrder.expired_date,
+      expires_at: activeOrder.expires_at,
+      success_page_url: buildSuccessPageUrl(activeOrder.invoice_number, activeOrder.status_token, env),
+      customer_email_masked: maskEmail(activeOrder.customer_email),
+    });
+  }
+
+  const invoiceNumber = `MT${Date.now()}`;
+  const statusToken = crypto.randomUUID();
+  const requestId = crypto.randomUUID();
+  const successPageUrl = buildSuccessPageUrl(invoiceNumber, statusToken, env);
+  const finishUrl = buildMidtransFinishUrl(invoiceNumber, statusToken, env);
+
+  const payload = {
+    transaction_details: {
+      order_id: invoiceNumber,
+      gross_amount: product.amount,
+    },
+    item_details: [
+      {
+        id: productId,
+        price: product.amount,
+        quantity: 1,
+        name: product.name.slice(0, 50),
+      },
+    ],
+    customer_details: {
+      email: customerEmail,
+      ...(customerName ? { first_name: customerName } : {}),
+      ...(customerPhone ? { phone: customerPhone } : {}),
+    },
+    callbacks: {
+      finish: finishUrl,
+    },
+  };
+
+  const response = await fetch(midtrans.snapTransactionUrl, {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": midtransAuthorizationHeader(serverKey),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const responseText = await response.text();
+  let data;
+  try { data = JSON.parse(responseText); } catch { data = { raw_response: responseText }; }
+
+  if (!response.ok) {
+    console.error("MIDTRANS_CREATE_FAILED", { status: response.status, data });
+    return jsonResponse({
+      success: false,
+      error: "Midtrans request failed",
+      midtrans_status: response.status,
+      midtrans_response: data,
+    }, 502);
+  }
+
+  const paymentUrl = String(data?.redirect_url || "").trim();
+  if (!paymentUrl) {
+    return jsonResponse({ success: false, error: "Midtrans response did not include redirect_url" }, 502);
+  }
+
+  // Keep the local active-order lock conservative. Midtrans will send the real
+  // expire/cancel status via webhook, which remains the source of truth.
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+  try {
+    await env.DB.prepare(
+      `INSERT INTO payments (
+        invoice_number, request_id, amount, currency, status, product_id, product_name,
+        payment_url, expired_date, status_token, customer_name, customer_email,
+        customer_phone, email_status, device_id, expires_at, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, 'PENDING', ?, ?, ?, NULL, ?, ?, ?, ?, 'WAITING_PAYMENT', ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
+    ).bind(
+      invoiceNumber,
+      requestId,
+      product.amount,
+      product.currency,
+      productId,
+      product.name,
+      paymentUrl,
+      statusToken,
+      customerName || null,
+      customerEmail,
+      customerPhone || null,
+      deviceId,
+      expiresAt
+    ).run();
+  } catch (error) {
+    console.error("MIDTRANS_PENDING_SAVE_FAILED", { invoiceNumber, error: error instanceof Error ? error.message : String(error) });
+    return jsonResponse({ success: false, error: "Checkout created but order could not be stored" }, 500);
+  }
+
+  console.log(JSON.stringify({
+    type: "MIDTRANS_PAYMENT_CREATED",
+    midtransEnvironment: midtrans.name,
+    invoiceNumber,
+    productId,
+    amount: product.amount,
+    status: "PENDING",
+    deviceId,
+    expiresAt,
+  }));
+
+  return jsonResponse({
+    success: true,
+    reused: false,
+    active_order: true,
+    payment_provider: "midtrans",
+    invoice_number: invoiceNumber,
+    status_token: statusToken,
+    product_id: productId,
+    product_name: product.name,
+    amount: product.amount,
+    currency: product.currency,
+    status: "PENDING",
+    payment_url: paymentUrl,
+    expired_date: null,
+    expires_at: expiresAt,
+    success_page_url: successPageUrl,
+    customer_email_masked: maskEmail(customerEmail),
+  });
+}
+
+async function handleMidtransNotification(request, env) {
+  if (!env.DB) {
+    return jsonResponse({ success: false, error: "D1 binding DB is missing" }, 500);
+  }
+
+  let serverKey;
+  try {
+    serverKey = getMidtransServerKey(env);
+  } catch (error) {
+    return jsonResponse({ success: false, error: error instanceof Error ? error.message : String(error) }, 500);
+  }
+
+  let notification;
+  try {
+    notification = await request.json();
+  } catch {
+    return jsonResponse({ success: false, error: "Invalid JSON body" }, 400);
+  }
+
+  const orderId = String(notification?.order_id || "").trim();
+  const statusCode = String(notification?.status_code || "").trim();
+  const grossAmount = String(notification?.gross_amount || "").trim();
+  const receivedSignature = String(notification?.signature_key || "").trim().toLowerCase();
+
+  if (!orderId || !statusCode || !grossAmount || !receivedSignature) {
+    return jsonResponse({ success: false, error: "Missing Midtrans notification fields" }, 400);
+  }
+
+  const expectedSignature = await sha512Hex(orderId + statusCode + grossAmount + serverKey);
+  if (receivedSignature !== expectedSignature) {
+    console.error("MIDTRANS_NOTIFICATION_INVALID_SIGNATURE", { orderId });
+    return jsonResponse({ success: false, error: "Invalid notification signature" }, 401);
+  }
+
+  const payment = await env.DB.prepare(
+    `SELECT invoice_number, product_id, amount, status
+     FROM payments WHERE invoice_number = ? LIMIT 1`
+  ).bind(orderId).first();
+
+  if (!payment) {
+    console.error("MIDTRANS_NOTIFICATION_ORDER_NOT_FOUND", { orderId });
+    return jsonResponse({ success: false, error: "Order not found" }, 404);
+  }
+
+  const product = PRODUCT_CATALOG[payment.product_id];
+  if (!product || product.paymentProvider !== "midtrans") {
+    return jsonResponse({ success: false, error: "Order is not a Midtrans product" }, 400);
+  }
+
+  const notificationAmount = Math.round(Number(grossAmount));
+  if (!Number.isFinite(notificationAmount) || notificationAmount !== Number(payment.amount)) {
+    console.error("MIDTRANS_NOTIFICATION_AMOUNT_MISMATCH", {
+      orderId,
+      expected: payment.amount,
+      received: grossAmount,
+    });
+    return jsonResponse({ success: false, error: "Payment amount mismatch" }, 400);
+  }
+
+  const nextStatus = mapMidtransStatus(notification);
+  const wasSuccess = String(payment.status || "").toUpperCase() === "SUCCESS";
+  const paymentChannel = String(notification?.payment_type || "").trim() || null;
+  const acquirer = String(notification?.bank || notification?.acquirer || "MIDTRANS").trim() || "MIDTRANS";
+  const paidAt = nextStatus === "SUCCESS"
+    ? String(notification?.settlement_time || notification?.transaction_time || new Date().toISOString()).trim()
+    : null;
+
+  await env.DB.prepare(
+    `UPDATE payments
+     SET status = ?,
+         paid_at = CASE WHEN ? = 'SUCCESS' THEN COALESCE(paid_at, ?) ELSE paid_at END,
+         payment_channel = COALESCE(?, payment_channel),
+         acquirer = COALESCE(?, acquirer),
+         payment_url = CASE WHEN ? = 'PENDING' THEN payment_url ELSE NULL END,
+         updated_at = CURRENT_TIMESTAMP
+     WHERE invoice_number = ?`
+  ).bind(nextStatus, nextStatus, paidAt, paymentChannel, acquirer, nextStatus, orderId).run();
+
+  console.log(JSON.stringify({
+    type: "MIDTRANS_NOTIFICATION",
+    orderId,
+    transactionStatus: notification?.transaction_status || null,
+    mappedStatus: nextStatus,
+    paymentType: paymentChannel,
+    fraudStatus: notification?.fraud_status || null,
+  }));
+
+  if (nextStatus === "SUCCESS" && !wasSuccess) {
+    try {
+      await sendPurchaseSuccessEmail(orderId, env);
+    } catch (error) {
+      console.error("MIDTRANS_POST_PAYMENT_EMAIL_FAILED", {
+        orderId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  return jsonResponse({ success: true, status: nextStatus });
+}
+
 async function getPaymentStatus(request, env) {
   if (!env.DB) {
     return jsonResponse(
@@ -3148,7 +3526,7 @@ async function getPaymentStatus(request, env) {
     email_sent_at: payment.email_sent_at,
     resource_url:
       effectiveStatus === "SUCCESS" &&
-      payment.product_id === "digital-marketing-ebooks"
+      ["digital-marketing-ebooks", "digital-marketing-ebooks-midtrans"].includes(payment.product_id)
         ? (String(env.EBOOK_GDRIVE_URL || "").trim() || null)
         : null,
     success_page_url: buildSuccessPageUrl(payment.invoice_number, statusToken, env),
@@ -3594,6 +3972,20 @@ export default {
       }
 
       return handleDokuNotification(request, env);
+    }
+
+    if (url.pathname === MIDTRANS_NOTIFICATION_PATH) {
+      if (request.method !== "POST") {
+        return new Response("Method Not Allowed", { status: 405, headers: { "Allow": "POST" } });
+      }
+      return handleMidtransNotification(request, env);
+    }
+
+    if (url.pathname === MIDTRANS_CREATE_PAYMENT_PATH) {
+      if (request.method !== "POST") {
+        return new Response("Method Not Allowed", { status: 405, headers: { "Allow": "POST" } });
+      }
+      return createMidtransPayment(request, env);
     }
 
     if (url.pathname === "/api/create-payment") {

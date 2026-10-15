@@ -348,7 +348,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
 <section class="checkout-view" id="checkout-view">
   <div class="form-shell shell">
     <div class="form-head">
-      <div class="eyebrow">Secure Checkout / DOKU Payment Gateway</div>
+      <div class="eyebrow" id="checkout-provider-heading">Secure Checkout / DOKU Payment Gateway</div>
       <h1 class="lang-id">Lengkapi data pembelian.</h1>
       <h1 class="lang-en">Complete your purchase details.</h1>
       <p class="intro lang-id">Email digunakan untuk mengirim konfirmasi pembayaran dan link halaman pascapembayaran.</p>
@@ -568,6 +568,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
       summaryEn: "A 9-chapter step-by-step course from website fundamentals to launch",
       promoId: "Segera checkout sebelum harga naik.",
       promoEn: "Checkout before the price increases.",
+      provider: "doku",
       postPayment: "course"
     },
     "website-development": {
@@ -576,14 +577,25 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
       detailUrl: "/products/website-development/",
       summaryId: "Pembuatan website sampai live",
       summaryEn: "Website development through launch",
+      provider: "doku",
       postPayment: "whatsapp"
     },
     "digital-marketing-ebooks": {
       name: "Digital Marketing eBooks",
       amount: 10000,
       detailUrl: "/products/digital-marketing-ebooks/",
-      summaryId: "Live test flow pembelian — eBook final belum tersedia",
-      summaryEn: "Live purchase-flow test — the final eBook is not available yet",
+      summaryId: "Live test flow pembelian DOKU — eBook final belum tersedia",
+      summaryEn: "Live DOKU purchase-flow test — the final eBook is not available yet",
+      provider: "doku",
+      postPayment: "ebook"
+    },
+    "digital-marketing-ebooks-midtrans": {
+      name: "Digital Marketing eBooks",
+      amount: 11000,
+      detailUrl: "/products/digital-marketing-ebooks-midtrans/",
+      summaryId: "Live test flow pembelian Midtrans — eBook final belum tersedia",
+      summaryEn: "Live Midtrans purchase-flow test — the final eBook is not available yet",
+      provider: "midtrans",
       postPayment: "ebook"
     }
   });
@@ -631,6 +643,9 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
       brand.innerHTML = '<span class="course-brand-mark">&lt;/&gt;</span><span class="course-brand-name">websitepertamamu<small>by digmarketingmaul</small></span>';
     }
     document.title = "Checkout — " + PRODUCT.name;
+    const providerName = PRODUCT.provider === "midtrans" ? "Midtrans" : "DOKU";
+    const providerHeading = document.getElementById("checkout-provider-heading");
+    if (providerHeading) providerHeading.textContent = "Secure Checkout / " + providerName + " Payment Gateway";
     document.getElementById("back-detail-link").href = PRODUCT.detailUrl;
     document.getElementById("checkout-product-name").textContent = PRODUCT.name;
     document.getElementById("checkout-product-summary-id").textContent = PRODUCT.summaryId;
@@ -691,15 +706,19 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     return language() === "en" ? "Proceed to Payment" : "Lanjutkan ke Pembayaran";
   }
 
+  function paymentProviderName() {
+    return PRODUCT.provider === "midtrans" ? "Midtrans" : "DOKU";
+  }
+
   function setStatus(messageId, state = "", payment = null) {
     const messages = {
       creating: {
-        id: "Membuat transaksi aman melalui DOKU…",
-        en: "Creating a secure transaction through DOKU…"
+        id: "Membuat transaksi aman melalui " + paymentProviderName() + "…",
+        en: "Creating a secure transaction through " + paymentProviderName() + "…"
       },
       waiting: {
-        id: "Checkout aktif. Menunggu konfirmasi pembayaran dari DOKU…",
-        en: "Checkout is active. Waiting for payment confirmation from DOKU…"
+        id: "Checkout aktif. Menunggu konfirmasi pembayaran dari " + paymentProviderName() + "…",
+        en: "Checkout is active. Waiting for payment confirmation from " + paymentProviderName() + "…"
       },
       expired: {
         id: "Checkout sebelumnya sudah kedaluwarsa. Kamu sekarang dapat membuat order baru.",
@@ -831,6 +850,14 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     }
     dokuBodyOverflowBefore = document.body.style.overflow || "";
     window.loadJokulCheckout(paymentUrl);
+  }
+
+  function openPaymentCheckout(paymentUrl) {
+    if (PRODUCT.provider === "midtrans") {
+      window.location.assign(paymentUrl);
+      return;
+    }
+    openDokuCheckout(paymentUrl);
   }
 
   document.addEventListener("keydown", (event) => {
@@ -973,12 +1000,12 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     event.preventDefault();
 
     if (activePayment?.payment_url) {
-      if (typeof window.loadJokulCheckout !== "function") {
+      if (PRODUCT.provider !== "midtrans" && typeof window.loadJokulCheckout !== "function") {
         setStatus(language() === "en" ? "DOKU Checkout is not ready yet." : "DOKU Checkout belum siap.", "error");
         return;
       }
       setStatus("active", "active", activePayment);
-      openDokuCheckout(activePayment.payment_url);
+      openPaymentCheckout(activePayment.payment_url);
       return;
     }
 
@@ -998,7 +1025,11 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     setStatus("creating");
 
     try {
-      const response = await fetch("/api/create-payment", {
+      const createPaymentEndpoint = PRODUCT.provider === "midtrans"
+        ? "/api/create-midtrans-payment"
+        : "/api/create-payment";
+
+      const response = await fetch(createPaymentEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -1032,7 +1063,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
       setActivePayment(payment, Boolean(data.reused));
       startPolling(payment);
 
-      openDokuCheckout(data.payment_url);
+      openPaymentCheckout(data.payment_url);
     } catch (error) {
       console.error(error);
       statusBox.hidden = false;

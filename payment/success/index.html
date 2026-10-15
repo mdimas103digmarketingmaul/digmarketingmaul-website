@@ -459,9 +459,10 @@ html[data-language="id"] .lang-id{display:revert!important}
 
 <script>
 (function () {
-  const params = new URLSearchParams(location.hash.replace(/^#/, ""));
-  const invoice = params.get("invoice");
-  const token = params.get("token");
+  const query = new URLSearchParams(location.search);
+  const hashParams = new URLSearchParams(location.hash.replace(/^#/, ""));
+  const invoice = hashParams.get("invoice") || query.get("invoice");
+  const token = hashParams.get("token") || query.get("token");
 
   const gate = document.getElementById("gate-view");
   const view = document.getElementById("success-view");
@@ -469,7 +470,6 @@ html[data-language="id"] .lang-id{display:revert!important}
 
   let currentData = null;
 
-  const query = new URLSearchParams(location.search);
   const localPreview =
     (location.hostname === "127.0.0.1" || location.hostname === "localhost") &&
     query.get("preview") === "1";
@@ -568,7 +568,7 @@ html[data-language="id"] .lang-id{display:revert!important}
       return;
     }
 
-    if (data.product_id === "digital-marketing-ebooks") {
+    if (["digital-marketing-ebooks", "digital-marketing-ebooks-midtrans"].includes(data.product_id)) {
       noteId.textContent = "Halaman ini memiliki link personal yang bisa kamu buka kembali dan link yang sama juga dikirim ke email. Flow testing Digital Marketing eBooks berhasil. Produk eBook final belum tersedia; tombol Google Drive di bawah digunakan sebagai bagian dari simulasi akses pascapembayaran.";
       noteEn.textContent = "This page has a personal link you can reopen, and the same link is also sent by email. The Digital Marketing eBooks test flow was completed successfully. The final eBook is not available yet; the Google Drive button below is part of the post-payment access simulation.";
       ebookNext.hidden = false;
@@ -601,11 +601,12 @@ html[data-language="id"] .lang-id{display:revert!important}
         email_status: "SENT",
         status: "SUCCESS"
       };
-    } else if (previewProduct === "digital-marketing-ebooks") {
+    } else if (previewProduct === "digital-marketing-ebooks" || previewProduct === "digital-marketing-ebooks-midtrans") {
+      const isMidtransPreview = previewProduct === "digital-marketing-ebooks-midtrans";
       currentData = {
-        invoice_number: "INV-PREVIEW-EBOOK-10000",
-        amount: 10000,
-        product_id: "digital-marketing-ebooks",
+        invoice_number: isMidtransPreview ? "MT-PREVIEW-EBOOK-11000" : "INV-PREVIEW-EBOOK-10000",
+        amount: isMidtransPreview ? 11000 : 10000,
+        product_id: previewProduct,
         product_name: "Digital Marketing eBooks",
         customer_name: "Maul Test",
         customer_email_masked: "m***@example.com",
