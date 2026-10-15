@@ -70,10 +70,12 @@ const MIDTRANS_ENVIRONMENTS = Object.freeze({
   sandbox: {
     name: "sandbox",
     snapTransactionUrl: "https://app.sandbox.midtrans.com/snap/v1/transactions",
+    snapJsUrl: "https://app.sandbox.midtrans.com/snap/snap.js",
   },
   production: {
     name: "production",
     snapTransactionUrl: "https://app.midtrans.com/snap/v1/transactions",
+    snapJsUrl: "https://app.midtrans.com/snap/snap.js",
   },
 });
 
@@ -89,6 +91,22 @@ function getMidtransServerKey(env) {
   const key = String(env.MIDTRANS_SERVER_KEY || "").trim();
   if (!key) throw new Error("MIDTRANS_SERVER_KEY missing");
   return key;
+}
+
+function getMidtransClientKey(env) {
+  const key = String(env.MIDTRANS_CLIENT_KEY || "").trim();
+  if (!key) throw new Error("MIDTRANS_CLIENT_KEY missing");
+  return key;
+}
+
+function extractMidtransSnapToken(paymentUrl) {
+  try {
+    const url = new URL(String(paymentUrl || ""));
+    const parts = url.pathname.split("/").filter(Boolean);
+    return parts.length ? parts[parts.length - 1] : "";
+  } catch {
+    return "";
+  }
 }
 
 function midtransAuthorizationHeader(serverKey) {
@@ -3102,9 +3120,11 @@ async function createMidtransPayment(request, env) {
   }
 
   let serverKey;
+  let clientKey;
   let midtrans;
   try {
     serverKey = getMidtransServerKey(env);
+    clientKey = getMidtransClientKey(env);
     midtrans = getMidtransEnvironment(env);
   } catch (error) {
     return jsonResponse({ success: false, error: error instanceof Error ? error.message : String(error) }, 500);
@@ -3169,6 +3189,9 @@ async function createMidtransPayment(request, env) {
       currency: activeOrder.currency,
       status: "PENDING",
       payment_url: activeOrder.payment_url,
+      snap_token: extractMidtransSnapToken(activeOrder.payment_url),
+      snap_client_key: clientKey,
+      snap_js_url: midtrans.snapJsUrl,
       expired_date: activeOrder.expired_date,
       expires_at: activeOrder.expires_at,
       success_page_url: buildSuccessPageUrl(activeOrder.invoice_number, activeOrder.status_token, env),
@@ -3230,8 +3253,9 @@ async function createMidtransPayment(request, env) {
   }
 
   const paymentUrl = String(data?.redirect_url || "").trim();
-  if (!paymentUrl) {
-    return jsonResponse({ success: false, error: "Midtrans response did not include redirect_url" }, 502);
+  const snapToken = String(data?.token || "").trim();
+  if (!paymentUrl || !snapToken) {
+    return jsonResponse({ success: false, error: "Midtrans response did not include Snap token/redirect_url" }, 502);
   }
 
   // Keep the local active-order lock conservative. Midtrans will send the real
@@ -3289,6 +3313,9 @@ async function createMidtransPayment(request, env) {
     currency: product.currency,
     status: "PENDING",
     payment_url: paymentUrl,
+    snap_token: snapToken,
+    snap_client_key: clientKey,
+    snap_js_url: midtrans.snapJsUrl,
     expired_date: null,
     expires_at: expiresAt,
     success_page_url: successPageUrl,

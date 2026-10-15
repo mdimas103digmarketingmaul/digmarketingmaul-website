@@ -621,6 +621,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
   let pollTimer = null;
   let currentSuccess = null;
   let activePayment = null;
+  let midtransSnapLoadPromise = null;
 
   function language() {
     return window.MauldigitalUI?.getLanguage?.() === "en" ? "en" : "id";
@@ -852,12 +853,110 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     window.loadJokulCheckout(paymentUrl);
   }
 
-  function openPaymentCheckout(paymentUrl) {
+  function extractMidtransSnapToken(payment) {
+    const explicit = String(payment?.snap_token || "").trim();
+    if (explicit) return explicit;
+
+    try {
+      const url = new URL(String(payment?.payment_url || ""), location.origin);
+      const parts = url.pathname.split("/").filter(Boolean);
+      return parts.length ? parts[parts.length - 1] : "";
+    } catch {
+      return "";
+    }
+  }
+
+  function loadMidtransSnapSdk(payment) {
+    if (window.snap && typeof window.snap.pay === "function") {
+      return Promise.resolve(window.snap);
+    }
+    if (midtransSnapLoadPromise) return midtransSnapLoadPromise;
+
+    const src = String(payment?.snap_js_url || "").trim();
+    const clientKey = String(payment?.snap_client_key || "").trim();
+    if (!src || !clientKey) {
+      return Promise.reject(new Error(
+        language() === "en"
+          ? "Midtrans popup configuration is incomplete."
+          : "Konfigurasi popup Midtrans belum lengkap."
+      ));
+    }
+
+    midtransSnapLoadPromise = new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[data-midtrans-snap="true"]');
+      if (existing) {
+        existing.addEventListener("load", () => resolve(window.snap), { once: true });
+        existing.addEventListener("error", () => reject(new Error("Midtrans Snap gagal dimuat")), { once: true });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = src;
+      script.type = "text/javascript";
+      script.async = true;
+      script.dataset.clientKey = clientKey;
+      script.dataset.midtransSnap = "true";
+      script.onload = () => {
+        if (window.snap && typeof window.snap.pay === "function") resolve(window.snap);
+        else reject(new Error("Midtrans Snap tidak tersedia setelah script dimuat"));
+      };
+      script.onerror = () => reject(new Error("Midtrans Snap gagal dimuat"));
+      document.head.appendChild(script);
+    }).catch((error) => {
+      midtransSnapLoadPromise = null;
+      throw error;
+    });
+
+    return midtransSnapLoadPromise;
+  }
+
+  async function openMidtransCheckout(payment) {
+    const snapToken = extractMidtransSnapToken(payment);
+    if (!snapToken) {
+      throw new Error(language() === "en" ? "Midtrans Snap token is missing." : "Snap token Midtrans tidak tersedia.");
+    }
+
+    await loadMidtransSnapSdk(payment);
+
+    if (!window.snap || typeof window.snap.pay !== "function") {
+      throw new Error(language() === "en" ? "Midtrans popup is not ready." : "Popup Midtrans belum siap.");
+    }
+
+    window.snap.pay(snapToken, {
+      onSuccess: function () {
+        setActivePayment({ ...payment, status: "PENDING" }, false);
+        setStatus("waiting", "active", payment);
+        startPolling(payment);
+      },
+      onPending: function () {
+        setActivePayment({ ...payment, status: "PENDING" }, false);
+        setStatus("waiting", "active", payment);
+        startPolling(payment);
+      },
+      onError: function (result) {
+        console.error("MIDTRANS_SNAP_ERROR", result);
+        setActivePayment({ ...payment, status: "PENDING" }, false);
+        setStatus(
+          language() === "en"
+            ? "Midtrans could not complete this payment attempt. You can reopen the active payment and try another method."
+            : "Percobaan pembayaran Midtrans belum berhasil. Kamu dapat membuka kembali pembayaran aktif dan mencoba metode lain.",
+          "error"
+        );
+        startPolling(payment);
+      },
+      onClose: function () {
+        setActivePayment({ ...payment, status: "PENDING" }, true);
+        startPolling(payment);
+      }
+    });
+  }
+
+  async function openPaymentCheckout(payment) {
     if (PRODUCT.provider === "midtrans") {
-      window.location.assign(paymentUrl);
+      await openMidtransCheckout(payment);
       return;
     }
-    openDokuCheckout(paymentUrl);
+    openDokuCheckout(payment.payment_url);
   }
 
   document.addEventListener("keydown", (event) => {
@@ -1005,7 +1104,12 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
         return;
       }
       setStatus("active", "active", activePayment);
-      openPaymentCheckout(activePayment.payment_url);
+      try {
+        await openPaymentCheckout(activePayment);
+      } catch (error) {
+        console.error(error);
+        setStatus(error.message || (language() === "en" ? "Unable to open checkout." : "Checkout tidak dapat dibuka."), "error");
+      }
       return;
     }
 
@@ -1053,6 +1157,9 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
         currency: data.currency,
         status: "PENDING",
         payment_url: data.payment_url,
+        snap_token: data.snap_token || "",
+        snap_client_key: data.snap_client_key || "",
+        snap_js_url: data.snap_js_url || "",
         expired_date: data.expired_date || null,
         expires_at: data.expires_at || null,
         customer_email_masked: data.customer_email_masked || "",
@@ -1063,7 +1170,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
       setActivePayment(payment, Boolean(data.reused));
       startPolling(payment);
 
-      openPaymentCheckout(data.payment_url);
+      await openPaymentCheckout(payment);
     } catch (error) {
       console.error(error);
       statusBox.hidden = false;
