@@ -268,6 +268,33 @@ html[data-language="id"] .lang-id{display:revert!important}
 .status-box.active{border-color:rgba(255,49,88,.28);background:var(--accent-soft);color:var(--text)}
 .status-box.error{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.07);color:#b42318}
 .loading{opacity:.72;pointer-events:none}
+[hidden]{display:none!important}
+
+/* Midtrans Embedded Checkout — custom merchant overlay so the checkout page stays visible behind Snap. */
+.midtrans-embed-overlay{
+  position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:rgba(7,17,31,.50);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)
+}
+.midtrans-embed-shell{
+  position:relative;width:min(560px,calc(100vw - 48px));height:min(760px,calc(100vh - 48px));
+  min-width:320px;min-height:560px;background:var(--panel);border:1px solid var(--line);border-radius:18px;
+  box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden
+}
+.midtrans-embed-close{
+  position:absolute;top:10px;right:10px;z-index:4;width:42px;height:42px;border-radius:999px;
+  border:1px solid rgba(15,23,42,.12);background:rgba(255,255,255,.92);color:#111827;
+  display:grid;place-items:center;font:700 25px/1 Inter,Arial,sans-serif;cursor:pointer;
+  box-shadow:0 8px 22px rgba(15,23,42,.12);transition:transform .18s ease,background .18s ease
+}
+.midtrans-embed-close:hover{transform:scale(1.04);background:#fff}
+.midtrans-embed-close:focus-visible{outline:3px solid rgba(255,49,88,.28);outline-offset:2px}
+#midtrans-snap-container{width:100%;height:100%;min-width:320px;min-height:560px;background:#fff;overflow:auto}
+body.midtrans-embed-open{overflow:hidden}
+@media(max-width:640px){
+  .midtrans-embed-overlay{padding:0;align-items:stretch}
+  .midtrans-embed-shell{width:100vw;height:100dvh;min-width:0;min-height:560px;border-radius:0;border:0}
+  .midtrans-embed-close{top:8px;right:8px}
+}
 .success-view{display:none;padding:58px 0 82px;min-height:calc(100vh - 76px)}
 .success-view.active{display:block}
 .checkout-view.hidden{display:none}
@@ -474,6 +501,12 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
 
 <footer class="footer shell">© 2026 Build and Design by Maul</footer>
 
+<div class="midtrans-embed-overlay" id="midtrans-embed-overlay" hidden aria-hidden="true">
+  <div class="midtrans-embed-shell" role="dialog" aria-modal="true" aria-label="Midtrans secure payment">
+    <button class="midtrans-embed-close" id="midtrans-embed-close" type="button" aria-label="Close payment">×</button>
+    <div id="midtrans-snap-container"></div>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -867,7 +900,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
   }
 
   function loadMidtransSnapSdk(payment) {
-    if (window.snap && typeof window.snap.pay === "function") {
+    if (window.snap && typeof window.snap.embed === "function") {
       return Promise.resolve(window.snap);
     }
     if (midtransSnapLoadPromise) return midtransSnapLoadPromise;
@@ -897,7 +930,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
       script.dataset.clientKey = clientKey;
       script.dataset.midtransSnap = "true";
       script.onload = () => {
-        if (window.snap && typeof window.snap.pay === "function") resolve(window.snap);
+        if (window.snap && typeof window.snap.embed === "function") resolve(window.snap);
         else reject(new Error("Midtrans Snap tidak tersedia setelah script dimuat"));
       };
       script.onerror = () => reject(new Error("Midtrans Snap gagal dimuat"));
@@ -910,6 +943,55 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     return midtransSnapLoadPromise;
   }
 
+  const midtransEmbedOverlay = document.getElementById("midtrans-embed-overlay");
+  const midtransEmbedClose = document.getElementById("midtrans-embed-close");
+  const midtransSnapContainer = document.getElementById("midtrans-snap-container");
+
+  function showMidtransEmbed() {
+    if (!midtransEmbedOverlay) return;
+    midtransEmbedOverlay.hidden = false;
+    midtransEmbedOverlay.setAttribute("aria-hidden", "false");
+    document.body.classList.add("midtrans-embed-open");
+    requestAnimationFrame(() => midtransEmbedClose?.focus({ preventScroll: true }));
+  }
+
+  function closeMidtransEmbed({ preserveContainer = true } = {}) {
+    try {
+      if (window.snap && typeof window.snap.hide === "function") window.snap.hide();
+    } catch (error) {
+      console.warn("MIDTRANS_SNAP_HIDE_FAILED", error);
+    }
+
+    if (midtransEmbedOverlay) {
+      midtransEmbedOverlay.hidden = true;
+      midtransEmbedOverlay.setAttribute("aria-hidden", "true");
+    }
+    document.body.classList.remove("midtrans-embed-open");
+
+    if (!preserveContainer && midtransSnapContainer) {
+      midtransSnapContainer.replaceChildren();
+    }
+  }
+
+  midtransEmbedClose?.addEventListener("click", () => {
+    closeMidtransEmbed();
+    if (activePayment) {
+      setActivePayment({ ...activePayment, status: "PENDING" }, true);
+      setStatus("active", "active", activePayment);
+      startPolling(activePayment);
+    }
+  });
+
+  midtransEmbedOverlay?.addEventListener("pointerdown", (event) => {
+    if (event.target !== midtransEmbedOverlay) return;
+    closeMidtransEmbed();
+    if (activePayment) {
+      setActivePayment({ ...activePayment, status: "PENDING" }, true);
+      setStatus("active", "active", activePayment);
+      startPolling(activePayment);
+    }
+  });
+
   async function openMidtransCheckout(payment) {
     const snapToken = extractMidtransSnapToken(payment);
     if (!snapToken) {
@@ -918,17 +1000,28 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
 
     await loadMidtransSnapSdk(payment);
 
-    if (!window.snap || typeof window.snap.pay !== "function") {
-      throw new Error(language() === "en" ? "Midtrans popup is not ready." : "Popup Midtrans belum siap.");
+    if (!window.snap || typeof window.snap.embed !== "function") {
+      throw new Error(language() === "en" ? "Midtrans embedded checkout is not ready." : "Embedded checkout Midtrans belum siap.");
     }
 
-    window.snap.pay(snapToken, {
+    if (!midtransSnapContainer) {
+      throw new Error(language() === "en" ? "Midtrans payment container is missing." : "Container pembayaran Midtrans tidak tersedia.");
+    }
+
+    showMidtransEmbed();
+
+    window.snap.embed(snapToken, {
+      embedId: "midtrans-snap-container",
       onSuccess: function () {
         setActivePayment({ ...payment, status: "PENDING" }, false);
         setStatus("waiting", "active", payment);
+        closeMidtransEmbed({ preserveContainer: false });
         startPolling(payment);
       },
       onPending: function () {
+        // Keep the embedded payment instruction visible. QRIS/VA are normally
+        // pending until the customer finishes payment, while status polling
+        // continues in the merchant page behind this overlay.
         setActivePayment({ ...payment, status: "PENDING" }, false);
         setStatus("waiting", "active", payment);
         startPolling(payment);
@@ -938,13 +1031,14 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
         setActivePayment({ ...payment, status: "PENDING" }, false);
         setStatus(
           language() === "en"
-            ? "Midtrans could not complete this payment attempt. You can reopen the active payment and try another method."
-            : "Percobaan pembayaran Midtrans belum berhasil. Kamu dapat membuka kembali pembayaran aktif dan mencoba metode lain.",
+            ? "Midtrans could not complete this payment attempt. Close the payment window to review the active order."
+            : "Percobaan pembayaran Midtrans belum berhasil. Tutup jendela pembayaran untuk melihat status order aktif.",
           "error"
         );
         startPolling(payment);
       },
       onClose: function () {
+        closeMidtransEmbed();
         setActivePayment({ ...payment, status: "PENDING" }, true);
         startPolling(payment);
       }
@@ -961,6 +1055,15 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
+      if (midtransEmbedOverlay && !midtransEmbedOverlay.hidden) {
+        closeMidtransEmbed();
+        if (activePayment) {
+          setActivePayment({ ...activePayment, status: "PENDING" }, true);
+          setStatus("active", "active", activePayment);
+          startPolling(activePayment);
+        }
+        return;
+      }
       closeDokuCheckoutPopup();
     }
   }, true);
@@ -1078,6 +1181,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
       try {
         const data = await fetchStatus(payment);
         if (data.status === "SUCCESS") {
+          closeMidtransEmbed({ preserveContainer: false });
           renderSuccess(data, payment);
           return;
         }
