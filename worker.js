@@ -2984,9 +2984,10 @@ async function createPayment(request, env) {
   const statusToken = crypto.randomUUID();
   const successPageUrl = buildSuccessPageUrl(invoiceNumber, statusToken, env);
 
+  // Customer-facing gateway receipt uses one consolidated product line.
+  // base_amount and service_fee remain stored separately in D1 for internal audit/reporting.
   const lineItems = [
-    { name: product.name, quantity: 1, price: baseAmount },
-    ...(serviceFee > 0 ? [{ name: `Service Fee - ${method.name}`, quantity: 1, price: serviceFee }] : []),
+    { name: product.name, quantity: 1, price: totalAmount },
   ];
 
   const payload = {
@@ -3216,9 +3217,10 @@ async function createMidtransPayment(request, env) {
   const successPageUrl = buildSuccessPageUrl(invoiceNumber, statusToken, env);
   const finishUrl = buildMidtransFinishUrl(invoiceNumber, statusToken, env);
 
+  // Customer-facing Midtrans receipt uses one consolidated product line.
+  // base_amount and service_fee remain stored separately in D1 for internal audit/reporting.
   const itemDetails = [
-    { id: productId, price: baseAmount, quantity: 1, name: product.name.slice(0, 50) },
-    ...(serviceFee > 0 ? [{ id: `fee-${methodId}`, price: serviceFee, quantity: 1, name: `Service Fee - ${method.name}`.slice(0, 50) }] : []),
+    { id: productId, price: totalAmount, quantity: 1, name: product.name.slice(0, 50) },
   ];
 
   const payload = {
