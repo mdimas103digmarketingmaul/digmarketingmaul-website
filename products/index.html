@@ -91,10 +91,14 @@
     .commerce-promo-note{margin-top:7px;font-size:.75rem;line-height:1.45;color:#ff3158;font-weight:700}
     html[data-products-theme="dark"] .commerce-original-price{color:#7f8da3}
 
-    .international-paypal{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:.76rem;font-weight:750;color:#475467}
-    .international-paypal[hidden]{display:none!important}
-    .international-paypal-logo{display:block;flex:0 0 auto}
-    html[data-products-theme="dark"] .international-paypal{color:#b6c2d4}
+    .payment-support-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .international-payment-support{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap;padding:7px 9px;width:max-content;max-width:100%;margin-left:auto;border:1px solid rgba(148,163,184,.20);border-radius:10px;background:rgba(255,255,255,.86)}
+    .international-payment-support[hidden]{display:none!important}
+    .international-payment-support img{display:block;width:auto;height:18px;max-width:34px;object-fit:contain}
+    .international-payment-support img[alt="American Express"]{height:20px}
+    .international-payment-support .paypal-wordmark{display:block;width:auto;height:18px;max-width:66px}
+    html[data-products-theme="dark"] .international-payment-support{background:#fff;border-color:rgba(255,255,255,.10)}
+    @media(max-width:680px){.payment-support-row{align-items:flex-start}.international-payment-support{margin-left:0;justify-content:flex-start}}
     br.desktop-break{display:block}
     @media(max-width:760px){br.desktop-break{display:none}}
   </style>
@@ -116,8 +120,6 @@
 .product-international-toggle[aria-pressed="true"] .pit-track{background:#ff3158}
 .product-international-toggle[aria-pressed="true"] .pit-track>span{transform:translateX(13px)}
 html[data-international="true"] .product-language-switch [data-language="id"]{opacity:.45;cursor:not-allowed}
-html[data-international="true"] .commerce-checkout-btn.international-whatsapp{cursor:pointer!important;color:#fff!important;background:#16a34a!important;border-color:#16a34a!important;box-shadow:0 10px 26px rgba(22,163,74,.16)!important}
-html[data-international="true"] .commerce-checkout-btn.international-whatsapp:hover{background:#15803d!important;border-color:#15803d!important;transform:translateY(-1px)}
 
 </style>
 <style>
@@ -241,7 +243,7 @@ html[data-products-theme="light"] .commerce-checkout-btn.international-unavailab
 <span class="product-icon"><i class="fa-solid fa-laptop-code"></i></span>
 <span class="commerce-category">Course / Website</span>
 </div>
-<h2 data-copy-lang="id">Panduan Membuat<br/>Website Pertama Kamu<br/>Live dari 0</h2>
+<h2 data-copy-lang="id">Panduan Membuat<br/>Website Pertama<br/>Kamu Live dari 0</h2>
 <h2 data-copy-lang="en" hidden>Your First Website<br/>Live from Zero</h2>
 <p class="commerce-description" data-copy-lang="id">
             Course step-by-step untuk membangun dan mempublikasikan website pertama kamu dari nol sampai live.
@@ -256,10 +258,16 @@ html[data-products-theme="light"] .commerce-checkout-btn.international-unavailab
 </div>
 <div class="commerce-promo-note" data-copy-lang="id">Harga Oktober 2026 · Segera checkout sebelum harga naik.</div>
 <div class="commerce-promo-note" data-copy-lang="en" hidden="">October 2026 price · Checkout before the price increases.</div>
-<div class="payment-progress"><span class="payment-progress-dot"></span>Secure payment gateway</div>
-<div class="international-paypal" hidden aria-label="Payment with PayPal">
-  <svg class="international-paypal-logo" viewBox="0 0 110 34" width="86" height="27" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg>
-  <span>Payment with PayPal</span>
+<div class="payment-support-row">
+<div class="payment-progress"><span class="payment-progress-dot"></span>Secure Payment Gateway</div>
+<div class="international-payment-support" hidden aria-label="Supported payment methods">
+  <svg class="paypal-wordmark" viewBox="0 0 110 34" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg>
+  <img src="/assets/payment-methods/visa.webp" alt="Visa" loading="lazy">
+  <img src="/assets/payment-methods/mastercard.webp" alt="Mastercard" loading="lazy">
+  <img src="/assets/payment-methods/amex.svg" alt="American Express" loading="lazy">
+  <img src="/assets/payment-methods/jcb.webp" alt="JCB" loading="lazy">
+  <img src="/assets/payment-methods/unionpay.svg" alt="UnionPay" loading="lazy">
+</div>
 </div>
 <div class="payment-status-detail" hidden=""></div>
 <a class="commerce-checkout-btn is-ready" href="/products/website-course/" style="text-decoration:none;text-align:center;display:block;">
@@ -285,10 +293,16 @@ html[data-products-theme="light"] .commerce-checkout-btn.international-unavailab
           </p>
 <div class="commerce-card-footer">
 <div class="commerce-price" data-price-id="Rp999.000" data-price-usd="USD 61">Rp999.000</div>
-<div class="payment-progress"><span class="payment-progress-dot"></span>Secure payment gateway</div>
-<div class="international-paypal" hidden aria-label="Payment with PayPal">
-  <svg class="international-paypal-logo" viewBox="0 0 110 34" width="86" height="27" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg>
-  <span>Payment with PayPal</span>
+<div class="payment-support-row">
+<div class="payment-progress"><span class="payment-progress-dot"></span>Secure Payment Gateway</div>
+<div class="international-payment-support" hidden aria-label="Supported payment methods">
+  <svg class="paypal-wordmark" viewBox="0 0 110 34" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg>
+  <img src="/assets/payment-methods/visa.webp" alt="Visa" loading="lazy">
+  <img src="/assets/payment-methods/mastercard.webp" alt="Mastercard" loading="lazy">
+  <img src="/assets/payment-methods/amex.svg" alt="American Express" loading="lazy">
+  <img src="/assets/payment-methods/jcb.webp" alt="JCB" loading="lazy">
+  <img src="/assets/payment-methods/unionpay.svg" alt="UnionPay" loading="lazy">
+</div>
 </div>
 <div class="payment-status-detail" hidden=""></div>
 <a class="commerce-checkout-btn is-ready" href="/products/website-development/" style="text-decoration:none;text-align:center;display:block;">
@@ -315,10 +329,16 @@ html[data-products-theme="light"] .commerce-checkout-btn.international-unavailab
           </p>
 <div class="commerce-card-footer">
 <div class="commerce-price" data-price-id="Rp10.000" data-price-usd="USD 6">Rp10.000</div>
-<div class="payment-progress"><span class="payment-progress-dot"></span>DOKU payment gateway — live test</div>
-<div class="international-paypal" hidden aria-label="Payment with PayPal">
-  <svg class="international-paypal-logo" viewBox="0 0 110 34" width="86" height="27" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg>
-  <span>Payment with PayPal</span>
+<div class="payment-support-row">
+<div class="payment-progress"><span class="payment-progress-dot"></span>Secure Payment Gateway</div>
+<div class="international-payment-support" hidden aria-label="Supported payment methods">
+  <svg class="paypal-wordmark" viewBox="0 0 110 34" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg>
+  <img src="/assets/payment-methods/visa.webp" alt="Visa" loading="lazy">
+  <img src="/assets/payment-methods/mastercard.webp" alt="Mastercard" loading="lazy">
+  <img src="/assets/payment-methods/amex.svg" alt="American Express" loading="lazy">
+  <img src="/assets/payment-methods/jcb.webp" alt="JCB" loading="lazy">
+  <img src="/assets/payment-methods/unionpay.svg" alt="UnionPay" loading="lazy">
+</div>
 </div>
 <div class="payment-status-detail" hidden=""></div>
 <a class="commerce-checkout-btn is-ready" href="/products/digital-marketing-ebooks/" style="text-decoration:none;text-align:center;display:block;">
@@ -345,7 +365,17 @@ html[data-products-theme="light"] .commerce-checkout-btn.international-unavailab
           </p>
 <div class="commerce-card-footer">
 <div class="commerce-price" data-price-id="Rp11.000" data-price-usd="USD 6">Rp11.000</div>
-<div class="payment-progress"><span class="payment-progress-dot"></span>Midtrans payment gateway — live test</div>
+<div class="payment-support-row">
+<div class="payment-progress"><span class="payment-progress-dot"></span>Secure Payment Gateway</div>
+<div class="international-payment-support" hidden aria-label="Supported payment methods">
+  <svg class="paypal-wordmark" viewBox="0 0 110 34" role="img" aria-label="PayPal"><text x="2" y="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-style="italic" font-size="29" letter-spacing="-1.5" fill="#003087">Pay<tspan fill="#0070e0">Pal</tspan></text></svg>
+  <img src="/assets/payment-methods/visa.webp" alt="Visa" loading="lazy">
+  <img src="/assets/payment-methods/mastercard.webp" alt="Mastercard" loading="lazy">
+  <img src="/assets/payment-methods/amex.svg" alt="American Express" loading="lazy">
+  <img src="/assets/payment-methods/jcb.webp" alt="JCB" loading="lazy">
+  <img src="/assets/payment-methods/unionpay.svg" alt="UnionPay" loading="lazy">
+</div>
+</div>
 <div class="payment-status-detail" hidden=""></div>
 <a class="commerce-checkout-btn is-ready" href="/products/digital-marketing-ebooks-midtrans/" style="text-decoration:none;text-align:center;display:block;">
 <span data-copy-lang="id">Lihat Detail</span>
@@ -968,7 +998,7 @@ document.addEventListener('DOMContentLoaded', function(){
   const languageBlocks=[...document.querySelectorAll('[data-copy-lang]')];
   const priceEls=[...document.querySelectorAll('[data-price-id][data-price-usd]')];
   const ctas=[...document.querySelectorAll('.commerce-checkout-btn')];
-  const INTERNATIONAL_ACTIVE_PRODUCTS=new Set(['website-course','website-development','digital-marketing-ebooks']);
+  const INTERNATIONAL_ACTIVE_PRODUCTS=new Set(['website-course','website-development','digital-marketing-ebooks','digital-marketing-ebooks-midtrans']);
   let regularLanguage='id';
 
   function setCopyLanguage(lang){
@@ -995,12 +1025,6 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   function productId(card){return card?.dataset.productId||'';}
   function isInternationalActive(card){return INTERNATIONAL_ACTIVE_PRODUCTS.has(productId(card));}
-  function waUrl(card){
-    const name=productName(card);
-    const msg=`Hi Maul, I am interested in ${name} (International). Could you help me with the purchase/payment process?`;
-    return 'https://wa.me/6281296069566?text='+encodeURIComponent(msg);
-  }
-
   ctas.forEach(cta=>{
     cta.dataset.originalDisabled=cta.disabled?'true':'false';
     cta.dataset.originalClass=cta.className;
@@ -1010,15 +1034,6 @@ document.addEventListener('DOMContentLoaded', function(){
     if(idSpan) idSpan.dataset.originalText=idSpan.textContent;
     if(enSpan) enSpan.dataset.originalText=enSpan.textContent;
   });
-
-  document.addEventListener('click',function(event){
-    const cta=event.target.closest('.commerce-checkout-btn');
-    if(!cta || root.dataset.international!=='true') return;
-    const card=cta.closest('.commerce-product-card');
-    event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();
-    if(!isInternationalActive(card)) return;
-    window.open(waUrl(card),'_blank','noopener,noreferrer');
-  },true);
 
   function applyInternational(active,persist=true){
     root.dataset.international=active?'true':'false';
@@ -1036,7 +1051,7 @@ document.addEventListener('DOMContentLoaded', function(){
       setCopyLanguage(regularLanguage);
     }
     priceEls.forEach(el=>{el.textContent=active?el.dataset.priceUsd:el.dataset.priceId;});
-    document.querySelectorAll('.international-paypal').forEach(el=>{el.hidden=!active;});
+    document.querySelectorAll('.international-payment-support').forEach(el=>{el.hidden=!active;});
 
     ctas.forEach(cta=>{
       const card=cta.closest('.commerce-product-card');
@@ -1045,11 +1060,12 @@ document.addEventListener('DOMContentLoaded', function(){
       if(active){
         if(isInternationalActive(card)){
           cta.disabled=false;
-          cta.classList.remove('is-coming-soon','international-unavailable');
-          cta.classList.add('is-ready','international-whatsapp');
-          if(cta.tagName==='A') cta.setAttribute('href',waUrl(card));
-          if(enSpan) enSpan.textContent='Contact via WhatsApp';
-          if(idSpan) idSpan.textContent='Hubungi via WhatsApp';
+          cta.classList.remove('is-coming-soon','international-unavailable','international-whatsapp');
+          cta.classList.add('is-ready');
+          cta.removeAttribute('aria-disabled');
+          if(cta.tagName==='A') cta.setAttribute('href',cta.dataset.originalHref||card?.dataset.detailUrl||'#');
+          if(idSpan&&idSpan.dataset.originalText) idSpan.textContent=idSpan.dataset.originalText;
+          if(enSpan&&enSpan.dataset.originalText) enSpan.textContent=enSpan.dataset.originalText;
         }else{
           cta.disabled=true;
           cta.classList.remove('is-ready','international-whatsapp');

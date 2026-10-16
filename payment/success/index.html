@@ -266,6 +266,7 @@ html[data-language="id"] .lang-id{display:revert!important}
 #success-view{display:none}
 @media(max-width:700px){.card,.gate{padding:22px}.meta{grid-template-columns:1fr}}
 </style>
+<link rel="stylesheet" href="/assets/compact-controls.css">
 </head>
 <body>
 <div class="grid-bg" aria-hidden="true"></div>
@@ -274,13 +275,23 @@ html[data-language="id"] .lang-id{display:revert!important}
     <a class="brand" href="/">M<b>.</b></a>
     <div class="nav-actions">
       
-<div class="segmented language-segment" role="group" aria-label="Language">
+<div class="maul-compact-controls" aria-label="Display controls">
+  <select class="maul-compact-select maul-language-select" data-maul-language-select aria-label="Language">
+    <option value="id">ID</option>
+    <option value="en">EN</option>
+  </select>
+  <select class="maul-compact-select maul-theme-select" data-maul-theme-select aria-label="Appearance">
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</div>
+<div class="maul-legacy-controls segmented language-segment" role="group" aria-label="Language">
   <button type="button" data-language-choice="id" aria-pressed="true">ID</button>
   <button type="button" data-language-choice="en" aria-pressed="false">EN</button>
 </div>
-<div class="segmented theme-segment" role="group" aria-label="Appearance">
-  <button type="button" data-theme-choice="light" aria-pressed="true" title="Light mode">☀ <span class="label">Light</span></button>
-  <button type="button" data-theme-choice="dark" aria-pressed="false" title="Dark mode">◐ <span class="label">Dark</span></button>
+<div class="maul-legacy-controls segmented theme-segment" role="group" aria-label="Appearance">
+  <button type="button" data-theme-choice="light" aria-pressed="true" title="Light mode">Light</button>
+  <button type="button" data-theme-choice="dark" aria-pressed="false" title="Dark mode">Dark</button>
 </div>
 
       <a class="nav-link" href="/products/">
@@ -686,5 +697,6 @@ html[data-language="id"] .lang-id{display:revert!important}
   run();
 })();
 </script>
+<script src="/assets/compact-controls.js"></script>
 </body>
 </html>

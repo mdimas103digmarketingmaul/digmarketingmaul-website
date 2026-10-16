@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<defs>
+<symbol id="logo-qris" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#111827"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#111827">QRIS</text>
+    </symbol>
+<symbol id="logo-bsi" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#00a39b"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#00a39b">BSI</text>
+    </symbol>
+<symbol id="logo-permata" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#6b2c91"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#6b2c91">Permata</text>
+    </symbol>
+<symbol id="logo-danamon" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#0a7f3f"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#0a7f3f">Danamon</text>
+    </symbol>
+<symbol id="logo-mandiri" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#003d79"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#003d79">mandiri</text>
+    </symbol>
+<symbol id="logo-cimb" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#c8102e"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#c8102e">CIMB NIAGA</text>
+    </symbol>
+<symbol id="logo-bni" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#f58220"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#f58220">BNI</text>
+    </symbol>
+<symbol id="logo-bri" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#00529b"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#00529b">BRI</text>
+    </symbol>
+<symbol id="logo-bnc" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#6a2ca0"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#6a2ca0">BNC</text>
+    </symbol>
+<symbol id="logo-bss" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#b21f2d"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#b21f2d">SAMPOERNA</text>
+    </symbol>
+<symbol id="logo-btn" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#004c93"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#004c93">BTN</text>
+    </symbol>
+<symbol id="logo-maybank" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#f7c600"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#111827">Maybank</text>
+    </symbol>
+<symbol id="logo-sinarmas" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#ed1c24"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#ed1c24">SINARMAS</text>
+    </symbol>
+<symbol id="logo-seabank" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#ff6a00"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#ff6a00">SeaBank</text>
+    </symbol>
+<symbol id="logo-card" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#1a1f71"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="#1a1f71">VISA · MC · JCB</text>
+    </symbol>
+<symbol id="logo-alfa" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#d71920"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#d71920">ALFA GROUP</text>
+    </symbol>
+<symbol id="logo-indomaret" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#e31e24"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#e31e24">INDOMARET</text>
+    </symbol>
+<symbol id="logo-gopay" viewBox="0 0 120 72">
+      <rect width="120" height="72" rx="12" fill="#ffffff"/>
+      <rect x="7" y="9" width="5" height="54" rx="2.5" fill="#00aed6"/>
+      <text x="65" y="39" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#00aed6">GoPay</text>
+    </symbol>
+</defs>
+</svg>

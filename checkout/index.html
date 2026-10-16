@@ -343,9 +343,14 @@ body.course-checkout .field input:focus{border-color:rgba(48,66,162,.65);box-sha
 html[data-theme="dark"] .course-access-notice{background:#29344d;border-color:#354053;color:#c0c9d7}
 body.course-checkout .course-access-notice{display:block}
 body.course-checkout .course-access-notice strong{color:var(--text)}
+.purchase-email-notice{margin:18px 0 0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);color:var(--muted);font-size:12px;line-height:1.65}
+.purchase-email-notice strong{color:var(--text)}
+.purchase-email-notice .email-note-parenthetical{color:var(--muted)}
 body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);line-height:1.25;letter-spacing:-.025em;white-space:nowrap;margin-bottom:8px}
 </style>
 
+<link rel="stylesheet" href="/assets/compact-controls.css">
+<link rel="stylesheet" href="/assets/checkout-payment-methods.css">
 </head>
 <body>
 <div class="grid-bg" aria-hidden="true"></div>
@@ -354,13 +359,23 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     <a class="brand" href="/">M<b>.</b></a>
     <div class="nav-actions">
       
-<div class="segmented language-segment" role="group" aria-label="Language">
+<div class="maul-compact-controls" aria-label="Display controls">
+  <select class="maul-compact-select maul-language-select" data-maul-language-select aria-label="Language">
+    <option value="id">ID</option>
+    <option value="en">EN</option>
+  </select>
+  <select class="maul-compact-select maul-theme-select" data-maul-theme-select aria-label="Appearance">
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</div>
+<div class="maul-legacy-controls segmented language-segment" role="group" aria-label="Language">
   <button type="button" data-language-choice="id" aria-pressed="true">ID</button>
   <button type="button" data-language-choice="en" aria-pressed="false">EN</button>
 </div>
-<div class="segmented theme-segment" role="group" aria-label="Appearance">
-  <button type="button" data-theme-choice="light" aria-pressed="true" title="Light mode">☀ <span class="label">Light</span></button>
-  <button type="button" data-theme-choice="dark" aria-pressed="false" title="Dark mode">◐ <span class="label">Dark</span></button>
+<div class="maul-legacy-controls segmented theme-segment" role="group" aria-label="Appearance">
+  <button type="button" data-theme-choice="light" aria-pressed="true" title="Light mode">Light</button>
+  <button type="button" data-theme-choice="dark" aria-pressed="false" title="Dark mode">Dark</button>
 </div>
 
       <a class="nav-link" id="back-detail-link" href="/products/">
@@ -375,7 +390,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
 <section class="checkout-view" id="checkout-view">
   <div class="form-shell shell">
     <div class="form-head">
-      <div class="eyebrow" id="checkout-provider-heading">Secure Checkout / DOKU Payment Gateway</div>
+      <div class="eyebrow" id="checkout-provider-heading">Secure Payment Gateway</div>
       <h1 class="lang-id">Lengkapi data pembelian.</h1>
       <h1 class="lang-en">Complete your purchase details.</h1>
       <p class="intro lang-id">Email digunakan untuk mengirim konfirmasi pembayaran dan link halaman pascapembayaran.</p>
@@ -416,12 +431,36 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
 
       <div class="field">
         <label for="customer-phone">
-          <span class="lang-id">Nomor telepon / WhatsApp</span><span class="lang-en">Phone / WhatsApp</span>
+          <span class="lang-id">Nomor Telepon / WhatsApp</span><span class="lang-en">Phone / WhatsApp</span>
           <span class="optional">(<span class="lang-id">opsional</span><span class="lang-en">optional</span>)</span>
         </label>
         <input id="customer-phone" type="tel" autocomplete="tel" maxlength="20"
           data-placeholder-id="0812xxxxxxxx" data-placeholder-en="+62..." placeholder="0812xxxxxxxx">
       </div>
+
+
+      <section class="payment-method-preview" id="payment-method-preview" hidden aria-labelledby="payment-method-label">
+        <div class="field-label" id="payment-method-label">
+          <span><span class="lang-id">Metode Pembayaran</span><span class="lang-en">Payment Method</span> <span class="required">*</span></span>
+        </div>
+        <input type="hidden" id="selected-payment-method" value="">
+        <div class="payment-dropdown">
+          <button class="payment-dropdown-trigger" id="payment-dropdown-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="payment-trigger-visual" id="payment-trigger-visual" hidden aria-hidden="true"></span>
+            <span class="payment-dropdown-trigger-copy">
+              <span class="payment-dropdown-trigger-title" id="payment-trigger-title">Pilih metode pembayaran</span>
+              <span class="payment-dropdown-trigger-meta" id="payment-trigger-meta">Pilih kategori pembayaran terlebih dahulu</span>
+            </span>
+            <span class="payment-dropdown-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div class="payment-dropdown-panel" id="payment-dropdown-panel" role="listbox" aria-label="Payment methods" hidden></div>
+        </div>
+        <div class="payment-price-breakdown" aria-live="polite">
+          <div class="payment-price-row"><span class="lang-id">Harga produk</span><span class="lang-en">Product price</span><strong id="payment-base-value">—</strong></div>
+          <div class="payment-price-row"><span>Service Fee</span><strong id="payment-fee-value">—</strong></div>
+          <div class="payment-price-row total"><span><span class="lang-id">Total pembayaran</span><span class="lang-en">Total payment</span></span><strong id="payment-total-value">Rp11.000</strong></div>
+        </div>
+      </section>
 
       <div class="privacy">
         <span class="lang-id">Data yang kamu isi digunakan untuk memproses order, pembayaran, dan komunikasi terkait layanan yang kamu beli.</span>
@@ -431,6 +470,11 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
       <div class="course-access-notice" id="course-access-notice">
         <span class="lang-id">Setelah pembayaran berhasil, email akses course akan dikirim otomatis dari <strong>course@mail.digmarketingmaul.com</strong>. Jika belum terlihat di inbox utama, mohon periksa folder Spam/Junk.</span>
         <span class="lang-en">After successful payment, your course access email will be sent automatically from <strong>course@mail.digmarketingmaul.com</strong>. If it does not appear in your main inbox, please check Spam/Junk.</span>
+      </div>
+
+      <div class="purchase-email-notice" id="purchase-email-notice" hidden>
+        <span class="lang-id">Setelah pembayaran berhasil, email otomatis dari <strong>order@mail.digmarketingmaul.com</strong> akan masuk ke inbox kamu dan berisi link untuk mengakses produk yang kamu beli. <span class="email-note-parenthetical">(Cek folder Spam/Junk apabila email tidak masuk ke inbox utama.)</span></span>
+        <span class="lang-en">After successful payment, an automatic email from <strong>order@mail.digmarketingmaul.com</strong> will be sent to your inbox with the link to access your purchased product. <span class="email-note-parenthetical">(Check Spam/Junk if the email does not appear in your main inbox.)</span></span>
       </div>
 
       <button class="btn btn-primary full" id="pay-button" type="submit">
@@ -642,6 +686,13 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     return;
   }
 
+  window.MauldigitalCheckoutContext = Object.freeze({
+    productId: PRODUCT_ID,
+    name: PRODUCT.name,
+    amount: PRODUCT.amount,
+    paymentRoutingEnabled: true
+  });
+
   const STORAGE_KEY = "maulCheckout:" + PRODUCT_ID;
   const DEVICE_KEY = "maulCheckoutDeviceId";
 
@@ -677,14 +728,15 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
       brand.innerHTML = '<span class="course-brand-mark">&lt;/&gt;</span><span class="course-brand-name">websitepertamamu<small>by digmarketingmaul</small></span>';
     }
     document.title = "Checkout — " + PRODUCT.name;
-    const providerName = PRODUCT.provider === "midtrans" ? "Midtrans" : "DOKU";
     const providerHeading = document.getElementById("checkout-provider-heading");
-    if (providerHeading) providerHeading.textContent = "Secure Checkout / " + providerName + " Payment Gateway";
+    if (providerHeading) providerHeading.textContent = "Secure Payment Gateway";
     document.getElementById("back-detail-link").href = PRODUCT.detailUrl;
     document.getElementById("checkout-product-name").textContent = PRODUCT.name;
     document.getElementById("checkout-product-summary-id").textContent = PRODUCT.summaryId;
     document.getElementById("checkout-product-summary-en").textContent = PRODUCT.summaryEn;
     document.getElementById("checkout-product-price").textContent = formatIdr(PRODUCT.amount);
+    const purchaseEmailNotice = document.getElementById("purchase-email-notice");
+    if (purchaseEmailNotice) purchaseEmailNotice.hidden = isCourse;
 
     const originalPrice = document.getElementById("checkout-original-price");
     const promoId = document.getElementById("checkout-promo-note-id");
@@ -740,19 +792,21 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     return language() === "en" ? "Proceed to Payment" : "Lanjutkan ke Pembayaran";
   }
 
-  function paymentProviderName() {
-    return PRODUCT.provider === "midtrans" ? "Midtrans" : "DOKU";
+  function paymentProvider(payment = null) {
+    const explicit = String(payment?.payment_provider || "").toLowerCase();
+    if (explicit === "midtrans" || explicit === "doku") return explicit;
+    return String(payment?.invoice_number || "").startsWith("MT") ? "midtrans" : "doku";
   }
 
   function setStatus(messageId, state = "", payment = null) {
     const messages = {
       creating: {
-        id: "Membuat transaksi aman melalui " + paymentProviderName() + "…",
-        en: "Creating a secure transaction through " + paymentProviderName() + "…"
+        id: "Membuat transaksi pembayaran yang aman…",
+        en: "Creating a secure payment transaction…"
       },
       waiting: {
-        id: "Checkout aktif. Menunggu konfirmasi pembayaran dari " + paymentProviderName() + "…",
-        en: "Checkout is active. Waiting for payment confirmation from " + paymentProviderName() + "…"
+        id: "Checkout aktif. Menunggu konfirmasi pembayaran…",
+        en: "Checkout is active. Waiting for payment confirmation…"
       },
       expired: {
         id: "Checkout sebelumnya sudah kedaluwarsa. Kamu sekarang dapat membuat order baru.",
@@ -1046,7 +1100,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
   }
 
   async function openPaymentCheckout(payment) {
-    if (PRODUCT.provider === "midtrans") {
+    if (paymentProvider(payment) === "midtrans") {
       await openMidtransCheckout(payment);
       return;
     }
@@ -1202,8 +1256,18 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
+    const selectedMethod = window.MauldigitalPaymentSelector?.getSelected?.();
+    if (!selectedMethod) {
+      setStatus(language() === "en" ? "Choose a payment method before continuing." : "Pilih metode pembayaran terlebih dahulu.", "error");
+      return;
+    }
+
+    if (window.MauldigitalCheckoutContext?.paymentRoutingEnabled !== true) {
+      return;
+    }
+
     if (activePayment?.payment_url) {
-      if (PRODUCT.provider !== "midtrans" && typeof window.loadJokulCheckout !== "function") {
+      if (paymentProvider(activePayment) !== "midtrans" && typeof window.loadJokulCheckout !== "function") {
         setStatus(language() === "en" ? "DOKU Checkout is not ready yet." : "DOKU Checkout belum siap.", "error");
         return;
       }
@@ -1233,7 +1297,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     setStatus("creating");
 
     try {
-      const createPaymentEndpoint = PRODUCT.provider === "midtrans"
+      const createPaymentEndpoint = selectedMethod.provider === "midtrans"
         ? "/api/create-midtrans-payment"
         : "/api/create-payment";
 
@@ -1242,6 +1306,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           product_id: PRODUCT_ID,
+          payment_method: selectedMethod.id,
           customer_email: email,
           customer_name: name,
           customer_phone: phone,
@@ -1258,8 +1323,13 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
         product_id: data.product_id,
         product_name: data.product_name,
         amount: data.amount,
+        base_amount: data.base_amount ?? PRODUCT.amount,
+        service_fee: data.service_fee ?? 0,
         currency: data.currency,
         status: "PENDING",
+        payment_provider: data.payment_provider || selectedMethod.provider,
+        payment_method_id: data.payment_method_id || selectedMethod.id,
+        payment_method_name: data.payment_method_name || selectedMethod.name,
         payment_url: data.payment_url,
         snap_token: data.snap_token || "",
         snap_client_key: data.snap_client_key || "",
@@ -1309,5 +1379,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
   }
 })();
 </script>
+<script src="/assets/compact-controls.js"></script>
+<script src="/assets/checkout-payment-methods.js"></script>
 </body>
 </html>

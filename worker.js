@@ -212,6 +212,172 @@ const PRODUCT_CATALOG = Object.freeze({
   },
 });
 
+/*
+ * Checkout payment routing is server-authoritative.
+ * Frontend only sends product_id + payment_method; the Worker decides provider,
+ * channel, service fee, and final charge amount.
+ */
+const PAYMENT_METHOD_CATALOG = Object.freeze({
+  qris: {
+    name: "QRIS",
+    provider: "midtrans",
+    midtransType: "other_qris",
+    feeRate: 0.007,
+    feeFixed: 0,
+  },
+
+  bsi: {
+    name: "BSI Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_BANK_SYARIAH_MANDIRI",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  permata: {
+    name: "Permata Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_BANK_PERMATA",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  danamon: {
+    name: "Danamon Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_BANK_DANAMON",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  mandiri: {
+    name: "Mandiri Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_BANK_MANDIRI",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  cimb: {
+    name: "CIMB Niaga Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_BANK_CIMB",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  bni: {
+    name: "BNI Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_BNI",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  bri: {
+    name: "BRI Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_BRI",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  bnc: {
+    name: "Bank Neo Commerce Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_BNC",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  btn: {
+    name: "BTN Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_BTN",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  maybank: {
+    name: "Maybank Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_MAYBANK",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  sinarmas: {
+    name: "Bank Sinarmas Virtual Account",
+    provider: "doku",
+    dokuType: "VIRTUAL_ACCOUNT_SINARMAS",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+  seabank: {
+    name: "SeaBank Virtual Account",
+    provider: "midtrans",
+    midtransType: "seabank_va",
+    feeRate: 0,
+    feeFixed: 4000,
+  },
+
+  card: {
+    name: "Credit / Debit Card",
+    provider: "midtrans",
+    midtransType: "credit_card",
+    feeRate: 0.029,
+    feeFixed: 2000,
+  },
+  alfa: {
+    name: "Alfa Group",
+    provider: "doku",
+    dokuType: "ONLINE_TO_OFFLINE_ALFA",
+    feeRate: 0,
+    feeFixed: 5000,
+  },
+  indomaret: {
+    name: "Indomaret",
+    provider: "doku",
+    dokuType: "ONLINE_TO_OFFLINE_INDOMARET",
+    feeRate: 0,
+    feeFixed: 6500,
+  },
+  gopay: {
+    name: "GoPay",
+    provider: "midtrans",
+    midtransType: "gopay",
+    feeRate: 0.02,
+    feeFixed: 0,
+  },
+});
+
+function normalizePaymentMethodId(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function calculateServiceFee(baseAmount, method) {
+  const amount = Number(baseAmount);
+  if (!Number.isFinite(amount) || amount < 0 || !method) return 0;
+  return Math.round(amount * Number(method.feeRate || 0)) + Number(method.feeFixed || 0);
+}
+
+function getPaymentSelection(productId, requestedMethodId, expectedProvider) {
+  const product = PRODUCT_CATALOG[String(productId || "").trim()];
+  if (!product) return { error: "Invalid or unavailable product_id" };
+
+  const methodId = normalizePaymentMethodId(requestedMethodId);
+  const method = PAYMENT_METHOD_CATALOG[methodId];
+  if (!method) return { error: "Invalid or unavailable payment_method" };
+
+  if (expectedProvider && method.provider !== expectedProvider) {
+    return { error: `Payment method ${methodId} must use ${method.provider}` };
+  }
+
+  const baseAmount = Number(product.amount);
+  const serviceFee = calculateServiceFee(baseAmount, method);
+  const totalAmount = baseAmount + serviceFee;
+
+  return {
+    product,
+    method,
+    methodId,
+    baseAmount,
+    serviceFee,
+    totalAmount,
+  };
+}
+
+
 
 function decodeBase64UrlToBytes(value) {
   const normalized = String(value || "")
@@ -520,6 +686,10 @@ async function getAdminOrders(request, env) {
       product_id,
       product_name,
       amount,
+      base_amount,
+      service_fee,
+      requested_payment_method,
+      payment_provider,
       currency,
       status,
       payment_channel,
@@ -2734,51 +2904,30 @@ async function createPayment(request, env) {
   const clientId = String(env.DOKU_CLIENT_ID || "").trim();
   const secretKey = String(env.DOKU_SECRET_KEY || "").trim();
 
-  if (!env.DB) {
-    return jsonResponse(
-      { success: false, error: "D1 binding DB is missing" },
-      500
-    );
-  }
-
-  if (!clientId) {
-    return jsonResponse(
-      { success: false, error: "DOKU_CLIENT_ID missing" },
-      500
-    );
-  }
-
-  if (!secretKey) {
-    return jsonResponse(
-      { success: false, error: "DOKU_SECRET_KEY missing" },
-      500
-    );
-  }
+  if (!env.DB) return jsonResponse({ success: false, error: "D1 binding DB is missing" }, 500);
+  if (!clientId) return jsonResponse({ success: false, error: "DOKU_CLIENT_ID missing" }, 500);
+  if (!secretKey) return jsonResponse({ success: false, error: "DOKU_SECRET_KEY missing" }, 500);
 
   let input;
   try {
     input = await request.json();
   } catch {
-    return jsonResponse(
-      { success: false, error: "Request body must be valid JSON" },
-      400
-    );
+    return jsonResponse({ success: false, error: "Request body must be valid JSON" }, 400);
   }
 
   const productId = String(input?.product_id || "").trim();
-  const product = PRODUCT_CATALOG[productId];
+  const selection = getPaymentSelection(productId, input?.payment_method, "doku");
+  if (selection.error) return jsonResponse({ success: false, error: selection.error }, 400);
+
+  const { product, method, methodId, baseAmount, serviceFee, totalAmount } = selection;
   const customerEmail = normalizeEmail(input?.customer_email);
   const customerName = normalizeCustomerName(input?.customer_name);
   const customerPhone = normalizePhone(input?.customer_phone);
   const deviceId = normalizeDeviceId(input?.device_id);
 
   if (!isValidDeviceId(deviceId)) {
-    return jsonResponse(
-      { success: false, error: "Device ID tidak valid. Refresh halaman lalu coba lagi." },
-      400
-    );
+    return jsonResponse({ success: false, error: "Device ID tidak valid. Refresh halaman lalu coba lagi." }, 400);
   }
-
   if (!isValidEmail(customerEmail)) {
     return jsonResponse({ success: false, error: "Email wajib diisi dengan format yang valid" }, 400);
   }
@@ -2786,103 +2935,47 @@ async function createPayment(request, env) {
     return jsonResponse({ success: false, error: "Nomor telepon tidak valid" }, 400);
   }
 
-  if (!product) {
-    return jsonResponse(
-      {
-        success: false,
-        error: "Invalid or unavailable product_id",
-      },
-      400
-    );
-  }
-
-  if (product.paymentProvider === "midtrans") {
-    return jsonResponse(
-      { success: false, error: "This product must use the Midtrans payment endpoint" },
-      400
-    );
-  }
-
-  /*
-   * ACTIVE ORDER LOCK
-   * One browser/device + one product may only have one active PENDING order.
-   *
-   * First, locally expire old PENDING rows for this device/product.
-   * Then reuse an existing unexpired order instead of calling DOKU again.
-   */
   const nowIso = new Date().toISOString();
-
   await env.DB.prepare(
     `UPDATE payments
-     SET status = 'EXPIRED',
-         updated_at = CURRENT_TIMESTAMP
-     WHERE device_id = ?
-       AND product_id = ?
-       AND status = 'PENDING'
-       AND expires_at IS NOT NULL
-       AND expires_at <= ?`
-  )
-    .bind(deviceId, productId, nowIso)
-    .run();
+     SET status = 'EXPIRED', updated_at = CURRENT_TIMESTAMP
+     WHERE device_id = ? AND product_id = ? AND status = 'PENDING'
+       AND expires_at IS NOT NULL AND expires_at <= ?`
+  ).bind(deviceId, productId, nowIso).run();
 
   const activeOrder = await env.DB.prepare(
-    `SELECT
-       invoice_number,
-       status_token,
-       product_id,
-       product_name,
-       amount,
-       currency,
-       payment_url,
-       expired_date,
-       expires_at,
-       customer_email,
-       customer_name,
-       customer_phone
+    `SELECT invoice_number, status_token, product_id, product_name, amount, currency,
+            payment_url, expired_date, expires_at, customer_email, customer_name, customer_phone,
+            base_amount, service_fee, requested_payment_method, payment_provider
      FROM payments
-     WHERE device_id = ?
-       AND product_id = ?
-       AND status = 'PENDING'
-       AND expires_at IS NOT NULL
-       AND expires_at > ?
-       AND payment_url IS NOT NULL
-       AND TRIM(payment_url) <> ''
-     ORDER BY id DESC
-     LIMIT 1`
-  )
-    .bind(deviceId, productId, nowIso)
-    .first();
+     WHERE device_id = ? AND product_id = ? AND status = 'PENDING'
+       AND requested_payment_method = ? AND payment_provider = 'doku' AND amount = ?
+       AND expires_at IS NOT NULL AND expires_at > ?
+       AND payment_url IS NOT NULL AND TRIM(payment_url) <> ''
+     ORDER BY id DESC LIMIT 1`
+  ).bind(deviceId, productId, methodId, totalAmount, nowIso).first();
 
   if (activeOrder) {
-    console.log(
-      JSON.stringify({
-        type: "DOKU_ACTIVE_ORDER_REUSED",
-        invoiceNumber: activeOrder.invoice_number,
-        productId,
-        deviceId,
-        expiresAt: activeOrder.expires_at,
-      })
-    );
-
     return jsonResponse({
       success: true,
       reused: true,
       active_order: true,
+      payment_provider: "doku",
+      payment_method_id: methodId,
+      payment_method_name: method.name,
       invoice_number: activeOrder.invoice_number,
       status_token: activeOrder.status_token,
       product_id: activeOrder.product_id,
       product_name: activeOrder.product_name,
+      base_amount: Number(activeOrder.base_amount ?? baseAmount),
+      service_fee: Number(activeOrder.service_fee ?? serviceFee),
       amount: activeOrder.amount,
       currency: activeOrder.currency,
       status: "PENDING",
       payment_url: activeOrder.payment_url,
       expired_date: activeOrder.expired_date,
       expires_at: activeOrder.expires_at,
-      success_page_url: buildSuccessPageUrl(
-        activeOrder.invoice_number,
-        activeOrder.status_token,
-        env
-      ),
+      success_page_url: buildSuccessPageUrl(activeOrder.invoice_number, activeOrder.status_token, env),
       customer_email_masked: maskEmail(activeOrder.customer_email),
     });
   }
@@ -2891,26 +2984,23 @@ async function createPayment(request, env) {
   const statusToken = crypto.randomUUID();
   const successPageUrl = buildSuccessPageUrl(invoiceNumber, statusToken, env);
 
+  const lineItems = [
+    { name: product.name, quantity: 1, price: baseAmount },
+    ...(serviceFee > 0 ? [{ name: `Service Fee - ${method.name}`, quantity: 1, price: serviceFee }] : []),
+  ];
+
   const payload = {
     order: {
-      amount: product.amount,
+      amount: totalAmount,
       invoice_number: invoiceNumber,
       currency: product.currency,
       callback_url_result: successPageUrl,
       auto_redirect: false,
-      line_items: [
-        {
-          name: product.name,
-          quantity: 1,
-          price: product.amount,
-        },
-      ],
+      line_items: lineItems,
     },
     payment: {
       payment_due_date: 60,
-      ...(Array.isArray(product.paymentMethodTypes) && product.paymentMethodTypes.length
-        ? { payment_method_types: product.paymentMethodTypes }
-        : {}),
+      payment_method_types: [method.dokuType],
     },
     customer: {
       email: customerEmail,
@@ -2924,22 +3014,15 @@ async function createPayment(request, env) {
   const requestId = crypto.randomUUID();
   const requestTimestamp = new Date().toISOString().split(".")[0] + "Z";
   const digest = await generateDigest(body);
-
   const componentSignature =
     `Client-Id:${clientId}\n` +
     `Request-Id:${requestId}\n` +
     `Request-Timestamp:${requestTimestamp}\n` +
     `Request-Target:${CREATE_PAYMENT_REQUEST_TARGET}\n` +
     `Digest:${digest}`;
+  const signature = await generateSignature(secretKey, componentSignature);
 
-  const signature = await generateSignature(
-    secretKey,
-    componentSignature
-  );
-
-  const dokuEndpoint = getDokuPaymentEndpoint(env);
-
-  const response = await fetch(dokuEndpoint, {
+  const response = await fetch(getDokuPaymentEndpoint(env), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -2953,136 +3036,65 @@ async function createPayment(request, env) {
   });
 
   const responseText = await response.text();
-
   let data;
-  try {
-    data = JSON.parse(responseText);
-  } catch {
-    data = { raw_response: responseText };
-  }
+  try { data = JSON.parse(responseText); } catch { data = { raw_response: responseText }; }
 
   if (!response.ok) {
-    return jsonResponse(
-      {
-        success: false,
-        error: "DOKU request failed",
-        doku_status: response.status,
-        doku_response: data,
-      },
-      502
-    );
+    return jsonResponse({ success: false, error: "DOKU request failed", doku_status: response.status, doku_response: data }, 502);
   }
 
-  const paymentUrl = String(
-    data?.response?.payment?.url || ""
-  ).trim();
-
-  const expiredDate = String(
-    data?.response?.payment?.expired_date || ""
-  ).trim() || null;
-
+  const paymentUrl = String(data?.response?.payment?.url || "").trim();
+  const expiredDate = String(data?.response?.payment?.expired_date || "").trim() || null;
   const parsedExpiry = parseDokuExpiredDate(expiredDate);
-  const expiresAt = (
-    parsedExpiry || new Date(Date.now() + 60 * 60 * 1000)
-  ).toISOString();
+  const expiresAt = (parsedExpiry || new Date(Date.now() + 60 * 60 * 1000)).toISOString();
 
   if (!paymentUrl) {
-    return jsonResponse(
-      {
-        success: false,
-        error: "DOKU response did not include payment URL",
-      },
-      502
-    );
+    return jsonResponse({ success: false, error: "DOKU response did not include payment URL" }, 502);
   }
 
-  /*
-   * Create PENDING row immediately.
-   *
-   * This gives D1 a complete order record BEFORE the user pays.
-   * DOKU webhook later upgrades this same row to SUCCESS.
-   */
   try {
     await env.DB.prepare(
       `INSERT INTO payments (
-        invoice_number,
-        request_id,
-        amount,
-        currency,
-        status,
-        product_id,
-        product_name,
-        payment_url,
-        expired_date,
-        status_token,
-        customer_name,
-        customer_email,
-        customer_phone,
-        email_status,
-        device_id,
-        expires_at,
-        created_at,
-        updated_at
-      ) VALUES (?, ?, ?, ?, 'PENDING', ?, ?, ?, ?, ?, ?, ?, ?, 'WAITING_PAYMENT', ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
-    )
-      .bind(
-        invoiceNumber,
-        requestId,
-        product.amount,
-        product.currency,
-        productId,
-        product.name,
-        paymentUrl,
-        expiredDate,
-        statusToken,
-        customerName || null,
-        customerEmail,
-        customerPhone || null,
-        deviceId,
-        expiresAt
-      )
-      .run();
+        invoice_number, request_id, amount, base_amount, service_fee, currency, status,
+        product_id, product_name, requested_payment_method, payment_provider,
+        payment_url, expired_date, status_token, customer_name, customer_email,
+        customer_phone, email_status, device_id, expires_at, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?, 'doku', ?, ?, ?, ?, ?, ?, 'WAITING_PAYMENT', ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
+    ).bind(
+      invoiceNumber, requestId, totalAmount, baseAmount, serviceFee, product.currency,
+      productId, product.name, methodId, paymentUrl, expiredDate, statusToken,
+      customerName || null, customerEmail, customerPhone || null, deviceId, expiresAt
+    ).run();
   } catch (error) {
-    console.error(
-      JSON.stringify({
-        type: "DOKU_PENDING_SAVE_FAILED",
-        invoiceNumber,
-        productId,
-        error: error instanceof Error ? error.message : String(error),
-      })
-    );
-
-    return jsonResponse(
-      {
-        success: false,
-        error: "Checkout created but order could not be stored",
-      },
-      500
-    );
+    console.error("DOKU_PENDING_SAVE_FAILED", { invoiceNumber, error: error instanceof Error ? error.message : String(error) });
+    return jsonResponse({ success: false, error: "Checkout created but order could not be stored" }, 500);
   }
 
-  console.log(
-    JSON.stringify({
-      type: "DOKU_PAYMENT_CREATED",
-      dokuEnvironment: getDokuEnvironment(env).name,
-      invoiceNumber,
-      productId,
-      amount: product.amount,
-      status: "PENDING",
-      deviceId,
-      expiresAt,
-    })
-  );
+  console.log(JSON.stringify({
+    type: "DOKU_PAYMENT_CREATED",
+    invoiceNumber,
+    productId,
+    paymentMethod: methodId,
+    baseAmount,
+    serviceFee,
+    amount: totalAmount,
+    status: "PENDING",
+  }));
 
   return jsonResponse({
     success: true,
     reused: false,
     active_order: true,
+    payment_provider: "doku",
+    payment_method_id: methodId,
+    payment_method_name: method.name,
     invoice_number: invoiceNumber,
     status_token: statusToken,
     product_id: productId,
     product_name: product.name,
-    amount: product.amount,
+    base_amount: baseAmount,
+    service_fee: serviceFee,
+    amount: totalAmount,
     currency: product.currency,
     status: "PENDING",
     payment_url: paymentUrl,
@@ -3092,7 +3104,6 @@ async function createPayment(request, env) {
     customer_email_masked: maskEmail(customerEmail),
   });
 }
-
 
 async function sha512Hex(value) {
   const digest = await crypto.subtle.digest("SHA-512", encoder.encode(String(value || "")));
@@ -3115,9 +3126,7 @@ function mapMidtransStatus(notification) {
 }
 
 async function createMidtransPayment(request, env) {
-  if (!env.DB) {
-    return jsonResponse({ success: false, error: "D1 binding DB is missing" }, 500);
-  }
+  if (!env.DB) return jsonResponse({ success: false, error: "D1 binding DB is missing" }, 500);
 
   let serverKey;
   let clientKey;
@@ -3131,22 +3140,19 @@ async function createMidtransPayment(request, env) {
   }
 
   let input;
-  try {
-    input = await request.json();
-  } catch {
-    return jsonResponse({ success: false, error: "Request body must be valid JSON" }, 400);
-  }
+  try { input = await request.json(); }
+  catch { return jsonResponse({ success: false, error: "Request body must be valid JSON" }, 400); }
 
   const productId = String(input?.product_id || "").trim();
-  const product = PRODUCT_CATALOG[productId];
+  const selection = getPaymentSelection(productId, input?.payment_method, "midtrans");
+  if (selection.error) return jsonResponse({ success: false, error: selection.error }, 400);
+
+  const { product, method, methodId, baseAmount, serviceFee, totalAmount } = selection;
   const customerEmail = normalizeEmail(input?.customer_email);
   const customerName = normalizeCustomerName(input?.customer_name);
   const customerPhone = normalizePhone(input?.customer_phone);
   const deviceId = normalizeDeviceId(input?.device_id);
 
-  if (!product || product.paymentProvider !== "midtrans") {
-    return jsonResponse({ success: false, error: "Invalid or unavailable Midtrans product_id" }, 400);
-  }
   if (!isValidDeviceId(deviceId)) {
     return jsonResponse({ success: false, error: "Device ID tidak valid. Refresh halaman lalu coba lagi." }, 400);
   }
@@ -3159,21 +3165,22 @@ async function createMidtransPayment(request, env) {
 
   const nowIso = new Date().toISOString();
   await env.DB.prepare(
-    `UPDATE payments
-     SET status = 'EXPIRED', updated_at = CURRENT_TIMESTAMP
+    `UPDATE payments SET status = 'EXPIRED', updated_at = CURRENT_TIMESTAMP
      WHERE device_id = ? AND product_id = ? AND status = 'PENDING'
        AND expires_at IS NOT NULL AND expires_at <= ?`
   ).bind(deviceId, productId, nowIso).run();
 
   const activeOrder = await env.DB.prepare(
     `SELECT invoice_number, status_token, product_id, product_name, amount, currency,
-            payment_url, expired_date, expires_at, customer_email, customer_name, customer_phone
+            payment_url, expired_date, expires_at, customer_email, customer_name, customer_phone,
+            base_amount, service_fee, requested_payment_method, payment_provider
      FROM payments
      WHERE device_id = ? AND product_id = ? AND status = 'PENDING'
+       AND requested_payment_method = ? AND payment_provider = 'midtrans' AND amount = ?
        AND expires_at IS NOT NULL AND expires_at > ?
        AND payment_url IS NOT NULL AND TRIM(payment_url) <> ''
      ORDER BY id DESC LIMIT 1`
-  ).bind(deviceId, productId, nowIso).first();
+  ).bind(deviceId, productId, methodId, totalAmount, nowIso).first();
 
   if (activeOrder) {
     return jsonResponse({
@@ -3181,10 +3188,14 @@ async function createMidtransPayment(request, env) {
       reused: true,
       active_order: true,
       payment_provider: "midtrans",
+      payment_method_id: methodId,
+      payment_method_name: method.name,
       invoice_number: activeOrder.invoice_number,
       status_token: activeOrder.status_token,
       product_id: activeOrder.product_id,
       product_name: activeOrder.product_name,
+      base_amount: Number(activeOrder.base_amount ?? baseAmount),
+      service_fee: Number(activeOrder.service_fee ?? serviceFee),
       amount: activeOrder.amount,
       currency: activeOrder.currency,
       status: "PENDING",
@@ -3205,27 +3216,22 @@ async function createMidtransPayment(request, env) {
   const successPageUrl = buildSuccessPageUrl(invoiceNumber, statusToken, env);
   const finishUrl = buildMidtransFinishUrl(invoiceNumber, statusToken, env);
 
+  const itemDetails = [
+    { id: productId, price: baseAmount, quantity: 1, name: product.name.slice(0, 50) },
+    ...(serviceFee > 0 ? [{ id: `fee-${methodId}`, price: serviceFee, quantity: 1, name: `Service Fee - ${method.name}`.slice(0, 50) }] : []),
+  ];
+
   const payload = {
-    transaction_details: {
-      order_id: invoiceNumber,
-      gross_amount: product.amount,
-    },
-    item_details: [
-      {
-        id: productId,
-        price: product.amount,
-        quantity: 1,
-        name: product.name.slice(0, 50),
-      },
-    ],
+    transaction_details: { order_id: invoiceNumber, gross_amount: totalAmount },
+    item_details: itemDetails,
+    enabled_payments: [method.midtransType],
     customer_details: {
       email: customerEmail,
       ...(customerName ? { first_name: customerName } : {}),
       ...(customerPhone ? { phone: customerPhone } : {}),
     },
-    callbacks: {
-      finish: finishUrl,
-    },
+    callbacks: { finish: finishUrl },
+    ...(method.midtransType === "credit_card" ? { credit_card: { secure: true } } : {}),
   };
 
   const response = await fetch(midtrans.snapTransactionUrl, {
@@ -3243,13 +3249,8 @@ async function createMidtransPayment(request, env) {
   try { data = JSON.parse(responseText); } catch { data = { raw_response: responseText }; }
 
   if (!response.ok) {
-    console.error("MIDTRANS_CREATE_FAILED", { status: response.status, data });
-    return jsonResponse({
-      success: false,
-      error: "Midtrans request failed",
-      midtrans_status: response.status,
-      midtrans_response: data,
-    }, 502);
+    console.error("MIDTRANS_CREATE_FAILED", { status: response.status, data, methodId });
+    return jsonResponse({ success: false, error: "Midtrans request failed", midtrans_status: response.status, midtrans_response: data }, 502);
   }
 
   const paymentUrl = String(data?.redirect_url || "").trim();
@@ -3258,31 +3259,20 @@ async function createMidtransPayment(request, env) {
     return jsonResponse({ success: false, error: "Midtrans response did not include Snap token/redirect_url" }, 502);
   }
 
-  // Keep the local active-order lock conservative. Midtrans will send the real
-  // expire/cancel status via webhook, which remains the source of truth.
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
   try {
     await env.DB.prepare(
       `INSERT INTO payments (
-        invoice_number, request_id, amount, currency, status, product_id, product_name,
+        invoice_number, request_id, amount, base_amount, service_fee, currency, status,
+        product_id, product_name, requested_payment_method, payment_provider,
         payment_url, expired_date, status_token, customer_name, customer_email,
         customer_phone, email_status, device_id, expires_at, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, 'PENDING', ?, ?, ?, NULL, ?, ?, ?, ?, 'WAITING_PAYMENT', ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
+      ) VALUES (?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?, 'midtrans', ?, NULL, ?, ?, ?, ?, 'WAITING_PAYMENT', ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
     ).bind(
-      invoiceNumber,
-      requestId,
-      product.amount,
-      product.currency,
-      productId,
-      product.name,
-      paymentUrl,
-      statusToken,
-      customerName || null,
-      customerEmail,
-      customerPhone || null,
-      deviceId,
-      expiresAt
+      invoiceNumber, requestId, totalAmount, baseAmount, serviceFee, product.currency,
+      productId, product.name, methodId, paymentUrl, statusToken,
+      customerName || null, customerEmail, customerPhone || null, deviceId, expiresAt
     ).run();
   } catch (error) {
     console.error("MIDTRANS_PENDING_SAVE_FAILED", { invoiceNumber, error: error instanceof Error ? error.message : String(error) });
@@ -3294,10 +3284,11 @@ async function createMidtransPayment(request, env) {
     midtransEnvironment: midtrans.name,
     invoiceNumber,
     productId,
-    amount: product.amount,
+    paymentMethod: methodId,
+    baseAmount,
+    serviceFee,
+    amount: totalAmount,
     status: "PENDING",
-    deviceId,
-    expiresAt,
   }));
 
   return jsonResponse({
@@ -3305,11 +3296,15 @@ async function createMidtransPayment(request, env) {
     reused: false,
     active_order: true,
     payment_provider: "midtrans",
+    payment_method_id: methodId,
+    payment_method_name: method.name,
     invoice_number: invoiceNumber,
     status_token: statusToken,
     product_id: productId,
     product_name: product.name,
-    amount: product.amount,
+    base_amount: baseAmount,
+    service_fee: serviceFee,
+    amount: totalAmount,
     currency: product.currency,
     status: "PENDING",
     payment_url: paymentUrl,
@@ -3358,7 +3353,7 @@ async function handleMidtransNotification(request, env) {
   }
 
   const payment = await env.DB.prepare(
-    `SELECT invoice_number, product_id, amount, status
+    `SELECT invoice_number, product_id, amount, status, payment_provider, requested_payment_method
      FROM payments WHERE invoice_number = ? LIMIT 1`
   ).bind(orderId).first();
 
@@ -3368,8 +3363,8 @@ async function handleMidtransNotification(request, env) {
   }
 
   const product = PRODUCT_CATALOG[payment.product_id];
-  if (!product || product.paymentProvider !== "midtrans") {
-    return jsonResponse({ success: false, error: "Order is not a Midtrans product" }, 400);
+  if (!product || String(payment.payment_provider || "").toLowerCase() !== "midtrans") {
+    return jsonResponse({ success: false, error: "Order is not a Midtrans payment" }, 400);
   }
 
   const notificationAmount = Math.round(Number(grossAmount));
@@ -3465,6 +3460,10 @@ async function getPaymentStatus(request, env) {
       product_id,
       product_name,
       amount,
+      base_amount,
+      service_fee,
+      requested_payment_method,
+      payment_provider,
       currency,
       status,
       paid_at,
@@ -3539,6 +3538,10 @@ async function getPaymentStatus(request, env) {
     product_id: payment.product_id,
     product_name: payment.product_name,
     amount: payment.amount,
+    base_amount: payment.base_amount,
+    service_fee: payment.service_fee,
+    payment_method_id: payment.requested_payment_method,
+    payment_provider: payment.payment_provider,
     currency: payment.currency,
     status: effectiveStatus,
     paid_at: payment.paid_at,

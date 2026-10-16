@@ -1,0 +1,63 @@
+/* Payment method selector — visual stage only; routing remains isolated in checkout logic. */
+.payment-method-preview{display:none;margin:4px 0 20px}
+body.payment-method-preview-active .payment-method-preview{display:block}
+.payment-method-preview .field-label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;font-size:14px;font-weight:700}
+.payment-dropdown{position:relative}
+.payment-dropdown-trigger{width:100%;min-height:64px;padding:10px 12px;display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:12px;background:var(--bg-soft);color:var(--text);text-align:left;cursor:pointer;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
+.payment-dropdown-trigger:hover,.payment-dropdown-trigger[aria-expanded="true"]{border-color:rgba(255,49,88,.42);box-shadow:0 0 0 3px rgba(255,49,88,.06)}
+.payment-dropdown-trigger-copy{min-width:0;flex:1}
+.payment-dropdown-trigger-title{display:block;font-weight:750;font-size:14px;line-height:1.35}
+.payment-dropdown-trigger-meta{display:block;margin-top:4px;color:var(--muted);font-size:11px;line-height:1.35}
+.payment-dropdown-chevron,.payment-category-chevron,.payment-category-arrow{width:18px;height:18px;display:grid;place-items:center;color:var(--muted);transition:transform .18s ease;flex:0 0 auto;font-size:22px;line-height:1}
+.payment-dropdown-trigger[aria-expanded="true"] .payment-dropdown-chevron,.payment-category-option[aria-expanded="true"] .payment-category-chevron{transform:rotate(180deg)}
+.payment-trigger-visual{display:flex;align-items:center;justify-content:center;min-width:56px;max-width:120px;min-height:36px;flex:0 0 auto}
+.payment-trigger-visual[hidden]{display:none!important}
+.payment-method-logo-box{width:58px;height:38px;display:flex;align-items:center;justify-content:center;flex:0 0 58px;padding:5px;border-radius:9px;background:#fff;border:1px solid rgba(15,23,42,.08);overflow:hidden}
+.payment-method-logo-image{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+.payment-dropdown-panel{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:40;max-height:min(520px,66vh);overflow:auto;padding:10px 8px;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:0 24px 70px rgba(15,23,42,.18)}
+.payment-dropdown-panel[hidden],.payment-category-children[hidden]{display:none!important}
+.payment-category-group+.payment-category-group,.payment-category-group+.payment-category-option,.payment-category-option+.payment-category-group{margin-top:6px}
+.payment-category-option,.payment-method-option{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;padding:16px 12px;border:0;border-radius:12px;background:transparent;color:var(--text);text-align:left;cursor:pointer;transition:background .15s ease}
+.payment-category-option:hover,.payment-category-option:focus-visible,.payment-method-option:hover,.payment-method-option:focus-visible{background:var(--panel-2);outline:none}
+.payment-method-option[aria-selected="true"],.payment-category-option[aria-selected="true"]{background:var(--accent-soft)}
+.payment-category-copy,.payment-method-copy{min-width:0}
+.payment-category-copy strong,.payment-method-name{display:block;font-weight:800;font-size:14px;line-height:1.35}
+.payment-category-preview{display:flex;align-items:center;min-height:26px;margin-top:12px}
+.payment-preview-stack{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.payment-preview-stack.is-single{gap:10px}
+.payment-preview-logo{display:block;width:auto;height:18px;max-width:64px;object-fit:contain}
+.payment-preview-stack.is-single .payment-preview-logo{height:20px;max-width:92px}
+.payment-preview-stack.is-single img[src$="gopay.webp"]{height:22px;max-width:130px}
+.payment-preview-more{display:inline-flex;align-items:center;justify-content:center;height:20px;padding:0 4px;border-radius:999px;font:700 12px/1 "JetBrains Mono",monospace;color:var(--text)}
+.payment-category-children{margin:4px 0 8px 18px;padding:4px 0 4px 16px;border-left:1px solid var(--line)}
+.payment-method-option{grid-template-columns:58px minmax(0,1fr) auto;gap:11px;padding:10px}
+.payment-method-option.is-child .payment-method-logo-box{width:54px;height:34px;flex-basis:54px}
+.payment-method-fee{text-align:right;white-space:nowrap;color:var(--muted);font:600 9px/1.25 "JetBrains Mono",monospace}
+.payment-method-fee span{display:block;margin-bottom:3px;font-size:8px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}
+.payment-method-fee strong{display:block;color:var(--text);font-size:10px;font-weight:700}
+.payment-card-logos{display:flex;align-items:center;gap:4px;flex-wrap:wrap;min-width:58px;max-width:138px;padding:5px 6px;border-radius:9px;background:#fff;border:1px solid rgba(15,23,42,.08)}
+.payment-card-logos.is-compact{max-width:120px;flex-wrap:nowrap;overflow:hidden}
+.payment-card-logo{display:block;width:auto;height:15px;max-width:27px;object-fit:contain}
+.payment-card-logos.is-compact .payment-card-logo{height:13px;max-width:22px}
+.payment-price-breakdown{margin-top:16px;padding:15px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
+.payment-price-row{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:6px 0;color:var(--muted);font-size:13px;line-height:1.45}
+.payment-price-row strong{color:var(--text);font:600 13px/1.45 "JetBrains Mono",monospace;text-align:right}
+.payment-price-row.total{margin-top:7px;padding-top:13px;border-top:1px solid var(--line);color:var(--text);font-weight:750}
+.payment-price-row.total strong{font-size:17px;color:var(--accent)}
+.payment-price-method{margin-top:7px;font-size:10px;color:var(--muted);line-height:1.5}
+body.payment-method-preview-active #pay-button:disabled{cursor:not-allowed;opacity:.56;transform:none}
+html[data-theme="dark"] .payment-method-logo-box,html[data-theme="dark"] .payment-card-logos{border-color:rgba(148,163,184,.18)}
+@media(max-width:560px){
+  .payment-category-option{padding:14px 10px;gap:8px}
+  .payment-preview-stack{gap:10px}
+  .payment-preview-logo{height:16px;max-width:52px}
+  .payment-preview-stack.is-single .payment-preview-logo{height:18px;max-width:82px}
+  .payment-preview-stack.is-single img[src$="gopay.webp"]{height:20px;max-width:118px}
+  .payment-method-option{grid-template-columns:48px minmax(0,1fr);gap:8px}
+  .payment-method-option .payment-method-fee{grid-column:2;text-align:left;margin-top:-2px}
+  .payment-method-logo-box{width:48px;height:32px;flex-basis:48px}
+  .payment-method-option.is-child .payment-method-logo-box{width:48px;height:31px;flex-basis:48px}
+  .payment-category-children{margin-left:12px;padding-left:10px}
+  .payment-card-logos{max-width:112px;gap:3px}
+  .payment-card-logo{height:13px;max-width:23px}
+}
