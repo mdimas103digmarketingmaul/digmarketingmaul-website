@@ -1,0 +1,37 @@
+/* Product detail header + International mode. Mirrors /products/ compact controls. */
+.product-detail-header-left{display:flex;align-items:center;gap:16px;min-width:0}
+.product-detail-header-controls{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.product-international-toggle{display:inline-flex;align-items:center;gap:7px;min-height:32px;padding:5px 9px;border:1px solid rgba(150,165,185,.14);border-radius:999px;background:rgba(255,255,255,.72);color:#667085;font:500 10px/1 "JetBrains Mono",monospace;cursor:pointer;transition:border-color .18s ease,color .18s ease,background .18s ease}
+.product-international-toggle:hover,.product-international-toggle:focus-visible{border-color:rgba(255,49,88,.35);color:var(--text);outline:none}
+.product-international-toggle .pit-track{width:27px;height:16px;border-radius:999px;background:#cfd5dd;position:relative;flex:none;transition:.18s ease}
+.product-international-toggle .pit-track>span{position:absolute;width:10px;height:10px;left:3px;top:3px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.22);transition:.18s ease}
+.product-international-toggle[aria-pressed="true"]{border-color:rgba(255,49,88,.42);color:var(--accent)}
+.product-international-toggle[aria-pressed="true"] .pit-track{background:var(--accent)}
+.product-international-toggle[aria-pressed="true"] .pit-track>span{transform:translateX(11px)}
+html[data-theme="dark"] .product-international-toggle{background:rgba(9,21,34,.36);border-color:rgba(150,165,185,.14);color:#9aa8bd}
+html[data-theme="dark"] .product-international-toggle:hover,html[data-theme="dark"] .product-international-toggle:focus-visible{color:#eef4ff}
+html[data-international="true"] .maul-language-select option[value="id"]{color:#98a2b3}
+html:not([data-international="true"]) body .international-only{display:none!important}
+html[data-international="true"] body .international-only{display:inline!important}
+html[data-international="true"] body .local-only{display:none!important}
+@media(max-width:980px){
+  .product-detail-header-left{gap:9px}
+  .product-detail-header-controls{gap:5px}
+  .product-international-label{display:none}
+  .product-international-toggle{width:45px;justify-content:center;padding-inline:7px}
+}
+@media(max-width:760px){
+  .topbar-inner{flex-wrap:wrap;align-items:center}
+  .product-detail-header-left{width:100%;justify-content:space-between}
+  .product-international-label{display:inline}
+  .product-international-toggle{width:auto}
+  .nav-actions{width:100%;justify-content:space-between}
+}
+@media(max-width:560px){
+  .topbar-inner{display:flex;grid-template-columns:none}
+  .product-detail-header-controls{gap:4px}
+  .product-international-toggle{padding-inline:7px}
+  .product-international-label{display:none}
+  .maul-compact-select{min-width:55px;padding-left:8px;padding-right:25px}
+  .maul-theme-select{min-width:70px}
+}

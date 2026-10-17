@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f7f8fb">
 <meta name="description" content="Digital Marketing eBooks — Midtrans live test flow checkout dan pascapembayaran. Produk eBook final belum tersedia.">
+<meta name="robots" content="noindex,nofollow,noarchive">
 <title>Digital Marketing eBooks — Maul Digital</title>
 <link rel="canonical" href="https://digmarketingmaul.com/products/digital-marketing-ebooks-midtrans/">
 <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
@@ -17,18 +18,17 @@
 
 <script>
 (function () {
-  const THEME_KEY = "maulCommerceTheme";
-  const GLOBAL_THEME_KEY = "maulSiteTheme";
+  const THEME_KEY = "maulCommerceDarkMode";
   const LANG_KEY = "maulCommerceLanguage";
 
   let theme = "light";
   let language = "id";
 
   try {
-    const savedTheme = localStorage.getItem(GLOBAL_THEME_KEY) || localStorage.getItem(THEME_KEY);
+    const savedDark = localStorage.getItem(THEME_KEY) === "true";
     const savedLanguage = localStorage.getItem(LANG_KEY);
 
-    theme = savedTheme === "dark" ? "dark" : "light";
+    theme = savedDark ? "dark" : "light";
     language = savedLanguage === "en" ? "en" : "id";
   } catch (error) {}
 
@@ -298,10 +298,10 @@ html[data-theme="dark"] .test-notice{background:rgba(59,130,246,.065);border-col
             <option value="id">ID</option>
             <option value="en">EN</option>
           </select>
-          <select class="maul-compact-select maul-theme-select" data-maul-theme-select aria-label="Appearance">
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-          </select>
+          <button class="maul-dark-toggle" type="button" data-maul-dark-toggle aria-pressed="false" aria-label="Enable dark mode">
+            <span class="maul-dark-toggle-track" aria-hidden="true"><span></span></span>
+            <span>Dark</span>
+          </button>
         </div>
       </div>
     </div>
@@ -405,8 +405,7 @@ html[data-theme="dark"] .test-notice{background:rgba(59,130,246,.065);border-col
 
 <script>
 (function () {
-  const THEME_KEY = "maulCommerceTheme";
-  const GLOBAL_THEME_KEY = "maulSiteTheme";
+  const THEME_KEY = "maulCommerceDarkMode";
   const LANG_KEY = "maulCommerceLanguage";
   const root = document.documentElement;
 
@@ -433,8 +432,7 @@ html[data-theme="dark"] .test-notice{background:rgba(59,130,246,.065);border-col
 
     if (persist) {
       try {
-        localStorage.setItem(THEME_KEY, next);
-        localStorage.setItem(GLOBAL_THEME_KEY, next);
+        localStorage.setItem(THEME_KEY, String(next === "dark"));
       } catch (error) {}
     }
   }

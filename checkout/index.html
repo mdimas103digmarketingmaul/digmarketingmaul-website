@@ -16,18 +16,17 @@
 
 <script>
 (function () {
-  const THEME_KEY = "maulCommerceTheme";
-  const GLOBAL_THEME_KEY = "maulSiteTheme";
+  const THEME_KEY = "maulCommerceDarkMode";
   const LANG_KEY = "maulCommerceLanguage";
 
   let theme = "light";
   let language = "id";
 
   try {
-    const savedTheme = localStorage.getItem(GLOBAL_THEME_KEY) || localStorage.getItem(THEME_KEY);
+    const savedDark = localStorage.getItem(THEME_KEY) === "true";
     const savedLanguage = localStorage.getItem(LANG_KEY);
 
-    theme = savedTheme === "dark" ? "dark" : "light";
+    theme = savedDark ? "dark" : "light";
     language = savedLanguage === "en" ? "en" : "id";
   } catch (error) {}
 
@@ -364,10 +363,10 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
     <option value="id">ID</option>
     <option value="en">EN</option>
   </select>
-  <select class="maul-compact-select maul-theme-select" data-maul-theme-select aria-label="Appearance">
-    <option value="light">Light</option>
-    <option value="dark">Dark</option>
-  </select>
+  <button class="maul-dark-toggle" type="button" data-maul-dark-toggle aria-pressed="false" aria-label="Enable dark mode">
+    <span class="maul-dark-toggle-track" aria-hidden="true"><span></span></span>
+    <span>Dark</span>
+  </button>
 </div>
 <div class="maul-legacy-controls segmented language-segment" role="group" aria-label="Language">
   <button type="button" data-language-choice="id" aria-pressed="true">ID</button>
@@ -554,8 +553,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
 
 <script>
 (function () {
-  const THEME_KEY = "maulCommerceTheme";
-  const GLOBAL_THEME_KEY = "maulSiteTheme";
+  const THEME_KEY = "maulCommerceDarkMode";
   const LANG_KEY = "maulCommerceLanguage";
   const root = document.documentElement;
 
@@ -582,8 +580,7 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
 
     if (persist) {
       try {
-        localStorage.setItem(THEME_KEY, next);
-        localStorage.setItem(GLOBAL_THEME_KEY, next);
+        localStorage.setItem(THEME_KEY, String(next === "dark"));
       } catch (error) {}
     }
   }
@@ -661,8 +658,8 @@ body.course-checkout #checkout-product-name{font-size:clamp(11px,1.8vw,18px);lin
       name: "Digital Marketing eBooks",
       amount: 10000,
       detailUrl: "/products/digital-marketing-ebooks/",
-      summaryId: "Live test flow pembelian DOKU — eBook final belum tersedia",
-      summaryEn: "Live DOKU purchase-flow test — the final eBook is not available yet",
+      summaryId: "Live test flow pembelian — eBook final belum tersedia",
+      summaryEn: "Live purchase-flow test — the final eBook is not available yet",
       provider: "doku",
       postPayment: "ebook"
     },
