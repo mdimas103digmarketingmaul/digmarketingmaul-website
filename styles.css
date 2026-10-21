@@ -238,6 +238,16 @@ img {
   color: var(--accent);
 }
 
+.brand-logo img {
+  display: block;
+  width: 36px;
+  height: 36px;
+}
+
+.brand-logo .brand-logo-light {
+  display: none;
+}
+
 .main-nav {
   display: flex;
   align-items: center;
@@ -1857,6 +1867,8 @@ summary:focus-visible,
 
   .brand-logo { font-size: 26px; }
 
+  .brand-logo img { width: 30px; height: 30px; }
+
   .site-header-inner {
     gap: 12px;
   }
@@ -1944,6 +1956,11 @@ summary:focus-visible,
 
   .brand-logo {
     font-size: 24px;
+  }
+
+  .brand-logo img {
+    width: 26px;
+    height: 26px;
   }
 
   .main-nav {
@@ -3040,6 +3057,16 @@ html[data-article-theme="light"] body[data-page="framework-article"] .brand-logo
 html[data-article-theme="light"] body[data-page="framework-article"] .nav-link.active,
 html[data-article-theme="light"] body[data-page="framework-article"] .nav-link:hover {
   color: #17202c;
+}
+
+html[data-article-theme="light"] body[data-page="framework-article"] .brand-logo .brand-logo-dark,
+html[data-products-theme="light"] body[data-page="products"] .brand-logo .brand-logo-dark {
+  display: none;
+}
+
+html[data-article-theme="light"] body[data-page="framework-article"] .brand-logo .brand-logo-light,
+html[data-products-theme="light"] body[data-page="products"] .brand-logo .brand-logo-light {
+  display: block;
 }
 
 html[data-article-theme="light"] body[data-page="framework-article"] .hero-title-gradient {
