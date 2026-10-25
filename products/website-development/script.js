@@ -207,7 +207,8 @@
     const width = view.clientWidth;
     const height = view.clientHeight;
     if (!width || !height) return;
-    const base = width < 520 ? 1024 : 1366;
+    // Always desktop width: below ~1280px the portfolio sites switch to a tablet layout that hides the hero image
+    const base = 1366;
     const scale = width / base;
     iframe.style.width = base + "px";
     iframe.style.height = Math.ceil(height / scale) + "px";
