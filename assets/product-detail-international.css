@@ -35,3 +35,11 @@ html[data-international="true"] body .local-only{display:none!important}
   .maul-compact-select{min-width:55px;padding-left:8px;padding-right:25px}
   .maul-theme-select{min-width:70px}
 }
+
+/* Brand logo (matches home/products header) */
+.brand > img{display:block;width:36px;height:36px}
+.brand > .brand-logo-dark{display:none}
+html[data-theme="dark"] .brand > .brand-logo-light{display:none}
+html[data-theme="dark"] .brand > .brand-logo-dark{display:block}
+@media (max-width:620px){.brand > img{width:30px;height:30px}}
+@media (max-width:390px){.brand > img{width:26px;height:26px}}
