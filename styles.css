@@ -1784,7 +1784,7 @@ body.footer-in-view .social-rail {
 @media (max-width: 620px) {
   .brand-footer-inner { width: calc(100% - 28px); }
   .footer-cols { grid-template-columns: 1fr 1fr; }
-  .footer-cols > div:nth-child(3) { grid-column: 1 / -1; }
+  .footer-top-link { grid-column: auto; justify-self: end; } /* beside "Based in" */
 }
 
 /* ACCESSIBILITY */

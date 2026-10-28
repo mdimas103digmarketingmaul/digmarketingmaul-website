@@ -627,45 +627,34 @@ body.menu-open .site-header {
   overflow: clip;
 }
 
-/* ---- Ambient cursor light (whole page) ----
-   The grid DNA of the current site + a red copy revealed under the cursor + a
-   soft trailing glow. One fixed layer lives in <main>, another in the footer;
-   each parent clips its own layer (clip-path), so the light always sits behind
-   content and runs from the hero to the very bottom. script.js moves it. */
-.page-fx {
-  --fx-line: rgba(244, 246, 250, 0.05);
-  --fx-glow: rgba(255, 48, 79, 0.16);
-  position: fixed;
+.hero-bg {
+  position: absolute;
   inset: 0;
-  z-index: 0;
   pointer-events: none;
 }
 
-/* light sections (certifications) keep the effect, with lines that read on paper */
-body[data-theme="light"] main > .page-fx {
-  --fx-line: rgba(7, 17, 31, 0.06);
-  --fx-glow: rgba(255, 48, 79, 0.1);
-}
-
-.fx-grid {
+/* Grid DNA from the current site; a second, red copy is revealed by a cursor mask */
+.hero-grid {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(var(--fx-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--fx-line) 1px, transparent 1px);
+    linear-gradient(rgba(244, 246, 250, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244, 246, 250, 0.05) 1px, transparent 1px);
   background-size: 72px 72px;
   background-position: center;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, #000 30%, transparent 100%);
 }
 
-.fx-grid-lit {
+.hero-grid-lit {
   background-image:
     linear-gradient(rgba(255, 48, 79, 0.55) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 48, 79, 0.55) 1px, transparent 1px);
-  -webkit-mask-image: radial-gradient(220px circle at var(--fx-x, -400px) var(--fx-y, -400px), #000, transparent 75%);
-  mask-image: radial-gradient(220px circle at var(--fx-x, -400px) var(--fx-y, -400px), #000, transparent 75%);
+  -webkit-mask-image: radial-gradient(220px circle at var(--gx, -400px) var(--gy, -400px), #000, transparent 75%);
+  mask-image: radial-gradient(220px circle at var(--gx, -400px) var(--gy, -400px), #000, transparent 75%);
 }
 
-.fx-glow {
+.hero-glow {
   position: absolute;
   top: 0;
   left: 0;
@@ -673,15 +662,9 @@ body[data-theme="light"] main > .page-fx {
   height: 70vmax;
   margin: -35vmax 0 0 -35vmax;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--fx-glow) 0%, rgba(255, 48, 79, 0.05) 35%, transparent 65%);
-  transform: translate3d(70vw, 30vh, 0);
+  background: radial-gradient(circle, rgba(255, 48, 79, 0.16) 0%, rgba(255, 48, 79, 0.05) 35%, transparent 65%);
+  transform: translate3d(var(--glow-x, 70vw), var(--glow-y, 30vh), 0);
   will-change: transform;
-}
-
-/* sections paint above the ambient layer */
-main > section {
-  position: relative;
-  z-index: 1;
 }
 
 .hero-inner {
@@ -1861,13 +1844,18 @@ html.has-cursor .marquee {
   line-height: 1.1;
   letter-spacing: -0.05em;
   white-space: nowrap;
+  /* "ghost" words: a soft translucent fill instead of an outline. A text-stroke on
+     the variable Inter font traces its overlapping contours (stray lines inside
+     A, q, e…); a clipped gradient keeps the edges clean. */
   color: transparent;
-  -webkit-text-stroke: 1px rgba(244, 246, 250, 0.4);
+  background: linear-gradient(180deg, rgba(244, 246, 250, 0.3) 0%, rgba(244, 246, 250, 0.07) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .marquee-track span:nth-child(even) {
   color: var(--fg);
-  -webkit-text-stroke: 0;
+  background: none;
 }
 
 .marquee-track span::after {
@@ -2450,6 +2438,10 @@ html.js .collab:not(.is-in) .collab-letter {
   animation: spin 18s linear infinite;
 }
 
+.collab-mobile-cta {
+  display: none;
+}
+
 .collab-arrow {
   position: relative;
   font-size: clamp(1.5rem, 2vw, 2rem);
@@ -2719,8 +2711,7 @@ body.menu-open .floating-cta {
    main (z-index 1, opaque) scrolls away to uncover the sticky footer.
 --------------------------------------------------------- */
 main {
-  /* rounded bottom edge; clip-path (not border-radius) so it also clips the fixed .page-fx layer */
-  clip-path: inset(0 round 0 0 var(--radius-lg) var(--radius-lg));
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
 .site-footer {
@@ -2731,7 +2722,6 @@ main {
   position: relative;
   z-index: 0;
   overflow: clip;
-  clip-path: inset(0); /* keeps the footer's own .page-fx layer inside the footer */
   padding-top: clamp(80px, 13vh, 150px);
   color: var(--fg);
   background: var(--bg);
@@ -2751,12 +2741,6 @@ main {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
-}
-
-.footer-inner,
-.footer-wordmark {
-  position: relative;
-  z-index: 1;
 }
 
 .footer-cols {
@@ -3030,7 +3014,7 @@ main {
 /* ≤ 767 — mobile: own composition, not a shrunk desktop */
 @media (max-width: 767px) {
   :root {
-    --fs-hero: 14.2vw;
+    --fs-hero: 23.5vw;
     --section-pad: 96px;
   }
 
@@ -3038,14 +3022,101 @@ main {
     padding-bottom: 20px;
   }
 
-  /* Lines dissolve so words wrap naturally into a tall poster stack */
+  /* Phone hero = a poster with three tiers:
+     eyebrow ("Hi, I'm Maul") → three huge verbs ("Design, / Develop / and Grow")
+     → smaller "Digital Marketing Efficiently." → one short line of copy */
+  .hero-headline-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-intro {
+    display: contents;
+  }
+
+  .hero-hello {
+    order: -1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero-hello::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+  }
+
+  .hero-lede {
+    order: 1;
+    max-width: 30ch;
+    margin-top: 28px;
+    font-size: 1rem;
+  }
+
+  html.js .hero-hello,
+  html.js .hero-lede {
+    opacity: 0;
+    transition: opacity 1s var(--ease-out) 1.25s;
+  }
+
+  html.is-ready .hero-hello,
+  html.is-ready .hero-lede {
+    opacity: 1;
+  }
+
+  .hero-title {
+    line-height: 0.86;
+  }
+
   .hero-line {
-    display: inline;
     white-space: normal;
+  }
+
+  .hero-line[data-line="0"] .w {
+    display: block;
+    width: fit-content;
   }
 
   .hero-line-indent {
     padding-left: 0;
+  }
+
+  /* "and" becomes a small red marker tucked against "Grow" */
+  .hero-line .w-and {
+    margin: 0.95em 0.7em 0 0.08em;
+    font-family: var(--font-mono);
+    font-size: 0.15em;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+
+  /* second tier */
+  .hero-line[data-line="2"],
+  .hero-line[data-line="3"] {
+    font-size: 0.385em;
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    color: #c9d1dc;
+  }
+
+  .hero-line[data-line="2"] {
+    margin-top: 0.55em;
+  }
+
+  .hero-line-end {
+    text-align: left;
   }
 
   .hero-foot-note {
@@ -3096,15 +3167,37 @@ main {
     text-align: right;
   }
 
-  /* Word is nearly full-width here: ring stays inside, above the "e",
-     with room reserved so it never touches the question */
+  /* Phones: the spinning ring gives way to a plain pill under the word */
   .collab-link {
     font-size: 18.5vw;
-    margin-top: calc(var(--ring) - 0.12em);
   }
 
   .collab-button {
-    right: 0;
+    display: none;
+  }
+
+  .collab-mobile-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    padding: 6px 6px 6px 20px;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--paper);
+    background: var(--navy);
+  }
+
+  .collab-mobile-cta i {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: var(--navy);
+    background: var(--red);
   }
 
   .floating-cta {
@@ -3145,8 +3238,10 @@ main {
     grid-template-columns: 1fr 1fr;
   }
 
-  .footer-cols > div:nth-child(3) {
-    grid-column: 1 / -1;
+  /* back to top sits on the right, next to "Based in" */
+  .footer-top-link {
+    grid-column: auto;
+    justify-self: end;
   }
 }
 

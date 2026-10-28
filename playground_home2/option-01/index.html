@@ -94,12 +94,6 @@
   </div>
 
   <main id="main">
-    <!-- Ambient cursor light for the whole page (see .page-fx in styles.css) -->
-    <div class="page-fx" aria-hidden="true">
-      <div class="fx-grid"></div>
-      <div class="fx-grid fx-grid-lit"></div>
-      <div class="fx-glow"></div>
-    </div>
 
     <!-- =========================================================
          SECTION 01 — HERO
@@ -107,11 +101,17 @@
          own velocity on scroll, the grid + glow respond softly to the cursor.
     ========================================================== -->
     <section class="hero" id="top" data-theme="dark">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-grid"></div>
+        <div class="hero-grid hero-grid-lit"></div>
+        <div class="hero-glow"></div>
+      </div>
+
       <div class="hero-inner container">
         <div class="hero-headline-wrap">
           <h1 class="hero-title" aria-label="Design, Develop and Grow Digital Marketing Efficiently.">
             <span class="hero-line" data-line="0" aria-hidden="true"><span class="w"><span class="w-in" style="--i:0">Design,</span></span> <span class="w"><span class="w-in" style="--i:1">Develop</span></span></span>
-            <span class="hero-line hero-line-indent" data-line="1" aria-hidden="true"><span class="w"><span class="w-in" style="--i:2">and</span></span> <span class="w"><span class="w-in" style="--i:3">Grow</span></span></span>
+            <span class="hero-line hero-line-indent" data-line="1" aria-hidden="true"><span class="w w-and"><span class="w-in" style="--i:2">and</span></span> <span class="w"><span class="w-in" style="--i:3">Grow</span></span></span>
             <span class="hero-line" data-line="2" aria-hidden="true"><span class="w"><span class="w-in" style="--i:4">Digital</span></span> <span class="w"><span class="w-in" style="--i:5">Marketing</span></span></span>
             <span class="hero-line hero-line-end" data-line="3" aria-hidden="true"><span class="w"><span class="w-in" style="--i:6">Efficiently<span class="accent-dot">.</span></span></span></span>
           </h1>
@@ -373,6 +373,8 @@
               <span class="collab-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
               <span class="visually-hidden">— see products and services</span>
             </span>
+            <!-- phones: replaces the spinning ring -->
+            <span class="collab-mobile-cta">See products &amp; services <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
           </a>
         </div>
       </div>
@@ -447,11 +449,6 @@
        Curtain reveal: the page lifts away to uncover the footer underneath.
   ========================================================== -->
   <footer class="site-footer" data-theme="dark">
-    <div class="page-fx" aria-hidden="true">
-      <div class="fx-grid"></div>
-      <div class="fx-grid fx-grid-lit"></div>
-      <div class="fx-glow"></div>
-    </div>
     <div class="container footer-inner">
       <div class="footer-cols">
         <nav aria-label="Footer">

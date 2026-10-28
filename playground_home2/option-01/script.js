@@ -861,64 +861,49 @@
       });
     });
 
-    /* ---- Ambient light: cursor-lit grid + trailing glow across the whole page
-            (main + footer layers), plus depth parallax for the hero metadata ---- */
+    /* ---- Hero: cursor-lit grid, trailing glow, depth parallax ---- */
     const depthEls = Array.from(hero.querySelectorAll("[data-depth]"));
-    const litGrids = document.querySelectorAll(".fx-grid-lit");
-    const glows = document.querySelectorAll(".fx-glow");
     const glow = { x: vw * 0.7, y: vh * 0.3, tx: vw * 0.7, ty: vh * 0.3 };
-    const spot = { x: -400, y: -400, tx: -400, ty: -400 };
-    let fxRunning = false;
+    const grid = { x: -400, y: -400, tx: -400, ty: -400 };
+    let heroRunning = false;
 
-    const fxLoop = () => {
+    const heroLoop = () => {
       glow.x = lerp(glow.x, glow.tx, 0.05);
       glow.y = lerp(glow.y, glow.ty, 0.05);
-      spot.x = lerp(spot.x, spot.tx, 0.18);
-      spot.y = lerp(spot.y, spot.ty, 0.18);
+      grid.x = lerp(grid.x, grid.tx, 0.18);
+      grid.y = lerp(grid.y, grid.ty, 0.18);
+      hero.style.setProperty("--gx", `${grid.x.toFixed(1)}px`);
+      hero.style.setProperty("--gy", `${grid.y.toFixed(1)}px`);
+      hero.style.setProperty("--glow-x", `${glow.x.toFixed(1)}px`);
+      hero.style.setProperty("--glow-y", `${glow.y.toFixed(1)}px`);
 
-      litGrids.forEach((el) => {
-        el.style.setProperty("--fx-x", `${spot.x.toFixed(1)}px`);
-        el.style.setProperty("--fx-y", `${spot.y.toFixed(1)}px`);
-      });
-      glows.forEach((el) => {
-        el.style.transform = `translate3d(${glow.x.toFixed(1)}px,${glow.y.toFixed(1)}px,0)`;
-      });
-
-      const nx = glow.x / vw - 0.5;
-      const ny = glow.y / vh - 0.5;
+      /* depth parallax only where the intro floats beside the headline (desktop);
+         clamped so a stale pointer position after a resize can't push it off */
+      const nx = clamp(glow.x / vw) - 0.5;
+      const ny = clamp(glow.y / vh) - 0.5;
       depthEls.forEach((el) => {
-        const depth = Number(el.dataset.depth);
+        const depth = vw >= 1024 ? Number(el.dataset.depth) : 0;
         el.style.translate = `${(nx * depth * 2).toFixed(2)}px ${(ny * depth * 2).toFixed(2)}px`;
       });
 
-      const settled =
-        Math.abs(glow.tx - glow.x) < 0.5 && Math.abs(glow.ty - glow.y) < 0.5 &&
-        Math.abs(spot.tx - spot.x) < 0.5 && Math.abs(spot.ty - spot.y) < 0.5;
-      if (settled) fxRunning = false;
-      else requestAnimationFrame(fxLoop);
+      if (Math.abs(glow.tx - glow.x) > 0.5 || Math.abs(glow.ty - glow.y) > 0.5) requestAnimationFrame(heroLoop);
+      else heroRunning = false;
     };
 
-    const runFx = () => {
-      if (fxRunning) return;
-      fxRunning = true;
-      requestAnimationFrame(fxLoop);
-    };
+    hero.addEventListener("pointermove", (event) => {
+      const r = hero.getBoundingClientRect();
+      glow.tx = event.clientX;
+      glow.ty = event.clientY;
+      grid.tx = event.clientX - r.left;
+      grid.ty = event.clientY - r.top;
+      if (!heroRunning) {
+        heroRunning = true;
+        requestAnimationFrame(heroLoop);
+      }
+    });
 
-    window.addEventListener(
-      "pointermove",
-      (event) => {
-        if (event.pointerType !== "mouse") return;
-        glow.tx = spot.tx = event.clientX;
-        glow.ty = spot.ty = event.clientY;
-        runFx();
-      },
-      { passive: true }
-    );
-
-    /* pointer left the window: the grid spotlight fades out, the glow stays */
-    document.documentElement.addEventListener("mouseleave", () => {
-      spot.tx = spot.ty = -400;
-      runFx();
+    hero.addEventListener("pointerleave", () => {
+      grid.tx = grid.ty = -400;
     });
 
     /* ---- Portrait: subtle 3D tilt toward the cursor ---- */
@@ -987,6 +972,40 @@
 
     certList.addEventListener("toggle", syncPreview, true);
     document.querySelectorAll(".cert-row").forEach((row) => (row.dataset.cursor = "View"));
+  }
+
+  /* =========================================================
+     7b. HERO DRIFT (touch devices) — with no cursor to follow, the lit grid
+         and the glow wander slowly on their own while the hero is on screen
+  ========================================================= */
+  if (!finePointer && motionOK && "IntersectionObserver" in window) {
+    let drifting = false;
+    let w = hero.offsetWidth;
+    let h = hero.offsetHeight;
+
+    const drift = (now) => {
+      if (!drifting) return;
+      const t = now / 1000;
+      /* two slow Lissajous paths: the spotlight leads, the glow trails behind it */
+      const gx = w * (0.5 + 0.38 * Math.sin(t * 0.55));
+      const gy = h * (0.42 + 0.28 * Math.sin(t * 0.83 + 1));
+      const lx = w * (0.5 + 0.32 * Math.sin(t * 0.55 - 0.9));
+      const ly = h * (0.45 + 0.22 * Math.sin(t * 0.83 + 0.1));
+      hero.style.setProperty("--gx", `${gx.toFixed(1)}px`);
+      hero.style.setProperty("--gy", `${gy.toFixed(1)}px`);
+      hero.style.setProperty("--glow-x", `${lx.toFixed(1)}px`);
+      hero.style.setProperty("--glow-y", `${ly.toFixed(1)}px`);
+      requestAnimationFrame(drift);
+    };
+
+    new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      w = entry.boundingClientRect.width;
+      h = entry.boundingClientRect.height;
+      const wasDrifting = drifting;
+      drifting = entry.isIntersecting;
+      if (drifting && !wasDrifting) requestAnimationFrame(drift);
+    }).observe(hero);
   }
 
   /* =========================================================
