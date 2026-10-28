@@ -67,7 +67,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   --info-bg:#f4f8fc;
   --info-border:#d8e4f0;
   --info-text:#475467;
-  --nav-bg:rgba(255,255,255,.9);
+  --nav-bg:#ffffff; /* solid navbar, matches Home */
   --shadow:0 18px 55px rgba(15,23,42,.08);
   --shadow-soft:0 8px 28px rgba(15,23,42,.05);
 }
@@ -88,7 +88,7 @@ html[data-theme="dark"]{
   --info-bg:rgba(59,130,246,.065);
   --info-border:rgba(125,211,252,.17);
   --info-text:#b5c2d4;
-  --nav-bg:rgba(7,17,31,.88);
+  --nav-bg:#07111f; /* solid navbar, matches Home */
   --shadow:0 24px 80px rgba(0,0,0,.28);
   --shadow-soft:0 8px 30px rgba(0,0,0,.18);
 }
@@ -139,6 +139,11 @@ button,input{font:inherit}
   letter-spacing:-.055em;
 }
 .brand b{color:var(--accent)}
+/* Logo mark (same as product pages); light/dark variant follows the theme toggle */
+.brand > img{display:block;width:36px;height:36px}
+.brand > .brand-logo-dark{display:none}
+html[data-theme="dark"] .brand > .brand-logo-light{display:none}
+html[data-theme="dark"] .brand > .brand-logo-dark{display:block}
 .nav-actions{
   display:flex;
   align-items:center;
@@ -372,7 +377,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
 <div class="grid-bg" aria-hidden="true"></div>
 <header class="topbar">
   <div class="shell topbar-inner">
-    <a class="brand" href="/">M<b>.</b></a>
+    <a class="brand" href="/" aria-label="digmarketingmaul Home"><img class="brand-logo-light" src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="36" height="36"><img class="brand-logo-dark" src="/assets/brand/logo/icon-reversed.svg" alt="digmarketingmaul" width="36" height="36"></a>
     <div class="nav-actions">
       
 <div class="maul-compact-controls" aria-label="Display controls">

@@ -52,7 +52,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
     <div class="social-rail-links">
       <a href="https://www.instagram.com/dig.marketing.maul/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
       <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-      <a href="#" class="social-link social-link-placeholder" data-placeholder-social="true" aria-label="TikTok — coming soon"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="https://www.tiktok.com/@digmarketingmaul" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
     </div>
     <span class="social-rail-line" aria-hidden="true"></span>
   </aside>
@@ -62,11 +62,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
     <span class="social-rail-line" aria-hidden="true"></span>
   </aside>
 
-  <header class="site-header">
+  <header class="site-header has-menu">
     <div class="site-header-inner">
 
       <a href="../index.html#home" class="brand-logo" aria-label="M. Dimas Maulana Home">
-        <img class="brand-logo-dark" src="/assets/brand/logo/icon-reversed.svg" alt="digmarketingmaul" width="36" height="36"><img class="brand-logo-light" src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="36" height="36">
+        <img class="brand-logo-dark" src="/assets/brand/logo/icon-reversed.svg" alt="digmarketingmaul" width="36" height="36"><img class="brand-logo-light" src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="36" height="36"><span class="brand-word">digmarketingmaul</span>
       </a>
 
       <nav class="main-nav" aria-label="Primary Navigation">
@@ -76,10 +76,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
         <a href="../blog/" class="nav-link"><span class="nav-number">04.</span><span>Blog</span></a>
         <a href="../index.html#profile" class="nav-link"><span class="nav-number">05.</span><span>Profile</span></a>
       </nav>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="menu-toggle-label">Menu</span>
+        <span class="menu-toggle-lines" aria-hidden="true"><span></span><span></span></span>
+      </button>
 
     </div>
     <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
   </header>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <nav class="mobile-menu-nav" aria-label="Mobile">
+      <a href="../index.html#home" class="mobile-link" style="--i:0"><span class="nav-number">01.</span>Home</a>
+      <a href="../frameworks/" class="mobile-link" style="--i:1" aria-current="page"><span class="nav-number">02.</span>Frameworks</a>
+      <a href="../products/" class="mobile-link" style="--i:2"><span class="nav-number">03.</span>Products</a>
+      <a href="../blog/" class="mobile-link" style="--i:3"><span class="nav-number">04.</span>Blog</a>
+      <a href="../index.html#profile" class="mobile-link" style="--i:4"><span class="nav-number">05.</span>Profile</a>
+    </nav>
+    <div class="mobile-menu-socials">
+      <a href="https://www.instagram.com/dig.marketing.maul/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://www.tiktok.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer">TikTok</a>
+    </div>
+  </div>
+
 
   <main>
 
@@ -227,15 +247,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
 
     </section>
 
-    <footer class="site-footer">
-      <p>© 2026 Build and Design by Maul</p>
+    <footer class="brand-footer">
+      <div class="brand-footer-inner">
+        <div class="footer-cols">
+          <nav aria-label="Footer">
+            <p class="footer-label">Pages</p>
+            <ul>
+              <li><a href="../index.html#home" class="footer-link">Home</a></li>
+              <li><a href="../frameworks/" class="footer-link">Frameworks</a></li>
+              <li><a href="../products/" class="footer-link">Products</a></li>
+              <li><a href="../blog/" class="footer-link">Blog</a></li>
+            </ul>
+          </nav>
+          <div>
+            <p class="footer-label">Social</p>
+            <ul>
+              <li><a href="https://www.instagram.com/dig.marketing.maul/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+              <li><a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+              <li><a href="https://www.tiktok.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-tiktok" aria-hidden="true"></i> TikTok</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer-label">Based in</p>
+            <ul>
+              <li>Bekasi, Indonesia</li>
+            </ul>
+          </div>
+          <div class="footer-top-link">
+            <a href="#" class="back-to-top"><span aria-hidden="true">↑</span> Back to top</a>
+          </div>
+        </div>
 
-      <div class="footer-socials">
-        <a href="https://www.instagram.com/dig.marketing.maul/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-        <a href="#" data-placeholder-social="true" aria-label="TikTok — coming soon"><i class="fa-brands fa-tiktok"></i></a>
-        <a href="mailto:mdimas103@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+        <div class="footer-bottom">
+          <p>© 2026 Build and Design by Maul</p>
+          <img class="footer-mark" src="/assets/brand/logo/icon-reversed.svg" alt="" width="26" height="26">
+        </div>
       </div>
+
+      <p class="footer-wordmark" aria-hidden="true">digmarketingmaul<span>.</span></p>
     </footer>
 
   </main>
