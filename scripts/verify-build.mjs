@@ -2,7 +2,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-import { execFileSync } from 'node:child_process';
 import { parse } from 'parse5';
 import { astroHtml } from './routes.mjs';
 const baseline=JSON.parse(fs.readFileSync('tests/baseline.json','utf8'));
@@ -10,7 +9,8 @@ const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex
 const attr=(n,k)=>n?.attrs?.find(a=>a.name===k)?.value;
 const nodes=n=>[n,...(n.childNodes||[]).flatMap(nodes)];
 const text=n=>n.nodeName==='#text'?n.value:(n.childNodes||[]).map(text).join('');
-const old=p=>execFileSync('git',['show',`${baseline.commit}:${p}`],{encoding:'utf8',maxBuffer:10e6});
+const contracts=JSON.parse(fs.readFileSync('tests/page-contracts.json','utf8'));
+assert.equal(contracts.sourceCommit,baseline.commit,'Page contracts must match the migration baseline');
 const meta=s=>{
  const ns=nodes(parse(s));
  const by=(tag,k,v)=>ns.find(n=>n.tagName===tag&&attr(n,k)===v);
@@ -27,12 +27,12 @@ const docs=new Map();
 for(const file of Object.keys(baseline.files).filter(f=>f.endsWith('.html'))) {
  const output=fs.readFileSync('dist/'+file,'utf8');htmlCount++;
  const parsed=nodes(parse(output));docs.set('/'+file,parsed);
- assert.deepEqual(meta(output),meta(old(file)),`SEO changed: ${file}`);
+ assert.deepEqual(JSON.parse(JSON.stringify(meta(output))),contracts.pages[file].meta,`SEO changed: ${file}`);
  if(astroHtml.includes(file)) {
   assert.ok(!fs.existsSync('public/'+file),`duplicate ownership: ${file}`);
   assert.equal(parsed.filter(n=>n.tagName==='script'&&text(n).includes("event:'gtm.js'")).length,1,`GTM loader count: ${file}`);
   assert.equal(parsed.filter(n=>n.tagName==='noscript'&&text(n).includes('googletagmanager.com/ns.html')).length,1,`GTM noscript count: ${file}`);
-  const oldIds=nodes(parse(old(file))).map(n=>attr(n,'id')).filter(Boolean);
+  const oldIds=contracts.pages[file].ids;
   const newIds=new Set(parsed.map(n=>attr(n,'id')).filter(Boolean));
   for(const id of oldIds)assert.ok(newIds.has(id),`lost anchor ${file}#${id}`);
  }

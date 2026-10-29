@@ -82,6 +82,6 @@ npm run test:worker
 
 Alternatively set `BROWSER_PATH` to an existing compatible Chromium executable. Browser tests reconstruct the pre-migration frontend from the Git baseline recorded in `tests/baseline.json`, serve both versions locally, and block all external traffic and API calls. Reports/screenshots are ignored under `test-results/`.
 
-The baseline comparison requires that historical commit to remain available (use a full Git checkout in CI). It is a migration regression gate, not a policy forbidding future intentional copy/SEO changes: update the baseline deliberately when those changes are approved.
+Production build checks use versioned `tests/page-contracts.json` and file hashes, so no Git history is required in Cloudflare/CI. Only the optional browser visual comparison needs the historical baseline commit. These are migration regression gates, not a policy forbidding future intentional copy/SEO changes: update the contracts deliberately when those changes are approved.
 
 See [migration compatibility and deployment notes](docs/migration/ARCHITECTURE.md).

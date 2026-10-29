@@ -1,0 +1,867 @@
+{
+  "sourceCommit": "66ada937af8d4d4ff34ee6bb2a75c4620a2f95f1",
+  "pages": {
+    "index.html": {
+      "meta": {
+        "title": "M. Dimas Maulana — Digital Marketing",
+        "description": "M. Dimas Maulana — Digital Marketer working across creative, acquisition, measurement, digital products, and performance optimization.",
+        "canonical": "https://digmarketingmaul.com/",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "brand-mark",
+        "mobile-menu",
+        "main",
+        "home",
+        "showreel",
+        "showreel-title",
+        "profile",
+        "profile-title",
+        "stack",
+        "stack-title",
+        "stack-detail",
+        "stack-skills",
+        "collaborate",
+        "collab-title",
+        "collab-circle",
+        "certifications",
+        "certs-title",
+        "skill-tooltip"
+      ]
+    },
+    "blog/index.html": {
+      "meta": {
+        "title": "Blog — M. Dimas Maulana",
+        "description": "Notes, ideas, experiments, frameworks, and practical lessons across digital marketing by M. Dimas Maulana.",
+        "canonical": "https://digmarketingmaul.com/blog/",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "cursor-grid-light",
+        "scroll-progress",
+        "mobile-menu"
+      ]
+    },
+    "frameworks/index.html": {
+      "meta": {
+        "title": "Frameworks — M. Dimas Maulana",
+        "description": "Digital marketing frameworks and systems by M. Dimas Maulana — how I think, build, optimize, and automate.",
+        "canonical": "https://digmarketingmaul.com/frameworks/",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "cursor-grid-light",
+        "scroll-progress",
+        "mobile-menu"
+      ]
+    },
+    "frameworks/digital-ads-operating-system/index.html": {
+      "meta": {
+        "title": "Digital Ads Operating System — M. Dimas Maulana",
+        "description": "Digital Ads Operating System — bagaimana M. Dimas Maulana menjalankan dan mengelola digital ads dari objective bisnis hingga continuous improvement.",
+        "canonical": "https://digmarketingmaul.com/frameworks/digital-ads-operating-system/",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "cursor-grid-light",
+        "scroll-progress",
+        "section-1",
+        "section-2",
+        "section-3",
+        "section-4",
+        "section-5",
+        "section-6",
+        "section-7",
+        "section-8",
+        "summary"
+      ]
+    },
+    "products/index.html": {
+      "meta": {
+        "title": "Products & Services — M. Dimas Maulana",
+        "description": "Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.",
+        "canonical": "https://digmarketingmaul.com/products/",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "cursor-grid-light",
+        "scroll-progress"
+      ]
+    },
+    "products/digital-marketing-ebooks-midtrans/index.html": {
+      "meta": {
+        "title": "Digital Marketing eBooks — Maul Digital",
+        "description": "Digital Marketing eBooks — Midtrans live test flow checkout dan pascapembayaran. Produk eBook final belum tersedia.",
+        "canonical": "https://digmarketingmaul.com/products/digital-marketing-ebooks-midtrans/",
+        "robots": "noindex,nofollow,noarchive",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": []
+    },
+    "products/digital-marketing-ebooks/index.html": {
+      "meta": {
+        "title": "Digital Marketing eBooks — Maul Digital",
+        "description": "Digital Marketing eBooks — live test flow checkout dan pascapembayaran. Produk eBook final belum tersedia.",
+        "canonical": "https://digmarketingmaul.com/products/digital-marketing-ebooks/",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": []
+    },
+    "products/website-development/index.html": {
+      "meta": {
+        "title": "Website Development — Maul Digital",
+        "description": "Website Development oleh Maul — website design, development, CMS, measurement, deployment, infrastructure, dan maintenance untuk bisnis maupun digital product.",
+        "canonical": "https://digmarketingmaul.com/products/website-development/",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "main",
+        "work",
+        "work-title",
+        "scope",
+        "scope-title",
+        "stage-01",
+        "stage-02",
+        "stage-03",
+        "stage-04",
+        "stage-05",
+        "stage-06",
+        "process",
+        "process-title",
+        "after-launch",
+        "after-title",
+        "pricing",
+        "pricing-title",
+        "faq",
+        "faq-title",
+        "final-title"
+      ]
+    },
+    "products/website-course/index.html": {
+      "meta": {
+        "title": "Website Pertama Kamu — Dari Ide Sampai Live, bersama Maul",
+        "description": "Buat website pertama kamu dari nol sampai live dengan bantuan AI. Panduan praktik 9 bab yang terurut, pilihan alamat gratis atau domain sendiri, dan bantuan troubleshooting bersama Maul.",
+        "canonical": "https://digmarketingmaul.com/products/website-course/",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "konten",
+        "hero-title",
+        "problem-title",
+        "method-title",
+        "domain-title",
+        "kurikulum",
+        "curriculum-title",
+        "pendampingan",
+        "support-title",
+        "harga",
+        "offer-title",
+        "faq",
+        "faq-title",
+        "kesepakatan",
+        "closing-title"
+      ]
+    },
+    "products/digital-ads-management/index.html": {
+      "meta": {
+        "title": "Digital Ads Management — Maul Digital",
+        "description": "Digital Ads Management oleh Maul — pengelolaan campaign, measurement, tracking, creative direction, optimization, reporting, dan business insight berbasis data.",
+        "canonical": "https://digmarketingmaul.com/products/digital-ads-management/",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "main",
+        "areas",
+        "areas-title",
+        "area-01",
+        "area-02",
+        "area-03",
+        "area-04",
+        "area-05",
+        "area-06",
+        "area-07",
+        "measurement",
+        "measure-title",
+        "decision",
+        "packages",
+        "packages-title",
+        "fee",
+        "fee-title",
+        "creds-title",
+        "brief",
+        "brief-title"
+      ]
+    },
+    "admin/index.html": {
+      "meta": {
+        "title": "Course Overview — Maul Digital Admin",
+        "robots": "noindex,nofollow",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "theme-button",
+        "grant-dialog",
+        "grant-form",
+        "grant-email",
+        "grant-type",
+        "grant-send",
+        "grant-note",
+        "grant-submit",
+        "m-active",
+        "m-total",
+        "m-sessions",
+        "m-sessions30",
+        "m-magic",
+        "m-magic30",
+        "m-review",
+        "recent-list",
+        "m-grants",
+        "m-review-only",
+        "m-high",
+        "m-inactive"
+      ]
+    },
+    "admin/customers/index.html": {
+      "meta": {
+        "title": "Customers — Maul Digital Admin",
+        "robots": "noindex,nofollow",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "theme-button",
+        "grant-dialog",
+        "grant-form",
+        "grant-email",
+        "grant-type",
+        "grant-send",
+        "grant-note",
+        "grant-submit",
+        "q",
+        "status",
+        "risk",
+        "sum-total",
+        "sum-active",
+        "sum-review",
+        "sum-high",
+        "customers-body",
+        "result-count",
+        "customer-drawer",
+        "drawer-email",
+        "drawer-sub",
+        "drawer-body",
+        "drawer-actions"
+      ]
+    },
+    "admin/activity/index.html": {
+      "meta": {
+        "title": "Activity — Maul Digital Admin",
+        "robots": "noindex,nofollow",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "theme-button",
+        "q",
+        "refresh",
+        "body",
+        "count"
+      ]
+    },
+    "admin/sessions/index.html": {
+      "meta": {
+        "title": "Sessions — Maul Digital Admin",
+        "robots": "noindex,nofollow",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "theme-button",
+        "q",
+        "status",
+        "refresh",
+        "body",
+        "count"
+      ]
+    },
+    "admin/magic-links/index.html": {
+      "meta": {
+        "title": "Magic Links — Maul Digital Admin",
+        "robots": "noindex,nofollow",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "theme-button",
+        "q",
+        "status",
+        "refresh",
+        "body",
+        "count"
+      ]
+    },
+    "admin/orders/index.html": {
+      "meta": {
+        "title": "Orders — Maul Digital Admin",
+        "robots": "noindex,nofollow",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "theme-button",
+        "metric-total",
+        "metric-success",
+        "metric-pending",
+        "metric-value",
+        "search-input",
+        "status-filter",
+        "refresh-button",
+        "export-button",
+        "orders-body",
+        "result-count"
+      ]
+    },
+    "checkout/index.html": {
+      "meta": {
+        "title": "Checkout — Maul Digital",
+        "robots": "noindex,nofollow",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "website-course-checkout-style",
+        "back-detail-link",
+        "checkout-view",
+        "checkout-provider-heading",
+        "checkout-product-name",
+        "checkout-product-summary-id",
+        "checkout-product-summary-en",
+        "checkout-original-price",
+        "checkout-product-price",
+        "checkout-promo-note-id",
+        "checkout-promo-note-en",
+        "checkout-form",
+        "customer-email",
+        "customer-name",
+        "customer-phone",
+        "payment-method-preview",
+        "payment-method-label",
+        "selected-payment-method",
+        "payment-dropdown-trigger",
+        "payment-trigger-visual",
+        "payment-trigger-title",
+        "payment-trigger-meta",
+        "payment-dropdown-panel",
+        "payment-base-value",
+        "payment-fee-value",
+        "payment-total-value",
+        "course-access-notice",
+        "purchase-email-notice",
+        "pay-button",
+        "checkout-status",
+        "success-view",
+        "success-greeting",
+        "success-invoice",
+        "success-amount",
+        "success-product-name",
+        "success-email",
+        "success-completion-note",
+        "success-completion-note-id",
+        "success-completion-note-en",
+        "success-whatsapp",
+        "success-course",
+        "success-resource",
+        "midtrans-embed-overlay",
+        "midtrans-embed-close",
+        "midtrans-snap-container"
+      ]
+    },
+    "payment/success/index.html": {
+      "meta": {
+        "title": "Pembayaran Berhasil — Maul Digital",
+        "robots": "noindex,nofollow",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "gate-view",
+        "gate-message",
+        "success-view",
+        "success-greeting",
+        "success-invoice",
+        "success-amount",
+        "success-product",
+        "success-email",
+        "success-completion-note",
+        "success-completion-note-id",
+        "success-completion-note-en",
+        "course-next",
+        "website-development-next",
+        "success-whatsapp",
+        "ebook-next",
+        "ebook-resource-link"
+      ]
+    },
+    "playground/_template/option-template/index.html": {
+      "meta": {
+        "title": "Visual Playground Option",
+        "robots": "noindex,nofollow",
+        "icons": []
+      },
+      "ids": []
+    },
+    "playground/pages/website-development/option-01/index.html": {
+      "meta": {
+        "title": "Website Development — Maul Digital",
+        "description": "Website Development oleh Maul — website design, development, CMS, measurement, deployment, infrastructure, dan maintenance untuk bisnis maupun digital product.",
+        "canonical": "https://digmarketingmaul.com/playground/pages/website-development/option-01/",
+        "robots": "noindex,nofollow",
+        "icons": [
+          "/assets/images/favicon.svg",
+          "/assets/images/apple-touch-icon.png"
+        ]
+      },
+      "ids": [
+        "main",
+        "work",
+        "work-title",
+        "scope",
+        "scope-title",
+        "stage-01",
+        "stage-02",
+        "stage-03",
+        "stage-04",
+        "stage-05",
+        "stage-06",
+        "process",
+        "process-title",
+        "after-launch",
+        "after-title",
+        "pricing",
+        "pricing-title",
+        "faq",
+        "faq-title",
+        "final-title"
+      ]
+    },
+    "playground/pages/digital-ads-management/option-02/index.html": {
+      "meta": {
+        "title": "Digital Ads Management — Maul Digital",
+        "description": "Digital Ads Management oleh Maul — pengelolaan campaign, measurement, tracking, creative direction, optimization, reporting, dan business insight berbasis data.",
+        "canonical": "https://digmarketingmaul.com/playground/pages/digital-ads-management/option-02/",
+        "robots": "noindex,nofollow,noarchive",
+        "icons": [
+          "/assets/images/favicon.svg",
+          "/assets/images/apple-touch-icon.png"
+        ]
+      },
+      "ids": [
+        "main",
+        "areas",
+        "areas-title",
+        "area-01",
+        "area-02",
+        "area-03",
+        "area-04",
+        "area-05",
+        "area-06",
+        "area-07",
+        "measurement",
+        "measure-title",
+        "decision",
+        "packages",
+        "packages-title",
+        "fee",
+        "fee-title",
+        "creds-title",
+        "brief",
+        "brief-title"
+      ]
+    },
+    "playground/pages/digital-ads-management/option-01/index.html": {
+      "meta": {
+        "title": "Digital Ads Management — Maul / Option 01",
+        "description": "Digital Ads Management bersama Maul. Tujuh area pengelolaan yang menghubungkan campaign, measurement, creative, dan business insight.",
+        "robots": "noindex,nofollow,noarchive",
+        "icons": [
+          "assets/favicon.svg"
+        ]
+      },
+      "ids": [
+        "main",
+        "scope",
+        "area-01",
+        "area-02",
+        "area-03",
+        "area-04",
+        "area-05",
+        "area-06",
+        "area-07",
+        "measurement",
+        "packages",
+        "credentials",
+        "discuss",
+        "brief-form",
+        "brief-cta"
+      ]
+    },
+    "playground_home/index.html": {
+      "meta": {
+        "title": "Home Visual Comparison — Playground",
+        "robots": "noindex,nofollow",
+        "icons": []
+      },
+      "ids": []
+    },
+    "playground_home/option-04/index.html": {
+      "meta": {
+        "title": "home · Option 04",
+        "robots": "noindex,nofollow",
+        "icons": []
+      },
+      "ids": []
+    },
+    "playground_home/option-03/index.html": {
+      "meta": {
+        "title": "home · Option 03",
+        "robots": "noindex,nofollow",
+        "icons": []
+      },
+      "ids": []
+    },
+    "playground_home/option-02/index.html": {
+      "meta": {
+        "title": "M. Dimas Maulana — Visual Option 02",
+        "description": "M. Dimas Maulana — Digital Marketer working across creative, acquisition, measurement, digital products, and performance optimization.",
+        "robots": "noindex, nofollow",
+        "icons": [
+          "./assets/favicon.svg"
+        ]
+      },
+      "ids": [
+        "arrow",
+        "instagram",
+        "linkedin",
+        "mail",
+        "navigation",
+        "main",
+        "home",
+        "hero-title",
+        "stack",
+        "stack-title",
+        "tab-creative",
+        "tab-acquire",
+        "tab-measurement",
+        "tab-build",
+        "tab-optimize",
+        "panel-creative",
+        "panel-title-creative",
+        "panel-acquire",
+        "panel-title-acquire",
+        "panel-measurement",
+        "panel-title-measurement",
+        "panel-build",
+        "panel-title-build",
+        "panel-optimize",
+        "panel-title-optimize",
+        "profile",
+        "profile-title"
+      ]
+    },
+    "playground_home/option-05/index.html": {
+      "meta": {
+        "title": "home · Option 05",
+        "robots": "noindex,nofollow",
+        "icons": []
+      },
+      "ids": []
+    },
+    "playground_home/option-01/index.html": {
+      "meta": {
+        "title": "M. Dimas Maulana — Digital Marketing",
+        "description": "M. Dimas Maulana — Digital Marketer working across creative, acquisition, measurement, digital products, and performance optimization.",
+        "robots": "noindex, nofollow",
+        "icons": [
+          "./assets/images/favicon.svg",
+          "./assets/images/favicon-32.png",
+          "./assets/images/apple-touch-icon.png"
+        ]
+      },
+      "ids": [
+        "atmo-spot",
+        "site-header",
+        "menu-toggle",
+        "primary-nav",
+        "scroll-progress",
+        "main",
+        "home",
+        "hero-title",
+        "hero-visual",
+        "dial",
+        "aperture",
+        "stack",
+        "stack-title",
+        "stack-tabs",
+        "tab-indicator",
+        "tab-creative",
+        "tab-acquire",
+        "tab-measurement",
+        "tab-build",
+        "tab-optimize",
+        "stack-panel",
+        "panel-inner",
+        "panel-icon",
+        "panel-title",
+        "panel-desc",
+        "skill-list",
+        "profile",
+        "profile-title"
+      ]
+    },
+    "playground_home2/backup-home1/index.html": {
+      "meta": {
+        "title": "M. Dimas Maulana — Digital Marketing",
+        "description": "M. Dimas Maulana — Digital Marketer working across creative, acquisition, measurement, digital products, and performance optimization.",
+        "robots": "noindex, nofollow",
+        "icons": [
+          "/assets/brand/favicon/favicon.ico?v=3",
+          "/assets/brand/favicon/favicon.svg?v=3",
+          "/assets/brand/favicon/apple-touch-icon.png?v=3",
+          "/assets/brand/favicon/site.webmanifest"
+        ]
+      },
+      "ids": [
+        "cursor-grid-light",
+        "scroll-progress",
+        "home",
+        "stack",
+        "stack-detail",
+        "stack-skills",
+        "profile",
+        "skill-tooltip"
+      ]
+    },
+    "playground_home2/option-01/index.html": {
+      "meta": {
+        "title": "M. Dimas Maulana — Design, Develop and Grow Digital Marketing",
+        "description": "M. Dimas Maulana — designing, developing and growing digital marketing across creative, acquisition, build, measurement and optimization.",
+        "robots": "noindex, nofollow",
+        "icons": [
+          "../../assets/brand/favicon/favicon.svg",
+          "../../assets/brand/favicon/apple-touch-icon.png"
+        ]
+      },
+      "ids": [
+        "brand-mark",
+        "mobile-menu",
+        "main",
+        "top",
+        "showreel",
+        "showreel-title",
+        "profile",
+        "profile-title",
+        "stack",
+        "stack-title",
+        "stack-detail",
+        "stack-skills",
+        "collaborate",
+        "collab-title",
+        "collab-circle",
+        "certifications",
+        "certs-title",
+        "skill-tooltip"
+      ]
+    },
+    "playground_products/index.html": {
+      "meta": {
+        "title": "Page 02 — Playground",
+        "robots": "noindex,nofollow",
+        "icons": []
+      },
+      "ids": []
+    },
+    "playground_products/option-04/index.html": {
+      "meta": {
+        "title": "page-02 · Option 04",
+        "robots": "noindex,nofollow",
+        "icons": []
+      },
+      "ids": []
+    },
+    "playground_products/option-03/index.html": {
+      "meta": {
+        "title": "Products & Services — M. Dimas Maulana",
+        "description": "Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.",
+        "canonical": "https://digmarketingmaul.com/products/",
+        "robots": "noindex,nofollow",
+        "icons": [
+          "../../assets/images/favicon.svg",
+          "../../assets/images/favicon-32.png",
+          "../../assets/images/apple-touch-icon.png"
+        ]
+      },
+      "ids": [
+        "cursor-grid-light",
+        "scroll-progress"
+      ]
+    },
+    "playground_products/option-02/index.html": {
+      "meta": {
+        "title": "Products & Services — M. Dimas Maulana | Option 02",
+        "description": "Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.",
+        "robots": "noindex,nofollow",
+        "icons": []
+      },
+      "ids": [
+        "international-toggle",
+        "language-select",
+        "theme-select",
+        "main",
+        "hero-title",
+        "international-help",
+        "international-notice",
+        "mode-announcement",
+        "catalog",
+        "catalog-heading",
+        "website-course",
+        "services",
+        "services-heading",
+        "website-development",
+        "digital-marketing-ebooks",
+        "upcoming",
+        "upcoming-heading",
+        "website-building-advisory",
+        "digital-ads-management",
+        "meta-ads-advisory",
+        "google-ads-advisory",
+        "exclusive-technical-digital-marketing-discussion",
+        "digital-marketing-reporting-templates",
+        "conversion-tracking-measurement-setup"
+      ]
+    },
+    "playground_products/option-05/index.html": {
+      "meta": {
+        "title": "page-02 · Option 05",
+        "robots": "noindex,nofollow",
+        "icons": []
+      },
+      "ids": []
+    },
+    "playground_products/option-01/index.html": {
+      "meta": {
+        "title": "Products & Services — M. Dimas Maulana",
+        "description": "Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.",
+        "robots": "noindex",
+        "icons": [
+          "https://digmarketingmaul.com/assets/images/favicon.svg",
+          "https://digmarketingmaul.com/assets/images/favicon-32.png"
+        ]
+      },
+      "ids": [
+        "cursor-grid-light",
+        "site-header",
+        "scroll-progress",
+        "state-announcer",
+        "main",
+        "hero-title",
+        "available",
+        "available-title",
+        "p-website-course",
+        "p-website-development",
+        "p-digital-marketing-ebooks",
+        "coming-soon",
+        "soon-title",
+        "p-website-building-advisory",
+        "p-digital-ads-management",
+        "p-meta-ads-advisory",
+        "p-google-ads-advisory",
+        "p-exclusive-technical-digital-marketing-discussion",
+        "p-digital-marketing-reporting-templates",
+        "p-conversion-tracking-measurement-setup"
+      ]
+    }
+  }
+}
