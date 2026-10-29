@@ -523,10 +523,6 @@
   const heroLines = Array.from(document.querySelectorAll(".hero-line"));
   const heroLineDrift = [-0.06, 0.09, -0.035, 0.05]; /* fraction of viewport width, per line */
 
-  const showreel = document.querySelector(".showreel");
-  const showreelFrame = document.querySelector(".showreel-frame");
-  const showreelMedia = document.querySelector(".showreel-media");
-
   const floatingCta = document.querySelector(".floating-cta");
 
   const collab = document.querySelector(".collab");
@@ -545,7 +541,6 @@
     scrollVelocity = y - lastScrollY;
 
     /* ---- READ ---- */
-    const showreelRect = showreel.getBoundingClientRect();
     const collabRect = collab.getBoundingClientRect();
     const mainBottom = main.getBoundingClientRect().bottom;
     const footerHeight = footer.offsetHeight;
@@ -599,15 +594,6 @@
         heroInner.style.opacity = (1 - h * 0.75).toFixed(3);
       }
 
-      /* SHOWREEL — inset rounded window → full-bleed while the section rises */
-      const open = easeInOut(clamp(1 - showreelRect.top / vh));
-      const insetY = (1 - open) * (isMobile ? 9 : 13);
-      const insetX = (1 - open) * (isMobile ? 4 : 11);
-      const radius = (1 - open) * (isMobile ? 22 : 44);
-      showreelFrame.style.clipPath = `inset(${insetY.toFixed(2)}% ${insetX.toFixed(2)}% ${insetY.toFixed(2)}% ${insetX.toFixed(2)}% round ${radius.toFixed(1)}px)`;
-      showreelMedia.style.transform = `scale(${(1.16 - 0.16 * open).toFixed(4)})`;
-      showreel.classList.toggle("is-open", showreelRect.top < vh * 0.04);
-
       /* COLLABORATE — red field grows from the centre */
       const c = progress(collabRect.top, vh, vh * 0.1);
       collabFill.style.clipPath = `circle(${(easeInOut(c) * 75).toFixed(2)}% at 50% 50%)`;
@@ -651,7 +637,6 @@
   });
 
   if (!motionOK) {
-    showreel.classList.add("is-open");
     collab.classList.add("is-in");
   }
 
@@ -754,46 +739,9 @@
   }
 
   /* =========================================================
-     6. SHOWREEL PLACEHOLDER — pause loop off-screen, timecode,
-        pointer highlight + tilt
+     6. SECTION 02 — the website showreel runs on its own script
+        (src/scripts/home/showreel.js).
   ========================================================= */
-  const placeholder = document.querySelector(".showreel-placeholder");
-
-  if (placeholder && "IntersectionObserver" in window) {
-    const timecode = placeholder.querySelector(".ph-timecode");
-    let timer = 0;
-    let seconds = 0;
-
-    new IntersectionObserver((entries) => {
-      const visible = entries[0].isIntersecting;
-      showreel.classList.toggle("is-visible", visible);
-      window.clearInterval(timer);
-      if (visible && motionOK) {
-        timer = window.setInterval(() => {
-          seconds = (seconds + 1) % 60;
-          timecode.textContent = `00:00:${String(seconds).padStart(2, "0")}`;
-        }, 1000);
-      }
-    }).observe(showreel);
-
-    if (finePointer && motionOK) {
-      const light = placeholder.querySelector(".ph-light");
-      const composition = placeholder.querySelector(".ph-composition");
-      showreelFrame.addEventListener("pointermove", (event) => {
-        const r = showreelFrame.getBoundingClientRect();
-        const nx = (event.clientX - r.left) / r.width;
-        const ny = (event.clientY - r.top) / r.height;
-        light.style.setProperty("--sx", `${(nx * 100).toFixed(1)}%`);
-        light.style.setProperty("--sy", `${(ny * 100).toFixed(1)}%`);
-        composition.style.setProperty("--tilt-y", `${((nx - 0.5) * 7).toFixed(2)}deg`);
-        composition.style.setProperty("--tilt-x", `${((0.5 - ny) * 5).toFixed(2)}deg`);
-      });
-      showreelFrame.addEventListener("pointerleave", () => {
-        composition.style.setProperty("--tilt-x", "0deg");
-        composition.style.setProperty("--tilt-y", "0deg");
-      });
-    }
-  }
 
   /* =========================================================
      7. POINTER EFFECTS (fine pointer + motion allowed)
