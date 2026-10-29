@@ -1,151 +1,474 @@
 ---
-import navigationCss from '../../styles/site/navigation-responsive.css?url';
-import products from "../../data/products.json";
-import ProductCard from "../../components/products/ProductCard.astro";
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import BrandFooter from '../../components/site/BrandFooter.astro';
-import NavLinks from '../../components/site/NavLinks.astro';
-import catalogThemeInitScript from '../../scripts/products/catalog-theme-init.js?raw';
-import catalogInternationalInitScript from '../../scripts/products/catalog-international-init.js?raw';
-import cardNavigationScript from '../../scripts/products/card-navigation.js?raw';
-import catalogControlsScript from '../../scripts/products/catalog-controls.js?raw';
-import catalogActionsCss from '../../styles/products/catalog-actions.css?url';
-import catalogInternationalCss from '../../styles/products/catalog-international.css?url';
-import catalogControlsCss from '../../styles/products/catalog-controls.css?url';
-import sharedCss from '../../styles/site/shared.css?url';
-import commerceCss from '../../styles/products/commerce.css?url';
-import catalogCss from '../../styles/products/catalog.css?url';
-import sharedJs from '../../scripts/site/interactions.js?url';
-import filterJs from '../../scripts/products/filter.js?url';
+import initScript from '../../scripts/products/product-page-init.js?raw';
+import pageCss from '../../styles/products/products.css?url';
+import pageJs from '../../scripts/products/products.js?url';
 const meta = {
   "title": "Products & Services — M. Dimas Maulana",
+  "themeColor": "#fafbfc",
   "description": "Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.",
-  "themeColor": "#f6f7f9",
   "canonical": "/products/"
 };
 ---
-<BaseLayout meta={meta} lang="id" htmlAttributes={{}} bodyAttributes={{"data-page": "products"}}>
+<!--
+  Products page — “Build. Create. Grow.” (light only).
+  Styles: src/styles/products/products.css · script: src/scripts/products/products.js
+  Header, payment, brief form and footer match the Website Development page.
+  Previous version: playground/pages/products/arsip-2026-10-29/
+-->
+<BaseLayout meta={meta} lang="en" htmlAttributes={{"data-language": "en", "data-international": "false"}} bodyAttributes={{"data-page": "products"}}>
 <Fragment slot="head">
-<script is:inline set:html={catalogThemeInitScript}></script>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet"/>
-<link rel="stylesheet" href={sharedCss} />
-<link rel="stylesheet" href={commerceCss} />
-<link rel="stylesheet" href={navigationCss} />
-<link rel="stylesheet" href={catalogCss} />
-<link rel="stylesheet" href={catalogActionsCss} />
-<script is:inline set:html={catalogInternationalInitScript}></script><link rel="stylesheet" href={catalogInternationalCss} />
-<link rel="stylesheet" href={catalogControlsCss} />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href={pageCss} />
+<script is:inline set:html={initScript}></script>
 </Fragment>
-<div aria-hidden="true" class="aurora-layer">
-<span class="aurora-orb aurora-one"></span>
-<span class="aurora-orb aurora-two"></span>
-<span class="aurora-orb aurora-three"></span>
-</div>
-<div aria-hidden="true" class="grid-layer"></div>
-<div aria-hidden="true" class="cursor-grid-light" id="cursor-grid-light"></div>
-<div aria-hidden="true" class="grain-layer"></div>
-<aside aria-label="Social media links" class="social-rail social-rail-left">
-<div class="social-rail-links">
-<a aria-label="Instagram" class="social-link" href="https://www.instagram.com/dig.marketing.maul/" rel="noopener noreferrer" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-<a aria-label="LinkedIn" class="social-link" href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" rel="noopener noreferrer" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
-<a href="https://www.tiktok.com/@digmarketingmaul" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-</div>
-<span aria-hidden="true" class="social-rail-line"></span>
-</aside>
-<aside aria-label="Email" class="social-rail social-rail-right">
-<a class="email-rail-link" href="mailto:mdimas103@gmail.com">mdimas103@gmail.com</a>
-<span aria-hidden="true" class="social-rail-line"></span>
-</aside>
-<header class="site-header">
-<div class="site-header-inner products-header-inner">
-<div class="products-header-left">
-<a aria-label="M. Dimas Maulana Home" class="brand-logo" href="/index.html#home">
-<img class="brand-logo-dark" src="/assets/brand/logo/icon-reversed.svg" alt="digmarketingmaul" width="36" height="36"><img class="brand-logo-light" src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="36" height="36">
-</a>
-<div class="product-header-controls" aria-label="Products display controls">
-<button aria-pressed="false" class="product-international-toggle product-international-toggle--header" type="button" aria-label="Toggle international mode">
-<span aria-hidden="true" class="pit-track"><span></span></span><span class="product-international-label">International</span>
-</button>
-<select class="product-compact-select product-language-select" aria-label="Language">
-<option value="id">ID</option>
-<option value="en">EN</option>
-</select>
-<button aria-pressed="false" class="product-international-toggle product-international-toggle--header product-dark-toggle" type="button" data-products-dark-toggle aria-label="Enable dark mode">
-<span aria-hidden="true" class="pit-track"><span></span></span><span class="product-international-label">Dark</span>
-</button>
-</div>
-</div>
-<nav aria-label="Primary Navigation" class="main-nav"><NavLinks active="products" /></nav>
-</div>
-<div aria-hidden="true" class="scroll-progress" id="scroll-progress"></div>
-</header>
-<main>
-<section class="subpage-hero product-hero commerce-product-hero">
-<div class="subpage-hero-inner">
-<div class="product-hero-top reveal-item">
-<div class="subpage-kicker product-page-kicker">
-<span class="kicker-line"></span>
-<span>Products / Services</span>
-</div>
-</div>
-<div class="reveal-mask">
-<h1 class="subpage-title hero-title-gradient reveal-item reveal-delay-1">
-            Build, Run &amp;<br/>
-<span class="accent-text">Grow Together.</span>
-</h1>
-</div>
-<div class="subpage-intro reveal-item reveal-delay-2">
-<p data-copy-lang="id">
-            Layanan dan resource praktis untuk membantu membangun, menjalankan,
-            mengukur, dan mengembangkan aktivitas digital marketing.
-          </p>
-<p data-copy-lang="en" hidden="">
-            Practical services and resources to help build, run, measure,
-            and grow digital marketing activities.
-          </p>
-</div>
-<div aria-hidden="true" class="subpage-orbit">
-<span class="subpage-orbit-ring ring-a"></span>
-<span class="subpage-orbit-ring ring-b"></span>
-<span class="subpage-orbit-dot"></span>
-</div>
-</div>
-</section>
-<section class="topic-section product-catalog-section section-reveal">
-<div class="product-catalog-heading o3-catalog-heading">
-<div class="subpage-kicker">
-<span class="kicker-line"></span>
-<span>Categories</span>
-</div>
-<div class="o3-chips" role="group" aria-label="Filter categories">
-<button class="o3-chip is-active" type="button" data-filter="all" aria-pressed="true"><span data-copy-lang="id">Semua</span><span data-copy-lang="en" hidden>All</span></button>
-<button class="o3-chip" type="button" data-filter="service" aria-pressed="false"><span data-copy-lang="id">Layanan</span><span data-copy-lang="en" hidden>Services</span></button>
-<button class="o3-chip" type="button" data-filter="learn" aria-pressed="false"><span data-copy-lang="id">Belajar &amp; Resource</span><span data-copy-lang="en" hidden>Learn &amp; Resources</span></button>
-<button class="o3-chip" type="button" data-filter="advisory" aria-pressed="false">Advisory 1 on 1</button>
-</div>
-</div>
-<div class="commerce-product-grid">
-{products.map((product, index) => <ProductCard product={product} number={index + 1} />)}
+  <a class="skip-link" href="#main"><span class="lang-id">Langsung ke konten</span><span class="lang-en">Skip to content</span></a>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" id="cursor-grid-light" aria-hidden="true">
+    <span class="cursor-ring"><span class="cursor-label"></span></span>
+    <span class="cursor-dot"></span>
+  </div>
 
+  <!-- ============ HEADER — same as the Website Development page ============ -->
+  <header class="site-header" data-header>
+    <div class="site-header-inner">
+      <a href="/index.html#home" class="brand-logo" aria-label="M. Dimas Maulana Home"><img src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="34" height="34"><span class="brand-word">digmarketingmaul</span></a>
+      <div class="header-tools">
+        <label class="lang-select">
+          <span class="visually-hidden">Language</span>
+          <select data-maul-language-select>
+            <option value="id">ID</option>
+            <option value="en">EN</option>
+          </select>
+        </label>
+        <button class="intl-toggle" type="button" data-product-international-toggle aria-pressed="false" aria-label="International mode">
+          <span class="intl-track" aria-hidden="true"><i></i></span><span>International</span>
+        </button>
+        <a class="btn btn-ink btn-sm header-cta" href="#contact" data-magnetic>Let's discuss</a>
+      </div>
+    </div>
+    <div class="scroll-progress" id="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  </header>
 
+  <main id="main">
 
+    <!-- ============ HERO — three verbs + the full stack shuffling beside them ============ -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <h1 class="hero-title" id="hero-title" data-reveal-title>
+            <span class="mask-line"><span>Build.</span></span>
+            <span class="mask-line"><span>Create.</span></span>
+            <span class="mask-line"><span><em>Grow</em><span class="accent-dot">.</span></span></span>
+          </h1>
+          <p class="hero-lead reveal"><span class="lang-id">Website, ads, dan creative production — dalam satu tempat.</span><span class="lang-en">Websites, ads and creative production — in one place.</span></p>
+          <div class="stack-tabs reveal" role="tablist" aria-label="Disciplines" data-stack-tabs>
+            <button type="button" role="tab" data-i="0">Web</button>
+            <button type="button" role="tab" data-i="1">Ads</button>
+            <button type="button" role="tab" data-i="2">Creative</button>
+            <button type="button" role="tab" data-i="3">Motion</button>
+            <button type="button" role="tab" data-i="4">Brand</button>
+          </div>
+        </div>
 
+        <!-- The full stack: five cards that shuffle to the front one by one (hover pauses, click a tab to jump) -->
+        <div class="stack" data-stack aria-hidden="true">
+          <div class="stack-card sc-web" data-name="Web">
+            <span class="sc-label">01 · Web</span>
+            <span class="sc-browser"><span class="sc-bar"><i></i><i></i><i></i></span><img src="/assets/website-development/clients/hanasari.webp" alt="" width="1280" height="800"></span>
+          </div>
+          <div class="stack-card sc-ads" data-name="Ads">
+            <span class="sc-label">02 · Ads</span>
+            <span class="sc-bars"><i style="--h:.32"></i><i style="--h:.46"></i><i style="--h:.4"></i><i style="--h:.62"></i><i style="--h:.78"></i><i style="--h:1"></i></span>
+            <svg class="sc-trend" viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0 52 C 40 48, 60 36, 92 34 S 150 16, 200 6" pathLength="1"/></svg>
+            <span class="sc-chips"><b>Meta</b><b>Google</b><b>TikTok</b></span>
+          </div>
+          <div class="stack-card sc-creative" data-name="Creative">
+            <span class="sc-label">03 · Creative</span>
+            <span class="sc-poster"><b>BIG</b><b>SALE</b><i></i><small>Poster · Flyer · Backdrop</small></span>
+          </div>
+          <div class="stack-card sc-motion" data-name="Motion">
+            <span class="sc-label">04 · Motion</span>
+            <span class="sc-play"></span>
+            <span class="sc-timeline"><i></i></span>
+            <span class="sc-time">00:12 / 00:30</span>
+          </div>
+          <div class="stack-card sc-brand" data-name="Brand">
+            <span class="sc-label">05 · Brand</span>
+            <span class="sc-type">Aa</span>
+            <span class="sc-swatch"><i style="--c:#07111f"></i><i style="--c:#ff304f"></i><i style="--c:#f4f6fa"></i><i style="--c:#f6b81f"></i></span>
+            <small class="sc-note">Logo · Color · Type</small>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- ============ ACCEPT PAYMENT — first thing after the hero ============ -->
+    <section class="pay-band" aria-labelledby="pay-title">
+      <div class="shell">
+        <div class="pay reveal">
+          <p class="pay-title" id="pay-title">Accept payment</p>
+          <div class="pay-group">
+            <p class="pay-label">Indonesia</p>
+            <ul class="pay-logos">
+              <li class="qris">
+                <button class="qris-btn" type="button" aria-expanded="false" aria-controls="qris-pop" data-qris>
+                  <img src="/assets/payment-methods/qris.webp" alt="QRIS">
+                  <span class="qris-badge"><span class="lang-id">Lihat</span><span class="lang-en">View</span></span>
+                </button>
+                <div class="qris-pop" id="qris-pop" role="dialog" aria-label="QRIS digmarketingmaul" data-qris-pop>
+                  <img src="/assets/payment-methods/qris-digmarketingmaul.webp" alt="QRIS Digital Marketing Maul, NMID ID1026603703558" width="760" height="1071" loading="lazy">
+                  <p class="qris-warn"><strong><span class="lang-id">Konfirmasi dulu, baru bayar.</span><span class="lang-en">Confirm first, then pay.</span></strong> <span class="lang-id">Bayar tanpa konfirmasi =&nbsp;sedekah.</span><span class="lang-en">Paying without confirming =&nbsp;a&nbsp;donation.</span></p>
+                  <a class="qris-confirm" href="#contact"><span class="lang-id">Konfirmasi via WhatsApp</span><span class="lang-en">Confirm on WhatsApp</span> →</a>
+                </div>
+              </li>
+              <li><img src="/assets/payment-methods/hijra.webp" alt="Hijra Bank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/gopay.webp" alt="GoPay" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/shopeepay.webp" alt="ShopeePay" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/dana.webp" alt="DANA" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/ovo.webp" alt="OVO" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/permata.webp" alt="PermataBank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bsi.webp" alt="Bank Syariah Indonesia" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/mandiri.webp" alt="Bank Mandiri" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bri.webp" alt="BRI" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bni.webp" alt="BNI" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/btn.webp" alt="BTN" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/cimb.webp" alt="CIMB Niaga" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/danamon.webp" alt="Danamon" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/maybank.webp" alt="Maybank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bjb.webp" alt="bank bjb" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/sinarmas.webp" alt="Bank Sinarmas" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bnc.webp" alt="Bank Neo Commerce" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bss.webp" alt="Bank Sahabat Sampoerna" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/seabank.webp" alt="SeaBank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/alfa.webp" alt="Alfamart" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/indomaret.webp" alt="Indomaret" loading="lazy"></li>
+            </ul>
+          </div>
+          <div class="pay-group">
+            <p class="pay-label">International</p>
+            <ul class="pay-logos">
+              <li><img src="/assets/payment-methods/paypal.svg" alt="PayPal" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/visa.webp" alt="Visa" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/mastercard.webp" alt="Mastercard" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/jcb.webp" alt="JCB" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/amex.svg" alt="American Express" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/unionpay.svg" alt="UnionPay" loading="lazy"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- ============ PRODUCTS — the four you can buy today ============ -->
+    <section class="products" id="products" aria-labelledby="products-title">
+      <div class="shell">
+        <div class="section-head">
+          <h2 class="section-title" id="products-title" data-reveal-title>
+            <span class="mask-line"><span>Products<span class="accent-dot">.</span></span></span>
+          </h2>
+          <p class="section-note"><span class="lang-id">Siap dibeli, langsung jalan.</span><span class="lang-en">Ready to buy, ready to go.</span></p>
+        </div>
 
+        <div class="cards">
+          <!-- 01 Website Development -->
+          <a class="card reveal" href="/products/website-development/" data-spot data-cursor="View" style="--tone:#f6b81f">
+            <span class="card-visual cv-web" aria-hidden="true">
+              <span class="cv-rail"></span>
+              <span class="cv-sheet" style="--i:0"><img src="/assets/website-development/clients/hanasari.webp" alt="" loading="lazy"></span>
+              <span class="cv-sheet" style="--i:1"><img src="/assets/website-development/clients/haikal-cfp.webp" alt="" loading="lazy"></span>
+            </span>
+            <span class="card-body">
+              <span class="card-meta"><span>01</span><span>Website &amp; Build</span></span>
+              <strong class="card-title">Website Development</strong>
+              <span class="card-desc"><span class="lang-id">Website untuk personal, bisnis, atau digital product.</span><span class="lang-en">Websites for personal brands, businesses or digital products.</span></span>
+              <span class="card-foot">
+                <span class="card-price"><s data-price-id="Rp5.000.000" data-price-usd="USD 305">Rp5.000.000</s><strong data-price-id="Rp999.000" data-price-usd="USD 61">Rp999.000</strong></span>
+                <span class="card-go" aria-hidden="true">→</span>
+              </span>
+            </span>
+          </a>
 
+          <!-- 02 Your First Website Live from Zero -->
+          <a class="card reveal" href="/products/website-course/" data-spot data-cursor="View" style="--tone:#07111f">
+            <span class="card-visual cv-course" aria-hidden="true">
+              <span class="cv-steps"><i>Domain</i><i>Hosting</i><i>Design</i><i>Live</i></span>
+              <span class="cv-progress"><b>0</b><i><em></em></i><b>Live</b></span>
+            </span>
+            <span class="card-body">
+              <span class="card-meta"><span>02</span><span>Course</span><span class="card-flag"><span class="lang-id">Harga Oktober</span><span class="lang-en">October price</span></span></span>
+              <strong class="card-title"><span class="lang-id">Website Pertama Kamu, Live dari 0</span><span class="lang-en">Your First Website Live from Zero</span></strong>
+              <span class="card-desc"><span class="lang-id">Course step-by-step sampai website kamu live.</span><span class="lang-en">A step-by-step course until your website is live.</span></span>
+              <span class="card-foot">
+                <span class="card-price"><s data-price-id="Rp4.000.000" data-price-usd="USD 229">Rp4.000.000</s><strong data-price-id="Rp899.000" data-price-usd="USD 56">Rp899.000</strong></span>
+                <span class="card-go" aria-hidden="true">→</span>
+              </span>
+            </span>
+          </a>
 
+          <!-- 03 Digital Ads Management -->
+          <a class="card reveal" href="/products/digital-ads-management/" data-spot data-cursor="View" style="--tone:#ff304f">
+            <span class="card-visual cv-ads" aria-hidden="true">
+              <span class="cv-funnel"><i style="--w:1"><span>Reach</span></i><i style="--w:.74"><span>Click</span></i><i style="--w:.5"><span>Lead</span></i><i style="--w:.3"><span>Sale</span></i></span>
+            </span>
+            <span class="card-body">
+              <span class="card-meta"><span>03</span><span>Digital Ads</span></span>
+              <strong class="card-title">Digital Ads Management</strong>
+              <span class="card-desc"><span class="lang-id">Dari setup, tracking, sampai optimasi dan report.</span><span class="lang-en">From setup and tracking to optimisation and reporting.</span></span>
+              <span class="card-foot">
+                <span class="card-price"><strong class="card-price-text"><span class="lang-id">Sesuai scope</span><span class="lang-en">By scope</span></strong></span>
+                <span class="card-go" aria-hidden="true">→</span>
+              </span>
+            </span>
+          </a>
 
-</div>
-</section>
-<BrandFooter />
-</main>
+          <!-- 04 Digital Marketing eBooks -->
+          <a class="card reveal" href="/products/digital-marketing-ebooks/" data-spot data-cursor="View" style="--tone:#e9e3d5">
+            <span class="card-visual cv-books" aria-hidden="true">
+              <span class="cv-book" style="--i:0;--c:#07111f"><b>Ads</b></span>
+              <span class="cv-book" style="--i:1;--c:#ff304f"><b>Content</b></span>
+              <span class="cv-book" style="--i:2;--c:#f6b81f"><b>Funnel</b></span>
+              <span class="cv-book" style="--i:3;--c:#1f5c43"><b>Data</b></span>
+            </span>
+            <span class="card-body">
+              <span class="card-meta"><span>04</span><span>eBook</span><span class="card-flag card-flag--muted">Live test</span></span>
+              <strong class="card-title">Digital Marketing eBooks</strong>
+              <span class="card-desc"><span class="lang-id">Uji alur pembelian. eBook final segera hadir.</span><span class="lang-en">Purchase-flow test. Final eBooks coming soon.</span></span>
+              <span class="card-foot">
+                <span class="card-price"><strong data-price-id="Rp10.000" data-price-usd="USD 6">Rp10.000</strong></span>
+                <span class="card-go" aria-hidden="true">→</span>
+              </span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
 
-<script is:inline set:html={cardNavigationScript}></script>
-<script is:inline src={sharedJs}></script>
-<script is:inline src={filterJs}></script>
-<script is:inline set:html={catalogControlsScript}></script>
+    <!-- ============ CREATIVE PRODUCTION — straight to WhatsApp ============ -->
+    <section class="creative" id="creative" aria-labelledby="creative-title" data-creative>
+      <div class="shell">
+        <div class="section-head">
+          <h2 class="section-title" id="creative-title" data-reveal-title>
+            <span class="mask-line"><span>Creative</span></span>
+            <span class="mask-line"><span>production<span class="accent-dot">.</span></span></span>
+          </h2>
+          <p class="section-note"><span class="lang-id">Pilih, lalu diskusi langsung via WhatsApp.</span><span class="lang-en">Pick one, then talk it through on WhatsApp.</span></p>
+        </div>
+
+        <div class="svc-groups">
+          <div class="svc-group reveal" style="--g:#07111f">
+            <p class="svc-label"><span>Motion</span><b>01</b></p>
+            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Video Motion Production" data-viz="motion" data-cursor="WhatsApp">
+              <span class="svc-name">Video Motion Production</span><span class="svc-tags">Reels · Ads · Explainer</span><span class="svc-go" aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="svc-group reveal" style="--g:#ff304f">
+            <p class="svc-label"><span>Visual &amp; Print</span><b>04</b></p>
+            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Poster Visual Creative Production" data-viz="poster" data-cursor="WhatsApp">
+              <span class="svc-name">Poster Visual Creative</span><span class="svc-tags">Social · Campaign</span><span class="svc-go" aria-hidden="true">↗</span>
+            </a>
+            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Print Poster Materials" data-viz="print" data-cursor="WhatsApp">
+              <span class="svc-name">Print Poster Materials</span><span class="svc-tags"><span class="lang-id">Siap cetak</span><span class="lang-en">Print-ready</span></span><span class="svc-go" aria-hidden="true">↗</span>
+            </a>
+            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Flyer" data-viz="flyer" data-cursor="WhatsApp">
+              <span class="svc-name">Flyer</span><span class="svc-tags">Promo · Event</span><span class="svc-go" aria-hidden="true">↗</span>
+            </a>
+            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Backdrop" data-viz="backdrop" data-cursor="WhatsApp">
+              <span class="svc-name">Backdrop</span><span class="svc-tags">Event · Booth · Stage</span><span class="svc-go" aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="svc-group reveal" style="--g:#f6b81f">
+            <p class="svc-label"><span>Brand</span><b>02</b></p>
+            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Brand Guide" data-viz="brand" data-cursor="WhatsApp">
+              <span class="svc-name">Brand Guide</span><span class="svc-tags">Logo · Color · Type</span><span class="svc-go" aria-hidden="true">↗</span>
+            </a>
+            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Company Profile" data-viz="profile" data-cursor="WhatsApp">
+              <span class="svc-name">Company Profile</span><span class="svc-tags">Print · Digital</span><span class="svc-go" aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="svc-group reveal" style="--g:#1f5c43">
+            <p class="svc-label"><span>Sales</span><b>02</b></p>
+            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Sales Kit Design" data-viz="kit" data-cursor="WhatsApp">
+              <span class="svc-name">Sales Kit Design</span><span class="svc-tags">Catalog · Pricelist</span><span class="svc-go" aria-hidden="true">↗</span>
+            </a>
+            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Sales Presentation Deck" data-viz="deck" data-cursor="WhatsApp">
+              <span class="svc-name">Sales Presentation Deck</span><span class="svc-tags">Pitch · Proposal</span><span class="svc-go" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- floating preview that follows the pointer over a service row (fine pointers) -->
+      <div class="svc-preview" data-svc-preview aria-hidden="true">
+        <span class="pv pv-motion"><i class="pv-play"></i><i class="pv-line"></i></span>
+        <span class="pv pv-poster"><b>NEW</b><b>DROP</b></span>
+        <span class="pv pv-print"><i></i><i></i></span>
+        <span class="pv pv-flyer"><b>50%</b><small>OFF</small></span>
+        <span class="pv pv-backdrop"><b>EVENT</b><i></i></span>
+        <span class="pv pv-brand"><b>Aa</b><i></i><i></i><i></i></span>
+        <span class="pv pv-profile"><b>About us</b><i></i><i></i></span>
+        <span class="pv pv-kit"><i></i><i></i><i></i><i></i></span>
+        <span class="pv pv-deck"><b>Q4 Pitch</b><i></i></span>
+      </div>
+    </section>
+
+    <!-- ============ COMING SOON ============ -->
+    <section class="soon" aria-labelledby="soon-title">
+      <div class="shell soon-inner reveal">
+        <p class="soon-title" id="soon-title">Coming soon</p>
+        <ul class="soon-list">
+          <li>Meta Ads Advisory 1:1</li>
+          <li>Google Ads Advisory 1:1</li>
+          <li><span class="lang-id">Diskusi Technical Digital Marketing 1:1</span><span class="lang-en">Technical Digital Marketing 1:1</span></li>
+          <li>Reporting Templates</li>
+          <li>Conversion Tracking Setup</li>
+          <li>E-Book</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT — brief form → WhatsApp ============ -->
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="shell contact-grid">
+        <div class="contact-intro">
+          <h2 class="section-title" id="contact-title" data-reveal-title>
+            <span class="mask-line"><span>Let's discuss</span></span>
+            <span class="mask-line"><span>your <em>project</em><span class="accent-dot">.</span></span></span>
+          </h2>
+          <p class="contact-lead"><span class="lang-id">Isi singkat, lanjut ke WhatsApp.</span><span class="lang-en">A quick brief, then WhatsApp.</span></p>
+
+          <div class="chat" aria-hidden="true">
+            <div class="chat-head">
+              <span class="chat-avatar"><img src="/assets/brand/logo/icon.svg" alt="" width="26" height="26"></span>
+              <span><strong>Maul</strong><small><span class="lang-id">Pratinjau pesan kamu</span><span class="lang-en">Your message preview</span></small></span>
+            </div>
+            <div class="chat-body">
+              <p class="chat-bubble"><span data-chat-text></span><small><span class="lang-id">Belum terkirim</span><span class="lang-en">Not sent yet</span></small></p>
+            </div>
+          </div>
+        </div>
+
+        <form class="brief" data-brief novalidate>
+          <div class="brief-head">
+            <p class="brief-title"><span class="lang-id">Brief project</span><span class="lang-en">Project brief</span></p>
+            <span class="brief-chip"><span class="lang-id">± 1 menit</span><span class="lang-en">± 1 minute</span></span>
+          </div>
+
+          <div class="field" data-field="name">
+            <label for="f-name"><span class="lang-id">Nama kamu</span><span class="lang-en">Your name</span> <b>*</b></label>
+            <input id="f-name" name="name" autocomplete="name" required data-ph-id="Nama panggilan" data-ph-en="What should we call you?">
+            <p class="field-error"><span class="lang-id">Isi nama dulu, ya.</span><span class="lang-en">Please add your name.</span></p>
+          </div>
+
+          <div class="field">
+            <label for="f-brand"><span class="lang-id">Bisnis / brand</span><span class="lang-en">Business / brand</span></label>
+            <input id="f-brand" name="brand" autocomplete="organization" data-ph-id="Contoh: Kopi Senja" data-ph-en="e.g. Senja Coffee">
+          </div>
+
+          <fieldset class="field" data-field="need">
+            <legend><span class="lang-id">Kamu butuh</span><span class="lang-en">You need</span> <b>*</b> <small class="legend-hint"><span class="lang-id">boleh lebih dari satu</span><span class="lang-en">pick any</span></small></legend>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="need" value="web" data-id="Website" data-en="Website"><span>Website</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="course" data-id="Course website" data-en="Website course"><span>Course</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="ads" data-id="Digital ads" data-en="Digital ads"><span>Digital ads</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="motion" data-id="Video motion" data-en="Video motion"><span>Video motion</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="print" data-id="Poster / flyer / backdrop" data-en="Poster / flyer / backdrop"><span>Poster &amp; print</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="brand" data-id="Brand guide / company profile" data-en="Brand guide / company profile"><span>Brand</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="sales" data-id="Sales kit / deck" data-en="Sales kit / deck"><span>Sales kit &amp; deck</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="other" data-id="Lainnya" data-en="Something else"><span><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></span></label>
+            </div>
+            <p class="field-error"><span class="lang-id">Pilih minimal satu.</span><span class="lang-en">Pick at least one.</span></p>
+          </fieldset>
+
+          <fieldset class="field">
+            <legend><span class="lang-id">Sudah punya sosial media?</span><span class="lang-en">On social media already?</span></legend>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="social" value="Instagram" data-id="Instagram" data-en="Instagram"><span>Instagram</span></label>
+              <label class="chip"><input type="checkbox" name="social" value="TikTok" data-id="TikTok" data-en="TikTok"><span>TikTok</span></label>
+              <label class="chip"><input type="checkbox" name="social" value="Facebook" data-id="Facebook" data-en="Facebook"><span>Facebook</span></label>
+              <label class="chip"><input type="checkbox" name="social" value="LinkedIn" data-id="LinkedIn" data-en="LinkedIn"><span>LinkedIn</span></label>
+              <label class="chip"><input type="checkbox" name="social" value="none" data-id="Belum ada" data-en="Not yet" data-none><span><span class="lang-id">Belum ada</span><span class="lang-en">Not yet</span></span></label>
+            </div>
+            <input class="field-more" name="handle" aria-label="Social media account or link" data-ph-id="@akunkamu atau link" data-ph-en="@youraccount or a link" hidden>
+          </fieldset>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="f-ref"><span class="lang-id">Referensi</span><span class="lang-en">Reference</span></label>
+              <input id="f-ref" name="ref" data-ph-id="Link atau nama brand (opsional)" data-ph-en="A link or a brand (optional)">
+            </div>
+            <div class="field">
+              <label for="f-when"><span class="lang-id">Target selesai</span><span class="lang-en">Deadline</span></label>
+              <select id="f-when" name="when">
+                <option value="" data-id="Pilih" data-en="Choose">Pilih</option>
+                <option value="asap" data-id="Secepatnya" data-en="As soon as possible">Secepatnya</option>
+                <option value="1m" data-id="Kurang dari 1 bulan" data-en="Within a month">Kurang dari 1 bulan</option>
+                <option value="3m" data-id="1–3 bulan" data-en="1–3 months">1–3 bulan</option>
+                <option value="unsure" data-id="Belum tahu" data-en="Not sure yet">Belum tahu</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="f-note"><span class="lang-id">Ceritakan idemu</span><span class="lang-en">Tell us your idea</span></label>
+            <textarea id="f-note" name="note" rows="3" data-ph-id="Tujuan, gaya, ukuran, jumlah, atau apa pun di kepalamu" data-ph-en="Goal, style, sizes, quantity, anything on your mind"></textarea>
+          </div>
+
+          <button class="btn btn-red btn-lg btn-block" type="submit">
+            <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+            <span class="lang-id">Lanjutkan ke WhatsApp</span><span class="lang-en">Continue on WhatsApp</span>
+          </button>
+          <p class="brief-note"><span class="lang-id">Pesan terbuka di WhatsApp. Data formulir tidak disimpan.</span><span class="lang-en">Your message opens in WhatsApp. Nothing is stored.</span></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER — same as the other pages ============ -->
+  <footer class="brand-footer">
+    <div class="brand-footer-inner">
+      <div class="footer-cols">
+        <nav aria-label="Footer">
+          <p class="footer-label">Pages</p>
+          <ul>
+            <li><a href="/index.html#home" class="footer-link">Home</a></li>
+            <li><a href="/frameworks/" class="footer-link">Frameworks</a></li>
+            <li><a href="/blog/" class="footer-link">Blog</a></li>
+            <li><a href="/products/" class="footer-link">Products</a></li>
+          </ul>
+        </nav>
+        <div>
+          <p class="footer-label">Social</p>
+          <ul>
+            <li><a href="https://www.instagram.com/digmarketingmaul/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+            <li><a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+            <li><a href="https://www.tiktok.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-tiktok" aria-hidden="true"></i> TikTok</a></li>
+            <li><a href="https://www.youtube.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-youtube" aria-hidden="true"></i> YouTube</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-label">Based in</p>
+          <ul>
+            <li>Bekasi, Indonesia</li>
+            <li class="footer-cta-item"><a href="/products/" class="footer-cta">Let's Collaborate <span aria-hidden="true">→</span></a></li>
+          </ul>
+        </div>
+        <div class="footer-top-link">
+          <a href="#" class="back-to-top"><span aria-hidden="true">↑</span> Back to top</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Build and Design by Maul</p>
+        <img class="footer-mark" src="/assets/brand/logo/icon.svg" alt="" width="26" height="26">
+      </div>
+    </div>
+    <p class="footer-wordmark" aria-hidden="true">digmarketingmaul<span>.</span></p>
+  </footer>
+  <script is:inline src={pageJs}></script>
 </BaseLayout>

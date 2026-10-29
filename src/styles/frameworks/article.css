@@ -683,16 +683,6 @@ html[data-article-theme="light"] body[data-page="framework-article"] .nav-link:h
   color: #17202c;
 }
 
-html[data-article-theme="light"] body[data-page="framework-article"] .brand-logo .brand-logo-dark,
-html[data-products-theme="light"] body[data-page="products"] .brand-logo .brand-logo-dark {
-  display: none;
-}
-
-html[data-article-theme="light"] body[data-page="framework-article"] .brand-logo .brand-logo-light,
-html[data-products-theme="light"] body[data-page="products"] .brand-logo .brand-logo-light {
-  display: block;
-}
-
 html[data-article-theme="light"] body[data-page="framework-article"] .hero-title-gradient {
   background:
     linear-gradient(

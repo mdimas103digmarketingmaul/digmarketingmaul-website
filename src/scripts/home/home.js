@@ -793,6 +793,8 @@
       ring.classList.toggle("has-label", Boolean(text));
       ring.classList.toggle("is-link", Boolean(target) && !text);
       if (text) label.textContent = text;
+      // red fields: white dot + white label disc, so the cursor never melts into the red
+      root.classList.toggle("cursor-on-red", Boolean(event.target.closest(".collab")));
     });
 
     /* ---- Magnetic elements ---- */

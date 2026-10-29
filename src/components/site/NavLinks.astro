@@ -4,8 +4,8 @@ const { active, home = false, mobile = false } = Astro.props;
 ---
 {navigation.map((item, i) => <a
   href={home && ['home', 'profile'].includes(item.id) ? `#${item.id}` : item.href}
-  class={mobile ? 'mobile-link' : `nav-link${!home && item.id === active ? ' active' : ''}`}
+  class={[mobile ? 'mobile-link' : `nav-link${!home && item.id === active ? ' active' : ''}`, item.cta && 'nav-cta'].filter(Boolean).join(' ')}
   aria-current={(home && !mobile && item.id === 'home') || (mobile && !home && item.id === active) ? 'page' : undefined}
   data-magnetic={home && !mobile ? true : undefined}
   style={mobile ? `--i:${i}` : undefined}
-><span class={home ? 'nav-num' : 'nav-number'}>{item.number}</span>{home || mobile ? item.label : <span>{item.label}</span>}</a>)}
+><span class={home ? 'nav-num' : 'nav-number'}>{item.number}</span>{home || mobile ? item.label : <span>{item.label}</span>}{item.cta && <span class="nav-cta-arrow" aria-hidden="true">↗</span>}</a>)}

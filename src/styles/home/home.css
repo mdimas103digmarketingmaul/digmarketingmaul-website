@@ -377,6 +377,15 @@ html.has-cursor .cursor-ring.has-label ~ .cursor-dot {
   scale: 0;
 }
 
+/* On the red Collaborate field the red dot / red disc would disappear */
+html.cursor-on-red .cursor-dot {
+  background: #fff;
+}
+
+html.cursor-on-red .cursor-ring.has-label {
+  background: #fff;
+}
+
 /* Magnetic elements — script.js writes `translate`, CSS smooths it */
 [data-magnetic] {
   transition: translate 0.55s var(--ease-expo);
@@ -497,6 +506,84 @@ html.has-cursor .cursor-ring.has-label ~ .cursor-dot {
 .nav-link[aria-current="page"]::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+/* Products = the call to action in the navbar: red pill, arrow, a soft ping */
+.nav-link.nav-cta {
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--red);
+  box-shadow: 0 8px 22px -10px rgba(255, 48, 79, 0.85);
+  transition: background-color 300ms ease, box-shadow 300ms ease;
+}
+
+.nav-link.nav-cta::after {
+  content: none;
+}
+
+.nav-link.nav-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(255, 48, 79, 0.55);
+  animation: nav-cta-ping 3.2s var(--ease-expo) infinite;
+  pointer-events: none;
+}
+
+.nav-link.nav-cta .nav-num {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.nav-link.nav-cta:hover,
+.nav-link.nav-cta:focus-visible,
+.nav-link.nav-cta[aria-current="page"] {
+  background: #d91a3c;
+  box-shadow: 0 10px 26px -10px rgba(255, 48, 79, 0.95);
+}
+
+.nav-cta-arrow {
+  display: inline-block;
+  font-size: 0.95em;
+  line-height: 1;
+  transition: transform 400ms var(--ease-expo);
+}
+
+.nav-cta:hover .nav-cta-arrow,
+.nav-cta:focus-visible .nav-cta-arrow {
+  transform: translate(2px, -2px);
+}
+
+.mobile-link.nav-cta {
+  color: var(--red);
+}
+
+/* over red sections the pill turns navy so it never disappears */
+.site-header[data-tone="red"] .nav-link.nav-cta {
+  background: var(--navy);
+  box-shadow: 0 8px 22px -10px rgba(7, 17, 31, 0.7);
+}
+
+.site-header[data-tone="red"] .nav-link.nav-cta::before {
+  animation: none;
+}
+
+@keyframes nav-cta-ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 48, 79, 0.55);
+  }
+  45%,
+  100% {
+    box-shadow: 0 0 0 12px rgba(255, 48, 79, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link.nav-cta::before {
+    animation: none;
+  }
 }
 
 .scroll-progress {
@@ -2071,6 +2158,51 @@ main {
   font-size: 0.625rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+
+/* "Let's Collaborate" under Based in → /products/ */
+.footer-cta-item {
+  margin-top: 10px;
+}
+
+.footer-cols a.footer-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
+  background: var(--red);
+  box-shadow: 0 10px 24px -12px rgba(255, 48, 79, 0.9);
+  transition: background-color 300ms ease, box-shadow 300ms ease;
+}
+
+.footer-cols a.footer-cta:hover,
+.footer-cols a.footer-cta:focus-visible {
+  background: #d91a3c;
+}
+
+.footer-cta span {
+  display: inline-block;
+  transition: transform 400ms var(--ease-expo);
+}
+
+.footer-cta:hover span,
+.footer-cta:focus-visible span {
+  transform: translateX(3px);
+}
+
+@media (max-width: 640px) {
+  .footer-cols a.footer-cta {
+    gap: 8px;
+    padding: 0 16px;
+    font-size: 13px;
+  }
 }
 
 .footer-top-link {

@@ -24,6 +24,15 @@
     letter-spacing: -0.02em;
   }
 
+  .nav-link.nav-cta {
+    gap: 3px;
+    padding: 5px 8px;
+  }
+
+  .nav-link.nav-cta::before {
+    animation: none;
+  }
+
   .framework-section {
     width: calc(100% - 36px);
     padding: 64px 0 84px;
@@ -126,6 +135,10 @@
   .nav-link {
     font-size: 7.35px;
     gap: 1px;
+  }
+
+  .nav-link.nav-cta {
+    padding: 4px 6px;
   }
 
   .framework-section {

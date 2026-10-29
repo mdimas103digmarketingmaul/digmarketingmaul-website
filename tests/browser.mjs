@@ -83,15 +83,27 @@ try{
  await page.keyboard.press('Escape');assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'false');
  await page.goto(newServer.url+'/');await page.locator('.menu-toggle').click();
  await page.locator('.mobile-menu a[href="#profile"]').click();await page.waitForTimeout(200);assert.equal(new URL(page.url()).hash,'#profile');
+ // Navbar order (2026-10-29): Home, Profile, Frameworks, Blog, Products — Products is the highlighted CTA.
+ await page.goto(newServer.url+'/blog/');
+ assert.deepEqual(await page.locator('.main-nav .nav-link').evaluateAll(as=>as.map(a=>a.textContent.replace(/\W+/g,''))),['01Home','02Profile','03Frameworks','04Blog','05Products']);
+ assert.equal(await page.locator('.main-nav .nav-cta').getAttribute('href'),'/products/');
+ await page.evaluate(()=>localStorage.clear());
  await page.goto(newServer.url+'/products/');
- await page.locator('[data-filter="service"]').click();assert.equal(await page.locator('.commerce-product-card:visible').count(),3);
- await page.locator('[data-filter="all"]').click();assert.equal(await page.locator('.commerce-product-card:visible').count(),10);
- await page.locator('[data-products-dark-toggle]').click();assert.equal(await page.locator('html').getAttribute('data-products-theme'),'dark');
- await page.locator('.product-language-select').selectOption('en');assert.equal(await page.locator('html').getAttribute('lang'),'en');
- await page.locator('.product-international-toggle').first().click();assert.equal(await page.locator('html').getAttribute('data-international'),'true');
- assert.equal(await page.locator('.commerce-checkout-btn').first().getAttribute('href'),'/products/website-course/');
- assert.equal(await page.locator('.commerce-price').first().textContent(),'USD 56');
- await page.locator('.product-international-toggle').first().click();assert.equal(await page.locator('.commerce-checkout-btn').first().getAttribute('href'),'/products/website-course/');
+ // First visit is English; a chosen language is remembered.
+ assert.equal(await page.locator('html').getAttribute('data-language'),'en');assert.equal(await page.locator('html').getAttribute('lang'),'en');
+ await page.locator('[data-maul-language-select]').selectOption('id');await page.reload();assert.equal(await page.locator('html').getAttribute('data-language'),'id');
+ // Products: four product cards, creative services straight to WhatsApp, QRIS popover, brief → WhatsApp.
+ assert.deepEqual(await page.locator('.cards a.card').evaluateAll(as=>as.map(a=>a.getAttribute('href'))),['/products/website-development/','/products/website-course/','/products/digital-ads-management/','/products/digital-marketing-ebooks/']);
+ assert.equal(await page.locator('.svc[href*="wa.me"]').count(),9);
+ assert.ok(decodeURIComponent(await page.locator('.svc').first().getAttribute('href')).includes('Video Motion Production'),'creative WhatsApp message');
+ await page.locator('[data-qris]').focus();await page.keyboard.press('Enter');assert.equal(await page.locator('[data-qris]').getAttribute('aria-expanded'),'true');
+ await page.keyboard.press('Escape');
+ await page.locator('[data-maul-language-select]').selectOption('en');assert.equal(await page.locator('html').getAttribute('lang'),'en');
+ await page.locator('[data-product-international-toggle]').click();assert.equal(await page.locator('html').getAttribute('data-international'),'true');
+ assert.equal(await page.locator('.card-price strong').first().textContent(),'USD 61');
+ await page.locator('[data-product-international-toggle]').click();assert.equal(await page.locator('.card-price strong').first().textContent(),'Rp999.000');
+ await page.locator('#f-name').fill('Local audit');await page.locator('.chip:has-text("Video motion")').click();
+ assert.ok((await page.locator('[data-chat-text]').textContent()).includes('Local audit'),'products brief preview');
  await page.goto(newServer.url+'/frameworks/digital-ads-operating-system/');
  await page.locator('[data-maul-theme-select]').first().selectOption('dark');assert.equal(await page.locator('html').getAttribute('data-article-theme'),'dark');
  await page.locator('[data-maul-language-select]').first().selectOption('en');assert.equal(await page.locator('html').getAttribute('lang'),'en');
@@ -99,15 +111,22 @@ try{
   await page.evaluate(()=>localStorage.clear());
   await page.goto(newServer.url+'/products/'+route+'/');
   await page.locator('[data-maul-language-select]').selectOption('en');assert.equal(await page.locator('html').getAttribute('data-language'),'en');
-  const previous=await page.locator('html').getAttribute('data-theme');await page.locator('[data-maul-dark-toggle]').click();assert.notEqual(await page.locator('html').getAttribute('data-theme'),previous);
+  // Website Development is light only (no dark toggle since 2026-10-29).
+  if(route==='website-development')assert.equal(await page.locator('[data-maul-dark-toggle]').count(),0);
+  else{const previous=await page.locator('html').getAttribute('data-theme');await page.locator('[data-maul-dark-toggle]').click();assert.notEqual(await page.locator('html').getAttribute('data-theme'),previous);}
   await page.locator('[data-product-international-toggle]').click();assert.equal(await page.locator('html').getAttribute('data-international'),'true');
  }
  await page.goto(newServer.url+'/products/digital-ads-management/');
  await page.locator('[name="business"]').fill('Local audit only');
  assert.ok((await page.locator('a[href*="wa.me"]').evaluateAll(as=>as.map(a=>a.href))).some(h=>decodeURIComponent(h).includes('Local audit only')),'WhatsApp brief');
  await page.goto(newServer.url+'/products/website-development/');
- assert.equal(await page.locator('[data-frame] iframe').count(),2);
- assert.ok((await page.locator('[data-frame] iframe').first().getAttribute('style')).includes('scale('));
+ // Selected work: hanging sheets, one live preview per client, scaled to the sheet; the ↗ button is the only link.
+ assert.equal(await page.locator('.sheet iframe').count(),3);
+ assert.ok((await page.locator('.sheet-screen').first().getAttribute('style')).includes('--s:'));
+ assert.equal(await page.locator('.sheet a.sheet-go').count(),4);
+ // Brief form composes a WhatsApp message; nothing is sent from the page.
+ await page.locator('#f-name').fill('Local audit');await page.locator('.chip:has-text("Landing page")').click();
+ assert.ok((await page.locator('[data-chat-text]').textContent()).includes('Local audit'),'brief preview');
  await page.evaluate(()=>localStorage.clear());
  await page.goto(newServer.url+'/products/website-course/');
  await page.locator('.theme-toggle').click();assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
@@ -129,5 +148,5 @@ try{
  assert.ok(results.every(r=>r.errors.length===0),'runtime errors in visual checks');
  assert.ok(results.every(r=>r.diffRatio<=.001),'visual regression; inspect test-results');
  assert.equal(errors.length,0,`smoke runtime errors: ${errors}`);
- console.log(`PASS: 36 routes, ${results.length} visual comparisons, menu/profile/filter/theme/language/international/WhatsApp/iframe/course behavior. External traffic and APIs blocked.`);
+ console.log(`PASS: 36 routes, ${results.length} visual comparisons, menu/profile/nav/products/theme/language/international/WhatsApp/iframe/course behavior. External traffic and APIs blocked.`);
 } finally {await browser.close();oldServer.server.close();newServer.server.close();fs.rmSync(before,{recursive:true,force:true});}
