@@ -1,0 +1,16 @@
+---
+import BaseHead from '../components/seo/BaseHead.astro';
+import Tracking from '../components/seo/Tracking.astro';
+const { meta, lang = 'en', htmlAttributes = {}, bodyAttributes = {} } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang={lang} {...htmlAttributes}>
+<head>
+<BaseHead {...meta} />
+<slot name="head" />
+</head>
+<body {...bodyAttributes}>
+<Tracking noscript />
+<slot />
+</body>
+</html>

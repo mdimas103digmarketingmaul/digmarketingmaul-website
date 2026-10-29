@@ -1,0 +1,1 @@
+window.MaulProductInternationalConfig={whatsappUrl:'https://wa.me/6281296069566?text=Hello%20Maul%2C%20I%20am%20interested%20in%20Digital%20Ads%20Management%20and%20would%20like%20to%20discuss%20my%20business%2C%20scope%2C%20platforms%2C%20ad%20budget%2C%20and%20management%20needs.'};

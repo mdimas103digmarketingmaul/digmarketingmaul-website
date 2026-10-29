@@ -1,0 +1,93 @@
+---
+import navigationCss from '../../styles/site/navigation-responsive.css?url';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BrandFooter from '../../components/site/BrandFooter.astro';
+import SiteHeader from '../../components/site/SiteHeader.astro';
+import sharedCss from '../../styles/site/shared.css?url';
+import sharedJs from '../../scripts/site/interactions.js?url';
+const meta = {
+  "title": "Blog — M. Dimas Maulana",
+  "description": "Notes, ideas, experiments, frameworks, and practical lessons across digital marketing by M. Dimas Maulana.",
+  "themeColor": "#07111f",
+  "canonical": "/blog/"
+};
+---
+<BaseLayout meta={meta} lang="en" htmlAttributes={{}} bodyAttributes={{"data-page": "blog"}}>
+<Fragment slot="head">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href={sharedCss} />
+<link rel="stylesheet" href={navigationCss} />
+</Fragment>
+<div class="aurora-layer" aria-hidden="true"><span class="aurora-orb aurora-one"></span><span class="aurora-orb aurora-two"></span><span class="aurora-orb aurora-three"></span></div>
+  <div class="grid-layer" aria-hidden="true"></div>
+  <div class="cursor-grid-light" id="cursor-grid-light" aria-hidden="true"></div>
+  <div class="grain-layer" aria-hidden="true"></div>
+
+  <aside class="social-rail social-rail-left" aria-label="Social media links">
+    <div class="social-rail-links">
+      <a href="https://www.instagram.com/dig.marketing.maul/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="https://www.tiktok.com/@digmarketingmaul" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+    </div>
+    <span class="social-rail-line" aria-hidden="true"></span>
+  </aside>
+
+  <aside class="social-rail social-rail-right" aria-label="Email">
+    <a href="mailto:mdimas103@gmail.com" class="email-rail-link">mdimas103@gmail.com</a>
+    <span class="social-rail-line" aria-hidden="true"></span>
+  </aside>
+
+  <SiteHeader active="blog" />
+
+
+  <main>
+    <section class="subpage-hero">
+      <div class="subpage-hero-inner">
+        <div class="subpage-kicker reveal-item"><span class="kicker-line"></span><span>Blog / Field Notes</span></div>
+
+        <div class="reveal-mask">
+          <h1 class="subpage-title hero-title-gradient reveal-item reveal-delay-1">Notes, Ideas &amp;<br><span class="accent-text">Experiments.</span></h1>
+        </div>
+
+        <div class="subpage-intro reveal-item reveal-delay-2">
+          <p>This blog is where I document how I think, build systems, solve problems, test ideas, and learn across digital marketing.</p>
+          <p>I share practical experiences, frameworks, experiments, and lessons from the things I work on.</p>
+        </div>
+
+        <div class="subpage-orbit" aria-hidden="true">
+          <span class="subpage-orbit-ring ring-a"></span>
+          <span class="subpage-orbit-ring ring-b"></span>
+          <span class="subpage-orbit-dot"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="topic-section section-reveal">
+      <div class="section-heading compact-heading">
+        <div class="subpage-kicker"><span class="kicker-line"></span><span>Topics I Write About</span></div>
+        <h2><span class="section-title-main">Explore by</span><span class="section-title-accent">Digital Marketing Topic</span></h2>
+      </div>
+
+      <div class="topic-grid">
+        <article class="topic-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">01</span><span class="topic-icon"><i class="fa-brands fa-meta"></i></span><h3>Meta Ads</h3><p>Campaign structure, optimization, creative testing, app acquisition, Android/iOS.</p></article>
+        <article class="topic-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">02</span><span class="topic-icon"><i class="fa-brands fa-google"></i></span><h3>Google Ads</h3><p>Search, App Campaign, Performance Max, bidding, keyword strategy, optimization.</p></article>
+        <article class="topic-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">03</span><span class="topic-icon"><i class="fa-solid fa-pen-ruler"></i></span><h3>Creative &amp; Brand</h3><p>Creative strategy, visual communication, branding, and content development.</p></article>
+        <article class="topic-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">04</span><span class="topic-icon"><i class="fa-solid fa-chart-line"></i></span><h3>Measurement, Analytics &amp; Attribution</h3><p>GA4, GTM, Adjust, mobile attribution, SKAN, web-to-app measurement, conversion tracking.</p></article>
+        <article class="topic-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">05</span><span class="topic-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></span><h3>SEO &amp; Organic Growth</h3><p>SEO, Google Search Console, content strategy, and organic growth.</p></article>
+        <article class="topic-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">06</span><span class="topic-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span><h3>AI &amp; Automation</h3><p>AI workflows, automation, productivity, and practical uses of AI for marketing.</p></article>
+        <article class="topic-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">07</span><span class="topic-icon"><i class="fa-solid fa-layer-group"></i></span><h3>Web &amp; Digital Products</h3><p>Websites, landing pages, digital products, and content systems.</p></article>
+        <article class="topic-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">08</span><span class="topic-icon"><i class="fa-solid fa-flask"></i></span><h3>Growth &amp; Experimentation</h3><p>A/B testing, funnel optimization, campaign experiments, and growth strategy.</p></article>
+        <article class="topic-card"><span class="card-sheen" aria-hidden="true"></span><span class="topic-number">09</span><span class="topic-icon"><i class="fa-solid fa-diagram-project"></i></span><h3>Thinking &amp; Systems</h3><p>Frameworks, decision-making, process design, problem structuring, and performance review.</p></article>
+      </div>
+
+      <div class="coming-note"><span class="coming-dot" aria-hidden="true"></span><span>Still building this space. More notes, experiments, and articles are coming soon.</span></div>
+    </section>
+
+    <BrandFooter />
+  </main>
+
+  <script is:inline src={sharedJs}></script>
+</BaseLayout>

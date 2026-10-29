@@ -1,0 +1,32 @@
+---
+import navigationCss from '../styles/site/navigation-responsive.css?url';
+import BaseLayout from "./BaseLayout.astro";
+import themeInitScript from '../scripts/frameworks/theme-init.js?raw';
+import articleHeaderCss from '../styles/frameworks/article-header.css?url';
+import sharedCss from '../styles/site/shared.css?url';
+import familyCss from '../styles/frameworks/article.css?url';
+import sharedJs from '../scripts/site/interactions.js?url';
+import articleJs from '../scripts/frameworks/article.js?url';
+const { meta } = Astro.props;
+---
+<BaseLayout meta={meta} lang="id" htmlAttributes={{}} bodyAttributes={{"data-page": "framework-article"}}>
+<Fragment slot="head">
+<script is:inline set:html={themeInitScript}></script>
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href={sharedCss} />
+<link rel="stylesheet" href={familyCss} />
+<link rel="stylesheet" href={navigationCss} />
+  <link rel="stylesheet" href="/assets/compact-controls.css">
+  <link rel="stylesheet" href={articleHeaderCss} />
+</Fragment>
+<slot />
+
+  <script is:inline src={sharedJs}></script>
+<script is:inline src={articleJs}></script>
+  <script is:inline src="/assets/compact-controls.js"></script>
+</BaseLayout>

@@ -1,0 +1,297 @@
+[
+  {
+    "id": "website-course",
+    "name": {
+      "id": "Panduan Membuat Website Pertama Kamu Live dari 0",
+      "en": "Your First Website Live from Zero"
+    },
+    "category": "learn",
+    "categoryLabel": "Course / Website",
+    "url": "/products/website-course/",
+    "amount": 899000,
+    "icon": "fa-solid fa-laptop-code",
+    "description": {
+      "id": "Course step-by-step untuk membangun dan mempublikasikan website pertama kamu dari nol sampai live.",
+      "en": "A step-by-step course to build and publish your first website from zero to live."
+    },
+    "price": {
+      "id": "Rp899.000",
+      "usd": "USD 56"
+    },
+    "originalPrice": {
+      "id": "Rp4.000.000",
+      "usd": "USD 229"
+    },
+    "promo": {
+      "id": "Harga Oktober 2026 · Segera checkout sebelum harga naik.",
+      "en": "October 2026 price · Checkout before the price increases."
+    },
+    "status": "available",
+    "paymentSupport": true,
+    "progress": {},
+    "cta": {
+      "id": "Lihat Detail Course",
+      "en": "View Course Details"
+    }
+  },
+  {
+    "id": "website-development",
+    "name": {
+      "id": "Website Development"
+    },
+    "category": "service",
+    "categoryLabel": "Website & Build",
+    "url": "/products/website-development/",
+    "amount": 999000,
+    "icon": "fa-solid fa-code",
+    "description": {
+      "id": "Membangun website untuk kebutuhan personal, bisnis, atau digital product.",
+      "en": "Building websites for personal, business, or digital product needs."
+    },
+    "price": {
+      "id": "Rp999.000",
+      "usd": "USD 61"
+    },
+    "originalPrice": {
+      "id": "Rp5.000.000",
+      "usd": "USD 305"
+    },
+    "promo": {},
+    "status": "available",
+    "paymentSupport": true,
+    "progress": {},
+    "cta": {
+      "id": "Lihat Detail",
+      "en": "View Details"
+    }
+  },
+  {
+    "id": "digital-ads-management",
+    "name": {
+      "id": "Digital Ads Management"
+    },
+    "category": "service",
+    "categoryLabel": "Digital Ads",
+    "url": "/products/digital-ads-management/",
+    "icon": "fa-solid fa-chart-column",
+    "description": {
+      "id": "Pengelolaan digital ads end-to-end: fondasi akun, tracking, campaign, creative direction, optimasi, reporting, dan business insight.",
+      "en": "End-to-end digital ads management covering account foundations, tracking, campaigns, creative direction, optimization, reporting, and business insight."
+    },
+    "price": {
+      "id": "Sesuai scope",
+      "usd": "By scope"
+    },
+    "promo": {
+      "id": "Fee dikonfirmasi setelah scope, platform, budget, dan kebutuhan pengelolaan disepakati.",
+      "en": "Fee is confirmed after the scope, platform, budget, and management needs are agreed."
+    },
+    "status": "available",
+    "paymentSupport": false,
+    "progress": {
+      "id": "Layanan tersedia · sesuai scope",
+      "en": "Service available · scope-based"
+    },
+    "cta": {
+      "id": "Lihat Scope & Detail",
+      "en": "View Scope & Details"
+    }
+  },
+  {
+    "id": "digital-marketing-ebooks",
+    "name": {
+      "id": "Digital Marketing eBooks"
+    },
+    "category": "learn",
+    "categoryLabel": "Live Test",
+    "url": "/products/digital-marketing-ebooks/",
+    "amount": 10000,
+    "icon": "fa-solid fa-book-open",
+    "description": {
+      "id": "Live test untuk mencoba flow pembelian Digital Marketing eBooks. Produk final dan eBook sungguhan belum tersedia.",
+      "en": "A live test of the Digital Marketing eBooks purchase flow. The final product and actual eBook are not available yet."
+    },
+    "price": {
+      "id": "Rp10.000",
+      "usd": "USD 6"
+    },
+    "promo": {},
+    "status": "available",
+    "paymentSupport": true,
+    "progress": {},
+    "cta": {
+      "id": "Lihat Detail",
+      "en": "View Details"
+    }
+  },
+  {
+    "id": "website-building-advisory",
+    "name": {
+      "id": "Website Building Advisory 1 on 1"
+    },
+    "category": "advisory",
+    "categoryLabel": "1 on 1 Advisory",
+    "amount": 1200000,
+    "icon": "fa-regular fa-comments",
+    "description": {
+      "id": "Pendampingan untuk membantu kamu memahami dan membangun website sendiri, dari perencanaan sampai launch.",
+      "en": "1 on 1 guidance to help you understand and build your own website, from planning through launch."
+    },
+    "price": {
+      "id": "Rpx.xxx.xxx",
+      "usd": "USD xxx"
+    },
+    "promo": {},
+    "status": "coming-soon",
+    "paymentSupport": false,
+    "progress": {
+      "id": "Produk/jasa dalam pengembangan",
+      "en": "Product/service in development"
+    },
+    "cta": {
+      "id": "Checkout segera tersedia",
+      "en": "Checkout coming soon"
+    }
+  },
+  {
+    "id": "meta-ads-advisory",
+    "name": {
+      "id": "Meta Ads Advisory 1 on 1"
+    },
+    "category": "advisory",
+    "categoryLabel": "1 on 1 Advisory",
+    "icon": "fa-brands fa-meta",
+    "description": {
+      "id": "Pendampingan praktis untuk memahami setup, campaign structure, creative testing, dan optimization di Meta Ads.",
+      "en": "Practical guidance to understand setup, campaign structure, creative testing, and optimization in Meta Ads."
+    },
+    "price": {
+      "id": "Rpx.xxx.xxx",
+      "usd": "USD xxx"
+    },
+    "promo": {},
+    "status": "coming-soon",
+    "paymentSupport": false,
+    "progress": {
+      "id": "Produk/jasa dalam pengembangan",
+      "en": "Product/service in development"
+    },
+    "cta": {
+      "id": "Checkout segera tersedia",
+      "en": "Checkout coming soon"
+    }
+  },
+  {
+    "id": "google-ads-advisory",
+    "name": {
+      "id": "Google Ads Advisory 1 on 1"
+    },
+    "category": "advisory",
+    "categoryLabel": "1 on 1 Advisory",
+    "icon": "fa-brands fa-google",
+    "description": {
+      "id": "Pendampingan untuk memahami dan menjalankan Google Ads, termasuk Search, campaign setup, dan optimization.",
+      "en": "Guidance to understand and run Google Ads, including Search, campaign setup, and optimization."
+    },
+    "price": {
+      "id": "Rpx.xxx.xxx",
+      "usd": "USD xxx"
+    },
+    "promo": {},
+    "status": "coming-soon",
+    "paymentSupport": false,
+    "progress": {
+      "id": "Produk/jasa dalam pengembangan",
+      "en": "Product/service in development"
+    },
+    "cta": {
+      "id": "Checkout segera tersedia",
+      "en": "Checkout coming soon"
+    }
+  },
+  {
+    "id": "exclusive-technical-digital-marketing-discussion",
+    "name": {
+      "id": "Diskusi Eksklusif 1 on 1 Seputar Technical Digital Marketing",
+      "en": "Exclusive 1 on 1 Technical Digital Marketing Discussion"
+    },
+    "category": "advisory",
+    "categoryLabel": "1 on 1 Discussion",
+    "icon": "fa-regular fa-message",
+    "description": {
+      "id": "Diskusi untuk panduan praktis dan insight teknis seputar digital marketing, berdasarkan pengalaman langsung yang saya jalani.",
+      "en": "A personalized discussion on practical guidance and technical insights on digital marketing, based on my hands-on experience."
+    },
+    "price": {
+      "id": "Rpx.xxx.xxx",
+      "usd": "USD xxx"
+    },
+    "promo": {},
+    "status": "coming-soon",
+    "paymentSupport": false,
+    "progress": {
+      "id": "Produk/jasa dalam pengembangan",
+      "en": "Product/service in development"
+    },
+    "cta": {
+      "id": "Checkout segera tersedia",
+      "en": "Checkout coming soon"
+    }
+  },
+  {
+    "id": "digital-marketing-reporting-templates",
+    "name": {
+      "id": "Digital Marketing Reporting Templates"
+    },
+    "category": "learn",
+    "categoryLabel": "Templates",
+    "icon": "fa-solid fa-table-columns",
+    "description": {
+      "id": "Template praktis untuk membantu monitoring, review, dan reporting performance marketing dengan lebih terstruktur.",
+      "en": "Practical templates to support more structured monitoring, review, and performance marketing reporting."
+    },
+    "price": {
+      "id": "Rpx.xxx.xxx",
+      "usd": "USD xxx"
+    },
+    "promo": {},
+    "status": "coming-soon",
+    "paymentSupport": false,
+    "progress": {
+      "id": "Produk/jasa dalam pengembangan",
+      "en": "Product/service in development"
+    },
+    "cta": {
+      "id": "Checkout segera tersedia",
+      "en": "Checkout coming soon"
+    }
+  },
+  {
+    "id": "conversion-tracking-measurement-setup",
+    "name": {
+      "id": "Conversion Tracking & Measurement Setup"
+    },
+    "category": "service",
+    "categoryLabel": "Measurement",
+    "icon": "fa-solid fa-chart-line",
+    "description": {
+      "id": "Pemasangan event tracking dan conversion measurement agar aktivitas digital marketing dapat diukur dan dioptimasi lebih baik.",
+      "en": "Implementation of event tracking and conversion measurement so digital marketing activities can be measured and optimized more effectively."
+    },
+    "price": {
+      "id": "Rpx.xxx.xxx",
+      "usd": "USD xxx"
+    },
+    "promo": {},
+    "status": "coming-soon",
+    "paymentSupport": false,
+    "progress": {
+      "id": "Produk/jasa dalam pengembangan",
+      "en": "Product/service in development"
+    },
+    "cta": {
+      "id": "Checkout segera tersedia",
+      "en": "Checkout coming soon"
+    }
+  }
+]

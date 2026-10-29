@@ -1,0 +1,71 @@
+
+    .payment-status-detail {
+      margin-top: 8px;
+      font-family: "Roboto Mono", monospace;
+      font-size: 0.72rem;
+      line-height: 1.55;
+      color: var(--slate, #64748b);
+      word-break: break-word;
+    }
+
+    .payment-status-detail strong {
+      color: var(--navy, #0f172a);
+      font-weight: 600;
+    }
+
+    .payment-progress[data-payment-state="SUCCESS"] {
+      color: #15803d;
+    }
+
+    .payment-progress[data-payment-state="PENDING"] {
+      color: #b45309;
+    }
+
+    .payment-progress[data-payment-state="TIMEOUT"] {
+      color: #b91c1c;
+    }
+
+
+    .commerce-product-card.js-detail-card{cursor:pointer}
+    .commerce-checkout-btn.is-ready{
+      cursor:pointer!important;
+      color:#fff!important;
+      background:#ff3158!important;
+      border-color:#ff3158!important;
+      box-shadow:0 10px 26px rgba(255,49,88,.16);
+    }
+    .commerce-checkout-btn.is-ready:hover{
+      background:#e92b50!important;
+      border-color:#e92b50!important;
+      transform:translateY(-1px);
+    }
+    .commerce-checkout-btn.is-coming-soon,
+    .commerce-checkout-btn.is-coming-soon:disabled{
+      cursor:default!important;
+      color:#667085!important;
+      background:#f2f4f7!important;
+      border-color:#e4e7ec!important;
+      box-shadow:none!important;
+      opacity:1!important;
+    }
+    html[data-products-theme="dark"] .commerce-checkout-btn.is-coming-soon,
+    html[data-products-theme="dark"] .commerce-checkout-btn.is-coming-soon:disabled{
+      color:#9aa8bd!important;
+      background:#101f33!important;
+      border-color:rgba(148,163,184,.18)!important;
+    }
+    .commerce-price-stack{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .commerce-original-price{font-family:"JetBrains Mono",monospace;font-size:.82rem;color:#98a2b3;text-decoration:line-through;text-decoration-thickness:1.5px}
+    .commerce-promo-note{margin-top:7px;font-size:.75rem;line-height:1.45;color:#ff3158;font-weight:700}
+    html[data-products-theme="dark"] .commerce-original-price{color:#7f8da3}
+
+    .payment-support-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .international-payment-support{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap;padding:7px 9px;width:max-content;max-width:100%;margin-left:auto;border:1px solid rgba(148,163,184,.20);border-radius:10px;background:rgba(255,255,255,.86)}
+    .international-payment-support[hidden]{display:none!important}
+    .international-payment-support img{display:block;width:auto;height:18px;max-width:34px;object-fit:contain}
+    .international-payment-support img[alt="American Express"]{height:20px}
+    .international-payment-support .paypal-wordmark{display:block;width:auto;height:18px;max-width:66px}
+    html[data-products-theme="dark"] .international-payment-support{background:#fff;border-color:rgba(255,255,255,.10)}
+    @media(max-width:680px){.payment-support-row{align-items:flex-start}.international-payment-support{margin-left:0;justify-content:flex-start}}
+    br.desktop-break{display:block}
+    @media(max-width:760px){br.desktop-break{display:none}}

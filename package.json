@@ -1,0 +1,29 @@
+{
+  "name": "digmarketingmaul-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "prepare:static": "node scripts/prepare-static.mjs",
+    "dev": "npm run prepare:static && astro dev --host 127.0.0.1",
+    "build": "npm run prepare:static && astro build && node scripts/verify-build.mjs",
+    "preview": "astro preview --host 127.0.0.1",
+    "preview:worker": "wrangler dev --local --ip 127.0.0.1",
+    "test": "node scripts/verify-build.mjs",
+    "test:browser": "node tests/browser.mjs",
+    "test:worker": "node tests/worker.mjs"
+  },
+  "dependencies": {
+    "astro": "7.4.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "parse5": "8.0.1",
+    "pixelmatch": "8.0.0",
+    "pngjs": "7.0.0",
+    "wrangler": "4.155.0"
+  }
+}

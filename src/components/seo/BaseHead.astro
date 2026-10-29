@@ -1,0 +1,17 @@
+---
+import { siteOrigin } from '../../data/site.js';
+import Tracking from './Tracking.astro';
+const { title, description, canonical, themeColor, robots } = Astro.props;
+---
+<meta charset="UTF-8" />
+<Tracking />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content={description} />
+<meta name="theme-color" content={themeColor} />
+{robots && <meta name="robots" content={robots} />}
+<link rel="icon" href="/assets/brand/favicon/favicon.ico?v=3" sizes="48x48" />
+<link rel="icon" href="/assets/brand/favicon/favicon.svg?v=3" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/assets/brand/favicon/apple-touch-icon.png?v=3" />
+<link rel="manifest" href="/assets/brand/favicon/site.webmanifest" />
+<title>{title}</title>
+<link rel="canonical" href={new URL(canonical, siteOrigin).href} />

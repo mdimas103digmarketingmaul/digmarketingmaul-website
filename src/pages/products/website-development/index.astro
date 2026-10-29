@@ -1,0 +1,620 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import developmentInitScript from '../../../scripts/products/development-init.js?raw';
+import developmentInternationalConfigScript from '../../../scripts/products/development-international-config.js?raw';
+const meta = {
+  "title": "Website Development — Maul Digital",
+  "themeColor": "#f7f8fb",
+  "description": "Website Development oleh Maul — website design, development, CMS, measurement, deployment, infrastructure, dan maintenance untuk bisnis maupun digital product.",
+  "canonical": "/products/website-development/"
+};
+---
+<BaseLayout meta={meta} lang="id" htmlAttributes={{"data-theme": "light", "data-language": "id"}} bodyAttributes={{}}>
+<Fragment slot="head">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/compact-controls.css">
+<link rel="stylesheet" href="/assets/product-detail-international.css">
+<link rel="stylesheet" href="/products/website-development/styles.css">
+
+<script is:inline set:html={developmentInitScript}></script>
+</Fragment>
+<div class="grid-bg" aria-hidden="true"></div>
+<a class="skip-link" href="#main"><span class="lang-id">Langsung ke konten</span><span class="lang-en">Skip to content</span></a>
+
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <div class="product-detail-header-left">
+      <a class="brand" href="/" aria-label="digmarketingmaul Home"><img class="brand-logo-light" src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="36" height="36"><img class="brand-logo-dark" src="/assets/brand/logo/icon-reversed.svg" alt="digmarketingmaul" width="36" height="36"></a>
+      <div class="product-detail-header-controls" aria-label="Product display controls">
+        <button aria-pressed="false" class="product-international-toggle" type="button" data-product-international-toggle aria-label="Toggle international mode">
+          <span aria-hidden="true" class="pit-track"><span></span></span><span class="product-international-label">International</span>
+        </button>
+        <div class="maul-compact-controls" aria-label="Display controls">
+          <select class="maul-compact-select maul-language-select" data-maul-language-select aria-label="Language">
+            <option value="id">ID</option>
+            <option value="en">EN</option>
+          </select>
+          <button class="maul-dark-toggle" type="button" data-maul-dark-toggle aria-pressed="false" aria-label="Enable dark mode">
+            <span class="maul-dark-toggle-track" aria-hidden="true"><span></span></span>
+            <span>Dark</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <a class="nav-link" href="/products/">
+        <span class="lang-id">← Kembali ke Products</span>
+        <span class="lang-en">← Back to Products</span>
+      </a>
+      <a class="btn btn-primary sticky-payment" href="/checkout/?product=website-development" data-international-cta>
+        <span class="lang-id local-only">Lanjut ke Pembayaran</span>
+        <span class="lang-en local-only">Proceed to Payment</span>
+        <span class="lang-en international-only">Checkout via WhatsApp</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <p class="ribbon">
+          <span class="ribbon-tag">Website Development</span>
+          <span class="ribbon-words">Design<b>.</b> Build<b>.</b> Measure<b>.</b> Grow<b>.</b></span>
+        </p>
+        <h1>
+          <span class="lang-id">Lebih dari sekadar coding halaman<b class="dot">.</b></span>
+          <span class="lang-en">More than just coding a page<b class="dot">.</b></span>
+        </h1>
+        <p class="lead">
+          <span class="lang-id">Dari UI/UX dan development, sampai CMS, GA4/GTM/Search Console, deployment, maintenance, dan handover. Maul membantu website kamu <strong>dibangun dengan rapi, bisa diukur, dan tetap terawat</strong> setelah live.</span>
+          <span class="lang-en">From UI/UX and development to CMS, GA4/GTM/Search Console, deployment, maintenance, and handover. Maul helps your website get <strong>built properly, stay measurable, and remain looked after</strong> once it's live.</span>
+        </p>
+
+        <div class="offer-strip">
+          <div class="offer-price">
+            <span class="offer-label"><span class="lang-id">Harga saat ini</span><span class="lang-en">Current price</span></span>
+            <strong class="price" data-price-id="Rp999.000" data-price-usd="USD 61">Rp999.000</strong>
+          </div>
+          <p class="offer-note">
+            <span class="lang-id">Scope final mengikuti kebutuhan yang disepakati. Integrasi, fitur, maintenance, atau development tambahan di luar scope dasar dikonfirmasi bersama Maul terlebih dahulu.</span>
+            <span class="lang-en">Final scope follows the agreed requirements. Integrations, features, maintenance, or additional development beyond the base scope are confirmed with Maul first.</span>
+          </p>
+        </div>
+
+        <div class="actions" data-hero-actions>
+          <a class="btn btn-primary btn-lg" href="/checkout/?product=website-development" data-international-cta>
+            <span class="lang-id local-only">Lanjut ke Pembayaran</span>
+            <span class="lang-en local-only">Proceed to Payment</span>
+            <span class="lang-en international-only">Checkout via WhatsApp</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="btn btn-whatsapp btn-lg" data-wa="scope" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20diskusi%20Website%20Development." target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+            <span class="lang-id">Diskusikan Scope</span><span class="lang-en">Discuss Scope</span>
+          </a>
+        </div>
+
+        <a class="proof-link" href="#work">
+          <span class="proof-kicker">Selected work</span>
+          <span class="proof-names">Hanasari Catering · MammaRoti</span>
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+
+      <aside class="anatomy" data-anatomy aria-label="Website lifecycle overview">
+        <div class="anatomy-chrome" aria-hidden="true">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="anatomy-url">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            <span>https://<span class="lang-id">bisniskamu</span><span class="lang-en">yourbusiness</span>.id</span>
+          </span>
+          <span class="anatomy-live"><i></i>LIVE</span>
+        </div>
+        <div class="anatomy-head">
+          <span>Website lifecycle</span><span>06 layers</span>
+        </div>
+        <ol class="anatomy-layers">
+          <li class="layer is-active"><a href="#stage-01"><span class="layer-idx">01</span><span class="layer-main"><strong>Design &amp; Development</strong><small>UI/UX · Responsive · Front-end</small></span><span class="layer-state">Build</span></a></li>
+          <li class="layer"><a href="#stage-02"><span class="layer-idx">02</span><span class="layer-main"><strong>Custom CMS</strong><small>Editable sections · Articles</small></span><span class="layer-state">Content</span></a></li>
+          <li class="layer"><a href="#stage-03"><span class="layer-idx">03</span><span class="layer-main"><strong>Measurement &amp; Search</strong><small>GA4 · GTM · Search Console</small></span><span class="layer-state">Measure</span></a></li>
+          <li class="layer"><a href="#stage-04"><span class="layer-idx">04</span><span class="layer-main"><strong>Deployment &amp; Infra</strong><small>Domain · DNS · SSL · Hosting</small></span><span class="layer-state">Launch</span></a></li>
+          <li class="layer"><a href="#stage-05"><span class="layer-idx">05</span><span class="layer-main"><strong>Care &amp; Maintenance</strong><small>Monitoring · Fixes · Support</small></span><span class="layer-state">Care</span></a></li>
+          <li class="layer"><a href="#stage-06"><span class="layer-idx">06</span><span class="layer-main"><strong>Handover</strong><small>Repository · Access · Docs</small></span><span class="layer-state">Continuity</span></a></li>
+        </ol>
+        <div class="anatomy-foot" aria-hidden="true">
+          <span><i></i>Live</span><span><i></i>Measured</span><span><i></i>Maintained</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ SELECTED WORK ============ -->
+  <section class="section work" id="work" aria-labelledby="work-title">
+    <div class="shell">
+      <header class="section-head split reveal">
+        <div>
+          <p class="eyebrow">Selected Work</p>
+          <h2 class="title" id="work-title"><span class="lang-id">Website nyata yang dikerjakan Maul.</span><span class="lang-en">Real websites built by Maul.</span></h2>
+        </div>
+        <p class="section-intro">
+          <span class="lang-id">Satu website bisnis catering dan satu redesign brand F&amp;B. Lihat bagaimana kebutuhan brand, konten, dan user journey diterjemahkan menjadi website yang benar-benar bisa dipakai.</span>
+          <span class="lang-en">One catering business website and one F&amp;B brand redesign. See how brand, content, and user-journey needs become a website people can actually use.</span>
+        </p>
+      </header>
+
+      <article class="case reveal">
+        <div class="case-visual">
+          <div class="browser">
+            <div class="browser-bar" aria-hidden="true">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="browser-url">hanasari-astro.pages.dev/revisi/</span>
+            </div>
+            <div class="browser-view" data-frame>
+              <div class="browser-fallback" aria-hidden="true"><span>Hanasari<b>.</b></span><small>Catering</small></div>
+              <iframe src="https://hanasari-astro.pages.dev/revisi/" title="Hanasari Catering website preview" loading="lazy" tabindex="-1"></iframe>
+              <a class="browser-cover" href="https://hanasari-astro.pages.dev/revisi/" target="_blank" rel="noopener noreferrer">
+                <span><span class="lang-id">Buka live preview ↗</span><span class="lang-en">Open live preview ↗</span></span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="case-body">
+          <div class="case-meta"><span class="case-index">01</span><span>Catering · Business Website</span></div>
+          <h3>Hanasari Catering</h3>
+          <p>
+            <span class="lang-id">Website bisnis catering yang fokus mengubah pengunjung menjadi pertanyaan dan pesanan—dari menjelajah menu sampai konsultasi via WhatsApp.</span>
+            <span class="lang-en">A catering business website focused on turning visitors into enquiries and orders—from browsing the menu to consulting via WhatsApp.</span>
+          </p>
+          <ul class="case-points">
+            <li><span class="lang-id">Penawaran produk dan katalog/menu yang mudah dijelajahi</span><span class="lang-en">Product offers and an easy-to-browse menu/catalog</span></li>
+            <li><span class="lang-id">Trust signal dan artikel untuk membangun kredibilitas</span><span class="lang-en">Trust signals and articles that build credibility</span></li>
+            <li><span class="lang-id">Alur konsultasi dan pemesanan langsung ke WhatsApp</span><span class="lang-en">Consultation and ordering flows straight to WhatsApp</span></li>
+          </ul>
+          <div class="tags"><span class="tag">UI/UX</span><span class="tag">Responsive Web</span><span class="tag">Product Catalog</span><span class="tag">WhatsApp Flow</span><span class="tag">Content Structure</span></div>
+          <div class="case-actions">
+            <a class="btn btn-secondary" href="https://hanasari-astro.pages.dev/revisi/" target="_blank" rel="noopener noreferrer"><span class="lang-id">Buka Live Preview</span><span class="lang-en">Open Live Preview</span> <span aria-hidden="true">↗</span></a>
+            <a class="text-link" data-wa="similar" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20diskusi%20Website%20Development." target="_blank" rel="noopener noreferrer"><span class="lang-id">Mau website serupa?</span><span class="lang-en">Want something similar?</span> →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="case case--flip reveal">
+        <div class="case-visual">
+          <div class="browser">
+            <div class="browser-bar" aria-hidden="true">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="browser-url">mammaroti.co.id</span>
+            </div>
+            <div class="browser-view" data-frame>
+              <div class="browser-fallback" aria-hidden="true"><span>MammaRoti<b>.</b></span><small>F&amp;B Brand</small></div>
+              <iframe src="https://mammaroti.co.id/" title="MammaRoti website redesign preview" loading="lazy" tabindex="-1"></iframe>
+              <a class="browser-cover" href="https://mammaroti.co.id/" target="_blank" rel="noopener noreferrer">
+                <span><span class="lang-id">Buka live preview ↗</span><span class="lang-en">Open live preview ↗</span></span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="case-body">
+          <div class="case-meta"><span class="case-index">02</span><span>F&amp;B · Brand Website Redesign</span></div>
+          <h3>MammaRoti</h3>
+          <p>
+            <span class="lang-id">Redesign website brand F&amp;B yang menggabungkan cerita produk, pencarian outlet, dan jalur kemitraan untuk mendukung pertumbuhan brand.</span>
+            <span class="lang-en">An F&amp;B brand website redesign that brings together product storytelling, outlet discovery, and a partnership journey to support brand growth.</span>
+          </p>
+          <ul class="case-points">
+            <li><span class="lang-id">Product storytelling dan pengalaman visual produk</span><span class="lang-en">Product storytelling and visual product experiences</span></li>
+            <li><span class="lang-id">Pencarian outlet dan credibility section</span><span class="lang-en">Outlet discovery and credibility sections</span></li>
+            <li><span class="lang-id">Jalur kemitraan untuk calon partner</span><span class="lang-en">A partnership journey for prospective partners</span></li>
+          </ul>
+          <div class="tags"><span class="tag">Website Redesign</span><span class="tag">Brand Experience</span><span class="tag">Product Storytelling</span><span class="tag">Outlet Discovery</span><span class="tag">Partnership Flow</span></div>
+          <div class="case-actions">
+            <a class="btn btn-secondary" href="https://mammaroti.co.id/" target="_blank" rel="noopener noreferrer"><span class="lang-id">Buka Live Preview</span><span class="lang-en">Open Live Preview</span> <span aria-hidden="true">↗</span></a>
+            <a class="text-link" data-wa="similar" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20diskusi%20Website%20Development." target="_blank" rel="noopener noreferrer"><span class="lang-id">Mau website serupa?</span><span class="lang-en">Want something similar?</span> →</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ LIFECYCLE / SCOPE ============ -->
+  <section class="section scope" id="scope" aria-labelledby="scope-title">
+    <div class="shell lifecycle">
+      <div class="lifecycle-aside">
+        <p class="eyebrow">Scope of Service</p>
+        <h2 class="title" id="scope-title"><span class="lang-id">Satu partner untuk seluruh lifecycle website.</span><span class="lang-en">One partner across the whole website lifecycle.</span></h2>
+        <p class="section-intro">
+          <span class="lang-id">Scope disusun modular. Ambil yang dibutuhkan sekarang, tambahkan modul lain saat bisnis berkembang.</span>
+          <span class="lang-en">Scope is modular. Start with what you need now and add modules as your business grows.</span>
+        </p>
+        <ol class="stage-index" aria-label="Lifecycle stages">
+          <li><a href="#stage-01" data-stage-link="stage-01" class="is-current"><span>01</span>Design &amp; Development</a></li>
+          <li><a href="#stage-02" data-stage-link="stage-02"><span>02</span>Custom CMS</a></li>
+          <li><a href="#stage-03" data-stage-link="stage-03"><span>03</span>Measurement &amp; Search</a></li>
+          <li><a href="#stage-04" data-stage-link="stage-04"><span>04</span>Deployment &amp; Infrastructure</a></li>
+          <li><a href="#stage-05" data-stage-link="stage-05"><span>05</span>Care &amp; Maintenance</a></li>
+          <li><a href="#stage-06" data-stage-link="stage-06"><span>06</span>Handover &amp; Continuity</a></li>
+        </ol>
+        <a class="text-link aside-link" data-wa="scope" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20diskusi%20Website%20Development." target="_blank" rel="noopener noreferrer"><span class="lang-id">Belum yakin butuh yang mana? Tanya Maul</span><span class="lang-en">Not sure what you need? Ask Maul</span> →</a>
+      </div>
+
+      <div class="stages">
+        <article class="stage reveal" id="stage-01">
+          <p class="stage-label"><span class="stage-num">01</span>Design &amp; Build</p>
+          <h3>Website Design &amp; Development</h3>
+          <p class="stage-outcome">
+            <span class="lang-id">Struktur halaman yang jelas dan tampilan yang nyaman dipakai di setiap layar—untuk website bisnis, personal, layanan, maupun digital product.</span>
+            <span class="lang-en">Clear page structure and an interface that feels right on every screen—for business, personal, service, or digital-product websites.</span>
+          </p>
+          <ul class="stage-list">
+            <li><span class="lang-id">Sitemap &amp; struktur informasi</span><span class="lang-en">Sitemap &amp; information structure</span></li>
+            <li>UI/UX &amp; visual direction</li>
+            <li><span class="lang-id">Responsive: desktop, tablet, mobile</span><span class="lang-en">Responsive: desktop, tablet, mobile</span></li>
+            <li>Front-end implementation</li>
+            <li><span class="lang-id">Iterasi lewat review bersama</span><span class="lang-en">Iteration through shared reviews</span></li>
+            <li><span class="lang-id">Halaman &amp; komponen sesuai scope</span><span class="lang-en">Pages &amp; components per scope</span></li>
+          </ul>
+        </article>
+
+        <article class="stage reveal" id="stage-02">
+          <p class="stage-label"><span class="stage-num">02</span>Content</p>
+          <h3>Custom CMS &amp; Editable Content</h3>
+          <p class="stage-outcome">
+            <span class="lang-id">Konten bisa diperbarui sendiri tanpa harus menyentuh source code setiap kali ada update.</span>
+            <span class="lang-en">Update your own content without touching source code every time something changes.</span>
+          </p>
+          <ul class="stage-list">
+            <li>CMS integration</li>
+            <li><span class="lang-id">Section homepage yang editable</span><span class="lang-en">Editable homepage sections</span></li>
+            <li><span class="lang-id">Artikel, promo, berita, atau content hub</span><span class="lang-en">Articles, promos, news, or a content hub</span></li>
+            <li><span class="lang-id">CMS maintenance &amp; troubleshooting</span><span class="lang-en">CMS maintenance &amp; troubleshooting</span></li>
+          </ul>
+          <p class="stage-note"><span class="lang-id">Maintenance CMS dan modul CMS tambahan mengikuti scope yang disepakati.</span><span class="lang-en">CMS maintenance and additional CMS modules follow the agreed scope.</span></p>
+        </article>
+
+        <article class="stage reveal" id="stage-03">
+          <p class="stage-label"><span class="stage-num">03</span>Measure</p>
+          <h3>Measurement &amp; Search Foundation</h3>
+          <p class="stage-outcome">
+            <span class="lang-id">Website tidak sekadar live—traffic dan aksi penting bisa diukur, dan performanya di Google Search bisa dipantau.</span>
+            <span class="lang-en">Not just live—traffic and key actions are measurable, and Google Search performance can be monitored.</span>
+          </p>
+          <div class="tool-row">
+            <div class="tool"><b>GA4</b><span>Google Analytics 4</span></div>
+            <div class="tool"><b>GTM</b><span>Google Tag Manager</span></div>
+            <div class="tool"><b>GSC</b><span>Google Search Console</span></div>
+          </div>
+          <p class="stage-note"><span class="lang-id">Termasuk konfigurasi &amp; validasi measurement dasar sesuai scope. Integrasi tracking lain dapat didiskusikan.</span><span class="lang-en">Includes basic measurement configuration &amp; validation per scope. Other tracking integrations can be discussed.</span></p>
+        </article>
+
+        <article class="stage reveal" id="stage-04">
+          <p class="stage-label"><span class="stage-num">04</span>Launch</p>
+          <h3>Deployment &amp; Infrastructure</h3>
+          <p class="stage-outcome">
+            <span class="lang-id">Website berjalan aman dan stabil di domain bisnis kamu.</span>
+            <span class="lang-en">Your website runs securely and reliably on your business domain.</span>
+          </p>
+          <ul class="stage-list">
+            <li>Deployment</li>
+            <li>DNS configuration</li>
+            <li>SSL / HTTPS</li>
+            <li><span class="lang-id">Setup &amp; pengelolaan hosting/infrastructure</span><span class="lang-en">Hosting/infrastructure setup &amp; management</span></li>
+            <li><span class="lang-id">Setup &amp; pengelolaan domain</span><span class="lang-en">Domain setup &amp; management</span></li>
+          </ul>
+          <p class="stage-note"><span class="lang-id">Pengelolaan domain dan hosting berlaku bila termasuk dalam scope.</span><span class="lang-en">Domain and hosting management apply when included in scope.</span></p>
+        </article>
+
+        <article class="stage reveal" id="stage-05">
+          <p class="stage-label"><span class="stage-num">05</span>Care</p>
+          <h3>Website Care &amp; Maintenance</h3>
+          <p class="stage-outcome">
+            <span class="lang-id">Setelah launch, website tetap ada yang menjaga—tidak ditinggal begitu saja.</span>
+            <span class="lang-en">After launch, someone keeps looking after your website—it isn't just left behind.</span>
+          </p>
+          <ul class="stage-list">
+            <li>Website monitoring</li>
+            <li>Technical troubleshooting</li>
+            <li>Bug fixing</li>
+            <li><span class="lang-id">Perubahan konten ringan sesuai kesepakatan</span><span class="lang-en">Minor content changes per agreement</span></li>
+            <li><span class="lang-id">Support operasional website</span><span class="lang-en">Operational website support</span></li>
+            <li>Domain, hosting, DNS &amp; SSL</li>
+          </ul>
+        </article>
+
+        <article class="stage reveal" id="stage-06">
+          <p class="stage-label"><span class="stage-num">06</span>Continuity</p>
+          <h3>Handover &amp; Continuity</h3>
+          <p class="stage-outcome">
+            <span class="lang-id">Aset penting website terdokumentasi, sehingga pengelolaan bisa dilanjutkan tim internal atau developer lain saat dibutuhkan.</span>
+            <span class="lang-en">Key website assets stay documented, so an internal team or another developer can take over when needed.</span>
+          </p>
+          <ul class="stage-list">
+            <li>Source code / repository</li>
+            <li>CMS</li>
+            <li>Domain &amp; DNS</li>
+            <li>Hosting / deployment</li>
+            <li>GA4, GTM &amp; Search Console</li>
+            <li><span class="lang-id">Dokumentasi &amp; knowledge transfer</span><span class="lang-en">Documentation &amp; knowledge transfer</span></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section class="band" id="process" aria-labelledby="process-title">
+    <div class="shell">
+      <header class="section-head split reveal">
+        <div>
+          <p class="eyebrow">How We Work</p>
+          <h2 class="title" id="process-title"><span class="lang-id">Dari kebutuhan bisnis sampai website siap dipakai.</span><span class="lang-en">From business needs to a website ready for use.</span></h2>
+        </div>
+        <p class="section-intro">
+          <span class="lang-id">Tahapan menyesuaikan kondisi project, tapi alurnya menjaga keputusan desain, development, measurement, dan deployment tetap terhubung.</span>
+          <span class="lang-en">Stages adapt to each project, while keeping design, development, measurement, and deployment decisions connected.</span>
+        </p>
+      </header>
+      <ol class="rail reveal">
+        <li class="rail-step"><span class="rail-node">01</span><div><strong>Discover</strong><p><span class="lang-id">Tujuan bisnis, audience, konten, kebutuhan, dan scope.</span><span class="lang-en">Business goals, audience, content, requirements, and scope.</span></p></div></li>
+        <li class="rail-step"><span class="rail-node">02</span><div><strong>Structure</strong><p><span class="lang-id">Sitemap, halaman, flow, dan prioritas informasi.</span><span class="lang-en">Sitemap, pages, flows, and information priorities.</span></p></div></li>
+        <li class="rail-step"><span class="rail-node">03</span><div><strong>Design</strong><p><span class="lang-id">UI/UX, visual direction, dan pengalaman responsive.</span><span class="lang-en">UI/UX, visual direction, and responsive experience.</span></p></div></li>
+        <li class="rail-step"><span class="rail-node">04</span><div><strong>Build</strong><p><span class="lang-id">Development, CMS, integrasi, dan testing.</span><span class="lang-en">Development, CMS, integrations, and testing.</span></p></div></li>
+        <li class="rail-step"><span class="rail-node">05</span><div><strong>Measure</strong><p><span class="lang-id">GA4, GTM, GSC, dan kesiapan measurement.</span><span class="lang-en">GA4, GTM, GSC, and measurement readiness.</span></p></div></li>
+        <li class="rail-step"><span class="rail-node">06</span><div><strong>Launch</strong><p><span class="lang-id">Domain, DNS, SSL, deployment, review, dan handover.</span><span class="lang-en">Domain, DNS, SSL, deployment, review, and handover.</span></p></div></li>
+      </ol>
+      <div class="rail-loop reveal">
+        <span class="loop-icon" aria-hidden="true">↻</span>
+        <p><span class="lang-id"><strong>Setelah go-live:</strong> Website Care &amp; Handover. Prosesnya tidak berhenti saat website online.</span><span class="lang-en"><strong>After go-live:</strong> Website Care &amp; Handover. The work doesn't stop once the site is online.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AFTER LAUNCH ============ -->
+  <section class="section after" id="after-launch" aria-labelledby="after-title">
+    <div class="shell">
+      <header class="section-head reveal">
+        <p class="eyebrow">After Launch</p>
+        <h2 class="title" id="after-title"><span class="lang-id">Setelah live: dirawat, atau dikembangkan.</span><span class="lang-en">After launch: maintained, or extended.</span></h2>
+        <p class="section-intro">
+          <span class="lang-id">Perawatan rutin dan development baru dipisahkan dengan jelas sejak awal, supaya ekspektasi dan biaya selalu transparan.</span>
+          <span class="lang-en">Routine care and new development are clearly separated from the start, so expectations and costs stay transparent.</span>
+        </p>
+      </header>
+
+      <div class="after-grid">
+        <article class="after-card reveal">
+          <p class="card-label"><span class="pill pill-green">Website Care</span></p>
+          <h3><span class="lang-id">Perawatan rutin</span><span class="lang-en">Routine care</span></h3>
+          <p class="card-copy">
+            <span class="lang-id">Dapat disiapkan sebagai layanan lanjutan setelah website live. Cakupan detail mengikuti maintenance agreement.</span>
+            <span class="lang-en">Can be arranged as an ongoing service once the site is live. Exact coverage follows the maintenance agreement.</span>
+          </p>
+          <ul class="check-list">
+            <li>Website monitoring</li>
+            <li>CMS maintenance</li>
+            <li>Technical troubleshooting</li>
+            <li>Bug fixing</li>
+            <li>Domain, hosting, DNS &amp; SSL</li>
+            <li><span class="lang-id">Ganti teks, foto, link &amp; kontak</span><span class="lang-en">Text, photo, link &amp; contact updates</span></li>
+            <li><span class="lang-id">Perbaikan tampilan ringan</span><span class="lang-en">Minor visual fixes</span></li>
+            <li><span class="lang-id">Support operasional</span><span class="lang-en">Operational support</span></li>
+          </ul>
+          <a class="text-link card-link" data-wa="care" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20diskusi%20Website%20Development." target="_blank" rel="noopener noreferrer"><span class="lang-id">Tanya soal Website Care</span><span class="lang-en">Ask about Website Care</span> →</a>
+        </article>
+
+        <article class="after-card after-card--accent reveal">
+          <p class="card-label"><span class="pill pill-accent">Additional Development</span></p>
+          <h3><span class="lang-id">Butuh website melakukan lebih banyak?</span><span class="lang-en">Need your website to do more?</span></h3>
+          <p class="card-copy">
+            <span class="lang-id">Kebutuhan berikut didiskusikan dan diestimasi terpisah, lalu dikerjakan setelah scope dan effort disepakati bersama.</span>
+            <span class="lang-en">These needs are discussed and estimated separately, then built once scope and effort are agreed together.</span>
+          </p>
+          <ul class="chip-grid">
+            <li>E-commerce</li>
+            <li>Payment Integration</li>
+            <li>Membership</li>
+            <li>Booking</li>
+            <li>Third-party Integration</li>
+            <li><span class="lang-id">Modul CMS Baru</span><span class="lang-en">New CMS Module</span></li>
+            <li><span class="lang-id">Halaman &amp; Fitur Baru</span><span class="lang-en">New Pages &amp; Features</span></li>
+            <li>Major Redesign</li>
+          </ul>
+          <ol class="mini-flow">
+            <li><span>01</span><span class="lang-id">Ceritakan kebutuhan</span><span class="lang-en">Share your needs</span></li>
+            <li><span>02</span><span class="lang-id">Cek kompleksitas &amp; effort</span><span class="lang-en">Feasibility &amp; effort check</span></li>
+            <li><span>03</span><span class="lang-id">Estimasi &amp; kesepakatan</span><span class="lang-en">Estimate &amp; agreement</span></li>
+          </ol>
+          <a class="btn btn-whatsapp" data-wa="integration" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20diskusi%20Website%20Development." target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+            <span class="lang-id">Diskusikan Integrasi Custom</span><span class="lang-en">Discuss a Custom Integration</span>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PATHS / PRICING ============ -->
+  <section class="section paths-section" id="pricing" aria-labelledby="pricing-title">
+    <div class="shell">
+      <header class="section-head reveal">
+        <p class="eyebrow">Get Started</p>
+        <h2 class="title" id="pricing-title"><span class="lang-id">Dua cara untuk mulai.</span><span class="lang-en">Two ways to get started.</span></h2>
+      </header>
+
+      <div class="paths">
+        <article class="path path--base reveal">
+          <p class="path-label">Website Development</p>
+          <h3><span class="lang-id">Mulai project website</span><span class="lang-en">Start your website project</span></h3>
+          <div class="path-price">
+            <strong class="price" data-price-id="Rp999.000" data-price-usd="USD 61">Rp999.000</strong>
+            <span class="lang-id">harga saat ini</span><span class="lang-en">current price</span>
+          </div>
+          <p class="path-copy">
+            <span class="lang-id">Lanjut melalui alur checkout Website Development. Scope final tetap dikonfirmasi bersama sebelum pengerjaan dimulai.</span>
+            <span class="lang-en">Continue through the Website Development checkout. The final scope is still confirmed together before work begins.</span>
+          </p>
+          <ul class="path-list">
+            <li><span class="lang-id">Kebutuhan &amp; scope dikonfirmasi di awal</span><span class="lang-en">Requirements &amp; scope confirmed up front</span></li>
+            <li><span class="lang-id">Free domain untuk pilihan domain tertentu</span><span class="lang-en">Free domain for selected options</span></li>
+            <li><span class="lang-id">Tambahan di luar scope dasar dikonfirmasi lebih dulu</span><span class="lang-en">Anything beyond the base scope is confirmed first</span></li>
+          </ul>
+          <div class="path-actions">
+            <a class="btn btn-primary btn-lg" href="/checkout/?product=website-development" data-international-cta>
+              <span class="lang-id local-only">Lanjut ke Pembayaran</span>
+              <span class="lang-en local-only">Proceed to Payment</span>
+              <span class="lang-en international-only">Checkout via WhatsApp</span>
+              <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+
+        <article class="path path--custom reveal">
+          <p class="path-label">Custom Scope</p>
+          <h3><span class="lang-id">Kebutuhanmu lebih spesifik?</span><span class="lang-en">Have more specific needs?</span></h3>
+          <div class="path-price path-price--text">
+            <strong><span class="lang-id">Sesuai scope</span><span class="lang-en">Scoped per project</span></strong>
+          </div>
+          <p class="path-copy">
+            <span class="lang-id">Ceritakan kebutuhan atau kirim referensi website. Maul akan mengecek kebutuhan, kompleksitas, dan dependency, lalu merekomendasikan scope yang paling tepat.</span>
+            <span class="lang-en">Share your needs or a reference website. Maul will review requirements, complexity, and dependencies, then recommend the right scope.</span>
+          </p>
+          <ul class="path-list">
+            <li><span class="lang-id">Kombinasi CMS, measurement, infrastructure &amp; care</span><span class="lang-en">A mix of CMS, measurement, infrastructure &amp; care</span></li>
+            <li><span class="lang-id">Integrasi atau fitur tambahan</span><span class="lang-en">Integrations or additional features</span></li>
+            <li><span class="lang-id">Redesign website yang sudah ada</span><span class="lang-en">Redesigning an existing website</span></li>
+          </ul>
+          <div class="path-actions">
+            <a class="btn btn-whatsapp btn-lg" data-wa="custom" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20diskusi%20Website%20Development." target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+              <span class="lang-id">Susun Scope dengan Maul</span><span class="lang-en">Scope It with Maul</span>
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <div class="domain-strip reveal">
+        <div>
+          <strong>Free Domain</strong>
+          <p><span class="lang-id">Gratis domain tersedia untuk pilihan domain tertentu. Nama, ekstensi, availability, dan ketentuannya dikonfirmasi bersama sebelum registrasi.</span><span class="lang-en">A free domain is available for selected options. Name, extension, availability, and terms are confirmed together before registration.</span></p>
+        </div>
+        <span class="pill pill-accent">Selected options</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="section faq-section" id="faq" aria-labelledby="faq-title">
+    <div class="shell faq">
+      <header class="faq-head reveal">
+        <p class="eyebrow">FAQ</p>
+        <h2 class="title" id="faq-title"><span class="lang-id">Pertanyaan yang sering muncul.</span><span class="lang-en">Common questions.</span></h2>
+        <p class="section-intro"><span class="lang-id">Pertanyaanmu tidak ada di sini?</span><span class="lang-en">Don't see your question?</span> <a class="text-link" data-wa="scope" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20diskusi%20Website%20Development." target="_blank" rel="noopener noreferrer"><span class="lang-id">Tanya langsung</span><span class="lang-en">Ask directly</span> →</a></p>
+      </header>
+      <div class="faq-list reveal">
+        <details>
+          <summary><span class="lang-id">Apa yang termasuk dalam harga saat ini?</span><span class="lang-en">What does the current price cover?</span></summary>
+          <div class="faq-answer">
+            <p><span class="lang-id"><span data-amount-id="Rp999.000" data-amount-usd="USD 61">Rp999.000</span> adalah harga Website Development saat ini. Scope final mengikuti kebutuhan yang disepakati—integrasi, fitur, maintenance, atau development tambahan di luar scope dasar dikonfirmasi bersama Maul sebelum pengerjaan.</span><span class="lang-en"><span data-amount-id="Rp999.000" data-amount-usd="USD 61">Rp999.000</span> is the current Website Development price. The final scope follows the agreed requirements—integrations, features, maintenance, or additional development beyond the base scope are confirmed with Maul before work starts.</span></p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="lang-id">Apakah konten website bisa saya ubah sendiri?</span><span class="lang-en">Can I edit the website content myself?</span></summary>
+          <div class="faq-answer">
+            <p><span class="lang-id">Bisa, jika project menyertakan Custom CMS. Artikel dan section homepage tertentu dapat dibuat editable; bagian mana yang editable ditentukan saat penyusunan scope.</span><span class="lang-en">Yes, when the project includes a Custom CMS. Articles and selected homepage sections can be made editable; exactly which parts is decided while scoping.</span></p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="lang-id">Bisa tambah e-commerce, payment, booking, atau membership?</span><span class="lang-en">Can you add e-commerce, payments, booking, or membership?</span></summary>
+          <div class="faq-answer">
+            <p><span class="lang-id">Bisa didiskusikan. Kebutuhan seperti ini dicek dulu dari sisi kompleksitas, dependency, dan effort, lalu diestimasi terpisah sebelum dikerjakan.</span><span class="lang-en">They can be discussed. Needs like these are first reviewed for complexity, dependencies, and effort, then estimated separately before any work begins.</span></p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="lang-id">Bagaimana setelah website live?</span><span class="lang-en">What happens after the website goes live?</span></summary>
+          <div class="faq-answer">
+            <p><span class="lang-id">Website Care dapat disiapkan sebagai layanan lanjutan: monitoring, troubleshooting, bug fixing, pengelolaan domain/hosting/DNS/SSL, serta bantuan perubahan konten ringan sesuai kesepakatan.</span><span class="lang-en">Website Care can be arranged as an ongoing service: monitoring, troubleshooting, bug fixing, domain/hosting/DNS/SSL management, and help with minor content changes per agreement.</span></p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="lang-id">Kalau nanti saya punya developer sendiri?</span><span class="lang-en">What if I hire my own developer later?</span></summary>
+          <div class="faq-answer">
+            <p><span class="lang-id">Aset penting—source code/repository, CMS, domain &amp; DNS, hosting/deployment, konfigurasi GA4/GTM/Search Console, dan dokumentasi—dikelola agar bisa di-handover. Jika migrasi membutuhkan pekerjaan teknis tambahan, effort-nya diinformasikan lebih dulu.</span><span class="lang-en">Key assets—source code/repository, CMS, domain &amp; DNS, hosting/deployment, GA4/GTM/Search Console configuration, and documentation—are managed so they can be handed over. If a migration needs extra technical work, the effort is shared with you first.</span></p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="lang-id">Apakah domainnya gratis?</span><span class="lang-en">Is the domain free?</span></summary>
+          <div class="faq-answer">
+            <p><span class="lang-id">Free domain tersedia untuk pilihan domain tertentu. Nama, ekstensi, availability, dan ketentuannya dikonfirmasi bersama sebelum registrasi.</span><span class="lang-en">A free domain is available for selected options. Name, extension, availability, and terms are confirmed together before registration.</span></p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA ============ -->
+  <section class="final" aria-labelledby="final-title">
+    <div class="shell">
+      <div class="final-card reveal" data-final>
+        <svg class="final-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M58 15.1H21.53L35.22 28.78Q35.38 28.94 35.52 29.11Q35.66 29.29 35.78 29.47Q35.91 29.66 36.01 29.86Q36.12 30.05 36.2 30.26Q36.29 30.47 36.35 30.68Q36.42 30.89 36.46 31.11Q36.51 31.33 36.53 31.55Q36.55 31.78 36.55 32Q36.55 32.22 36.53 32.45Q36.51 32.67 36.46 32.89Q36.42 33.11 36.35 33.32Q36.29 33.53 36.2 33.74Q36.12 33.95 36.01 34.14Q35.91 34.34 35.78 34.53Q35.66 34.71 35.52 34.89Q35.38 35.06 35.22 35.22L21.53 48.9H58V58H10.55Q10.1 58 9.66 57.91Q9.22 57.83 8.81 57.65Q8.39 57.48 8.02 57.23Q7.65 56.98 7.33 56.67Q7.17 56.51 7.03 56.34Q6.89 56.16 6.77 55.98Q6.64 55.79 6.54 55.59Q6.43 55.4 6.35 55.19Q6.26 54.98 6.2 54.77Q6.13 54.56 6.09 54.34Q6.04 54.12 6.02 53.9Q6 53.67 6 53.45Q6 53.23 6.02 53Q6.04 52.78 6.09 52.56Q6.13 52.34 6.2 52.13Q6.26 51.92 6.35 51.71Q6.43 51.5 6.54 51.31Q6.64 51.11 6.77 50.92Q6.89 50.74 7.03 50.56Q7.17 50.39 7.33 50.23L25.57 32L7.33 13.77Q7.02 13.45 6.77 13.08Q6.52 12.71 6.35 12.29Q6.17 11.88 6.09 11.44Q6 11 6 10.55Q6 10.33 6.02 10.1Q6.04 9.88 6.09 9.66Q6.13 9.44 6.2 9.23Q6.26 9.02 6.35 8.81Q6.43 8.6 6.54 8.41Q6.64 8.21 6.77 8.02Q6.89 7.84 7.03 7.66Q7.17 7.49 7.33 7.33Q7.49 7.17 7.66 7.03Q7.84 6.89 8.02 6.77Q8.21 6.64 8.41 6.54Q8.6 6.43 8.81 6.35Q9.02 6.26 9.23 6.2Q9.44 6.13 9.66 6.09Q9.88 6.04 10.1 6.02Q10.33 6 10.55 6H58Z"/><circle class="final-mark-dot" cx="51.11" cy="32" r="6.24"/></svg>
+        <div class="final-copy">
+          <p class="eyebrow">Build with Maul</p>
+          <h2 id="final-title"><span class="lang-id">Ceritakan website yang kamu butuhkan<b class="dot">.</b></span><span class="lang-en">Tell Maul what your website needs<b class="dot">.</b></span></h2>
+          <p>
+            <span class="lang-id">Diskusikan scope, CMS, measurement, infrastructure, maintenance, atau integrasi tambahan. Kita tentukan apa yang benar-benar dibutuhkan sebelum pengerjaan dimulai.</span>
+            <span class="lang-en">Discuss scope, CMS, measurement, infrastructure, maintenance, or extra integrations. We'll define what's actually needed before any work begins.</span>
+          </p>
+        </div>
+        <div class="final-actions">
+          <a class="btn btn-wa-ink btn-lg" data-wa="final" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20diskusi%20Website%20Development." target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+            <span class="lang-id">Diskusi via WhatsApp</span><span class="lang-en">Discuss via WhatsApp</span>
+          </a>
+          <a class="btn btn-on-ink btn-lg" href="/checkout/?product=website-development" data-international-cta>
+            <span class="lang-id local-only">Lanjut ke Pembayaran</span>
+            <span class="lang-en local-only">Proceed to Payment</span>
+            <span class="lang-en international-only">Checkout via WhatsApp</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span>© 2026 Build and Design by Maul</span>
+    <nav class="footer-links" aria-label="Footer">
+      <a href="/products/">Products</a>
+      <a href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- Mobile sticky action dock -->
+<div class="dock" data-dock>
+  <div class="dock-price">
+    <span><span class="lang-id">Website Development</span><span class="lang-en">Website Development</span></span>
+    <strong data-price-id="Rp999.000" data-price-usd="USD 61">Rp999.000</strong>
+  </div>
+  <a class="btn btn-wa-ink dock-wa" data-wa="scope" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20diskusi%20Website%20Development." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+  </a>
+  <a class="btn btn-primary dock-pay" href="/checkout/?product=website-development" data-international-cta>
+    <span class="lang-id local-only">Lanjut Bayar</span>
+    <span class="lang-en local-only">Proceed</span>
+    <span class="lang-en international-only">Checkout</span>
+    <span class="arrow" aria-hidden="true">→</span>
+  </a>
+</div>
+
+<script is:inline src="/products/website-development/script.js"></script>
+<script is:inline src="/assets/compact-controls.js"></script>
+<script is:inline set:html={developmentInternationalConfigScript}></script>
+<script is:inline src="/assets/product-detail-international.js"></script>
+</BaseLayout>

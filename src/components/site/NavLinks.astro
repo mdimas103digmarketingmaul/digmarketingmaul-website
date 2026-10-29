@@ -1,0 +1,11 @@
+---
+import { navigation } from '../../data/navigation.js';
+const { active, home = false, mobile = false } = Astro.props;
+---
+{navigation.map((item, i) => <a
+  href={home && ['home', 'profile'].includes(item.id) ? `#${item.id}` : item.href}
+  class={mobile ? 'mobile-link' : `nav-link${!home && item.id === active ? ' active' : ''}`}
+  aria-current={(home && !mobile && item.id === 'home') || (mobile && !home && item.id === active) ? 'page' : undefined}
+  data-magnetic={home && !mobile ? true : undefined}
+  style={mobile ? `--i:${i}` : undefined}
+><span class={home ? 'nav-num' : 'nav-number'}>{item.number}</span>{home || mobile ? item.label : <span>{item.label}</span>}</a>)}

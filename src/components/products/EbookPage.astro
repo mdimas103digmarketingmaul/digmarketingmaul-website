@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import commerceInitScript from '../../scripts/products/commerce-init.js?raw';
+import ebookControlsScript from '../../scripts/products/ebook-controls.js?raw';
+import ebookInternationalConfigScript from '../../scripts/products/ebook-international-config.js?raw';
+import ebookCss from '../../styles/products/ebook.css?url';
+import ebookHeaderCss from '../../styles/products/ebook-header.css?url';
+const { variant } = Astro.props;
+const midtrans = variant.provider === 'midtrans';
+const priceId = `Rp${variant.amount.toLocaleString('id-ID')}`;
+const priceEn = `Rp${variant.amount.toLocaleString('en-US')}`;
+const checkoutUrl = `/checkout/?product=${variant.id}`;
+const meta = {
+  title: 'Digital Marketing eBooks — Maul Digital',
+  themeColor: '#f7f8fb',
+  description: `Digital Marketing eBooks — ${midtrans ? 'Midtrans ' : ''}live test flow checkout dan pascapembayaran. Produk eBook final belum tersedia.`,
+  canonical: `/products/${variant.id}/`,
+  robots: variant.robots,
+};
+---
+<BaseLayout meta={meta} lang="id" htmlAttributes={{"data-theme": "light", "data-language": "id"}} bodyAttributes={{}}>
+<Fragment slot="head">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/compact-controls.css">
+<link rel="stylesheet" href="/assets/product-detail-international.css">
+
+<script is:inline set:html={commerceInitScript}></script>
+
+
+<link rel="stylesheet" href={ebookCss} />
+
+<link rel="stylesheet" href={ebookHeaderCss} />
+</Fragment>
+<div class="grid-bg" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <div class="product-detail-header-left">
+      <a class="brand" href="/" aria-label="digmarketingmaul Home"><img class="brand-logo-light" src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="36" height="36"><img class="brand-logo-dark" src="/assets/brand/logo/icon-reversed.svg" alt="digmarketingmaul" width="36" height="36"></a>
+      <div class="product-detail-header-controls" aria-label="Product display controls">
+        <button aria-pressed="false" class="product-international-toggle" type="button" data-product-international-toggle aria-label="Toggle international mode">
+          <span aria-hidden="true" class="pit-track"><span></span></span><span class="product-international-label">International</span>
+        </button>
+        <div class="maul-compact-controls" aria-label="Display controls">
+          <select class="maul-compact-select maul-language-select" data-maul-language-select aria-label="Language">
+            <option value="id">ID</option>
+            <option value="en">EN</option>
+          </select>
+          <button class="maul-dark-toggle" type="button" data-maul-dark-toggle aria-pressed="false" aria-label="Enable dark mode">
+            <span class="maul-dark-toggle-track" aria-hidden="true"><span></span></span>
+            <span>Dark</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="nav-actions">
+
+      <a class="nav-link" href="/products/">
+        <span class="lang-id">← Kembali ke Products</span>
+        <span class="lang-en">← Back to Products</span>
+      </a>
+      <a class="btn btn-primary sticky-payment" href={checkoutUrl} data-international-cta>
+        <span class="lang-id local-only">Coba Checkout</span>
+        <span class="lang-en local-only">Test Checkout</span>
+        <span class="lang-en international-only">Checkout via WhatsApp</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero shell">
+    <div class="hero-grid">
+      <div>
+        <span class="test-badge">Live Test Product</span>
+        <h1>Digital Marketing<br>eBooks<span style="color:var(--accent)">.</span></h1>
+        <p class="lead lang-id">Produk ini saat ini masih berupa live test untuk mencoba end-to-end flow website yang saya buat—mulai dari product detail, checkout{midtrans ? ' Midtrans' : ''}, konfirmasi pembayaran, email, hingga personal thank-you page.</p>
+        <p class="lead lang-en">This product is currently a live test of the end-to-end website flow—from product detail and {midtrans ? 'Midtrans Snap Checkout' : 'checkout'} to payment confirmation, email, and the personal thank-you page.</p>
+        <div class="price" data-price-id={priceId} data-price-usd="USD 6">{priceId}</div>
+        <p class="note lang-id"><strong>Belum ada eBook sungguhan pada tahap ini.</strong> Produk final akan dibuat menyusul. Nominal {priceId} digunakan khusus untuk live testing flow transaksi{midtrans ? ' melalui Midtrans' : ''}.</p>
+        <p class="note lang-en"><strong>There is no actual eBook yet.</strong> The final product will be created later. The <span data-amount-id={priceId} data-amount-usd="USD 6">{priceEn}</span> amount is used specifically for live transaction-flow testing{midtrans ? ' through Midtrans' : ''}.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href={checkoutUrl} data-international-cta>
+            <span class="lang-id local-only">Coba {midtrans ? 'Midtrans ' : ''}Checkout {priceId}</span>
+            <span class="lang-en local-only">Test {midtrans ? 'Midtrans ' : ''}Checkout {priceEn}</span>
+            <span class="lang-en international-only">Checkout via WhatsApp</span>
+          </a>
+          <a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20bertanya%20tentang%20live%20test%20Digital%20Marketing%20eBooks." target="_blank" rel="noopener noreferrer">
+            <span class="lang-id">Tanya Maul via WhatsApp</span>
+            <span class="lang-en">Ask Maul via WhatsApp</span>
+          </a>
+        </div>
+        <div class="test-notice">
+          <span class="lang-id"><strong>Harap dipahami sebelum melanjutkan:</strong> ini adalah transaksi testing. Pembayaran, invoice, email konfirmasi, dan thank-you page diproses sungguhan melalui flow website, tetapi belum ada eBook final yang dijual atau diberikan.</span>
+          <span class="lang-en"><strong>Please understand before continuing:</strong> this is a test transaction. Payment, invoice, confirmation email, and the thank-you page run through the real website flow, but there is no final eBook being sold or delivered yet.</span>
+        </div>
+      </div>
+
+      <aside class="panel hero-card">
+        <h3 class="lang-id">Yang sedang diuji</h3>
+        <h3 class="lang-en">What this test covers</h3>
+        <div class="feature"><i>01</i><div><span class="lang-id">Journey dari halaman produk ke checkout.</span><span class="lang-en">The journey from product page to checkout.</span></div></div>
+        <div class="feature"><i>02</i><div><span class="lang-id">{midtrans ? 'Midtrans Snap Checkout' : 'Secure payment gateway'} dengan metode pembayaran yang tersedia.</span><span class="lang-en">{midtrans ? 'Midtrans Snap Checkout' : 'Secure payment gateway'} with the available payment methods.</span></div></div>
+        <div class="feature"><i>03</i><div><span class="lang-id">Konfirmasi status pembayaran, penyimpanan order, dan email otomatis.</span><span class="lang-en">Payment confirmation, order storage, and automated email.</span></div></div>
+        <div class="feature"><i>04</i><div><span class="lang-id">Personal thank-you page dan alur akses Google Drive sebagai bagian dari simulasi.</span><span class="lang-en">The personal thank-you page and Google Drive access flow as part of the simulation.</span></div></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section shell compact-copy-section">
+    <div class="domain-note">
+      <h3>Testing Notes</h3>
+      <p class="lang-id">Setelah pembayaran terkonfirmasi, email hanya akan mengarahkan kembali ke personal thank-you page. Link Google Drive ditampilkan di halaman tersebut sebagai bagian dari live test. Isi folder bukan representasi eBook final.</p>
+      <p class="lang-en">After payment is confirmed, the email only links back to the personal thank-you page. The Google Drive link is shown there as part of the live test. The folder contents do not represent the final eBook.</p>
+    </div>
+  </section>
+
+  <section class="section shell discussion-section">
+    <div class="eyebrow">Questions before testing?</div>
+    <h2 class="lang-id">Masih ingin memastikan flow-nya?</h2>
+    <h2 class="lang-en">Want to clarify the test first?</h2>
+    <p class="section-intro lang-id">Kalau kamu ingin memahami tujuan testing, proses pembayaran, atau apa yang terjadi setelah transaksi, hubungi Maul melalui WhatsApp.</p>
+    <p class="section-intro lang-en">If you want to understand the purpose of the test, the payment process, or what happens after the transaction, contact Maul via WhatsApp.</p>
+    <div class="actions">
+      <a class="btn btn-whatsapp" href="https://wa.me/6281296069566?text=Halo%20Maul%2C%20saya%20ingin%20bertanya%20tentang%20live%20test%20Digital%20Marketing%20eBooks." target="_blank" rel="noopener noreferrer">
+        <span class="lang-id">Hubungi Maul via WhatsApp</span>
+        <span class="lang-en">Contact Maul via WhatsApp</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="panel bottom-cta shell">
+    <div class="bottom-cta-inner">
+      <div class="bottom-cta-copy">
+        <p class="bottom-kicker">Live transaction test</p>
+        <h2 class="lang-id">Coba flow pembayarannya.</h2>
+        <h2 class="lang-en">Test the payment flow.</h2>
+        <p class="bottom-subcopy lang-id">Dengan melanjutkan, kamu memahami bahwa produk eBook final belum tersedia. Transaksi <span data-amount-id={priceId} data-amount-usd="USD 6">{priceId}</span> ini digunakan untuk menguji journey checkout sampai personal thank-you page.</p>
+        <p class="bottom-subcopy lang-en">By continuing, you understand that the final eBook is not available yet. This <span data-amount-id={priceId} data-amount-usd="USD 6">{priceEn}</span> transaction is used to test the checkout journey through the personal thank-you page.</p>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary" href={checkoutUrl} data-international-cta>
+          <span class="lang-id local-only">Coba {midtrans ? 'Midtrans ' : ''}Checkout {priceId}</span>
+          <span class="lang-en local-only">Test {midtrans ? 'Midtrans ' : ''}Checkout {priceEn}</span>
+          <span class="lang-en international-only">Checkout via WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer shell">© 2026 Build and Design by Maul</footer>
+
+<script is:inline set:html={ebookControlsScript}></script>
+
+<script is:inline src="/assets/compact-controls.js"></script>
+<script is:inline set:html={ebookInternationalConfigScript}></script>
+<script is:inline src="/assets/product-detail-international.js"></script>
+</BaseLayout>

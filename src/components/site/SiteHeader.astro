@@ -1,0 +1,24 @@
+---
+import NavLinks from './NavLinks.astro';
+const { active } = Astro.props;
+---
+<header class="site-header has-menu">
+    <div class="site-header-inner">
+      <a href="/index.html#home" class="brand-logo" aria-label="M. Dimas Maulana Home"><img class="brand-logo-dark" src="/assets/brand/logo/icon-reversed.svg" alt="digmarketingmaul" width="36" height="36"><img class="brand-logo-light" src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="36" height="36"><span class="brand-word">digmarketingmaul</span></a>
+      <nav class="main-nav" aria-label="Primary Navigation"><NavLinks active={active} /></nav>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="menu-toggle-label">Menu</span>
+        <span class="menu-toggle-lines" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <nav class="mobile-menu-nav" aria-label="Mobile"><NavLinks active={active} mobile /></nav>
+    <div class="mobile-menu-socials">
+      <a href="https://www.instagram.com/dig.marketing.maul/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://www.tiktok.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer">TikTok</a>
+    </div>
+  </div>

@@ -1,0 +1,151 @@
+---
+import navigationCss from '../../styles/site/navigation-responsive.css?url';
+import products from "../../data/products.json";
+import ProductCard from "../../components/products/ProductCard.astro";
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BrandFooter from '../../components/site/BrandFooter.astro';
+import NavLinks from '../../components/site/NavLinks.astro';
+import catalogThemeInitScript from '../../scripts/products/catalog-theme-init.js?raw';
+import catalogInternationalInitScript from '../../scripts/products/catalog-international-init.js?raw';
+import cardNavigationScript from '../../scripts/products/card-navigation.js?raw';
+import catalogControlsScript from '../../scripts/products/catalog-controls.js?raw';
+import catalogActionsCss from '../../styles/products/catalog-actions.css?url';
+import catalogInternationalCss from '../../styles/products/catalog-international.css?url';
+import catalogControlsCss from '../../styles/products/catalog-controls.css?url';
+import sharedCss from '../../styles/site/shared.css?url';
+import commerceCss from '../../styles/products/commerce.css?url';
+import catalogCss from '../../styles/products/catalog.css?url';
+import sharedJs from '../../scripts/site/interactions.js?url';
+import filterJs from '../../scripts/products/filter.js?url';
+const meta = {
+  "title": "Products & Services — M. Dimas Maulana",
+  "description": "Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.",
+  "themeColor": "#f6f7f9",
+  "canonical": "/products/"
+};
+---
+<BaseLayout meta={meta} lang="id" htmlAttributes={{}} bodyAttributes={{"data-page": "products"}}>
+<Fragment slot="head">
+<script is:inline set:html={catalogThemeInitScript}></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href={sharedCss} />
+<link rel="stylesheet" href={commerceCss} />
+<link rel="stylesheet" href={navigationCss} />
+<link rel="stylesheet" href={catalogCss} />
+<link rel="stylesheet" href={catalogActionsCss} />
+<script is:inline set:html={catalogInternationalInitScript}></script><link rel="stylesheet" href={catalogInternationalCss} />
+<link rel="stylesheet" href={catalogControlsCss} />
+</Fragment>
+<div aria-hidden="true" class="aurora-layer">
+<span class="aurora-orb aurora-one"></span>
+<span class="aurora-orb aurora-two"></span>
+<span class="aurora-orb aurora-three"></span>
+</div>
+<div aria-hidden="true" class="grid-layer"></div>
+<div aria-hidden="true" class="cursor-grid-light" id="cursor-grid-light"></div>
+<div aria-hidden="true" class="grain-layer"></div>
+<aside aria-label="Social media links" class="social-rail social-rail-left">
+<div class="social-rail-links">
+<a aria-label="Instagram" class="social-link" href="https://www.instagram.com/dig.marketing.maul/" rel="noopener noreferrer" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+<a aria-label="LinkedIn" class="social-link" href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" rel="noopener noreferrer" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+<a href="https://www.tiktok.com/@digmarketingmaul" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+</div>
+<span aria-hidden="true" class="social-rail-line"></span>
+</aside>
+<aside aria-label="Email" class="social-rail social-rail-right">
+<a class="email-rail-link" href="mailto:mdimas103@gmail.com">mdimas103@gmail.com</a>
+<span aria-hidden="true" class="social-rail-line"></span>
+</aside>
+<header class="site-header">
+<div class="site-header-inner products-header-inner">
+<div class="products-header-left">
+<a aria-label="M. Dimas Maulana Home" class="brand-logo" href="/index.html#home">
+<img class="brand-logo-dark" src="/assets/brand/logo/icon-reversed.svg" alt="digmarketingmaul" width="36" height="36"><img class="brand-logo-light" src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="36" height="36">
+</a>
+<div class="product-header-controls" aria-label="Products display controls">
+<button aria-pressed="false" class="product-international-toggle product-international-toggle--header" type="button" aria-label="Toggle international mode">
+<span aria-hidden="true" class="pit-track"><span></span></span><span class="product-international-label">International</span>
+</button>
+<select class="product-compact-select product-language-select" aria-label="Language">
+<option value="id">ID</option>
+<option value="en">EN</option>
+</select>
+<button aria-pressed="false" class="product-international-toggle product-international-toggle--header product-dark-toggle" type="button" data-products-dark-toggle aria-label="Enable dark mode">
+<span aria-hidden="true" class="pit-track"><span></span></span><span class="product-international-label">Dark</span>
+</button>
+</div>
+</div>
+<nav aria-label="Primary Navigation" class="main-nav"><NavLinks active="products" /></nav>
+</div>
+<div aria-hidden="true" class="scroll-progress" id="scroll-progress"></div>
+</header>
+<main>
+<section class="subpage-hero product-hero commerce-product-hero">
+<div class="subpage-hero-inner">
+<div class="product-hero-top reveal-item">
+<div class="subpage-kicker product-page-kicker">
+<span class="kicker-line"></span>
+<span>Products / Services</span>
+</div>
+</div>
+<div class="reveal-mask">
+<h1 class="subpage-title hero-title-gradient reveal-item reveal-delay-1">
+            Build, Run &amp;<br/>
+<span class="accent-text">Grow Together.</span>
+</h1>
+</div>
+<div class="subpage-intro reveal-item reveal-delay-2">
+<p data-copy-lang="id">
+            Layanan dan resource praktis untuk membantu membangun, menjalankan,
+            mengukur, dan mengembangkan aktivitas digital marketing.
+          </p>
+<p data-copy-lang="en" hidden="">
+            Practical services and resources to help build, run, measure,
+            and grow digital marketing activities.
+          </p>
+</div>
+<div aria-hidden="true" class="subpage-orbit">
+<span class="subpage-orbit-ring ring-a"></span>
+<span class="subpage-orbit-ring ring-b"></span>
+<span class="subpage-orbit-dot"></span>
+</div>
+</div>
+</section>
+<section class="topic-section product-catalog-section section-reveal">
+<div class="product-catalog-heading o3-catalog-heading">
+<div class="subpage-kicker">
+<span class="kicker-line"></span>
+<span>Categories</span>
+</div>
+<div class="o3-chips" role="group" aria-label="Filter categories">
+<button class="o3-chip is-active" type="button" data-filter="all" aria-pressed="true"><span data-copy-lang="id">Semua</span><span data-copy-lang="en" hidden>All</span></button>
+<button class="o3-chip" type="button" data-filter="service" aria-pressed="false"><span data-copy-lang="id">Layanan</span><span data-copy-lang="en" hidden>Services</span></button>
+<button class="o3-chip" type="button" data-filter="learn" aria-pressed="false"><span data-copy-lang="id">Belajar &amp; Resource</span><span data-copy-lang="en" hidden>Learn &amp; Resources</span></button>
+<button class="o3-chip" type="button" data-filter="advisory" aria-pressed="false">Advisory 1 on 1</button>
+</div>
+</div>
+<div class="commerce-product-grid">
+{products.map((product, index) => <ProductCard product={product} number={index + 1} />)}
+
+
+
+
+
+
+
+
+
+
+</div>
+</section>
+<BrandFooter />
+</main>
+
+<script is:inline set:html={cardNavigationScript}></script>
+<script is:inline src={sharedJs}></script>
+<script is:inline src={filterJs}></script>
+<script is:inline set:html={catalogControlsScript}></script>
+</BaseLayout>

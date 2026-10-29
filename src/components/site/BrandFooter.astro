@@ -1,0 +1,39 @@
+---
+import { navigation } from "../../data/navigation.js";
+---
+<footer class="brand-footer">
+      <div class="brand-footer-inner">
+        <div class="footer-cols">
+          <nav aria-label="Footer">
+            <p class="footer-label">Pages</p>
+            <ul>
+              {navigation.filter(item => item.id !== 'profile').map(item => <li><a href={item.href} class="footer-link">{item.label}</a></li>)}
+            </ul>
+          </nav>
+          <div>
+            <p class="footer-label">Social</p>
+            <ul>
+              <li><a href="https://www.instagram.com/dig.marketing.maul/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+              <li><a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+              <li><a href="https://www.tiktok.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-tiktok" aria-hidden="true"></i> TikTok</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer-label">Based in</p>
+            <ul>
+              <li>Bekasi, Indonesia</li>
+            </ul>
+          </div>
+          <div class="footer-top-link">
+            <a href="#" class="back-to-top"><span aria-hidden="true">↑</span> Back to top</a>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2026 Build and Design by Maul</p>
+          <img class="footer-mark footer-mark-dark" src="/assets/brand/logo/icon-reversed.svg" alt="" width="26" height="26"><img class="footer-mark footer-mark-light" src="/assets/brand/logo/icon.svg" alt="" width="26" height="26">
+        </div>
+      </div>
+
+      <p class="footer-wordmark" aria-hidden="true">digmarketingmaul<span>.</span></p>
+    </footer>
