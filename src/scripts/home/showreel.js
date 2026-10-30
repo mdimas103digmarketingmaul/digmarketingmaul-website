@@ -63,6 +63,7 @@
     expo: bezier(0.16, 1, 0.3, 1), //       a hit, then glide
     transform: bezier(0.72, 0, 0.12, 1), // layout morphs: fast in, long controlled settle
     inOut: bezier(0.65, 0, 0.35, 1), //     between two resting states
+    glide: bezier(0.33, 0, 0.15, 1), //     starts from rest, long soft settle (entrances that travel)
   };
 
   /* Style writes go through a tiny cache so unchanged values never touch the DOM. */
@@ -94,13 +95,29 @@
   // Frame shown for each chapter while paused (and under reduced motion)
   const CHAPTER_FRAME = [4.3, 7.6, 11.2, 20.2];
 
+  // Each corner of the table is rounded over ±r s (quadratic blend between the two slopes), so the
+  // story never changes speed within a single frame. Keyframe times and values stay the same.
+  const WARP_R = WARP.map((k, i) =>
+    i === 0 || i === WARP.length - 1 ? 0 : Math.min(0.25, 0.45 * (k[0] - WARP[i - 1][0]), 0.45 * (WARP[i + 1][0] - k[0]))
+  );
+
+  function linearAt(t, i) {
+    const [t0, p0] = WARP[i - 1];
+    const [t1, p1] = WARP[i];
+    return p0 + ((p1 - p0) * (t - t0)) / (t1 - t0);
+  }
+
   function progressAt(t) {
     for (let i = 1; i < WARP.length; i++) {
-      const [t1, p1] = WARP[i];
-      if (t <= t1) {
-        const [t0, p0] = WARP[i - 1];
-        return lerp(p0, p1, seg(t, t0, t1));
+      const r = WARP_R[i];
+      const [tk, pk] = WARP[i];
+      if (r && t >= tk - r && t <= tk + r) {
+        const a = linearAt(tk - r, i);
+        const b = linearAt(tk + r, i + 1);
+        const k = (t - tk + r) / (2 * r);
+        return (1 - k) * (1 - k) * a + 2 * k * (1 - k) * pk + k * k * b;
       }
+      if (t <= tk) return linearAt(clamp(t, WARP[i - 1][0], tk), i);
     }
     return 1;
   }
@@ -144,6 +161,9 @@
   const caps = $$(".cap");
   const timeEl = $(".build-time");
   const playBtn = $(".build-play");
+  const glows = { blue: $(".glow--blue"), sun: $(".glow--sun"), red: $(".glow--red") };
+  const dotsEl = $(".scene-dots");
+  const glassAll = $$(".device-glass");
 
   // Story order = top-to-bottom landing order, so each lands just after the wipe has revealed its slot.
   const frags = ["palette", "badge", "type", "portrait", "button"].map((k) => $(`.frag--${k}`));
@@ -538,22 +558,22 @@
     }
 
     /* ---- LAUNCH ---- */
-    const lapIn = E.expo(seg(p, 0.86, 0.94));
-    const tabIn = E.expo(seg(p, 0.875, 0.955));
+    const lapIn = E.glide(seg(p, 0.86, 0.94));
+    const tabIn = E.glide(seg(p, 0.875, 0.955));
     placeAt(laptop, S.lap.x - (1 - lapIn) * W * 0.14, S.lap.y + (1 - lapIn) * 24);
     placeAt(tablet, S.tabL.x + (1 - tabIn) * W * 0.14, S.tabL.y + (1 - tabIn) * 24);
-    show(laptop, lapIn);
-    show(tablet, tabIn);
+    show(laptop, E.out(seg(p, 0.86, 0.93)));
+    show(tablet, E.out(seg(p, 0.875, 0.945)));
     const tag = E.out(seg(p, 0.93, 0.98)).toFixed(3);
     [device, laptop, tablet].forEach((el) => set(el, "--tag", tag));
 
     /* ---- Colour per act: blueprint blue → client sun → brand red ---- */
     const gBlue = seg(p, 0.04, 0.2) * (1 - seg(p, 0.38, 0.5));
-    set(frame, "--g-blue", gBlue.toFixed(3));
+    set(glows.blue, "opacity", gBlue.toFixed(3));
     // Sample 2 warms the whole canvas (bag-yellow / kopi)
-    set(frame, "--g-sun", Math.max(seg(p, 0.38, 0.5) * (1 - seg(p, 0.62, 0.78)), e * 0.8, swap * 0.95).toFixed(3));
-    set(frame, "--g-red", ((0.45 + 0.55 * seg(p, 0.55, 0.7)) * (1 - swap * 0.6)).toFixed(3));
-    set(frame, "--dots", (0.45 + 0.45 * gBlue).toFixed(3));
+    set(glows.sun, "opacity", Math.max(seg(p, 0.38, 0.5) * (1 - seg(p, 0.62, 0.78)), e * 0.8, swap * 0.95).toFixed(3));
+    set(glows.red, "opacity", ((0.45 + 0.55 * seg(p, 0.55, 0.7)) * (1 - swap * 0.6)).toFixed(3));
+    set(dotsEl, "opacity", (0.45 + 0.45 * gBlue).toFixed(3));
 
     renderCursor(p, e, sp, btnFrag, forward);
 
@@ -670,7 +690,8 @@
     let rz = lerp(a[3], b[3], k);
     let sc = lerp(a[4], b[4], k);
     // Sway with each morph so the resize feels physical
-    ry += 7 * Math.sin(Math.PI * seg(p, 0.56, 0.66)) - 7 * Math.sin(Math.PI * seg(p, 0.7, 0.79));
+    // (sin²: leaves and returns to rest smoothly, rounded turn at the peak)
+    ry += 7 * Math.sin(Math.PI * seg(p, 0.56, 0.66)) ** 2 - 7 * Math.sin(Math.PI * seg(p, 0.7, 0.79)) ** 2;
     // Exploded view: tip the stack over so the layers read
     rx += 44 * e;
     rz -= 26 * e;
@@ -684,7 +705,8 @@
     const c = cameraAt(p, e);
     // Sample 2: a slow orbit while the page plays; a little whip during the hand-off
     const drift = Math.sin(((time - SWAP[0]) / (DURATION - SWAP[0])) * Math.PI);
-    const whip = Math.sin(Math.PI * swap);
+    // sin² of the hand-off clock: starts and ends at rest, with a rounded (not pointed) turn
+    const whip = Math.sin(Math.PI * seg(time, ...SWAP)) ** 2;
     const rx = lerp(c.rx, 5 + 3 * drift, swap) + 6 * whip - pointer.y * 7;
     const ry = lerp(c.ry, -6 - 8 * drift, swap) - 14 * whip + pointer.x * 10;
     const rz = lerp(c.rz, 0, swap);
@@ -830,10 +852,15 @@
       const ny = (ev.clientY - r.top) / r.height - 0.5;
       pointer.tx = nx;
       pointer.ty = ny;
-      frame.style.setProperty("--px", (nx * 2).toFixed(3));
-      frame.style.setProperty("--py", (ny * 2).toFixed(3));
-      frame.style.setProperty("--gx", `${((nx + 0.5) * 100).toFixed(1)}%`);
-      frame.style.setProperty("--gy", `${((ny + 0.5) * 100).toFixed(1)}%`);
+      // Only the fragments (parallax) and the glass (specular) read these
+      frags.forEach((f) => {
+        set(f, "--px", (nx * 2).toFixed(3));
+        set(f, "--py", (ny * 2).toFixed(3));
+      });
+      glassAll.forEach((g) => {
+        set(g, "--gx", `${((nx + 0.5) * 100).toFixed(1)}%`);
+        set(g, "--gy", `${((ny + 0.5) * 100).toFixed(1)}%`);
+      });
       wake();
     });
     frame.addEventListener("pointerleave", () => {

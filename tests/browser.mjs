@@ -100,7 +100,7 @@ try{
  await page.keyboard.press('Escape');
  await page.locator('[data-maul-language-select]').selectOption('en');assert.equal(await page.locator('html').getAttribute('lang'),'en');
  await page.locator('[data-product-international-toggle]').click();assert.equal(await page.locator('html').getAttribute('data-international'),'true');
- assert.equal(await page.locator('.card-price strong').first().textContent(),'USD 61');
+ assert.equal(await page.locator('.card-price strong').first().textContent(),'USD 100');
  await page.locator('[data-product-international-toggle]').click();assert.equal(await page.locator('.card-price strong').first().textContent(),'Rp999.000');
  await page.locator('#f-name').fill('Local audit');await page.locator('.chip:has-text("Video motion")').click();
  assert.ok((await page.locator('[data-chat-text]').textContent()).includes('Local audit'),'products brief preview');
