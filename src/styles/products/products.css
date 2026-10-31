@@ -176,6 +176,13 @@ ul {
   color: var(--red);
 }
 
+/* Titles use tight negative tracking; that pulls the closing dot's advance in,
+   so the .mask-line clip shaved its right edge. Give the dot its full width. */
+.mask-line .accent-dot {
+  letter-spacing: 0;
+  padding-right: 0.04em;
+}
+
 /* ---------------------------------------------------------
    2. LANGUAGE + INTERNATIONAL
 --------------------------------------------------------- */
@@ -1314,6 +1321,7 @@ html.js .reveal.is-in {
 
 .stack {
   position: relative;
+  isolation: isolate; /* keep the cards' z-index inside the stack */
   height: clamp(320px, 50vh, 500px);
 }
 
@@ -1643,6 +1651,9 @@ html.js .reveal.is-in {
    6. PAYMENT BAND — right under the hero
 --------------------------------------------------------- */
 .pay-band {
+  /* Above the hero stack, so the QRIS pop (opening upwards) is never covered by the cards */
+  position: relative;
+  z-index: 20;
   padding-bottom: 8px;
 }
 

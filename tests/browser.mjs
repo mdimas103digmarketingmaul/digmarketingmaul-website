@@ -121,9 +121,9 @@ try{
  assert.ok((await page.locator('a[href*="wa.me"]').evaluateAll(as=>as.map(a=>a.href))).some(h=>decodeURIComponent(h).includes('Local audit only')),'WhatsApp brief');
  await page.goto(newServer.url+'/products/website-development/');
  // Selected work: hanging sheets, one live preview per client, scaled to the sheet; the ↗ button is the only link.
- assert.equal(await page.locator('.sheet iframe').count(),3);
+ assert.equal(await page.locator('.sheet iframe').count(),4);
  assert.ok((await page.locator('.sheet-screen').first().getAttribute('style')).includes('--s:'));
- assert.equal(await page.locator('.sheet a.sheet-go').count(),4);
+ assert.equal(await page.locator('.sheet a.sheet-go').count(),5);
  // Brief form composes a WhatsApp message; nothing is sent from the page.
  await page.locator('#f-name').fill('Local audit');await page.locator('.chip:has-text("Landing page")').click();
  assert.ok((await page.locator('[data-chat-text]').textContent()).includes('Local audit'),'brief preview');
