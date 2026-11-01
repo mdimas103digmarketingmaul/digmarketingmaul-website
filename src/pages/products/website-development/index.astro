@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { serviceGraph } from '../../../data/structured-data.js';
 import initScript from '../../../scripts/products/product-page-init.js?raw';
 import pageCss from '../../../styles/products/website-development.css?url';
 import pageJs from '../../../scripts/products/website-development.js?url';
@@ -9,7 +10,16 @@ const meta = {
   "title": "Website Development — Maul Digital",
   "themeColor": "#fafbfc",
   "description": "Website Development oleh Maul — website design, development, CMS, measurement, deployment, infrastructure, dan maintenance untuk bisnis maupun digital product.",
-  "canonical": "/products/website-development/"
+  "canonical": "/products/website-development/",
+  "image": "/assets/brand/og/website-development.jpg",
+  "structuredData": serviceGraph({
+    name: "Website Development",
+    path: "/products/website-development/",
+    description: "Website untuk personal, bisnis, atau digital product: desain, development, CMS, measurement, deployment, dan maintenance.",
+    serviceType: "Website design and development",
+    image: "/assets/brand/og/website-development.jpg",
+    offer: { currency: "IDR", minPrice: 999000 }
+  })
 };
 ---
 <!--
@@ -676,6 +686,12 @@ const meta = {
             <summary><span class="lang-id">Kalau nanti punya developer sendiri?</span><span class="lang-en">What if I hire my own developer later?</span></summary>
             <div class="faq-a">
               <p><span class="lang-id">Repository, CMS, domain &amp; DNS, hosting, dan dokumentasi disiapkan untuk handover.</span><span class="lang-en">Repository, CMS, domain &amp; DNS, hosting and docs are prepared for handover.</span></p>
+            </div>
+          </details>
+          <details class="reveal">
+            <summary><span class="lang-id">Butuh video atau desain juga?</span><span class="lang-en">Need video or design too?</span></summary>
+            <div class="faq-a">
+              <p><span class="lang-id">Bisa. Lihat <a href="/products/video-editing-motion/">Video Editing &amp; Motion</a> dan <a href="/products/graphic-design/">Graphic Design</a>.</span><span class="lang-en">Yes. See <a href="/products/video-editing-motion/">Video Editing &amp; Motion</a> and <a href="/products/graphic-design/">Graphic Design</a>.</span></p>
             </div>
           </details>
         </div>

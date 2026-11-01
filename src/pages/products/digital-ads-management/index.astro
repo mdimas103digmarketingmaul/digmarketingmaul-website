@@ -1,12 +1,21 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { serviceGraph } from '../../../data/structured-data.js';
 import adsInitScript from '../../../scripts/products/ads-init.js?raw';
 import adsInternationalConfigScript from '../../../scripts/products/ads-international-config.js?raw';
 const meta = {
   "title": "Digital Ads Management — Maul Digital",
   "themeColor": "#f7f8fb",
   "description": "Digital Ads Management oleh Maul — pengelolaan campaign, measurement, tracking, creative direction, optimization, reporting, dan business insight berbasis data.",
-  "canonical": "/products/digital-ads-management/"
+  "canonical": "/products/digital-ads-management/",
+  "image": "/assets/brand/og/digital-ads-management.jpg",
+  "structuredData": serviceGraph({
+    name: "Digital Ads Management",
+    path: "/products/digital-ads-management/",
+    description: "Pengelolaan campaign digital ads: setup, tracking, optimasi, dan report.",
+    serviceType: "Digital advertising management",
+    image: "/assets/brand/og/digital-ads-management.jpg"
+  })
 };
 ---
 <BaseLayout meta={meta} lang="id" htmlAttributes={{"data-theme": "light", "data-language": "id"}} bodyAttributes={{}}>

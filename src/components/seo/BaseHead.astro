@@ -1,7 +1,32 @@
 ---
-import { siteOrigin } from '../../data/site.js';
+import { siteOrigin, siteName, defaultOgImage } from '../../data/site.js';
 import Tracking from './Tracking.astro';
-const { title, description, canonical, themeColor, robots } = Astro.props;
+/*
+  SEO head for every Astro page.
+  - title / description / canonical / robots / icons: locked for the original pages by
+    tests/page-contracts.json (scripts/verify-build.mjs) — change them deliberately.
+  - Open Graph + Twitter card: built from the same title/description/canonical;
+    `image` (1200×630, see scripts/generate-og-images.mjs) falls back to the site card.
+  - `structuredData`: one JSON-LD object or an array; see src/data/structured-data.js.
+*/
+const {
+  title,
+  description,
+  canonical,
+  themeColor,
+  robots,
+  lang = 'en',
+  image = defaultOgImage,
+  imageAlt,
+  type = 'website',
+  structuredData,
+} = Astro.props;
+const url = new URL(canonical, siteOrigin).href;
+const imageUrl = new URL(image, siteOrigin).href;
+const locale = lang === 'id' ? 'id_ID' : 'en_US';
+const altLocale = lang === 'id' ? 'en_US' : 'id_ID';
+const indexable = !robots || !/noindex/i.test(robots);
+const jsonLd = structuredData ? (Array.isArray(structuredData) ? structuredData : [structuredData]) : [];
 ---
 <meta charset="UTF-8" />
 <Tracking />
@@ -14,4 +39,24 @@ const { title, description, canonical, themeColor, robots } = Astro.props;
 <link rel="apple-touch-icon" href="/assets/brand/favicon/apple-touch-icon.png?v=3" />
 <link rel="manifest" href="/assets/brand/favicon/site.webmanifest" />
 <title>{title}</title>
-<link rel="canonical" href={new URL(canonical, siteOrigin).href} />
+<link rel="canonical" href={url} />
+{indexable && (
+  <>
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:locale" content={locale} />
+    <meta property="og:locale:alternate" content={altLocale} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt || title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+  </>
+)}
+{jsonLd.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}

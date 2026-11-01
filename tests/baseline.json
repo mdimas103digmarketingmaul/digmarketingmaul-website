@@ -13,7 +13,7 @@
     "products/website-development/index.html": "2d39cf384cd25a05348b7006f95469598ede77ebc8d011284d59f19be8a07210",
     "products/website-development/styles.css": "2ca14beaf7935545689ebe9de93f1ddaaeea917e3c4652e3316b1edd992c2a75",
     "products/website-development/script.js": "ed38c037caa550d577d5e2bbc8be3e088bd0a680d6cbfe7e4147cd870d0ae6ea",
-    "products/website-course/index.html": "f910c6c69c92aea2385ca487f85299cb7a3d1560045a67767e74c0973a2f3c8e",
+    "products/website-course/index.html": "29d87bcf670d233c543b135fba749b38bf19b08bee13ac51381207a6af3c79b0",
     "products/website-course/styles.css": "3b629a303d78941bdfb520620b07594a636f0caa81869bb7aec5fe7b96bfea51",
     "products/website-course/theme-init.js": "5c1e75a51f3fb38ff6b8c9b9635e2883b304082ea32ab023044eac8eb89c7e82",
     "products/website-course/script.js": "f2ef10c8dc3ec0f3451283d1f743d6dc11038e009499decf669545af5a5f1775",
@@ -178,7 +178,7 @@
     "styles.css": "8fa07b5a61d0a3c9696e0e44d4034a62f098d65764cf3ef4a210b52d221626fb",
     "script.js": "8358b9de8829a00828b6cf551a0fa5d7f9baf90037147b87f326f9eb313ab366",
     "robots.txt": "d6fbc9ae3e1d0d12771a67ea05fe53fc2e6a6d67380cd3a5b307139935265bd4",
-    "sitemap.xml": "f96a4fcf4e5672def3ebfb5f16ece3ba555a1935cf2fde245271a5fe3a4c66cf",
+    "sitemap.xml": "4204a14acdce9475ef681159673d6db739a45fe672658e04345f73b09a86f1af",
     "worker.js": "28e7e9019c2a27e5e51f199aeb15b3637bdad4e64538ef46f920518ca2d15799"
   }
 }

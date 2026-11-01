@@ -1,14 +1,143 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { serviceGraph } from '../../../data/structured-data.js';
 import initScript from '../../../scripts/products/product-page-init.js?raw';
 import baseCss from '../../../styles/products/website-development.css?url';
 import pageCss from '../../../styles/products/graphic-design.css?url';
 import pageJs from '../../../scripts/products/graphic-design.js?url';
+// One source for the visible FAQ and its JSON-LD. Answers may hold inline HTML (links).
+const plain = (html) => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").trim();
+const faq = [
+  {
+    "id": {
+      "q": "Apa yang perlu saya siapkan?",
+      "a": [
+        "Logo, foto produk, teks, dan referensi, kalau sudah ada.",
+        "Belum lengkap? Tidak apa-apa, kita mulai dari brief."
+      ]
+    },
+    "en": {
+      "q": "What should I prepare?",
+      "a": [
+        "Your logo, product photos, copy and references, if you have them.",
+        "Not everything ready? That's fine, we start from the brief."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Bisa untuk digital dan cetak?",
+      "a": [
+        "Bisa. File disiapkan sesuai media: ukuran untuk sosial media atau iklan, dan versi siap cetak sesuai spesifikasi percetakanmu."
+      ]
+    },
+    "en": {
+      "q": "Digital and print?",
+      "a": [
+        "Yes. Files are prepared for where they'll be used: sized for social media or ads, and print-ready to your printer's specs."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "File apa yang saya terima?",
+      "a": [
+        "Umumnya PNG atau JPG untuk digital dan PDF untuk cetak. Format lain bisa disepakati di awal."
+      ]
+    },
+    "en": {
+      "q": "Which files do I get?",
+      "a": [
+        "Usually PNG or JPG for digital and PDF for print. Other formats can be agreed up front."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Berapa lama pengerjaannya?",
+      "a": [
+        "Tergantung jenis dan jumlah desain. Estimasi waktu disampaikan setelah brief."
+      ]
+    },
+    "en": {
+      "q": "How long does it take?",
+      "a": [
+        "It depends on the type and number of designs. You get a time estimate after the brief."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Bagaimana dengan revisi?",
+      "a": [
+        "Revisi sesuai yang kamu mau, jumlahnya tidak dibatasi. Kamu bayar hanya setelah desainnya sesuai dengan brief yang kamu sampaikan."
+      ]
+    },
+    "en": {
+      "q": "What about revisions?",
+      "a": [
+        "Ask for as many revisions as you need. You only pay once the design matches the brief you gave."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Logo seperti apa yang dibuat?",
+      "a": [
+        "Simple logo: logo sederhana dan rapi untuk UMKM atau usaha yang baru mulai."
+      ]
+    },
+    "en": {
+      "q": "What kind of logo do you make?",
+      "a": [
+        "A simple, clean logo for small businesses or ones just starting out."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Pembeli dari luar Indonesia?",
+      "a": [
+        "Bisa. Bayar dengan PayPal, Visa, Mastercard, atau metode internasional lain."
+      ]
+    },
+    "en": {
+      "q": "Buying from outside Indonesia?",
+      "a": [
+        "Yes. Pay with PayPal, Visa, Mastercard or other international methods."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Butuh video atau website juga?",
+      "a": [
+        "Bisa. Lihat <a href=\"/products/video-editing-motion/\">Video Editing &amp; Motion</a> dan <a href=\"/products/website-development/\">Website Development</a>."
+      ]
+    },
+    "en": {
+      "q": "Need video or a website too?",
+      "a": [
+        "Yes. See <a href=\"/products/video-editing-motion/\">Video Editing &amp; Motion</a> and <a href=\"/products/website-development/\">Website Development</a>."
+      ]
+    }
+  }
+];
 const meta = {
-  "title": "Graphic Design — Maul Digital",
-  "themeColor": "#fafbfc",
-  "description": "Graphic Design oleh Maul — desain untuk konten digital, materi marketing, presentasi, print, dan merchandise.",
-  "canonical": "/products/graphic-design/"
+  title: "Jasa Graphic Design untuk Bisnis & UMKM — Maul Digital",
+  themeColor: "#fafbfc",
+  description: "Desain konten sosial media, poster, flyer, menu, company profile, undangan, backdrop, jersey, dan simple logo. Revisi tanpa batas, bayar setelah sesuai brief.",
+  canonical: "/products/graphic-design/",
+  image: "/assets/brand/og/graphic-design.jpg",
+  imageAlt: "Graphic Design oleh digmarketingmaul",
+  structuredData: serviceGraph({
+    name: "Graphic Design",
+    path: "/products/graphic-design/",
+    description: "Desain untuk konten digital, materi marketing, presentasi, cetak, merchandise, dan simple logo.",
+    serviceType: "Graphic design",
+    image: "/assets/brand/og/graphic-design.jpg",
+    faq: faq.map((item) => ({ q: plain(item.id.q), a: item.id.a.map(plain).join(" ") })),
+  }),
 };
 ---
 <!--
@@ -582,55 +711,14 @@ const meta = {
           <span class="mask-line"><span>FAQ<span class="accent-dot">.</span></span></span>
         </h2>
         <div class="faq-list">
-          <details class="reveal">
-            <summary><span class="lang-id">Apa yang perlu saya siapkan?</span><span class="lang-en">What should I prepare?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Logo, foto produk, teks, dan referensi, kalau sudah ada.</span><span class="lang-en">Your logo, product photos, copy and references, if you have them.</span></p>
-              <p><span class="lang-id">Belum lengkap? Tidak apa-apa, kita mulai dari brief.</span><span class="lang-en">Not everything ready? That's fine, we start from the brief.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Bisa untuk digital dan cetak?</span><span class="lang-en">Digital and print?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Bisa. File disiapkan sesuai media: ukuran untuk sosial media atau iklan, dan versi siap cetak sesuai spesifikasi percetakanmu.</span><span class="lang-en">Yes. Files are prepared for where they'll be used: sized for social media or ads, and print-ready to your printer's specs.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">File apa yang saya terima?</span><span class="lang-en">Which files do I get?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Umumnya PNG atau JPG untuk digital dan PDF untuk cetak. Format lain bisa disepakati di awal.</span><span class="lang-en">Usually PNG or JPG for digital and PDF for print. Other formats can be agreed up front.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Berapa lama pengerjaannya?</span><span class="lang-en">How long does it take?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Tergantung jenis dan jumlah desain. Estimasi waktu disampaikan setelah brief.</span><span class="lang-en">It depends on the type and number of designs. You get a time estimate after the brief.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Bagaimana dengan revisi?</span><span class="lang-en">What about revisions?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Revisi sesuai yang kamu mau, jumlahnya tidak dibatasi. Kamu bayar hanya setelah desainnya sesuai dengan brief yang kamu sampaikan.</span><span class="lang-en">Ask for as many revisions as you need. You only pay once the design matches the brief you gave.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Logo seperti apa yang dibuat?</span><span class="lang-en">What kind of logo do you make?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Simple logo: logo sederhana dan rapi untuk UMKM atau usaha yang baru mulai.</span><span class="lang-en">A simple, clean logo for small businesses or ones just starting out.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Pembeli dari luar Indonesia?</span><span class="lang-en">Buying from outside Indonesia?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Bisa. Bayar dengan PayPal, Visa, Mastercard, atau metode internasional lain.</span><span class="lang-en">Yes. Pay with PayPal, Visa, Mastercard or other international methods.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Butuh video atau website juga?</span><span class="lang-en">Need video or a website too?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Bisa. Lihat <a href="/products/video-editing-motion/">Video Editing &amp; Motion</a> dan <a href="/products/website-development/">Website Development</a>.</span><span class="lang-en">Yes. See <a href="/products/video-editing-motion/">Video Editing &amp; Motion</a> and <a href="/products/website-development/">Website Development</a>.</span></p>
-            </div>
-          </details>
+          {faq.map((item) => (
+            <details class="reveal">
+              <summary><span class="lang-id" set:html={item.id.q} /><span class="lang-en" set:html={item.en.q} /></summary>
+              <div class="faq-a">
+                {item.id.a.map((answer, i) => <p><span class="lang-id" set:html={answer} /><span class="lang-en" set:html={item.en.a[i]} /></p>)}
+              </div>
+            </details>
+          ))}
         </div>
       </div>
     </section>

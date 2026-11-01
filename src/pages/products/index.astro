@@ -1,13 +1,23 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { productsGraph } from '../../data/structured-data.js';
 import initScript from '../../scripts/products/product-page-init.js?raw';
 import pageCss from '../../styles/products/products.css?url';
 import pageJs from '../../scripts/products/products.js?url';
 const meta = {
   "title": "Products & Services — M. Dimas Maulana",
   "themeColor": "#fafbfc",
-  "description": "Products dan services dari M. Dimas Maulana untuk website, digital ads, reporting, digital resources, dan measurement setup.",
-  "canonical": "/products/"
+  "description": "Products dan services dari M. Dimas Maulana: website development, video editing & motion, graphic design, course website, digital ads management, dan eBook digital marketing.",
+  "canonical": "/products/",
+  "image": "/assets/brand/og/products.jpg",
+  "structuredData": productsGraph([
+    ["Website Development", "/products/website-development/"],
+    ["Video Editing & Motion", "/products/video-editing-motion/"],
+    ["Graphic Design", "/products/graphic-design/"],
+    ["Website Pertama Kamu, Live dari 0", "/products/website-course/"],
+    ["Digital Ads Management", "/products/digital-ads-management/"],
+    ["Digital Marketing eBooks", "/products/digital-marketing-ebooks/"]
+  ])
 };
 ---
 <!--

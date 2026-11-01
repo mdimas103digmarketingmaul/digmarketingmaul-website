@@ -1844,6 +1844,18 @@ html.js .reveal.is-in {
   display: none;
 }
 
+/* links inside answers (cross-links to the other service pages) */
+.faq-a a {
+  color: var(--ink);
+  font-weight: 600;
+  background: linear-gradient(var(--red), var(--red)) 0 100% / 100% 2px no-repeat;
+  transition: color 0.3s;
+}
+
+.faq-a a:hover {
+  color: var(--red);
+}
+
 /* + → ✕ */
 .faq-list summary::before,
 .faq-list summary::after {

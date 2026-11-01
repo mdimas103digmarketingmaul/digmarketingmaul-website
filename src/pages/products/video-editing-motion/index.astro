@@ -1,14 +1,131 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { serviceGraph } from '../../../data/structured-data.js';
 import initScript from '../../../scripts/products/product-page-init.js?raw';
 import baseCss from '../../../styles/products/website-development.css?url';
 import pageCss from '../../../styles/products/video-editing-motion.css?url';
 import pageJs from '../../../scripts/products/video-editing-motion.js?url';
+// One source for the visible FAQ and its JSON-LD. Answers may hold inline HTML (links).
+const plain = (html) => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").trim();
+const faq = [
+  {
+    "id": {
+      "q": "Bisa pakai footage dari saya?",
+      "a": [
+        "Bisa. Kirim footage, foto, logo, atau aset yang kamu punya.",
+        "Belum punya footage? Video bisa dibangun sepenuhnya dengan motion graphics."
+      ]
+    },
+    "en": {
+      "q": "Can you work with my footage?",
+      "a": [
+        "Yes. Send the footage, photos, logo or any assets you have.",
+        "No footage yet? The video can be built entirely with motion graphics."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Untuk platform apa saja?",
+      "a": [
+        "Instagram Reels, TikTok, YouTube Shorts, iklan digital, YouTube, website, sampai presentasi.",
+        "Satu video bisa disiapkan dalam beberapa rasio: 9:16, 4:5, 1:1, atau 16:9."
+      ]
+    },
+    "en": {
+      "q": "Which platforms?",
+      "a": [
+        "Instagram Reels, TikTok, YouTube Shorts, digital ads, YouTube, websites and presentations.",
+        "One video can be delivered in several ratios: 9:16, 4:5, 1:1 or 16:9."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Berapa lama pengerjaannya?",
+      "a": [
+        "Tergantung durasi dan tingkat kerumitannya. Estimasi waktu disampaikan setelah brief."
+      ]
+    },
+    "en": {
+      "q": "How long does it take?",
+      "a": [
+        "It depends on the length and complexity. You get a time estimate after the brief."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Termasuk musik, subtitle, dan voice over?",
+      "a": [
+        "Bisa, sesuai kebutuhan. Sumber musik dan voice over kita sepakati bersama, termasuk lisensinya."
+      ]
+    },
+    "en": {
+      "q": "Music, subtitles and voice-over included?",
+      "a": [
+        "Yes, as needed. We agree on the music and voice-over sources together, licences included."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Bagaimana dengan revisi?",
+      "a": [
+        "Revisi sesuai yang kamu mau, jumlahnya tidak dibatasi. Kamu bayar hanya setelah videonya sesuai dengan brief yang kamu sampaikan."
+      ]
+    },
+    "en": {
+      "q": "What about revisions?",
+      "a": [
+        "Ask for as many revisions as you need. You only pay once the video matches the brief you gave."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Pembeli dari luar Indonesia?",
+      "a": [
+        "Bisa. Bayar dengan PayPal, Visa, Mastercard, atau metode internasional lain."
+      ]
+    },
+    "en": {
+      "q": "Buying from outside Indonesia?",
+      "a": [
+        "Yes. Pay with PayPal, Visa, Mastercard or other international methods."
+      ]
+    }
+  },
+  {
+    "id": {
+      "q": "Bisa sekalian dibuatkan website?",
+      "a": [
+        "Bisa. Lihat <a href=\"/products/website-development/\">Website Development</a>."
+      ]
+    },
+    "en": {
+      "q": "Can you build the website too?",
+      "a": [
+        "Yes. See <a href=\"/products/website-development/\">Website Development</a>."
+      ]
+    }
+  }
+];
 const meta = {
-  "title": "Video Editing & Motion — Maul Digital",
-  "themeColor": "#fafbfc",
-  "description": "Video Editing & Motion oleh Maul — produksi video, video editing, motion graphics, dan video promo untuk bisnis maupun brand.",
-  "canonical": "/products/video-editing-motion/"
+  title: "Jasa Video Editing & Motion Graphics — Maul Digital",
+  themeColor: "#fafbfc",
+  description: "Jasa video editing, motion graphics, dan video promo untuk Reels, TikTok, YouTube, dan iklan digital. Revisi tanpa batas, bayar setelah sesuai brief.",
+  canonical: "/products/video-editing-motion/",
+  image: "/assets/brand/og/video-editing-motion.jpg",
+  imageAlt: "Video Editing & Motion oleh digmarketingmaul",
+  structuredData: serviceGraph({
+    name: "Video Editing & Motion",
+    path: "/products/video-editing-motion/",
+    description: "Produksi video, video editing, motion graphics, dan video promo untuk bisnis maupun brand.",
+    serviceType: "Video editing and motion graphics",
+    image: "/assets/brand/og/video-editing-motion.jpg",
+    faq: faq.map((item) => ({ q: plain(item.id.q), a: item.id.a.map(plain).join(" ") })),
+  }),
 };
 ---
 <!--
@@ -317,50 +434,14 @@ const meta = {
           <span class="mask-line"><span>FAQ<span class="accent-dot">.</span></span></span>
         </h2>
         <div class="faq-list">
-          <details class="reveal">
-            <summary><span class="lang-id">Bisa pakai footage dari saya?</span><span class="lang-en">Can you work with my footage?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Bisa. Kirim footage, foto, logo, atau aset yang kamu punya.</span><span class="lang-en">Yes. Send the footage, photos, logo or any assets you have.</span></p>
-              <p><span class="lang-id">Belum punya footage? Video bisa dibangun sepenuhnya dengan motion graphics.</span><span class="lang-en">No footage yet? The video can be built entirely with motion graphics.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Untuk platform apa saja?</span><span class="lang-en">Which platforms?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Instagram Reels, TikTok, YouTube Shorts, iklan digital, YouTube, website, sampai presentasi.</span><span class="lang-en">Instagram Reels, TikTok, YouTube Shorts, digital ads, YouTube, websites and presentations.</span></p>
-              <p><span class="lang-id">Satu video bisa disiapkan dalam beberapa rasio: 9:16, 4:5, 1:1, atau 16:9.</span><span class="lang-en">One video can be delivered in several ratios: 9:16, 4:5, 1:1 or 16:9.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Berapa lama pengerjaannya?</span><span class="lang-en">How long does it take?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Tergantung durasi dan tingkat kerumitannya. Estimasi waktu disampaikan setelah brief.</span><span class="lang-en">It depends on the length and complexity. You get a time estimate after the brief.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Termasuk musik, subtitle, dan voice over?</span><span class="lang-en">Music, subtitles and voice-over included?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Bisa, sesuai kebutuhan. Sumber musik dan voice over kita sepakati bersama, termasuk lisensinya.</span><span class="lang-en">Yes, as needed. We agree on the music and voice-over sources together, licences included.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Bagaimana dengan revisi?</span><span class="lang-en">What about revisions?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Revisi sesuai yang kamu mau, jumlahnya tidak dibatasi. Kamu bayar hanya setelah videonya sesuai dengan brief yang kamu sampaikan.</span><span class="lang-en">Ask for as many revisions as you need. You only pay once the video matches the brief you gave.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Pembeli dari luar Indonesia?</span><span class="lang-en">Buying from outside Indonesia?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Bisa. Bayar dengan PayPal, Visa, Mastercard, atau metode internasional lain.</span><span class="lang-en">Yes. Pay with PayPal, Visa, Mastercard or other international methods.</span></p>
-            </div>
-          </details>
-          <details class="reveal">
-            <summary><span class="lang-id">Bisa sekalian dibuatkan website?</span><span class="lang-en">Can you build the website too?</span></summary>
-            <div class="faq-a">
-              <p><span class="lang-id">Bisa. Lihat <a href="/products/website-development/">Website Development</a>.</span><span class="lang-en">Yes. See <a href="/products/website-development/">Website Development</a>.</span></p>
-            </div>
-          </details>
+          {faq.map((item) => (
+            <details class="reveal">
+              <summary><span class="lang-id" set:html={item.id.q} /><span class="lang-en" set:html={item.en.q} /></summary>
+              <div class="faq-a">
+                {item.id.a.map((answer, i) => <p><span class="lang-id" set:html={answer} /><span class="lang-en" set:html={item.en.a[i]} /></p>)}
+              </div>
+            </details>
+          ))}
         </div>
       </div>
     </section>

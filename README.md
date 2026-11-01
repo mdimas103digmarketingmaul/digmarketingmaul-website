@@ -62,7 +62,7 @@ No content collection is created yet: there is one framework article and a blog 
 
 All playground source files remain Vanilla and retain their local assets. Root `/styles.css` and `/script.js` remain compatibility assets for snapshots; new marketing pages use the smaller owned styles/scripts. Do not remove those legacy files based only on references in `src/`.
 
-`sitemap.xml` remains an **editorial allowlist of nine URLs**. It is copied unchanged; no automatic sitemap discovery includes admin, transactions or playground. The original eBook test remains indexed; the Midtrans variant stays noindex. Changing either requires an editorial decision.
+`sitemap.xml` remains an **editorial allowlist of eleven URLs** (Video Editing & Motion and Graphic Design added 2026-11-01). It is copied unchanged; no automatic sitemap discovery includes admin, transactions or playground. The original eBook test remains indexed; the Midtrans variant stays noindex. Changing either requires an editorial decision.
 
 ## Pricing and backend
 

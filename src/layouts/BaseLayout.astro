@@ -6,7 +6,7 @@ const { meta, lang = 'en', htmlAttributes = {}, bodyAttributes = {} } = Astro.pr
 <!DOCTYPE html>
 <html lang={lang} {...htmlAttributes}>
 <head>
-<BaseHead {...meta} />
+<BaseHead lang={lang} {...meta} />
 <slot name="head" />
 </head>
 <body {...bodyAttributes}>
