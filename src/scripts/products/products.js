@@ -6,9 +6,9 @@
    1. Language + International (same storage keys as production)
    2. Reveal, cursor + magnetic, spotlight, header progress
    3. Hero stack — five disciplines shuffling to the front
-   4. Creative rows — prefilled WhatsApp + pointer-following preview
-   5. Brief form → prefilled WhatsApp (+ live chat preview)
-   6. QRIS popover
+   4. Brief form → prefilled WhatsApp (+ live chat preview)
+   5. QRIS popover
+   (The creative rows were removed: Video and Graphic Design have their own pages.)
 ========================================================= */
 (function () {
   "use strict";
@@ -284,79 +284,7 @@
   })();
 
   /* =========================================================
-     4. CREATIVE ROWS
-     Each row opens WhatsApp with a message naming the service, in the
-     current language. On a fine pointer a small preview card trails
-     the cursor and swaps its visual per row.
-  ========================================================= */
-  (function creative() {
-    const rows = $$(".svc[data-svc]");
-    if (!rows.length) return;
-
-    const message = (svc) =>
-      intl()
-        ? `Hello Maul, I am interested in ${svc} and would like to continue with the international purchase and payment process.`
-        : lang() === "en"
-          ? `Hi Maul, I'm interested in ${svc}. Can we talk through what I need?`
-          : `Halo Maul, saya tertarik dengan ${svc}. Boleh diskusi kebutuhannya?`;
-
-    const relink = () => rows.forEach((a) => (a.href = wa(message(a.dataset.svc))));
-    onLanguage.push(relink);
-    relink();
-
-    const preview = $("[data-svc-preview]");
-    if (!preview || !finePointer || !motionOK) return;
-
-    let px = 0;
-    let py = 0;
-    let tx = 0;
-    let ty = 0;
-    let on = false;
-    let raf = 0;
-
-    const move = () => {
-      px = lerp(px, tx, 0.18);
-      py = lerp(py, ty, 0.18);
-      preview.style.transform = `translate3d(${px.toFixed(1)}px,${py.toFixed(1)}px,0)`;
-      raf = on || Math.abs(tx - px) > 0.5 || Math.abs(ty - py) > 0.5 ? requestAnimationFrame(move) : 0;
-    };
-    // sits up-right of the cursor, flipped left near the viewport edge
-    const target = (e) => {
-      const w = preview.offsetWidth;
-      const h = preview.offsetHeight;
-      tx = e.clientX + 28 + w > innerWidth - 12 ? e.clientX - w - 28 : e.clientX + 28;
-      ty = clamp(e.clientY - h - 18, 12, innerHeight - h - 12);
-    };
-
-    rows.forEach((a) => {
-      a.addEventListener("pointerenter", (e) => {
-        if (e.pointerType !== "mouse") return;
-        const group = a.closest(".svc-group");
-        preview.dataset.show = a.dataset.viz;
-        preview.style.setProperty("--pg", group ? getComputedStyle(group).getPropertyValue("--g") : "");
-        target(e);
-        if (!on) {
-          px = tx;
-          py = ty;
-        }
-        on = true;
-        preview.classList.add("is-on");
-        if (!raf) raf = requestAnimationFrame(move);
-      });
-      a.addEventListener("pointermove", target);
-      a.addEventListener("pointerleave", () => {
-        on = false;
-        preview.classList.remove("is-on");
-      });
-    });
-    addEventListener("scroll", () => {
-      on = false;
-      preview.classList.remove("is-on");
-    }, { passive: true });
-  })();
-
-  /* =========================================================
-     5. BRIEF FORM → WHATSAPP
+     4. BRIEF FORM → WHATSAPP
      Nothing is stored or sent anywhere: the message is composed
      here and opened in WhatsApp for the visitor to send.
   ========================================================= */
@@ -464,7 +392,7 @@
   })();
 
   /* =========================================================
-     6. QRIS — hover / focus shows it (CSS); tap toggles it on touch
+     5. QRIS — hover / focus shows it (CSS); tap toggles it on touch
   ========================================================= */
   (function qris() {
     const item = $(".qris");

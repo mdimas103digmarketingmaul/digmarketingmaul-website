@@ -67,9 +67,9 @@ const meta = {
           <p class="hero-lead reveal"><span class="lang-id">Website, ads, dan creative production — dalam satu tempat.</span><span class="lang-en">Websites, ads and creative production — in one place.</span></p>
           <div class="stack-tabs reveal" role="tablist" aria-label="Disciplines" data-stack-tabs>
             <button type="button" role="tab" data-i="0">Web</button>
-            <button type="button" role="tab" data-i="1">Ads</button>
-            <button type="button" role="tab" data-i="2">Creative</button>
-            <button type="button" role="tab" data-i="3">Motion</button>
+            <button type="button" role="tab" data-i="1">Motion</button>
+            <button type="button" role="tab" data-i="2">Design</button>
+            <button type="button" role="tab" data-i="3">Ads</button>
             <button type="button" role="tab" data-i="4">Brand</button>
           </div>
         </div>
@@ -78,23 +78,23 @@ const meta = {
         <div class="stack" data-stack aria-hidden="true">
           <div class="stack-card sc-web" data-name="Web">
             <span class="sc-label">01 · Web</span>
-            <span class="sc-browser"><span class="sc-bar"><i></i><i></i><i></i></span><img src="/assets/website-development/clients/hanasari.webp" alt="" width="1280" height="800"></span>
-          </div>
-          <div class="stack-card sc-ads" data-name="Ads">
-            <span class="sc-label">02 · Ads</span>
-            <span class="sc-bars"><i style="--h:.32"></i><i style="--h:.46"></i><i style="--h:.4"></i><i style="--h:.62"></i><i style="--h:.78"></i><i style="--h:1"></i></span>
-            <svg class="sc-trend" viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0 52 C 40 48, 60 36, 92 34 S 150 16, 200 6" pathLength="1"/></svg>
-            <span class="sc-chips"><b>Meta</b><b>Google</b><b>TikTok</b></span>
-          </div>
-          <div class="stack-card sc-creative" data-name="Creative">
-            <span class="sc-label">03 · Creative</span>
-            <span class="sc-poster"><b>BIG</b><b>SALE</b><i></i><small>Poster · Flyer · Backdrop</small></span>
+            <span class="sc-browser"><span class="sc-bar"><i></i><i></i><i></i></span><img src="/assets/website-development/clients/haikal-cfp.webp" alt="" width="1280" height="800"></span>
           </div>
           <div class="stack-card sc-motion" data-name="Motion">
-            <span class="sc-label">04 · Motion</span>
+            <span class="sc-label">02 · Motion</span>
             <span class="sc-play"></span>
             <span class="sc-timeline"><i></i></span>
             <span class="sc-time">00:12 / 00:30</span>
+          </div>
+          <div class="stack-card sc-creative" data-name="Design">
+            <span class="sc-label">03 · Design</span>
+            <span class="sc-poster"><b>BIG</b><b>SALE</b><i></i><small>Poster · Flyer · Backdrop</small></span>
+          </div>
+          <div class="stack-card sc-ads" data-name="Ads">
+            <span class="sc-label">04 · Ads</span>
+            <span class="sc-bars"><i style="--h:.32"></i><i style="--h:.46"></i><i style="--h:.4"></i><i style="--h:.62"></i><i style="--h:.78"></i><i style="--h:1"></i></span>
+            <svg class="sc-trend" viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0 52 C 40 48, 60 36, 92 34 S 150 16, 200 6" pathLength="1"/></svg>
+            <span class="sc-chips"><b>Meta</b><b>Google</b><b>TikTok</b></span>
           </div>
           <div class="stack-card sc-brand" data-name="Brand">
             <span class="sc-label">05 · Brand</span>
@@ -163,7 +163,7 @@ const meta = {
       </div>
     </section>
 
-    <!-- ============ PRODUCTS — the four you can buy today ============ -->
+    <!-- ============ PRODUCTS — services with their own page, then the course, ads and eBooks ============ -->
     <section class="products" id="products" aria-labelledby="products-title">
       <div class="shell">
         <div class="section-head">
@@ -192,14 +192,50 @@ const meta = {
             </span>
           </a>
 
-          <!-- 02 Your First Website Live from Zero -->
+          <!-- 02 Video Editing & Motion — real work: the two video posters -->
+          <a class="card reveal" href="/products/video-editing-motion/" data-spot data-cursor="View" style="--tone:#0b0f1a">
+            <span class="card-visual cv-reels" aria-hidden="true">
+              <span class="cv-reel" style="--i:0"><img src="/assets/video-editing-motion/work/hijra-deposito-10-poster.webp" alt="" width="540" height="960" loading="lazy"></span>
+              <span class="cv-reel" style="--i:1"><img src="/assets/video-editing-motion/work/digmarketingmaul-website-offer-poster.webp" alt="" width="540" height="960" loading="lazy"></span>
+              <span class="cv-play"></span>
+            </span>
+            <span class="card-body">
+              <span class="card-meta"><span>02</span><span>Video &amp; Motion</span></span>
+              <strong class="card-title">Video Editing &amp; Motion</strong>
+              <span class="card-desc"><span class="lang-id">Produksi video, editing, dan motion graphics.</span><span class="lang-en">Video production, editing and motion graphics.</span></span>
+              <span class="card-foot">
+                <span class="card-price"><strong class="card-price-text"><span class="lang-id">Sesuai scope</span><span class="lang-en">By scope</span></strong></span>
+                <span class="card-go" aria-hidden="true">→</span>
+              </span>
+            </span>
+          </a>
+
+          <!-- 03 Graphic Design — CSS samples: post, poster, slide -->
+          <a class="card reveal" href="/products/graphic-design/" data-spot data-cursor="View" style="--tone:#eceff4">
+            <span class="card-visual cv-design" aria-hidden="true">
+              <span class="cvd-post"><b>Es Kopi<br>Aren.</b><i></i></span>
+              <span class="cvd-poster"><small>Mega sale</small><b>50%</b></span>
+              <span class="cvd-slide"><b>About us.</b><i></i><i></i><i></i></span>
+            </span>
+            <span class="card-body">
+              <span class="card-meta"><span>03</span><span>Design</span></span>
+              <strong class="card-title">Graphic Design</strong>
+              <span class="card-desc"><span class="lang-id">Desain untuk sosial media, promosi, presentasi, cetak, sampai jersey.</span><span class="lang-en">Design for social media, marketing, presentations, print and jerseys.</span></span>
+              <span class="card-foot">
+                <span class="card-price"><strong class="card-price-text"><span class="lang-id">Sesuai scope</span><span class="lang-en">By scope</span></strong></span>
+                <span class="card-go" aria-hidden="true">→</span>
+              </span>
+            </span>
+          </a>
+
+          <!-- 04 Your First Website Live from Zero -->
           <a class="card reveal" href="/products/website-course/" data-spot data-cursor="View" style="--tone:#07111f">
             <span class="card-visual cv-course" aria-hidden="true">
               <span class="cv-steps"><i>Domain</i><i>Hosting</i><i>Design</i><i>Live</i></span>
               <span class="cv-progress"><b>0</b><i><em></em></i><b>Live</b></span>
             </span>
             <span class="card-body">
-              <span class="card-meta"><span>02</span><span>Course</span><span class="card-flag"><span class="lang-id">Harga Oktober</span><span class="lang-en">October price</span></span></span>
+              <span class="card-meta"><span>04</span><span>Course</span></span>
               <strong class="card-title"><span class="lang-id">Website Pertama Kamu, Live dari 0</span><span class="lang-en">Your First Website Live from Zero</span></strong>
               <span class="card-desc"><span class="lang-id">Course step-by-step sampai website kamu live.</span><span class="lang-en">A step-by-step course until your website is live.</span></span>
               <span class="card-foot">
@@ -209,13 +245,13 @@ const meta = {
             </span>
           </a>
 
-          <!-- 03 Digital Ads Management -->
+          <!-- 05 Digital Ads Management -->
           <a class="card reveal" href="/products/digital-ads-management/" data-spot data-cursor="View" style="--tone:#ff304f">
             <span class="card-visual cv-ads" aria-hidden="true">
               <span class="cv-funnel"><i style="--w:1"><span>Reach</span></i><i style="--w:.74"><span>Click</span></i><i style="--w:.5"><span>Lead</span></i><i style="--w:.3"><span>Sale</span></i></span>
             </span>
             <span class="card-body">
-              <span class="card-meta"><span>03</span><span>Digital Ads</span></span>
+              <span class="card-meta"><span>05</span><span>Digital Ads</span></span>
               <strong class="card-title">Digital Ads Management</strong>
               <span class="card-desc"><span class="lang-id">Dari setup, tracking, sampai optimasi dan report.</span><span class="lang-en">From setup and tracking to optimisation and reporting.</span></span>
               <span class="card-foot">
@@ -225,7 +261,7 @@ const meta = {
             </span>
           </a>
 
-          <!-- 04 Digital Marketing eBooks -->
+          <!-- 06 Digital Marketing eBooks -->
           <a class="card reveal" href="/products/digital-marketing-ebooks/" data-spot data-cursor="View" style="--tone:#e9e3d5">
             <span class="card-visual cv-books" aria-hidden="true">
               <span class="cv-book" style="--i:0;--c:#07111f"><b>Ads</b></span>
@@ -234,7 +270,7 @@ const meta = {
               <span class="cv-book" style="--i:3;--c:#1f5c43"><b>Data</b></span>
             </span>
             <span class="card-body">
-              <span class="card-meta"><span>04</span><span>eBook</span><span class="card-flag card-flag--muted">Live test</span></span>
+              <span class="card-meta"><span>06</span><span>eBook</span><span class="card-flag card-flag--muted">Live test</span></span>
               <strong class="card-title">Digital Marketing eBooks</strong>
               <span class="card-desc"><span class="lang-id">Uji alur pembelian. eBook final segera hadir.</span><span class="lang-en">Purchase-flow test. Final eBooks coming soon.</span></span>
               <span class="card-foot">
@@ -244,77 +280,6 @@ const meta = {
             </span>
           </a>
         </div>
-      </div>
-    </section>
-
-    <!-- ============ CREATIVE PRODUCTION — straight to WhatsApp ============ -->
-    <section class="creative" id="creative" aria-labelledby="creative-title" data-creative>
-      <div class="shell">
-        <div class="section-head">
-          <h2 class="section-title" id="creative-title" data-reveal-title>
-            <span class="mask-line"><span>Creative</span></span>
-            <span class="mask-line"><span>production<span class="accent-dot">.</span></span></span>
-          </h2>
-          <p class="section-note"><span class="lang-id">Pilih, lalu diskusi langsung via WhatsApp.</span><span class="lang-en">Pick one, then talk it through on WhatsApp.</span></p>
-        </div>
-
-        <div class="svc-groups">
-          <div class="svc-group reveal" style="--g:#07111f">
-            <p class="svc-label"><span>Motion</span><b>01</b></p>
-            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Video Motion Production" data-viz="motion" data-cursor="WhatsApp">
-              <span class="svc-name">Video Motion Production</span><span class="svc-tags">Reels · Ads · Explainer</span><span class="svc-go" aria-hidden="true">↗</span>
-            </a>
-          </div>
-
-          <div class="svc-group reveal" style="--g:#ff304f">
-            <p class="svc-label"><span>Visual &amp; Print</span><b>04</b></p>
-            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Poster Visual Creative Production" data-viz="poster" data-cursor="WhatsApp">
-              <span class="svc-name">Poster Visual Creative</span><span class="svc-tags">Social · Campaign</span><span class="svc-go" aria-hidden="true">↗</span>
-            </a>
-            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Print Poster Materials" data-viz="print" data-cursor="WhatsApp">
-              <span class="svc-name">Print Poster Materials</span><span class="svc-tags"><span class="lang-id">Siap cetak</span><span class="lang-en">Print-ready</span></span><span class="svc-go" aria-hidden="true">↗</span>
-            </a>
-            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Flyer" data-viz="flyer" data-cursor="WhatsApp">
-              <span class="svc-name">Flyer</span><span class="svc-tags">Promo · Event</span><span class="svc-go" aria-hidden="true">↗</span>
-            </a>
-            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Backdrop" data-viz="backdrop" data-cursor="WhatsApp">
-              <span class="svc-name">Backdrop</span><span class="svc-tags">Event · Booth · Stage</span><span class="svc-go" aria-hidden="true">↗</span>
-            </a>
-          </div>
-
-          <div class="svc-group reveal" style="--g:#f6b81f">
-            <p class="svc-label"><span>Brand</span><b>02</b></p>
-            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Brand Guide" data-viz="brand" data-cursor="WhatsApp">
-              <span class="svc-name">Brand Guide</span><span class="svc-tags">Logo · Color · Type</span><span class="svc-go" aria-hidden="true">↗</span>
-            </a>
-            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Company Profile" data-viz="profile" data-cursor="WhatsApp">
-              <span class="svc-name">Company Profile</span><span class="svc-tags">Print · Digital</span><span class="svc-go" aria-hidden="true">↗</span>
-            </a>
-          </div>
-
-          <div class="svc-group reveal" style="--g:#1f5c43">
-            <p class="svc-label"><span>Sales</span><b>02</b></p>
-            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Sales Kit Design" data-viz="kit" data-cursor="WhatsApp">
-              <span class="svc-name">Sales Kit Design</span><span class="svc-tags">Catalog · Pricelist</span><span class="svc-go" aria-hidden="true">↗</span>
-            </a>
-            <a class="svc" href="https://wa.me/6281296069566" target="_blank" rel="noopener noreferrer" data-svc="Sales Presentation Deck" data-viz="deck" data-cursor="WhatsApp">
-              <span class="svc-name">Sales Presentation Deck</span><span class="svc-tags">Pitch · Proposal</span><span class="svc-go" aria-hidden="true">↗</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- floating preview that follows the pointer over a service row (fine pointers) -->
-      <div class="svc-preview" data-svc-preview aria-hidden="true">
-        <span class="pv pv-motion"><i class="pv-play"></i><i class="pv-line"></i></span>
-        <span class="pv pv-poster"><b>NEW</b><b>DROP</b></span>
-        <span class="pv pv-print"><i></i><i></i></span>
-        <span class="pv pv-flyer"><b>50%</b><small>OFF</small></span>
-        <span class="pv pv-backdrop"><b>EVENT</b><i></i></span>
-        <span class="pv pv-brand"><b>Aa</b><i></i><i></i><i></i></span>
-        <span class="pv pv-profile"><b>About us</b><i></i><i></i></span>
-        <span class="pv pv-kit"><i></i><i></i><i></i><i></i></span>
-        <span class="pv pv-deck"><b>Q4 Pitch</b><i></i></span>
       </div>
     </section>
 
@@ -377,10 +342,9 @@ const meta = {
               <label class="chip"><input type="checkbox" name="need" value="web" data-id="Website" data-en="Website"><span>Website</span></label>
               <label class="chip"><input type="checkbox" name="need" value="course" data-id="Course website" data-en="Website course"><span>Course</span></label>
               <label class="chip"><input type="checkbox" name="need" value="ads" data-id="Digital ads" data-en="Digital ads"><span>Digital ads</span></label>
-              <label class="chip"><input type="checkbox" name="need" value="motion" data-id="Video motion" data-en="Video motion"><span>Video motion</span></label>
-              <label class="chip"><input type="checkbox" name="need" value="print" data-id="Poster / flyer / backdrop" data-en="Poster / flyer / backdrop"><span>Poster &amp; print</span></label>
-              <label class="chip"><input type="checkbox" name="need" value="brand" data-id="Brand guide / company profile" data-en="Brand guide / company profile"><span>Brand</span></label>
-              <label class="chip"><input type="checkbox" name="need" value="sales" data-id="Sales kit / deck" data-en="Sales kit / deck"><span>Sales kit &amp; deck</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="motion" data-id="Video editing &amp; motion" data-en="Video editing &amp; motion"><span>Video &amp; motion</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="design" data-id="Graphic design" data-en="Graphic design"><span>Graphic design</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="brand" data-id="Brand guide" data-en="Brand guide"><span>Brand guide</span></label>
               <label class="chip"><input type="checkbox" name="need" value="other" data-id="Lainnya" data-en="Something else"><span><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></span></label>
             </div>
             <p class="field-error"><span class="lang-id">Pilih minimal satu.</span><span class="lang-en">Pick at least one.</span></p>

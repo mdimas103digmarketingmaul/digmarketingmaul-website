@@ -1210,7 +1210,9 @@ html.js .reveal.is-in {
 /* =========================================================
    PRODUCTS PAGE — option-01
    5. Hero + full-stack shuffle   6. Payment band   7. Product cards
-   8. Creative production rows    9. Coming soon     10. Responsive
+   9. Coming soon                 10. Responsive
+   (8. Creative production rows was removed on 2026-11-01: those services
+   now live on /products/video-editing-motion/ and /products/graphic-design/.)
 ========================================================= */
 
 /* ---------------------------------------------------------
@@ -1888,7 +1890,167 @@ html.js .reveal.is-in {
   }
 }
 
-/* 02 course: 0 → Live */
+/* 02 video: the two real video posters, a play button between them */
+.cv-reels {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6%;
+}
+
+.cv-reel {
+  width: 22%;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08), 0 30px 40px -24px #000;
+  rotate: calc(-5deg + var(--i) * 10deg);
+  translate: 0 calc(6% - var(--i) * 12%);
+  transition: rotate 0.7s var(--ease-expo), translate 0.7s var(--ease-expo);
+}
+
+.cv-reel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card:hover .cv-reel {
+  rotate: calc(-2deg + var(--i) * 4deg);
+  translate: 0 -4%;
+}
+
+.cv-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 6.5v11l9-5.5z' fill='white'/%3E%3C/svg%3E") center / 22px no-repeat;
+  box-shadow: 0 16px 30px -12px rgba(255, 48, 79, 0.8);
+  translate: -50% -50%;
+  transition: scale 0.5s var(--ease-expo);
+}
+
+.card:hover .cv-play {
+  scale: 1.12;
+}
+
+/* 03 graphic design: a post, a poster and a slide — the samples from its page */
+.cv-design {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4%;
+  padding: 0 8%;
+}
+
+.cv-design > span {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(7, 17, 31, 0.06), 0 24px 34px -22px rgba(7, 17, 31, 0.55);
+  transition: rotate 0.7s var(--ease-expo), translate 0.7s var(--ease-expo);
+}
+
+.cvd-post {
+  width: 22%;
+  aspect-ratio: 4 / 5;
+  padding: 3%;
+  background: #f3e7d3;
+  rotate: -6deg;
+}
+
+.cvd-post b {
+  position: relative;
+  z-index: 1;
+  display: block;
+  color: #3b2416;
+  font-size: clamp(11px, 1.3vw, 18px);
+  font-weight: 760;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+.cvd-post i {
+  position: absolute;
+  right: -25%;
+  bottom: -25%;
+  width: 80%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #e0702d;
+}
+
+.cvd-poster {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  width: 22%;
+  aspect-ratio: 210 / 297;
+  padding: 3%;
+  background: #0d0d0d;
+  translate: 0 -6%;
+}
+
+.cvd-poster small {
+  color: #fff;
+  font-size: clamp(7px, 0.7vw, 10px);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cvd-poster b {
+  color: #d7ff3a;
+  font-size: clamp(18px, 2.4vw, 34px);
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.08em;
+}
+
+.cvd-slide {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  width: 34%;
+  aspect-ratio: 16 / 9;
+  padding: 3%;
+  background: #fff;
+  rotate: 5deg;
+}
+
+.cvd-slide b {
+  color: #13294b;
+  font-size: clamp(10px, 1.1vw, 15px);
+  font-weight: 750;
+  letter-spacing: -0.05em;
+}
+
+.cvd-slide i {
+  width: 55%;
+  height: 3px;
+  border-radius: 3px;
+  background: #dfe5ef;
+}
+
+.cvd-slide i:last-child {
+  position: absolute;
+  top: 18%;
+  right: 6%;
+  bottom: 18%;
+  width: 34%;
+  height: auto;
+  border-radius: 4px;
+  background: #13294b;
+}
+
+.card:hover .cvd-post { rotate: -2deg; translate: 0 -4%; }
+.card:hover .cvd-poster { translate: 0 -10%; }
+.card:hover .cvd-slide { rotate: 1deg; translate: 0 -4%; }
+
+/* 04 course: 0 → Live */
 .cv-course {
   display: grid;
   align-content: center;
@@ -1960,7 +2122,7 @@ html.js .reveal.is-in {
   color: var(--red);
 }
 
-/* 03 ads: a funnel */
+/* 05 ads: a funnel */
 .cv-funnel {
   display: grid;
   justify-items: center;
@@ -1994,7 +2156,7 @@ html.js .reveal.is-in {
   width: calc((var(--w) * 0.6 + 0.4) * 70%);
 }
 
-/* 04 books */
+/* 06 books */
 .cv-books {
   display: flex;
   align-items: flex-end;
@@ -2030,285 +2192,6 @@ html.js .reveal.is-in {
 
 .card:hover .cv-book {
   translate: 0 -14px;
-}
-
-/* ---------------------------------------------------------
-   8. CREATIVE PRODUCTION — big rows, fill on hover, preview follows the pointer
---------------------------------------------------------- */
-.creative {
-  position: relative;
-  padding-top: clamp(110px, 16vh, 190px);
-}
-
-.svc-groups {
-  margin-top: clamp(36px, 6vh, 60px);
-  border-top: 1px solid var(--line-2);
-}
-
-.svc-group {
-  display: grid;
-  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
-  border-bottom: 1px solid var(--line-2);
-}
-
-.svc-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  grid-row: 1 / span 9;
-  align-self: start;
-  padding-top: clamp(26px, 2.6vw, 36px);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink);
-}
-
-.svc-label::before {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--g);
-}
-
-.svc-label b {
-  font-weight: 500;
-  color: var(--muted-2);
-}
-
-.svc {
-  --on: #fff;
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: center;
-  gap: 24px;
-  padding: clamp(18px, 2vw, 26px) 16px;
-  overflow: hidden;
-  grid-column: 2;
-  color: var(--ink);
-  isolation: isolate;
-  transition: color 0.35s;
-}
-
-.svc + .svc {
-  border-top: 1px solid var(--line);
-}
-
-.svc::before {
-  content: "";
-  position: absolute;
-  inset: 4px 0;
-  z-index: -1;
-  border-radius: 14px;
-  background: var(--g);
-  transform: scaleY(0);
-  transform-origin: 50% 100%;
-  transition: transform 0.5s var(--ease-expo);
-}
-
-.svc-group[style*="#f6b81f"] .svc {
-  --on: var(--ink);
-}
-
-.svc:hover,
-.svc:focus-visible {
-  color: var(--on);
-}
-
-.svc:hover::before,
-.svc:focus-visible::before {
-  transform: scaleY(1);
-}
-
-.svc-name {
-  font-size: clamp(1.5rem, 3.4vw, 3.2rem);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.05em;
-  transition: translate 0.5s var(--ease-expo);
-}
-
-.svc:hover .svc-name {
-  translate: 12px 0;
-}
-
-.svc-tags {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  white-space: nowrap;
-  transition: color 0.35s;
-}
-
-.svc:hover .svc-tags {
-  color: inherit;
-  opacity: 0.8;
-}
-
-.svc-go {
-  display: grid;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px var(--line-2);
-  font-size: 20px;
-  transition: background-color 0.35s, color 0.35s, rotate 0.5s var(--ease-expo), box-shadow 0.35s;
-}
-
-.svc:hover .svc-go {
-  background: var(--on);
-  color: var(--g);
-  box-shadow: none;
-  rotate: 45deg;
-}
-
-/* preview card following the pointer */
-.svc-preview {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 50;
-  display: grid;
-  width: 200px;
-  height: 150px;
-  overflow: hidden;
-  border-radius: 18px;
-  background: var(--pg, var(--ink));
-  box-shadow: 0 30px 60px -24px rgba(7, 17, 31, 0.6);
-  pointer-events: none;
-  scale: 0;
-  rotate: -6deg;
-  transition: scale 0.45s var(--ease-expo), rotate 0.45s var(--ease-expo), background-color 0.3s;
-}
-
-.svc-preview.is-on {
-  scale: 1;
-  rotate: 4deg;
-}
-
-.pv {
-  display: none;
-  grid-area: 1 / 1;
-  place-items: center;
-  align-content: center;
-  gap: 8px;
-  padding: 16px;
-  color: #fff;
-}
-
-.svc-preview[data-show="motion"] .pv-motion,
-.svc-preview[data-show="poster"] .pv-poster,
-.svc-preview[data-show="print"] .pv-print,
-.svc-preview[data-show="flyer"] .pv-flyer,
-.svc-preview[data-show="backdrop"] .pv-backdrop,
-.svc-preview[data-show="brand"] .pv-brand,
-.svc-preview[data-show="profile"] .pv-profile,
-.svc-preview[data-show="kit"] .pv-kit,
-.svc-preview[data-show="deck"] .pv-deck {
-  display: grid;
-}
-
-.pv b {
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 0.9;
-  letter-spacing: -0.05em;
-}
-
-.pv-play {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--red);
-}
-
-.pv-line,
-.pv-print i,
-.pv-profile i,
-.pv-deck i {
-  width: 120px;
-  height: 4px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.pv-poster,
-.pv-flyer {
-  color: var(--ink);
-}
-
-.pv-poster {
-  background: #f6b81f;
-}
-
-.pv-print {
-  grid-auto-flow: column;
-  gap: 10px;
-}
-
-.pv-print i {
-  width: 56px;
-  height: 78px;
-  border-radius: 4px;
-  background: #fff;
-}
-
-.pv-flyer {
-  background: #fff;
-}
-
-.pv-flyer small {
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.pv-backdrop i {
-  width: 140px;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.7);
-}
-
-.pv-brand {
-  grid-template-columns: repeat(3, 26px);
-  color: var(--ink);
-}
-
-.pv-brand b {
-  grid-column: 1 / -1;
-}
-
-.pv-brand i {
-  height: 26px;
-  border-radius: 6px;
-  background: var(--ink);
-}
-
-.pv-brand i:nth-of-type(2) {
-  background: var(--red);
-}
-
-.pv-brand i:nth-of-type(3) {
-  background: #fff;
-}
-
-.pv-kit {
-  grid-template-columns: repeat(2, 54px);
-}
-
-.pv-kit i {
-  height: 40px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.85);
-}
-
-.pv-profile b,
-.pv-deck b {
-  font-size: 22px;
 }
 
 /* ---------------------------------------------------------
@@ -2401,19 +2284,6 @@ html.js .reveal.is-in {
     grid-row: auto;
   }
 
-  .svc-group {
-    grid-template-columns: 1fr;
-  }
-
-  .svc-label {
-    grid-row: auto;
-    padding-top: 22px;
-  }
-
-  .svc {
-    grid-column: 1;
-  }
-
   .footer-cols {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -2466,23 +2336,6 @@ html.js .reveal.is-in {
     aspect-ratio: 16 / 10;
   }
 
-  .svc {
-    grid-template-columns: minmax(0, 1fr) auto;
-    padding-inline: 8px;
-  }
-
-  .svc-tags {
-    grid-row: 2;
-    white-space: normal;
-  }
-
-  .svc-go {
-    grid-row: 1 / span 2;
-    grid-column: 2;
-    width: 44px;
-    height: 44px;
-  }
-
   .pay-group {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -2506,6 +2359,12 @@ html.js .reveal.is-in {
 
   .footer-cols {
     grid-template-columns: 1fr 1fr;
+  }
+
+  /* back to top sits on the right, level with "Let's Collaborate" (same as the other pages) */
+  .footer-top-link {
+    grid-column: auto;
+    justify-self: end;
   }
 }
 

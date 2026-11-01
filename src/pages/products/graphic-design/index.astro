@@ -1,0 +1,785 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import initScript from '../../../scripts/products/product-page-init.js?raw';
+import baseCss from '../../../styles/products/website-development.css?url';
+import pageCss from '../../../styles/products/graphic-design.css?url';
+import pageJs from '../../../scripts/products/graphic-design.js?url';
+const meta = {
+  "title": "Graphic Design — Maul Digital",
+  "themeColor": "#fafbfc",
+  "description": "Graphic Design oleh Maul — desain untuk konten digital, materi marketing, presentasi, print, dan merchandise.",
+  "canonical": "/products/graphic-design/"
+};
+---
+<!--
+  Graphic Design product page — “Hanging Samples” (light only).
+  Built on the Website Development page: its stylesheet is loaded first as the shared base
+  (tokens, header, hanging rail, bento, steps, pricing, payment, FAQ, brief form, footer);
+  src/styles/products/graphic-design.css only adds the design-specific parts.
+  Every visual on this page is an HTML/CSS sample application, not client work. No images.
+  Script: src/scripts/products/graphic-design.js · notes: docs/graphic-design.md
+-->
+<BaseLayout meta={meta} lang="id" htmlAttributes={{"data-language": "id", "data-international": "false"}} bodyAttributes={{"data-page": "graphic-design"}}>
+<Fragment slot="head">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href={baseCss} />
+<link rel="stylesheet" href={pageCss} />
+<script is:inline set:html={initScript}></script>
+</Fragment>
+  <a class="skip-link" href="#main"><span class="lang-id">Langsung ke konten</span><span class="lang-en">Skip to content</span></a>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor-ring"><span class="cursor-label"></span></span>
+    <span class="cursor-dot"></span>
+  </div>
+
+  <!-- ============ HEADER — same as Website Development ============ -->
+  <header class="site-header" data-header>
+    <div class="site-header-inner">
+      <a href="/index.html#home" class="brand-logo" aria-label="M. Dimas Maulana Home"><img src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="34" height="34"><span class="brand-word">digmarketingmaul</span></a>
+      <div class="header-tools">
+        <label class="lang-select">
+          <span class="visually-hidden">Language</span>
+          <select data-maul-language-select>
+            <option value="id">ID</option>
+            <option value="en">EN</option>
+          </select>
+        </label>
+        <button class="intl-toggle" type="button" data-product-international-toggle aria-pressed="false" aria-label="International mode">
+          <span class="intl-track" aria-hidden="true"><i></i></span><span>International</span>
+        </button>
+        <a class="btn btn-ink btn-sm header-cta" href="#contact" data-magnetic>Let's discuss</a>
+      </div>
+    </div>
+    <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ HERO — headline beside the sample applications (hanging sheets) ============ -->
+    <section class="hero hero--design" id="samples" aria-labelledby="design-title">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <h1 class="hero-title" id="design-title" data-reveal-title>
+            <span class="mask-line"><span>Graphic</span></span>
+            <span class="mask-line"><span><em>design</em><span class="accent-dot">.</span></span></span>
+          </h1>
+          <p class="hero-lead reveal">Design for digital content, marketing materials, presentations, print, and more.</p>
+          <div class="hero-work-ui reveal">
+            <p class="hero-work-label"><span class="lang-id">Bisa dibuat</span><span class="lang-en">What we make</span><span class="accent-dot">.</span> <small><span class="lang-id">Klik untuk lihat sample</span><span class="lang-en">Click to see a sample</span></small></p>
+            <!-- Each button jumps the rail to the first sheet with the same data-cat -->
+            <ol class="cats" aria-label="Graphic design categories">
+              <li><button class="cat" type="button" data-cat-go="social"><span class="cat-num">01</span><span class="cat-name">Social media</span><span class="cat-items"><span class="lang-id">Post, story, banner, visual produk</span><span class="lang-en">Posts, stories, banners, product visuals</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
+              <li><button class="cat" type="button" data-cat-go="sales"><span class="cat-num">02</span><span class="cat-name"><span class="lang-id">Promosi &amp; penjualan</span><span class="lang-en">Marketing &amp; sales</span></span><span class="cat-items"><span class="lang-id">Poster, flyer, price list, katalog, menu</span><span class="lang-en">Posters, flyers, price lists, catalogues, menus</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
+              <li><button class="cat" type="button" data-cat-go="docs"><span class="cat-num">03</span><span class="cat-name"><span class="lang-id">Presentasi &amp; dokumen</span><span class="lang-en">Presentations &amp; documents</span></span><span class="cat-items"><span class="lang-id">Company profile, deck, proposal, booklet</span><span class="lang-en">Company profiles, decks, proposals, booklets</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
+              <li><button class="cat" type="button" data-cat-go="print"><span class="cat-num">04</span><span class="cat-name"><span class="lang-id">Cetak &amp; event</span><span class="lang-en">Print &amp; events</span></span><span class="cat-items"><span class="lang-id">Undangan, backdrop, banner, booth, flyer cetak</span><span class="lang-en">Invitations, backdrops, banners, booths, printed flyers</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
+              <li><button class="cat" type="button" data-cat-go="apparel"><span class="cat-num">05</span><span class="cat-name"><span class="lang-id">Kaos &amp; jersey</span><span class="lang-en">T-shirts &amp; jerseys</span></span><span class="cat-items"><span class="lang-id">Kaos, jersey olahraga, merchandise</span><span class="lang-en">T-shirts, sports jerseys, merchandise</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
+              <li><button class="cat" type="button" data-cat-go="logo"><span class="cat-num">06</span><span class="cat-name">Simple logo</span><span class="cat-items"><span class="lang-id">Logo sederhana untuk UMKM</span><span class="lang-en">A simple logo for small businesses</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
+            </ol>
+            <div class="hang-ui">
+              <p class="hang-label">Sample applications</p>
+              <p class="hang-count"><b data-hang-current>01</b> / <span data-hang-total>08</span></p>
+              <button class="round-btn" type="button" data-hang-prev aria-label="Previous sample"><span aria-hidden="true">←</span></button>
+              <button class="round-btn" type="button" data-hang-next aria-label="Next sample"><span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-work">
+        <div class="hang hang--design" data-hang>
+          <span class="hang-rail" aria-hidden="true"></span>
+          <div class="hang-viewport" data-hang-viewport tabindex="0" role="region" aria-roledescription="carousel" aria-label="Sample applications — drag, or use the arrow keys">
+            <ol class="hang-track" data-hang-track>
+              <!--
+                Each sheet is a sample made in HTML/CSS (.art-*, styled in graphic-design.css).
+                Real client work can replace these one by one: swap the .sheet-screen content for an
+                <img> (WebP, ~1200px wide, width/height set, loading="lazy" after the first two)
+                and the caption's "Sample" tag for the client's name.
+              -->
+
+              <!-- 01 Social post · 4:5 -->
+              <li class="sheet" data-cat="social" style="--tone:#f3e7d3">
+                <div class="sheet-swing">
+                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                  <div class="sheet-paper" data-cursor="Drag">
+                    <div class="sheet-screen art art-post" role="img" aria-label="Sample social media post for a coffee shop: Es Kopi Aren, new on the menu">
+                      <span class="ap-brand"><i></i>teduh</span>
+                      <span class="ap-badge">Baru</span>
+                      <span class="ap-title">Es Kopi<br>Aren<span>.</span></span>
+                      <span class="ap-sun"></span>
+                      <span class="ap-glass"><i></i></span>
+                      <span class="ap-price">Rp18K</span>
+                      <span class="ap-dots"><i></i><i></i><i></i></span>
+                    </div>
+                    <span class="sheet-caption">
+                      <span class="sheet-idx">01</span>
+                      <span class="sheet-name"><strong>Social post</strong><small>Social media</small></span>
+                      <span class="sheet-tag">Sample</span>
+                    </span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 02 Sales poster · A-series -->
+              <li class="sheet" data-cat="sales" style="--tone:#0d0d0d">
+                <div class="sheet-swing">
+                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                  <div class="sheet-paper" data-cursor="Drag">
+                    <div class="sheet-screen art art-poster" role="img" aria-label="Sample sales poster for a running store: Mega Sale, up to 50% off">
+                      <span class="as-brand">LARI.CO</span>
+                      <span class="as-kicker">Mega sale</span>
+                      <span class="as-big">50<small>%</small></span>
+                      <span class="as-band"><span>Up to 50% off · Up to 50% off · Up to 50% off · Up to 50% off ·</span></span>
+                      <span class="as-foot"><span>Weekend only</span><span>All stores</span></span>
+                    </div>
+                    <span class="sheet-caption">
+                      <span class="sheet-idx">02</span>
+                      <span class="sheet-name"><strong>Sales poster</strong><small><span class="lang-id">Promosi &amp; penjualan</span><span class="lang-en">Marketing &amp; sales</span></small></span>
+                      <span class="sheet-tag">Sample</span>
+                    </span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 03 Menu · A-series -->
+              <li class="sheet" data-cat="sales" style="--tone:#1f3b2d">
+                <div class="sheet-swing">
+                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                  <div class="sheet-paper" data-cursor="Drag">
+                    <div class="sheet-screen art art-menu" role="img" aria-label="Sample restaurant menu with food and drink prices">
+                      <span class="am-leaf"></span>
+                      <span class="am-brand">Dapur Rimbun</span>
+                      <span class="am-title">Menu</span>
+                      <span class="am-group">Makan</span>
+                      <span class="am-row"><span>Nasi Goreng Rimbun</span><i></i><b>32</b></span>
+                      <span class="am-row"><span>Mie Kuah Kampung</span><i></i><b>28</b></span>
+                      <span class="am-row"><span>Sate Ayam</span><i></i><b>35</b></span>
+                      <span class="am-group">Minum</span>
+                      <span class="am-row"><span>Es Teh Serai</span><i></i><b>12</b></span>
+                      <span class="am-row"><span>Kopi Susu</span><i></i><b>18</b></span>
+                      <span class="am-foot"><span>Buka setiap hari</span><span>10.00–22.00</span></span>
+                    </div>
+                    <span class="sheet-caption">
+                      <span class="sheet-idx">03</span>
+                      <span class="sheet-name"><strong>Menu</strong><small><span class="lang-id">Promosi &amp; penjualan</span><span class="lang-en">Marketing &amp; sales</span></small></span>
+                      <span class="sheet-tag">Sample</span>
+                    </span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 04 Company profile slide · 16:9 -->
+              <li class="sheet" data-cat="docs" style="--tone:#ffffff">
+                <div class="sheet-swing">
+                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                  <div class="sheet-paper" data-cursor="Drag">
+                    <div class="sheet-screen art art-deck" role="img" aria-label="Sample company profile slide for a logistics company: About us">
+                      <span class="ad-copy">
+                        <span class="ad-label">Company profile</span>
+                        <span class="ad-title">About<br>us<span>.</span></span>
+                        <span class="ad-lines"><i></i><i></i><i></i></span>
+                      </span>
+                      <span class="ad-visual"><i></i><i></i><i></i><i></i></span>
+                      <span class="ad-foot"><span>Nusa Logistik</span><span>03 / 12</span></span>
+                    </div>
+                    <span class="sheet-caption">
+                      <span class="sheet-idx">04</span>
+                      <span class="sheet-name"><strong>Company profile</strong><small><span class="lang-id">Presentasi &amp; dokumen</span><span class="lang-en">Presentations &amp; documents</span></small></span>
+                      <span class="sheet-tag">Sample</span>
+                    </span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 05 Wedding invitation · 5:7 -->
+              <li class="sheet" data-cat="print" style="--tone:#f7f1e8">
+                <div class="sheet-swing">
+                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                  <div class="sheet-paper" data-cursor="Drag">
+                    <div class="sheet-screen art art-invite" role="img" aria-label="Sample wedding invitation: The wedding of Rani and Bima">
+                      <span class="ai-arch">
+                        <span class="ai-kicker">The wedding of</span>
+                        <span class="ai-names">Rani<br><span>&amp;</span> Bima</span>
+                        <span class="ai-rule"></span>
+                        <span class="ai-date">12 · 12 · 2026</span>
+                      </span>
+                      <span class="ai-foot">Save the date</span>
+                    </div>
+                    <span class="sheet-caption">
+                      <span class="sheet-idx">05</span>
+                      <span class="sheet-name"><strong><span class="lang-id">Undangan</span><span class="lang-en">Invitation</span></strong><small><span class="lang-id">Cetak &amp; event</span><span class="lang-en">Print &amp; events</span></small></span>
+                      <span class="sheet-tag">Sample</span>
+                    </span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 06 Sports jersey · 1:1 -->
+              <li class="sheet" data-cat="apparel" style="--tone:#e9edf2">
+                <div class="sheet-swing">
+                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                  <div class="sheet-paper" data-cursor="Drag">
+                    <div class="sheet-screen art art-tee" role="img" aria-label="Sample sports jersey for a sports club, number 10">
+                      <span class="at-shirt">
+                        <span class="at-stripe"></span>
+                        <span class="at-club">PAGI<small>Sports club</small></span>
+                        <span class="at-num">10</span>
+                      </span>
+                      <span class="at-label">Front</span>
+                    </div>
+                    <span class="sheet-caption">
+                      <span class="sheet-idx">06</span>
+                      <span class="sheet-name"><strong><span class="lang-id">Jersey olahraga</span><span class="lang-en">Sports jersey</span></strong><small><span class="lang-id">Kaos &amp; jersey</span><span class="lang-en">T-shirts &amp; jerseys</span></small></span>
+                      <span class="sheet-tag">Sample</span>
+                    </span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 07 Simple logo · 1:1 -->
+              <li class="sheet" data-cat="logo" style="--tone:#f6efe4">
+                <div class="sheet-swing">
+                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                  <div class="sheet-paper" data-cursor="Drag">
+                    <div class="sheet-screen art art-logo" role="img" aria-label="Sample simple logo for a small bakery, with three colour versions">
+                      <span class="al-mark">RM</span>
+                      <span class="al-name">Roti Mekar</span>
+                      <span class="al-tag">Bakery</span>
+                      <span class="al-vars"><i><b></b></i><i><b></b></i><i><b></b></i></span>
+                    </div>
+                    <span class="sheet-caption">
+                      <span class="sheet-idx">07</span>
+                      <span class="sheet-name"><strong>Simple logo</strong><small><span class="lang-id">Untuk UMKM</span><span class="lang-en">For small businesses</span></small></span>
+                      <span class="sheet-tag">Sample</span>
+                    </span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- The open slot: always last -->
+              <li class="sheet sheet--next" style="--tone:#ff304f">
+                <div class="sheet-swing">
+                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                  <div class="sheet-paper" data-cursor="Drag">
+                    <span class="sheet-screen sheet-screen--next">
+                      <span class="next-plus" aria-hidden="true">+</span>
+                      <span class="next-title">Your design<br>is next<span class="accent-dot">.</span></span>
+                    </span>
+                    <span class="sheet-caption">
+                      <span class="sheet-idx">08</span>
+                      <span class="sheet-name"><strong><span class="lang-id">Slot terbuka</span><span class="lang-en">Open slot</span></strong><small><span class="lang-id">Mulai dari brief singkat</span><span class="lang-en">Starts with a quick brief</span></small></span>
+                      <a class="sheet-go sheet-go--red" href="#contact" data-cursor="Let's talk" aria-label="Let's discuss your design">→</a>
+                    </span>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div class="hang-foot">
+            <span class="hang-progress" aria-hidden="true"><i data-hang-bar></i></span>
+            <span class="hang-hint" aria-hidden="true"><span class="lang-id">Geser</span><span class="lang-en">Drag</span> ↔</span>
+          </div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WHAT WE DESIGN — every category, written out ============ -->
+    <section class="why" id="scope" aria-labelledby="scope-title">
+      <div class="shell">
+        <h2 class="section-title" id="scope-title" data-reveal-title>
+          <span class="mask-line"><span>What we design<span class="accent-dot">.</span></span></span>
+        </h2>
+
+        <div class="bento bento--design">
+          <a class="tile tile--wide tile--red reveal" href="#contact" data-spot data-cursor="Let's talk">
+            <div class="viz viz-brief" aria-hidden="true">
+              <span class="vb-inputs"><i>Logo</i><i><span class="lang-id">Foto produk</span><span class="lang-en">Product photos</span></i><i>Copy</i><i><span class="lang-id">Ide</span><span class="lang-en">Idea</span></i></span>
+              <span class="vb-arrow"></span>
+              <span class="vb-board"><i class="vb-a"></i><i class="vb-b"></i><i class="vb-c"></i><b>Aa</b></span>
+            </div>
+            <h3><span class="lang-id">Mulai dari apa saja.</span><span class="lang-en">Start from anything.</span></h3>
+            <p class="tile-line"><span class="lang-id">Logo, foto produk, teks, atau baru sebatas ide. Tidak ada di daftar? Tanya saja.</span><span class="lang-en">A logo, product photos, copy, or just an idea. Not on the list? Just ask.</span></p>
+            <span class="tile-go" aria-hidden="true">→</span>
+          </a>
+          <article class="tile reveal" id="cat-social" data-spot>
+            <span class="tile-idx">01</span>
+            <div class="viz viz-social" aria-hidden="true">
+              <span class="vso-card"><i></i><b></b></span>
+              <span class="vso-card"><i></i><b></b></span>
+              <span class="vso-card"><i></i><b></b></span>
+              <span class="vso-heart"></span>
+            </div>
+            <h3><span class="lang-id">Social media.</span><span class="lang-en">Social media.</span></h3>
+            <ul class="tile-list">
+              <li><span class="lang-id">Post &amp; carousel feed</span><span class="lang-en">Feed posts &amp; carousels</span></li>
+              <li><span class="lang-id">Story &amp; cover reels</span><span class="lang-en">Stories &amp; reel covers</span></li>
+              <li><span class="lang-id">Campaign visual</span><span class="lang-en">Campaign visuals</span></li>
+              <li><span class="lang-id">Banner digital &amp; iklan</span><span class="lang-en">Digital banners &amp; ads</span></li>
+              <li><span class="lang-id">Visual produk</span><span class="lang-en">Product visuals</span></li>
+            </ul>
+          </article>
+          <article class="tile reveal" id="cat-sales" data-spot>
+            <span class="tile-idx">02</span>
+            <div class="viz viz-sales" aria-hidden="true">
+              <span class="vsa-poster"><b>SALE</b><i></i><i></i></span>
+              <span class="vsa-list"><i></i><i></i><i></i><i></i></span>
+              <span class="vsa-tag">-30%</span>
+            </div>
+            <h3><span class="lang-id">Promosi &amp; penjualan.</span><span class="lang-en">Marketing &amp; sales.</span></h3>
+            <ul class="tile-list">
+              <li><span class="lang-id">Poster &amp; sales poster</span><span class="lang-en">Posters &amp; sales posters</span></li>
+              <li><span class="lang-id">Flyer</span><span class="lang-en">Flyers</span></li>
+              <li><span class="lang-id">Price list</span><span class="lang-en">Price lists</span></li>
+              <li><span class="lang-id">Katalog produk</span><span class="lang-en">Product catalogues</span></li>
+              <li><span class="lang-id">Menu</span><span class="lang-en">Menus</span></li>
+              <li><span class="lang-id">Materi promosi lainnya</span><span class="lang-en">Other promo materials</span></li>
+            </ul>
+          </article>
+          <article class="tile reveal" id="cat-docs" data-spot>
+            <span class="tile-idx">03</span>
+            <div class="viz viz-deck" aria-hidden="true">
+              <span class="vd-stack"><i></i><i></i><i><b>Q4</b><em></em></i></span>
+              <span class="vd-pages"><i></i><i></i><i></i></span>
+            </div>
+            <h3><span class="lang-id">Presentasi &amp; dokumen.</span><span class="lang-en">Presentations &amp; documents.</span></h3>
+            <ul class="tile-list">
+              <li><span class="lang-id">Company profile</span><span class="lang-en">Company profiles</span></li>
+              <li><span class="lang-id">Sales deck &amp; presentasi</span><span class="lang-en">Sales decks &amp; presentations</span></li>
+              <li><span class="lang-id">Proposal</span><span class="lang-en">Proposals</span></li>
+              <li><span class="lang-id">Booklet</span><span class="lang-en">Booklets</span></li>
+              <li><span class="lang-id">Menu book</span><span class="lang-en">Menu books</span></li>
+            </ul>
+          </article>
+          <article class="tile reveal" id="cat-print" data-spot>
+            <span class="tile-idx">04</span>
+            <div class="viz viz-print" aria-hidden="true">
+              <span class="vp-card"><i></i><b>&amp;</b><i></i></span>
+              <span class="vp-flyer"><b></b><i></i><i></i><i></i></span>
+            </div>
+            <h3><span class="lang-id">Cetak &amp; event.</span><span class="lang-en">Print &amp; events.</span></h3>
+            <ul class="tile-list">
+              <li><span class="lang-id">Undangan pernikahan &amp; acara</span><span class="lang-en">Wedding &amp; event invitations</span></li>
+              <li><span class="lang-id">Backdrop &amp; photobooth</span><span class="lang-en">Backdrops &amp; photo booths</span></li>
+              <li><span class="lang-id">Banner, spanduk &amp; X-banner</span><span class="lang-en">Banners &amp; roll-up banners</span></li>
+              <li><span class="lang-id">Booth &amp; signage</span><span class="lang-en">Booths &amp; signage</span></li>
+              <li><span class="lang-id">Flyer &amp; brosur cetak</span><span class="lang-en">Printed flyers &amp; brochures</span></li>
+              <li><span class="lang-id">Materi cetak lainnya</span><span class="lang-en">Other print materials</span></li>
+            </ul>
+          </article>
+          <article class="tile reveal" id="cat-apparel" data-spot>
+            <span class="tile-idx">05</span>
+            <div class="viz viz-apparel" aria-hidden="true">
+              <span class="vp-tee"><b>07</b></span>
+              <span class="vp-tee vp-tee--red"><i></i></span>
+            </div>
+            <h3><span class="lang-id">Kaos &amp; jersey.</span><span class="lang-en">T-shirts &amp; jerseys.</span></h3>
+            <ul class="tile-list">
+              <li><span class="lang-id">Kaos / T-shirt</span><span class="lang-en">T-shirts</span></li>
+              <li><span class="lang-id">Jersey olahraga: lari, sepak bola, futsal, dan lainnya</span><span class="lang-en">Sports jerseys: running, football, futsal and more</span></li>
+              <li>Merchandise</li>
+            </ul>
+          </article>
+          <article class="tile reveal" id="cat-logo" data-spot>
+            <span class="tile-idx">06</span>
+            <div class="viz viz-logo" aria-hidden="true">
+              <span class="vl-mark">RM</span>
+              <span class="vl-mark vl-mark--red">RM</span>
+              <span class="vl-mark vl-mark--line">RM</span>
+            </div>
+            <h3><span class="lang-id">Simple logo.</span><span class="lang-en">Simple logo.</span></h3>
+            <ul class="tile-list">
+              <li><span class="lang-id">Logo sederhana untuk UMKM</span><span class="lang-en">A simple logo for small businesses</span></li>
+              <li><span class="lang-id">Logo teks atau ikon simpel</span><span class="lang-en">A simple wordmark or icon</span></li>
+              <li><span class="lang-id">Cocok untuk usaha yang baru mulai</span><span class="lang-en">Great for businesses just starting out</span></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ONE LOOK, EVERY MEDIUM — one sample identity across five media ============ -->
+    <section class="system" id="system" aria-labelledby="system-title" data-system>
+      <div class="shell">
+        <div class="system-head">
+          <h2 class="section-title" id="system-title" data-reveal-title>
+            <span class="mask-line"><span>One look,</span></span>
+            <span class="mask-line"><span>every medium<span class="accent-dot">.</span></span></span>
+          </h2>
+          <div class="system-side reveal">
+            <p class="system-note"><span class="lang-id">Satu visual dipakai konsisten dari sosial media sampai merchandise, jadi brand tetap mudah dikenali.</span><span class="lang-en">One look carried from social media to merchandise, so the brand stays recognisable everywhere.</span></p>
+            <div class="looks" role="group" aria-label="Sample brand">
+              <span class="looks-label">Sample brand</span>
+              <button class="look" type="button" data-look="teduh" aria-pressed="true"><i style="--c:#e0702d"></i>Teduh</button>
+              <button class="look" type="button" data-look="lari" aria-pressed="false"><i style="--c:#d7ff3a"></i>Lari</button>
+              <button class="look" type="button" data-look="arunika" aria-pressed="false"><i style="--c:#b08d57"></i>Arunika</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sys-stage reveal" data-look="teduh" data-sys-stage>
+          <figure class="sys-item sys-item--post">
+            <div class="sys-art sa-post" aria-hidden="true">
+              <span class="sa-mark"></span>
+              <span class="sa-name" data-sys="name">teduh</span>
+              <span class="sa-head" data-sys="post">Es Kopi Aren.</span>
+              <span class="sa-blob"></span>
+            </div>
+            <figcaption><b>01</b> Social</figcaption>
+          </figure>
+          <figure class="sys-item sys-item--poster">
+            <div class="sys-art sa-poster" aria-hidden="true">
+              <span class="sa-name" data-sys="name">teduh</span>
+              <span class="sa-head" data-sys="poster">Slow<br>Sunday.</span>
+              <span class="sa-blob"></span>
+              <span class="sa-meta" data-sys="tag">Kopi pelan-pelan.</span>
+            </div>
+            <figcaption><b>02</b> Poster</figcaption>
+          </figure>
+          <figure class="sys-item sys-item--slide">
+            <div class="sys-art sa-slide" aria-hidden="true">
+              <span class="sa-copy">
+                <span class="sa-mark"></span>
+                <span class="sa-head" data-sys="slide">Our story.</span>
+                <span class="sa-lines"><i></i><i></i></span>
+              </span>
+              <span class="sa-panel"><span class="sa-blob"></span></span>
+            </div>
+            <figcaption><b>03</b> <span class="lang-id">Presentasi</span><span class="lang-en">Presentation</span></figcaption>
+          </figure>
+          <figure class="sys-item sys-item--print">
+            <div class="sys-art sa-print" aria-hidden="true">
+              <span class="sa-mark"></span>
+              <span class="sa-name" data-sys="name">teduh</span>
+              <span class="sa-meta" data-sys="tag">Kopi pelan-pelan.</span>
+            </div>
+            <figcaption><b>04</b> Print</figcaption>
+          </figure>
+          <figure class="sys-item sys-item--merch">
+            <div class="sys-art sa-merch" aria-hidden="true">
+              <span class="sa-bag">
+                <span class="sa-mark"></span>
+                <span class="sa-name" data-sys="name">teduh</span>
+              </span>
+            </div>
+            <figcaption><b>05</b> Merchandise</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="process" id="process" aria-labelledby="process-title" data-process>
+      <div class="shell">
+        <h2 class="section-title" id="process-title" data-reveal-title>
+          <span class="mask-line"><span>How it works<span class="accent-dot">.</span></span></span>
+        </h2>
+        <ol class="steps">
+          <li class="step"><span class="step-num">01</span><strong>Brief</strong><span><span class="lang-id">Ceritakan kebutuhanmu</span><span class="lang-en">Tell us what you need</span></span></li>
+          <li class="step"><span class="step-num">02</span><strong><span class="lang-id">Arah visual</span><span class="lang-en">Direction</span></strong><span><span class="lang-id">Gaya, warna &amp; tipografi</span><span class="lang-en">Style, colour &amp; type</span></span></li>
+          <li class="step"><span class="step-num">03</span><strong><span class="lang-id">Desain</span><span class="lang-en">Design</span></strong><span><span class="lang-id">Dikerjakan sesuai media</span><span class="lang-en">Made for each medium</span></span></li>
+          <li class="step"><span class="step-num">04</span><strong>Review</strong><span><span class="lang-id">Revisi sampai sesuai brief</span><span class="lang-en">Revised until it matches your brief</span></span></li>
+          <li class="step"><span class="step-num">05</span><strong><span class="lang-id">Bayar &amp; file final</span><span class="lang-en">Pay &amp; final files</span></strong><span><span class="lang-id">Siap upload atau siap cetak</span><span class="lang-en">Ready to post or print</span></span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ PRICING + ACCEPT PAYMENT ============ -->
+    <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+      <div class="shell">
+        <h2 class="section-title" id="pricing-title" data-reveal-title>
+          <span class="mask-line"><span>Pricing<span class="accent-dot">.</span></span></span>
+        </h2>
+
+        <div class="plans">
+          <article class="plan plan--main reveal" data-spot>
+            <p class="plan-label">Graphic Design</p>
+            <p class="plan-price"><strong class="plan-price-text"><span class="lang-id">Sesuai scope</span><span class="lang-en">By scope</span></strong></p>
+            <ul class="plan-list">
+              <li><span class="lang-id">Harga disepakati sebelum mulai</span><span class="lang-en">Price agreed before we start</span></li>
+              <li><span class="lang-id">Dihitung dari jenis, ukuran &amp; jumlah desain</span><span class="lang-en">Based on the type, size &amp; number of designs</span></li>
+              <li><span class="lang-id">Revisi tanpa batas, bayar setelah sesuai brief</span><span class="lang-en">Unlimited revisions, pay once it matches the brief</span></li>
+              <li><span class="lang-id">Satu desain atau satu set lengkap</span><span class="lang-en">One design or a full set</span></li>
+            </ul>
+            <a class="btn btn-red btn-lg btn-block" href="#contact" data-magnetic>
+              <span class="lang-id">Diskusikan Scope</span><span class="lang-en">Discuss the scope</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+          </article>
+          <article class="plan plan--custom reveal" data-spot>
+            <p class="plan-label"><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></p>
+            <p class="plan-price"><strong class="plan-price-text"><span class="lang-id">Butuh yang lain?</span><span class="lang-en">Something else?</span></strong></p>
+            <ul class="plan-list">
+              <li>Brand guide</li>
+              <li><span class="lang-id">Visual untuk website &amp; iklan</span><span class="lang-en">Visuals for websites &amp; ads</span></li>
+              <li><span class="lang-id">Kebutuhan desain lainnya</span><span class="lang-en">Other design needs</span></li>
+            </ul>
+            <a class="btn btn-ghost btn-lg btn-block" href="#contact">Let's discuss <span class="btn-arrow" aria-hidden="true">→</span></a>
+          </article>
+        </div>
+
+        <div class="pay reveal">
+          <p class="pay-title">Accept payment</p>
+          <div class="pay-group">
+            <p class="pay-label">Indonesia</p>
+            <ul class="pay-logos">
+              <li class="qris">
+                <button class="qris-btn" type="button" aria-expanded="false" aria-controls="qris-pop" data-qris>
+                  <img src="/assets/payment-methods/qris.webp" alt="QRIS">
+                  <span class="qris-badge"><span class="lang-id">Lihat</span><span class="lang-en">View</span></span>
+                </button>
+                <div class="qris-pop" id="qris-pop" role="dialog" aria-label="QRIS digmarketingmaul" data-qris-pop>
+                  <img src="/assets/payment-methods/qris-digmarketingmaul.webp" alt="QRIS Digital Marketing Maul, NMID ID1026603703558" width="760" height="1071" loading="lazy">
+                  <p class="qris-warn"><strong><span class="lang-id">Konfirmasi dulu, baru bayar.</span><span class="lang-en">Confirm first, then pay.</span></strong> <span class="lang-id">Bayar tanpa konfirmasi =&nbsp;sedekah.</span><span class="lang-en">Paying without confirming =&nbsp;a&nbsp;donation.</span></p>
+                  <a class="qris-confirm" href="#contact"><span class="lang-id">Konfirmasi via WhatsApp</span><span class="lang-en">Confirm on WhatsApp</span> →</a>
+                </div>
+              </li>
+              <li><img src="/assets/payment-methods/hijra.webp" alt="Hijra Bank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/gopay.webp" alt="GoPay" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/shopeepay.webp" alt="ShopeePay" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/dana.webp" alt="DANA" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/ovo.webp" alt="OVO" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/permata.webp" alt="PermataBank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bsi.webp" alt="Bank Syariah Indonesia" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/mandiri.webp" alt="Bank Mandiri" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bri.webp" alt="BRI" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bni.webp" alt="BNI" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/btn.webp" alt="BTN" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/cimb.webp" alt="CIMB Niaga" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/danamon.webp" alt="Danamon" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/maybank.webp" alt="Maybank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bjb.webp" alt="bank bjb" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/sinarmas.webp" alt="Bank Sinarmas" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bnc.webp" alt="Bank Neo Commerce" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bss.webp" alt="Bank Sahabat Sampoerna" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/seabank.webp" alt="SeaBank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/alfa.webp" alt="Alfamart" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/indomaret.webp" alt="Indomaret" loading="lazy"></li>
+            </ul>
+          </div>
+          <div class="pay-group">
+            <p class="pay-label">International</p>
+            <ul class="pay-logos">
+              <li><img src="/assets/payment-methods/paypal.svg" alt="PayPal" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/visa.webp" alt="Visa" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/mastercard.webp" alt="Mastercard" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/jcb.webp" alt="JCB" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/amex.svg" alt="American Express" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/unionpay.svg" alt="UnionPay" loading="lazy"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <div class="shell">
+        <h2 class="section-title" id="faq-title" data-reveal-title>
+          <span class="mask-line"><span>FAQ<span class="accent-dot">.</span></span></span>
+        </h2>
+        <div class="faq-list">
+          <details class="reveal">
+            <summary><span class="lang-id">Apa yang perlu saya siapkan?</span><span class="lang-en">What should I prepare?</span></summary>
+            <div class="faq-a">
+              <p><span class="lang-id">Logo, foto produk, teks, dan referensi, kalau sudah ada.</span><span class="lang-en">Your logo, product photos, copy and references, if you have them.</span></p>
+              <p><span class="lang-id">Belum lengkap? Tidak apa-apa, kita mulai dari brief.</span><span class="lang-en">Not everything ready? That's fine, we start from the brief.</span></p>
+            </div>
+          </details>
+          <details class="reveal">
+            <summary><span class="lang-id">Bisa untuk digital dan cetak?</span><span class="lang-en">Digital and print?</span></summary>
+            <div class="faq-a">
+              <p><span class="lang-id">Bisa. File disiapkan sesuai media: ukuran untuk sosial media atau iklan, dan versi siap cetak sesuai spesifikasi percetakanmu.</span><span class="lang-en">Yes. Files are prepared for where they'll be used: sized for social media or ads, and print-ready to your printer's specs.</span></p>
+            </div>
+          </details>
+          <details class="reveal">
+            <summary><span class="lang-id">File apa yang saya terima?</span><span class="lang-en">Which files do I get?</span></summary>
+            <div class="faq-a">
+              <p><span class="lang-id">Umumnya PNG atau JPG untuk digital dan PDF untuk cetak. Format lain bisa disepakati di awal.</span><span class="lang-en">Usually PNG or JPG for digital and PDF for print. Other formats can be agreed up front.</span></p>
+            </div>
+          </details>
+          <details class="reveal">
+            <summary><span class="lang-id">Berapa lama pengerjaannya?</span><span class="lang-en">How long does it take?</span></summary>
+            <div class="faq-a">
+              <p><span class="lang-id">Tergantung jenis dan jumlah desain. Estimasi waktu disampaikan setelah brief.</span><span class="lang-en">It depends on the type and number of designs. You get a time estimate after the brief.</span></p>
+            </div>
+          </details>
+          <details class="reveal">
+            <summary><span class="lang-id">Bagaimana dengan revisi?</span><span class="lang-en">What about revisions?</span></summary>
+            <div class="faq-a">
+              <p><span class="lang-id">Revisi sesuai yang kamu mau, jumlahnya tidak dibatasi. Kamu bayar hanya setelah desainnya sesuai dengan brief yang kamu sampaikan.</span><span class="lang-en">Ask for as many revisions as you need. You only pay once the design matches the brief you gave.</span></p>
+            </div>
+          </details>
+          <details class="reveal">
+            <summary><span class="lang-id">Logo seperti apa yang dibuat?</span><span class="lang-en">What kind of logo do you make?</span></summary>
+            <div class="faq-a">
+              <p><span class="lang-id">Simple logo: logo sederhana dan rapi untuk UMKM atau usaha yang baru mulai.</span><span class="lang-en">A simple, clean logo for small businesses or ones just starting out.</span></p>
+            </div>
+          </details>
+          <details class="reveal">
+            <summary><span class="lang-id">Pembeli dari luar Indonesia?</span><span class="lang-en">Buying from outside Indonesia?</span></summary>
+            <div class="faq-a">
+              <p><span class="lang-id">Bisa. Bayar dengan PayPal, Visa, Mastercard, atau metode internasional lain.</span><span class="lang-en">Yes. Pay with PayPal, Visa, Mastercard or other international methods.</span></p>
+            </div>
+          </details>
+          <details class="reveal">
+            <summary><span class="lang-id">Butuh video atau website juga?</span><span class="lang-en">Need video or a website too?</span></summary>
+            <div class="faq-a">
+              <p><span class="lang-id">Bisa. Lihat <a href="/products/video-editing-motion/">Video Editing &amp; Motion</a> dan <a href="/products/website-development/">Website Development</a>.</span><span class="lang-en">Yes. See <a href="/products/video-editing-motion/">Video Editing &amp; Motion</a> and <a href="/products/website-development/">Website Development</a>.</span></p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT — brief form → WhatsApp (prefilled) ============ -->
+    <section class="contact" id="contact" aria-labelledby="final-title">
+      <div class="shell contact-grid">
+        <div class="contact-intro">
+          <h2 class="section-title" id="final-title" data-reveal-title>
+            <span class="mask-line"><span>Let's discuss</span></span>
+            <span class="mask-line"><span>your <em>design</em><span class="accent-dot">.</span></span></span>
+          </h2>
+          <p class="contact-lead"><span class="lang-id">Isi singkat, lanjut ke WhatsApp.</span><span class="lang-en">A quick brief, then WhatsApp.</span></p>
+
+          <div class="chat" aria-hidden="true">
+            <div class="chat-head">
+              <span class="chat-avatar"><img src="/assets/brand/logo/icon.svg" alt="" width="26" height="26"></span>
+              <span><strong>Maul</strong><small><span class="lang-id">Pratinjau pesan kamu</span><span class="lang-en">Your message preview</span></small></span>
+            </div>
+            <div class="chat-body">
+              <p class="chat-bubble"><span data-chat-text></span><small><span class="lang-id">Belum terkirim</span><span class="lang-en">Not sent yet</span></small></p>
+            </div>
+          </div>
+        </div>
+
+        <form class="brief" data-brief novalidate>
+          <div class="brief-head">
+            <p class="brief-title"><span class="lang-id">Brief desain</span><span class="lang-en">Design brief</span></p>
+            <span class="brief-chip"><span class="lang-id">± 1 menit</span><span class="lang-en">± 1 minute</span></span>
+          </div>
+
+          <div class="field" data-field="name">
+            <label for="f-name"><span class="lang-id">Nama kamu</span><span class="lang-en">Your name</span> <b>*</b></label>
+            <input id="f-name" name="name" autocomplete="name" required data-ph-id="Nama panggilan" data-ph-en="What should we call you?">
+            <p class="field-error"><span class="lang-id">Isi nama dulu, ya.</span><span class="lang-en">Please add your name.</span></p>
+          </div>
+
+          <div class="field">
+            <label for="f-brand"><span class="lang-id">Bisnis / brand</span><span class="lang-en">Business / brand</span></label>
+            <input id="f-brand" name="brand" autocomplete="organization" data-ph-id="Contoh: Kopi Senja" data-ph-en="e.g. Senja Coffee">
+          </div>
+
+          <fieldset class="field" data-field="need">
+            <legend><span class="lang-id">Kamu butuh</span><span class="lang-en">You need</span> <b>*</b> <small class="legend-hint"><span class="lang-id">boleh lebih dari satu</span><span class="lang-en">pick any</span></small></legend>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="need" value="social" data-id="Social media" data-en="Social media"><span>Social media</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="poster" data-id="Poster / flyer" data-en="Poster / flyer"><span>Poster / flyer</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="deck" data-id="Presentasi / company profile" data-en="Presentation / company profile"><span><span class="lang-id">Presentasi / company profile</span><span class="lang-en">Deck / company profile</span></span></label>
+              <label class="chip"><input type="checkbox" name="need" value="menu" data-id="Menu / katalog / price list" data-en="Menu / catalogue / price list"><span><span class="lang-id">Menu / katalog</span><span class="lang-en">Menu / catalogue</span></span></label>
+              <label class="chip"><input type="checkbox" name="need" value="invite" data-id="Undangan" data-en="Invitation"><span><span class="lang-id">Undangan</span><span class="lang-en">Invitation</span></span></label>
+              <label class="chip"><input type="checkbox" name="need" value="event" data-id="Backdrop / banner / booth" data-en="Backdrop / banner / booth"><span>Backdrop / banner</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="merch" data-id="Kaos / jersey olahraga / merchandise" data-en="T-shirt / sports jersey / merchandise"><span><span class="lang-id">Kaos / jersey</span><span class="lang-en">T-shirt / jersey</span></span></label>
+              <label class="chip"><input type="checkbox" name="need" value="logo" data-id="Simple logo" data-en="Simple logo"><span>Simple logo</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="other" data-id="Lainnya" data-en="Something else"><span><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></span></label>
+            </div>
+            <p class="field-error"><span class="lang-id">Pilih minimal satu.</span><span class="lang-en">Pick at least one.</span></p>
+          </fieldset>
+
+          <fieldset class="field">
+            <legend><span class="lang-id">Untuk</span><span class="lang-en">For</span></legend>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="use" value="digital" data-id="Digital" data-en="Digital"><span>Digital</span></label>
+              <label class="chip"><input type="checkbox" name="use" value="print" data-id="Cetak" data-en="Print"><span><span class="lang-id">Cetak</span><span class="lang-en">Print</span></span></label>
+            </div>
+          </fieldset>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="f-count"><span class="lang-id">Jumlah desain</span><span class="lang-en">Number of designs</span></label>
+              <select id="f-count" name="count">
+                <option value="" data-id="Pilih" data-en="Choose">Pilih</option>
+                <option value="1" data-id="1 desain" data-en="1 design">1 desain</option>
+                <option value="2-5" data-id="2–5 desain" data-en="2–5 designs">2–5 desain</option>
+                <option value="6-10" data-id="6–10 desain" data-en="6–10 designs">6–10 desain</option>
+                <option value="10+" data-id="Lebih dari 10" data-en="More than 10">Lebih dari 10</option>
+                <option value="unsure" data-id="Belum tahu" data-en="Not sure yet">Belum tahu</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-when"><span class="lang-id">Target selesai</span><span class="lang-en">Deadline</span></label>
+              <select id="f-when" name="when">
+                <option value="" data-id="Pilih" data-en="Choose">Pilih</option>
+                <option value="asap" data-id="Secepatnya" data-en="As soon as possible">Secepatnya</option>
+                <option value="2w" data-id="Kurang dari 2 minggu" data-en="Within two weeks">Kurang dari 2 minggu</option>
+                <option value="1m" data-id="Kurang dari 1 bulan" data-en="Within a month">Kurang dari 1 bulan</option>
+                <option value="unsure" data-id="Belum tahu" data-en="Not sure yet">Belum tahu</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="f-ref"><span class="lang-id">Referensi desain</span><span class="lang-en">Design reference</span></label>
+            <input id="f-ref" name="ref" data-ph-id="Link atau nama akun (opsional)" data-ph-en="A link or an account (optional)">
+          </div>
+
+          <div class="field">
+            <label for="f-note"><span class="lang-id">Ceritakan kebutuhanmu</span><span class="lang-en">Tell us what you need</span></label>
+            <textarea id="f-note" name="note" rows="3" data-ph-id="Untuk apa, ukuran, gaya, materi yang sudah ada, atau apa pun di kepalamu" data-ph-en="What it's for, sizes, style, material you already have, anything on your mind"></textarea>
+          </div>
+
+          <button class="btn btn-red btn-lg btn-block" type="submit">
+            <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+            <span class="lang-id">Lanjutkan ke WhatsApp</span><span class="lang-en">Continue on WhatsApp</span>
+          </button>
+          <p class="brief-note"><span class="lang-id">Pesan terbuka di WhatsApp. Data formulir tidak disimpan.</span><span class="lang-en">Your message opens in WhatsApp. Nothing is stored.</span></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER — same as the other pages (BrandFooter), light ============ -->
+  <footer class="brand-footer">
+    <div class="brand-footer-inner">
+      <div class="footer-cols">
+        <nav aria-label="Footer">
+          <p class="footer-label">Pages</p>
+          <ul>
+            <li><a href="/index.html#home" class="footer-link">Home</a></li>
+            <li><a href="/frameworks/" class="footer-link">Frameworks</a></li>
+            <li><a href="/blog/" class="footer-link">Blog</a></li>
+            <li><a href="/products/" class="footer-link">Products</a></li>
+          </ul>
+        </nav>
+        <div>
+          <p class="footer-label">Social</p>
+          <ul>
+            <li><a href="https://www.instagram.com/digmarketingmaul/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+            <li><a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+            <li><a href="https://www.tiktok.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-tiktok" aria-hidden="true"></i> TikTok</a></li>
+            <li><a href="https://www.youtube.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-youtube" aria-hidden="true"></i> YouTube</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-label">Based in</p>
+          <ul>
+            <li>Bekasi, Indonesia</li>
+            <li class="footer-cta-item"><a href="/products/" class="footer-cta">Let's Collaborate <span aria-hidden="true">→</span></a></li>
+          </ul>
+        </div>
+        <div class="footer-top-link">
+          <a href="#" class="back-to-top"><span aria-hidden="true">↑</span> Back to top</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Build and Design by Maul</p>
+        <img class="footer-mark" src="/assets/brand/logo/icon.svg" alt="" width="26" height="26">
+      </div>
+    </div>
+    <p class="footer-wordmark" aria-hidden="true">digmarketingmaul<span>.</span></p>
+  </footer>
+  <script is:inline src={pageJs}></script>
+</BaseLayout>

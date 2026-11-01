@@ -2,6 +2,9 @@
    WEBSITE DEVELOPMENT — product page · “Hanging Proofs”
    Light only. Short, bold copy. Homepage interaction language
    (custom cursor, magnetic CTAs, mask reveals) on a paper canvas.
+   Also the shared base of the Video Editing & Motion and Graphic Design
+   pages (loaded before video-editing-motion.css / graphic-design.css)
+   — check all three pages.
 
    1. Tokens + base
    2. Language / international visibility
@@ -2511,6 +2514,12 @@ html.js .reveal.is-in {
 
   .footer-cols {
     grid-template-columns: 1fr 1fr;
+  }
+
+  /* back to top sits on the right, level with "Let's Collaborate" (same as the other pages) */
+  .footer-top-link {
+    grid-column: auto;
+    justify-self: end;
   }
 
   /* showreel window on phones */

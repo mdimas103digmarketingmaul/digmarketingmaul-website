@@ -22,7 +22,7 @@ npm run build
 npm run preview
 ```
 
-`build` stages passthrough files, builds nine Astro routes into `dist/`, then checks compatibility. `preview` serves the built frontend only.
+`build` stages passthrough files, builds eleven Astro routes into `dist/`, then checks compatibility. `preview` serves the built frontend only.
 
 For the existing Worker locally, after building:
 
@@ -45,6 +45,7 @@ Wrangler uses local emulation. No production secret is supplied by this reposito
 | `src/styles/`, `src/scripts/` | Homepage, shared site, frameworks and catalog ownership; Vanilla browser interactions |
 | `assets/` | Shared compatibility assets, brand, payment icons and snapshot dependencies |
 | `products/website-development/`, `products/digital-ads-management/` | Custom CSS/JS retained at their existing public URLs; HTML template lives in `src/pages/` |
+| `assets/video-editing-motion/` | Video Editing & Motion posters + web encodes (from `scripts/prepare-video-assets.mjs`); see [docs](docs/video-editing-motion.md) |
 | `products/website-course/` | Intentional standalone Vanilla course landing |
 | `checkout/`, `payment/`, `admin/` | Existing standalone applications, unchanged |
 | `playground*/` | Vanilla experiments/design history, unchanged |

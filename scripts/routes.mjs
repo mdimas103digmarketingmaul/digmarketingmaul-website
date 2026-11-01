@@ -6,6 +6,8 @@ export const astroHtml = [
   "frameworks/digital-ads-operating-system/index.html",
   "products/index.html",
   "products/website-development/index.html",
+  "products/video-editing-motion/index.html",
+  "products/graphic-design/index.html",
   "products/digital-ads-management/index.html",
   "products/digital-marketing-ebooks/index.html",
   "products/digital-marketing-ebooks-midtrans/index.html"
