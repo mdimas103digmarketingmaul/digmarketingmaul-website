@@ -645,6 +645,20 @@ html.js .reveal.is-in {
   bottom: clamp(32px, 7svh, 76px);
 }
 
+/* Two lines, same as the homepage: each line is kept whole and the size is
+   capped so "with digmarketingmaul." (~9.6em) always fits inside the window. */
+.reel-wrap .build-copy {
+  max-width: none;
+}
+
+.reel-wrap .build-title {
+  font-size: min(clamp(2.4rem, 5.6vw, 6.4rem), calc((100vw - 4 * var(--gutter)) / 10.4));
+}
+
+.reel-wrap .build-title .mask-line {
+  white-space: nowrap;
+}
+
 /* ---------------------------------------------------------
    7. SELECTED WORK — hanging sheets (inside the hero)
    script.js owns: track translate + padding, each .sheet-swing
@@ -2541,6 +2555,10 @@ html.js .reveal.is-in {
 
   .reel-wrap .build-copy {
     bottom: 24px;
+  }
+
+  .reel-wrap .build-title {
+    font-size: min(clamp(1.6rem, 7.6vw, 2.6rem), calc((100vw - 4 * var(--gutter)) / 10.4));
   }
 
   .reel-wrap .build-cta {
