@@ -1501,52 +1501,49 @@ html.js .reveal.is-in {
   font-weight: 500;
 }
 
-/* Creative: a poster */
+/* Creative: three pieces of real work (jersey, newsletter, logo) fanned like proofs */
 .sc-creative {
   place-items: center;
   background: var(--red);
 }
 
-.sc-poster {
+.sc-proofs {
   position: relative;
-  display: grid;
-  align-content: center;
-  width: 54%;
-  aspect-ratio: 3 / 4;
-  padding: 18px;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.sc-proofs img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: top;
   border-radius: 8px;
-  background: #f6b81f;
-  color: var(--ink);
-  box-shadow: 0 24px 40px -20px rgba(7, 17, 31, 0.6);
-  rotate: -4deg;
+  background: #fff;
+  box-shadow: 0 0 0 4px #fff, 0 26px 40px -20px rgba(7, 17, 31, 0.65);
+  translate: calc(-50% + var(--r) * 78%) calc(-46% + var(--r) * var(--r) * 6%);
+  rotate: calc(var(--r) * 9deg);
+  transition: translate 0.8s var(--ease-expo), rotate 0.8s var(--ease-expo);
 }
 
-.sc-poster b {
-  font-size: clamp(2rem, 4vw, 3.4rem);
-  font-weight: 800;
-  line-height: 0.85;
-  letter-spacing: -0.06em;
+.stack:hover .sc-creative .sc-proofs img {
+  translate: calc(-50% + var(--r) * 92%) calc(-48% + var(--r) * var(--r) * 4%);
+  rotate: calc(var(--r) * 6deg);
 }
 
-.sc-poster i {
+.sc-proof-note {
   position: absolute;
-  right: -20%;
-  bottom: -14%;
-  width: 70%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--ink);
-}
-
-.sc-poster small {
-  position: absolute;
-  left: 14px;
-  bottom: 12px;
-  z-index: 1;
+  right: 16px;
+  bottom: 14px;
+  color: rgba(255, 255, 255, 0.85);
   font-family: var(--font-mono);
-  font-size: 9px;
-  color: #fff;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* Motion: player */
@@ -1937,118 +1934,53 @@ html.js .reveal.is-in {
   scale: 1.12;
 }
 
-/* 03 graphic design: a post, a poster and a slide — the samples from its page */
-.cv-design {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4%;
-  padding: 0 8%;
+/* 03 graphic design: a mini overview wall of the real work, tilted, five columns
+   drifting up / down (each column holds its images twice, so -50% loops seamlessly) */
+.cvw-cols {
+  position: absolute;
+  inset: -34% -14%;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(8px, 1vw, 14px);
+  rotate: -11deg;
+  transition: rotate 0.9s var(--ease-expo), scale 0.9s var(--ease-expo);
 }
 
-.cv-design > span {
-  position: relative;
-  flex: none;
-  overflow: hidden;
-  border-radius: 6px;
-  box-shadow: 0 0 0 1px rgba(7, 17, 31, 0.06), 0 24px 34px -22px rgba(7, 17, 31, 0.55);
-  transition: rotate 0.7s var(--ease-expo), translate 0.7s var(--ease-expo);
-}
-
-.cvd-post {
-  width: 22%;
-  aspect-ratio: 4 / 5;
-  padding: 3%;
-  background: #f3e7d3;
-  rotate: -6deg;
-}
-
-.cvd-post b {
-  position: relative;
-  z-index: 1;
+.cvw-col {
   display: block;
-  color: #3b2416;
-  font-size: clamp(11px, 1.3vw, 18px);
-  font-weight: 760;
-  line-height: 0.9;
-  letter-spacing: -0.06em;
+  animation: cvw-drift var(--dur, 52s) linear infinite;
 }
 
-.cvd-post i {
-  position: absolute;
-  right: -25%;
-  bottom: -25%;
-  width: 80%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #e0702d;
+.cvw-col[data-dir="down"] {
+  animation-direction: reverse;
 }
 
-.cvd-poster {
-  display: grid;
-  align-content: start;
-  gap: 4px;
-  width: 22%;
-  aspect-ratio: 210 / 297;
-  padding: 3%;
-  background: #0d0d0d;
-  translate: 0 -6%;
-}
-
-.cvd-poster small {
-  color: #fff;
-  font-size: clamp(7px, 0.7vw, 10px);
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.cvd-poster b {
-  color: #d7ff3a;
-  font-size: clamp(18px, 2.4vw, 34px);
-  font-weight: 800;
-  line-height: 0.85;
-  letter-spacing: -0.08em;
-}
-
-.cvd-slide {
-  display: grid;
-  align-content: start;
-  gap: 5px;
-  width: 34%;
-  aspect-ratio: 16 / 9;
-  padding: 3%;
-  background: #fff;
-  rotate: 5deg;
-}
-
-.cvd-slide b {
-  color: #13294b;
-  font-size: clamp(10px, 1.1vw, 15px);
-  font-weight: 750;
-  letter-spacing: -0.05em;
-}
-
-.cvd-slide i {
-  width: 55%;
-  height: 3px;
-  border-radius: 3px;
-  background: #dfe5ef;
-}
-
-.cvd-slide i:last-child {
-  position: absolute;
-  top: 18%;
-  right: 6%;
-  bottom: 18%;
-  width: 34%;
+.cvw-col img {
+  display: block;
+  width: 100%;
   height: auto;
-  border-radius: 4px;
-  background: #13294b;
+  margin-bottom: clamp(8px, 1vw, 14px);
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(7, 17, 31, 0.06), 0 18px 28px -18px rgba(7, 17, 31, 0.5);
 }
 
-.card:hover .cvd-post { rotate: -2deg; translate: 0 -4%; }
-.card:hover .cvd-poster { translate: 0 -10%; }
-.card:hover .cvd-slide { rotate: 1deg; translate: 0 -4%; }
+@keyframes cvw-drift {
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+.card:hover .cvw-cols {
+  rotate: -7deg;
+  scale: 1.06;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cvw-col {
+    animation: none;
+  }
+}
 
 /* 04 course: 0 → Live */
 .cv-course {

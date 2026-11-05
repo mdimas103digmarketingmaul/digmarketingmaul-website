@@ -19,6 +19,19 @@ const meta = {
     ["Digital Marketing eBooks", "/products/digital-marketing-ebooks/"]
   ])
 };
+
+// Graphic Design card: a mini overview wall of the real work on /products/graphic-design/
+// (the same -thumb.webp files as that page's hero wall, 480px wide), five tilted columns
+// drifting up/down. Columns are listed twice in the markup so the loop is seamless.
+const GDT = "/assets/graphic-design/";
+const t = (file, h) => ({ src: `${GDT}${file}-thumb.webp`, w: 480, h });
+const gdWall = [
+  [t("logo/meutuah-1978-logo", 600), t("packaging/meutuah-drip-bags", 480), t("newsletter/mti-juz-amma-tafseer", 600), t("logo/gals-episode-philosophy", 480)],
+  [t("apparel/hijra-football-kit", 600), t("sales/meutuah-1978-price-list", 601), t("packaging/meutuah-box-front", 480), t("apparel/hijra-runner-jersey", 590)],
+  [t("logo/gals-episode-logo", 480), t("newsletter/mti-last-chapter", 600), t("packaging/meutuah-product-line", 480), t("apparel/ptm-baposa-jersey", 306)],
+  [t("packaging/meutuah-drip-post", 600), t("apparel/hijra-runner-jersey", 590), t("logo/gals-episode-options", 480), t("packaging/meutuah-box-story", 480)],
+  [t("newsletter/mti-scholarship-fund", 600), t("packaging/meutuah-drip-box-set", 480), t("logo/meutuah-1978-logo", 600), t("packaging/meutuah-box-side", 480)],
+];
 ---
 <!--
   Products page — “Build. Create. Grow.” (light only).
@@ -98,7 +111,13 @@ const meta = {
           </div>
           <div class="stack-card sc-creative" data-name="Design">
             <span class="sc-label">03 · Design</span>
-            <span class="sc-poster"><b>BIG</b><b>SALE</b><i></i><small>Poster · Flyer · Backdrop</small></span>
+            <!-- real work from /products/graphic-design/, fanned like proofs -->
+            <span class="sc-proofs">
+              <img src="/assets/graphic-design/apparel/hijra-football-kit-thumb.webp" alt="" width="480" height="600" style="--r:-1">
+              <img src="/assets/graphic-design/newsletter/mti-juz-amma-tafseer-thumb.webp" alt="" width="480" height="600" style="--r:1">
+              <img src="/assets/graphic-design/logo/meutuah-1978-logo-thumb.webp" alt="" width="480" height="600" style="--r:0">
+            </span>
+            <small class="sc-proof-note">Logo · Jersey · Newsletter · Packaging</small>
           </div>
           <div class="stack-card sc-ads" data-name="Ads">
             <span class="sc-label">04 · Ads</span>
@@ -220,17 +239,21 @@ const meta = {
             </span>
           </a>
 
-          <!-- 03 Graphic Design — CSS samples: post, poster, slide -->
-          <a class="card reveal" href="/products/graphic-design/" data-spot data-cursor="View" style="--tone:#eceff4">
-            <span class="card-visual cv-design" aria-hidden="true">
-              <span class="cvd-post"><b>Es Kopi<br>Aren.</b><i></i></span>
-              <span class="cvd-poster"><small>Mega sale</small><b>50%</b></span>
-              <span class="cvd-slide"><b>About us.</b><i></i><i></i><i></i></span>
+          <!-- 03 Graphic Design — real work: a mini overview wall (logos, jerseys, newsletters, packaging) -->
+          <a class="card reveal" href="/products/graphic-design/" data-spot data-cursor="View" style="--tone:#e6ebf1">
+            <span class="card-visual cv-wall" aria-hidden="true">
+              <span class="cvw-cols">
+                {gdWall.map((col, c) => (
+                <span class="cvw-col" style={`--dur:${[46, 58, 50, 62, 54][c]}s`} data-dir={c % 2 ? "down" : "up"}>
+                  {[...col, ...col].map((im) => <img src={im.src} alt="" width={im.w} height={im.h} loading="lazy" decoding="async">)}
+                </span>
+                ))}
+              </span>
             </span>
             <span class="card-body">
               <span class="card-meta"><span>03</span><span>Design</span></span>
               <strong class="card-title">Graphic Design</strong>
-              <span class="card-desc"><span class="lang-id">Desain untuk sosial media, promosi, presentasi, cetak, sampai jersey.</span><span class="lang-en">Design for social media, marketing, presentations, print and jerseys.</span></span>
+              <span class="card-desc"><span class="lang-id">Desain untuk promosi, jersey, logo, newsletter, kemasan, dan lainnya.</span><span class="lang-en">Design for marketing, jerseys, logos, newsletters, packaging and more.</span></span>
               <span class="card-foot">
                 <span class="card-price"><strong class="card-price-text"><span class="lang-id">Sesuai scope</span><span class="lang-en">By scope</span></strong></span>
                 <span class="card-go" aria-hidden="true">→</span>
