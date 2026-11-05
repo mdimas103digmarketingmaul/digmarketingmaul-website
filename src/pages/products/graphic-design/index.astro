@@ -5,6 +5,7 @@ import initScript from '../../../scripts/products/product-page-init.js?raw';
 import baseCss from '../../../styles/products/website-development.css?url';
 import pageCss from '../../../styles/products/graphic-design.css?url';
 import pageJs from '../../../scripts/products/graphic-design.js?url';
+import WorkSheet from '../../../components/products/WorkSheet.astro';
 // One source for the visible FAQ and its JSON-LD. Answers may hold inline HTML (links).
 const plain = (html) => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").trim();
 const faq = [
@@ -123,17 +124,142 @@ const faq = [
     }
   }
 ];
+// Real client work on the hero rail. One work = one sheet (src/components/products/WorkSheet.astro):
+// `card` is the small image that hangs, `images` what the viewer shows, top to bottom.
+// Each list sits in its category's place on the rail, after that category's HTML samples.
+// The hero opens on the overview wall (every image, small); a tile opens the rail at its work.
+// Sizes are the files' real pixel sizes. Files + how to make them: docs/graphic-design.md
+const GD = "/assets/graphic-design/";
+const pic = (file, w, h, alt = "") => ({ src: GD + file, w, h, alt });
+const works = {
+  sales: [
+    {
+      key: "meutuah-price-list", name: "Price list", client: "Meutuah 1978",
+      title: { id: "Price list kopi specialty, Triple Pick", en: "Specialty coffee price list, Triple Pick" },
+      card: pic("sales/meutuah-1978-price-list-card.webp", 800, 1001),
+      images: [pic("sales/meutuah-1978-price-list.webp", 1600, 2002, "Meutuah 1978 price list for Triple Pick specialty coffee: drip bags, ground and whole bean in 100 g, 250 g and 1 kg, and bundles, with the product line photographed on a wooden table")],
+    },
+  ],
+  apparel: [
+    {
+      key: "ptm-baposa", name: { id: "Jersey tenis meja", en: "Table tennis jersey" }, client: "PTM Baposa",
+      title: { id: "Jersey tenis meja, depan & belakang", en: "Table tennis jersey, front & back" },
+      card: pic("apparel/ptm-baposa-jersey-card.webp", 800, 511),
+      images: [pic("apparel/ptm-baposa-jersey.webp", 1600, 1021, "PTM Baposa table tennis jersey in navy with a blue brush pattern: the front with the club badge and PTM BAPOSA, the back with BAPOSA written down the spine")],
+    },
+    {
+      key: "hijra-football", name: { id: "Jersey sepak bola", en: "Football kit" }, client: "Hijra Bank",
+      title: { id: "Jersey sepak bola: depan, belakang & celana", en: "Football kit: front, back & shorts" },
+      card: pic("apparel/hijra-football-kit-card.webp", 800, 1000),
+      images: [pic("apparel/hijra-football-kit.webp", 1600, 2000, "Hijra Bank football kit in sky blue with navy trim: the front with the Hijra logo and club badge, the back with name and number 6, and navy shorts with a blue side stripe")],
+    },
+    {
+      key: "hijra-runner", name: { id: "Jersey lari", en: "Running jersey" }, client: "Hijra Bank · Hijra Runner",
+      title: { id: "10 konsep dipresentasikan, lalu final", en: "10 concepts presented, then the final" },
+      card: pic("apparel/hijra-runner-jersey-card.webp", 800, 983),
+      images: [pic("apparel/hijra-runner-jersey.webp", 1600, 1966, "Hijra Runner running jersey: an overview of the ten concepts presented, above the final chosen design, Chevron Rush, in deep teal with a chevron pattern, front and back")],
+    },
+  ],
+  logo: [
+    {
+      key: "meutuah-logo", name: "Logo", client: "Meutuah 1978",
+      title: { id: "Logo: vertikal & horizontal, latar terang & gelap", en: "Logo: vertical & horizontal, on light & dark" },
+      card: pic("logo/meutuah-1978-logo-card.webp", 800, 1000),
+      images: [pic("logo/meutuah-1978-logo.webp", 1600, 2000, "Meutuah 1978 logo system: the vertical and horizontal versions, each in green on white and in white on green, with the brand colours")],
+    },
+    {
+      key: "gals-logo", name: "Logo", client: "Gals Episode",
+      title: { id: "Logo: 4 versi, filosofi & opsi yang dibuat", en: "Logo: 4 versions, the philosophy & the options" },
+      card: pic("logo/gals-episode-logo-card.webp", 800, 800),
+      images: [
+        pic("logo/gals-episode-logo.webp", 1600, 1600, "Gals Episode logo in four versions: the gradient primary, one colour on white, white on dark, and white on the brand magenta"),
+        pic("logo/gals-episode-philosophy.webp", 1600, 1600, "Gals Episode logo philosophy: the letters G and E, a butterfly shape, the colour #231F20 and the Minion Variable Concept font"),
+        pic("logo/gals-episode-options.webp", 1600, 1600, "The three logo options created for Gals Episode, a butterfly, a tulip and a rose, each with its meaning"),
+      ],
+    },
+  ],
+  email: [
+    {
+      key: "mti-juz-amma", name: "Newsletter", client: "Measured Tones Institute", mail: true,
+      title: { id: "Master the lessons of Juz ‘Amma", en: "Master the lessons of Juz ‘Amma" },
+      card: pic("newsletter/mti-juz-amma-tafseer-card.webp", 680, 2048),
+      images: [pic("newsletter/mti-juz-amma-tafseer.webp", 724, 2180, "Newsletter for Measured Tones Institute announcing The Last Chapter, a 10-month Juz ‘Amma tafseer course, with payment options and enrollment buttons")],
+    },
+    {
+      // Source is only 528px wide, so the card and the full view share one file
+      key: "mti-last-chapter", name: "Newsletter", client: "Measured Tones Institute", mail: true,
+      title: { id: "Spots still available: The Last Chapter", en: "Spots still available: The Last Chapter" },
+      card: pic("newsletter/mti-last-chapter.webp", 600, 1536),
+      images: [pic("newsletter/mti-last-chapter.webp", 600, 1536, "Enrollment newsletter for Measured Tones Institute: spots still available in The Last Chapter, a 10-month Juz ‘Amma Mastery Course, with Full Experience and Tafseer Only options")],
+    },
+    {
+      key: "mti-scholarship", name: "Newsletter", client: "Measured Tones Institute", mail: true,
+      title: { id: "We’re just $2,000 away from our goal", en: "We’re just $2,000 away from our goal" },
+      card: pic("newsletter/mti-scholarship-fund-card.webp", 680, 2528),
+      images: [pic("newsletter/mti-scholarship-fund.webp", 1280, 4759, "Fundraising newsletter for the Measured Tones Institute scholarship fund: $8,000 of $10,000 raised, with a donate button and two course options")],
+    },
+  ],
+  packaging: [
+    {
+      key: "meutuah-drip", name: "Drip bag", client: "Meutuah 1978",
+      title: { id: "Sachet drip bag: Lintong, Gayo, Mandheling", en: "Drip bag sachets: Lintong, Gayo, Mandheling" },
+      card: pic("packaging/meutuah-drip-bags-card.webp", 800, 800),
+      images: [
+        pic("packaging/meutuah-drip-bags.webp", 1600, 1600, "Meutuah 1978 drip bag sachets in green, orange and yellow, illustrated with coffee pickers, laid out on a wooden table beside a white box and coffee beans"),
+        pic("packaging/meutuah-drip-post.webp", 1080, 1350, "Social post introducing the Meutuah Coffee Drip: three sachets, Lintong, Mandheling and Gayo, on green beside a cup of coffee"),
+        pic("packaging/meutuah-drip-box-set.webp", 1600, 1600, "Stacked Meutuah 1978 boxes with drip bag sachets, a moka pot and a drip bag brewing in a glass"),
+      ],
+    },
+    {
+      key: "meutuah-box", name: { id: "Box & pouch", en: "Box & pouch" }, client: "Meutuah 1978",
+      title: { id: "Box & pouch: satu lini produk", en: "Box & pouch: one product line" },
+      card: pic("packaging/meutuah-product-line-card.webp", 800, 800),
+      images: [
+        pic("packaging/meutuah-product-line.webp", 1600, 1600, "The Meutuah 1978 product line: white stand-up pouches with illustrated labels, the white box and drip bag sachets, with a French press and beans"),
+        pic("packaging/meutuah-box-front.webp", 1600, 1600, "The Meutuah 1978 box: white with a dark green panel, the logo and the 100% Arabica coffee drip label, next to a drip bag brewing"),
+        pic("packaging/meutuah-box-side.webp", 1600, 1600, "The side of the Meutuah 1978 box with the brewing guide, storage notes and composition, next to a drip bag and coffee beans"),
+        pic("packaging/meutuah-box-story.webp", 1600, 1600, "The top of the Meutuah 1978 box with the brand story, among scattered coffee beans and a French press"),
+      ],
+    },
+  ],
+};
+// Rail order = category order; the HTML samples keep their keys here so every sheet gets its number.
+const rail = [
+  ...works.sales.map((w) => w.key), "invite",
+  ...works.apparel.map((w) => w.key), ...works.logo.map((w) => w.key),
+  ...works.email.map((w) => w.key), ...works.packaging.map((w) => w.key), "open",
+];
+const num = (key) => String(rail.indexOf(key) + 1).padStart(2, "0");
+
+// Overview wall: every image of every work as a small tile, categories interleaved, dealt into
+// three columns that drift up/down. Thumbs are <image>-thumb.webp, 480px wide (emails: their top, 4:5).
+const catName = {
+  sales: { id: "Promosi & penjualan", en: "Marketing & sales" },
+  apparel: { id: "Kaos & jersey", en: "T-shirts & jerseys" },
+  logo: { id: "Simple logo", en: "Simple logo" },
+  email: { id: "Newsletter", en: "Newsletter" },
+  packaging: { id: "Kemasan", en: "Packaging" },
+};
+const queues = Object.entries(works).map(([cat, list]) =>
+  list.flatMap((w) => w.images.map((im) => ({
+    key: w.key, cat, client: w.client, title: w.title.en,
+    src: im.src.replace(/\.webp$/, "-thumb.webp"), w: 480, h: w.mail ? 600 : Math.round((480 * im.h) / im.w),
+  }))));
+const tiles = [];
+while (queues.some((q) => q.length)) for (const q of queues) if (q.length) tiles.push(q.shift());
+const wallCols = [0, 1, 2].map((c) => tiles.filter((_, i) => i % 3 === c));
+
 const meta = {
   title: "Jasa Graphic Design untuk Bisnis & UMKM — Maul Digital",
   themeColor: "#fafbfc",
-  description: "Desain konten sosial media, poster, flyer, menu, company profile, undangan, backdrop, jersey, dan simple logo. Revisi tanpa batas, bayar setelah sesuai brief.",
+  description: "Desain konten sosial media, poster, flyer, menu, company profile, undangan, backdrop, jersey, newsletter, kemasan, dan simple logo. Revisi tanpa batas, bayar setelah sesuai brief.",
   canonical: "/products/graphic-design/",
   image: "/assets/brand/og/graphic-design.jpg",
   imageAlt: "Graphic Design oleh digmarketingmaul",
   structuredData: serviceGraph({
     name: "Graphic Design",
     path: "/products/graphic-design/",
-    description: "Desain untuk konten digital, materi marketing, presentasi, cetak, merchandise, dan simple logo.",
+    description: "Desain untuk konten digital, materi marketing, presentasi, cetak, merchandise, newsletter / email blast, kemasan produk, dan simple logo.",
     serviceType: "Graphic design",
     image: "/assets/brand/og/graphic-design.jpg",
     faq: faq.map((item) => ({ q: plain(item.id.q), a: item.id.a.map(plain).join(" ") })),
@@ -145,7 +271,8 @@ const meta = {
   Built on the Website Development page: its stylesheet is loaded first as the shared base
   (tokens, header, hanging rail, bento, steps, pricing, payment, FAQ, brief form, footer);
   src/styles/products/graphic-design.css only adds the design-specific parts.
-  Every visual on this page is an HTML/CSS sample application, not client work. No images.
+  The hero sheets mix HTML/CSS sample applications with real client work (images, the `works`
+  data above, one WorkSheet each) that opens full-size in the work viewer dialog.
   Script: src/scripts/products/graphic-design.js · notes: docs/graphic-design.md
 -->
 <BaseLayout meta={meta} lang="id" htmlAttributes={{"data-language": "id", "data-international": "false"}} bodyAttributes={{"data-page": "graphic-design"}}>
@@ -189,7 +316,7 @@ const meta = {
   <main id="main">
 
     <!-- ============ HERO — headline beside the sample applications (hanging sheets) ============ -->
-    <section class="hero hero--design" id="samples" aria-labelledby="design-title">
+    <section class="hero hero--design" id="samples" aria-labelledby="design-title" data-view="wall">
       <div class="shell hero-grid">
         <div class="hero-copy">
           <h1 class="hero-title" id="design-title" data-reveal-title>
@@ -198,7 +325,7 @@ const meta = {
           </h1>
           <p class="hero-lead reveal">Design for digital content, marketing materials, presentations, print, and more.</p>
           <div class="hero-work-ui reveal">
-            <p class="hero-work-label"><span class="lang-id">Bisa dibuat</span><span class="lang-en">What we make</span><span class="accent-dot">.</span> <small><span class="lang-id">Klik untuk lihat sample</span><span class="lang-en">Click to see a sample</span></small></p>
+            <p class="hero-work-label"><span class="lang-id">Bisa dibuat</span><span class="lang-en">What we make</span><span class="accent-dot">.</span> <small><span class="lang-id">Klik untuk lihat karyanya</span><span class="lang-en">Click to see the work</span></small></p>
             <!-- Each button jumps the rail to the first sheet with the same data-cat -->
             <ol class="cats" aria-label="Graphic design categories">
               <li><button class="cat" type="button" data-cat-go="social"><span class="cat-num">01</span><span class="cat-name">Social media</span><span class="cat-items"><span class="lang-id">Post, story, banner, visual produk</span><span class="lang-en">Posts, stories, banners, product visuals</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
@@ -207,10 +334,13 @@ const meta = {
               <li><button class="cat" type="button" data-cat-go="print"><span class="cat-num">04</span><span class="cat-name"><span class="lang-id">Cetak &amp; event</span><span class="lang-en">Print &amp; events</span></span><span class="cat-items"><span class="lang-id">Undangan, backdrop, banner, booth, flyer cetak</span><span class="lang-en">Invitations, backdrops, banners, booths, printed flyers</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
               <li><button class="cat" type="button" data-cat-go="apparel"><span class="cat-num">05</span><span class="cat-name"><span class="lang-id">Kaos &amp; jersey</span><span class="lang-en">T-shirts &amp; jerseys</span></span><span class="cat-items"><span class="lang-id">Kaos, jersey olahraga, merchandise</span><span class="lang-en">T-shirts, sports jerseys, merchandise</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
               <li><button class="cat" type="button" data-cat-go="logo"><span class="cat-num">06</span><span class="cat-name">Simple logo</span><span class="cat-items"><span class="lang-id">Logo sederhana untuk UMKM</span><span class="lang-en">A simple logo for small businesses</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
+              <li><button class="cat" type="button" data-cat-go="email"><span class="cat-num">07</span><span class="cat-name">Newsletter</span><span class="cat-items"><span class="lang-id">Email blast, newsletter, email promo</span><span class="lang-en">Email blasts, newsletters, promo emails</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
+              <li><button class="cat" type="button" data-cat-go="packaging"><span class="cat-num">08</span><span class="cat-name"><span class="lang-id">Kemasan</span><span class="lang-en">Packaging</span></span><span class="cat-items"><span class="lang-id">Sachet, box, pouch, label produk</span><span class="lang-en">Sachets, boxes, pouches, product labels</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
             </ol>
             <div class="hang-ui">
-              <p class="hang-label">Sample applications</p>
-              <p class="hang-count"><b data-hang-current>01</b> / <span data-hang-total>08</span></p>
+              <p class="hang-label"><span class="hl-wall"><span class="lang-id">Semua karya</span><span class="lang-en">All work</span></span><span class="hl-rail"><span class="lang-id">Karya &amp; sample</span><span class="lang-en">Work &amp; samples</span></span></p>
+              <button class="round-btn wall-btn" type="button" data-view-wall aria-label="Show all work"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i></button>
+              <p class="hang-count"><b data-hang-current>01</b> / <span data-hang-total>{num("open")}</span></p>
               <button class="round-btn" type="button" data-hang-prev aria-label="Previous sample"><span aria-hidden="true">←</span></button>
               <button class="round-btn" type="button" data-hang-next aria-label="Next sample"><span aria-hidden="true">→</span></button>
             </div>
@@ -218,112 +348,37 @@ const meta = {
         </div>
 
         <div class="hero-work">
+        <!-- Overview wall: everything at once, small. A tile opens the rail (below) at that work. -->
+        <div class="wall" data-wall role="region" aria-label="All work">
+          <div class="wall-cols">
+            {wallCols.map((col, c) => (
+            <ul class="wall-col" style={`--dur:${[64, 78, 70][c]}s`} data-dir={c === 1 ? "down" : "up"}>
+              {[...col, ...col].map((t, k) => (
+              <li aria-hidden={k >= col.length ? "true" : undefined}>
+                <button class="wall-tile" type="button" data-wall-go={t.key} data-cursor="View" tabindex={k >= col.length ? -1 : undefined} aria-label={`${t.client}: ${t.title}`}>
+                  <img src={t.src} alt="" width={t.w} height={t.h} loading={k < col.length ? "eager" : "lazy"} decoding="async" draggable="false">
+                  <span class="wall-cap"><b>{t.client}</b><small><span class="lang-id">{catName[t.cat].id}</span><span class="lang-en">{catName[t.cat].en}</span></small></span>
+                </button>
+              </li>
+              ))}
+            </ul>
+            ))}
+          </div>
+        </div>
+
         <div class="hang hang--design" data-hang>
           <span class="hang-rail" aria-hidden="true"></span>
           <div class="hang-viewport" data-hang-viewport tabindex="0" role="region" aria-roledescription="carousel" aria-label="Sample applications — drag, or use the arrow keys">
             <ol class="hang-track" data-hang-track>
               <!--
-                Each sheet is a sample made in HTML/CSS (.art-*, styled in graphic-design.css).
-                Real client work can replace these one by one: swap the .sheet-screen content for an
-                <img> (WebP, ~1200px wide, width/height set, loading="lazy" after the first two)
-                and the caption's "Sample" tag for the client's name.
+                In category order. A sample is HTML/CSS (.art-*, styled in graphic-design.css) with a
+                "Sample" tag; real client work is a WorkSheet from `works`, placed after its
+                category's samples. Numbers come from `rail` in the frontmatter.
               -->
 
-              <!-- 01 Social post · 4:5 -->
-              <li class="sheet" data-cat="social" style="--tone:#f3e7d3">
-                <div class="sheet-swing">
-                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
-                  <div class="sheet-paper" data-cursor="Drag">
-                    <div class="sheet-screen art art-post" role="img" aria-label="Sample social media post for a coffee shop: Es Kopi Aren, new on the menu">
-                      <span class="ap-brand"><i></i>teduh</span>
-                      <span class="ap-badge">Baru</span>
-                      <span class="ap-title">Es Kopi<br>Aren<span>.</span></span>
-                      <span class="ap-sun"></span>
-                      <span class="ap-glass"><i></i></span>
-                      <span class="ap-price">Rp18K</span>
-                      <span class="ap-dots"><i></i><i></i><i></i></span>
-                    </div>
-                    <span class="sheet-caption">
-                      <span class="sheet-idx">01</span>
-                      <span class="sheet-name"><strong>Social post</strong><small>Social media</small></span>
-                      <span class="sheet-tag">Sample</span>
-                    </span>
-                  </div>
-                </div>
-              </li>
+              {works.sales.map((w) => <WorkSheet work={w} idx={num(w.key)} cat="sales" />)}
 
-              <!-- 02 Sales poster · A-series -->
-              <li class="sheet" data-cat="sales" style="--tone:#0d0d0d">
-                <div class="sheet-swing">
-                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
-                  <div class="sheet-paper" data-cursor="Drag">
-                    <div class="sheet-screen art art-poster" role="img" aria-label="Sample sales poster for a running store: Mega Sale, up to 50% off">
-                      <span class="as-brand">LARI.CO</span>
-                      <span class="as-kicker">Mega sale</span>
-                      <span class="as-big">50<small>%</small></span>
-                      <span class="as-band"><span>Up to 50% off · Up to 50% off · Up to 50% off · Up to 50% off ·</span></span>
-                      <span class="as-foot"><span>Weekend only</span><span>All stores</span></span>
-                    </div>
-                    <span class="sheet-caption">
-                      <span class="sheet-idx">02</span>
-                      <span class="sheet-name"><strong>Sales poster</strong><small><span class="lang-id">Promosi &amp; penjualan</span><span class="lang-en">Marketing &amp; sales</span></small></span>
-                      <span class="sheet-tag">Sample</span>
-                    </span>
-                  </div>
-                </div>
-              </li>
-
-              <!-- 03 Menu · A-series -->
-              <li class="sheet" data-cat="sales" style="--tone:#1f3b2d">
-                <div class="sheet-swing">
-                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
-                  <div class="sheet-paper" data-cursor="Drag">
-                    <div class="sheet-screen art art-menu" role="img" aria-label="Sample restaurant menu with food and drink prices">
-                      <span class="am-leaf"></span>
-                      <span class="am-brand">Dapur Rimbun</span>
-                      <span class="am-title">Menu</span>
-                      <span class="am-group">Makan</span>
-                      <span class="am-row"><span>Nasi Goreng Rimbun</span><i></i><b>32</b></span>
-                      <span class="am-row"><span>Mie Kuah Kampung</span><i></i><b>28</b></span>
-                      <span class="am-row"><span>Sate Ayam</span><i></i><b>35</b></span>
-                      <span class="am-group">Minum</span>
-                      <span class="am-row"><span>Es Teh Serai</span><i></i><b>12</b></span>
-                      <span class="am-row"><span>Kopi Susu</span><i></i><b>18</b></span>
-                      <span class="am-foot"><span>Buka setiap hari</span><span>10.00–22.00</span></span>
-                    </div>
-                    <span class="sheet-caption">
-                      <span class="sheet-idx">03</span>
-                      <span class="sheet-name"><strong>Menu</strong><small><span class="lang-id">Promosi &amp; penjualan</span><span class="lang-en">Marketing &amp; sales</span></small></span>
-                      <span class="sheet-tag">Sample</span>
-                    </span>
-                  </div>
-                </div>
-              </li>
-
-              <!-- 04 Company profile slide · 16:9 -->
-              <li class="sheet" data-cat="docs" style="--tone:#ffffff">
-                <div class="sheet-swing">
-                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
-                  <div class="sheet-paper" data-cursor="Drag">
-                    <div class="sheet-screen art art-deck" role="img" aria-label="Sample company profile slide for a logistics company: About us">
-                      <span class="ad-copy">
-                        <span class="ad-label">Company profile</span>
-                        <span class="ad-title">About<br>us<span>.</span></span>
-                        <span class="ad-lines"><i></i><i></i><i></i></span>
-                      </span>
-                      <span class="ad-visual"><i></i><i></i><i></i><i></i></span>
-                      <span class="ad-foot"><span>Nusa Logistik</span><span>03 / 12</span></span>
-                    </div>
-                    <span class="sheet-caption">
-                      <span class="sheet-idx">04</span>
-                      <span class="sheet-name"><strong>Company profile</strong><small><span class="lang-id">Presentasi &amp; dokumen</span><span class="lang-en">Presentations &amp; documents</span></small></span>
-                      <span class="sheet-tag">Sample</span>
-                    </span>
-                  </div>
-                </div>
-              </li>
-
-              <!-- 05 Wedding invitation · 5:7 -->
+              <!-- Wedding invitation · 5:7 -->
               <li class="sheet" data-cat="print" style="--tone:#f7f1e8">
                 <div class="sheet-swing">
                   <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
@@ -338,7 +393,7 @@ const meta = {
                       <span class="ai-foot">Save the date</span>
                     </div>
                     <span class="sheet-caption">
-                      <span class="sheet-idx">05</span>
+                      <span class="sheet-idx">{num("invite")}</span>
                       <span class="sheet-name"><strong><span class="lang-id">Undangan</span><span class="lang-en">Invitation</span></strong><small><span class="lang-id">Cetak &amp; event</span><span class="lang-en">Print &amp; events</span></small></span>
                       <span class="sheet-tag">Sample</span>
                     </span>
@@ -346,47 +401,15 @@ const meta = {
                 </div>
               </li>
 
-              <!-- 06 Sports jersey · 1:1 -->
-              <li class="sheet" data-cat="apparel" style="--tone:#e9edf2">
-                <div class="sheet-swing">
-                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
-                  <div class="sheet-paper" data-cursor="Drag">
-                    <div class="sheet-screen art art-tee" role="img" aria-label="Sample sports jersey for a sports club, number 10">
-                      <span class="at-shirt">
-                        <span class="at-stripe"></span>
-                        <span class="at-club">PAGI<small>Sports club</small></span>
-                        <span class="at-num">10</span>
-                      </span>
-                      <span class="at-label">Front</span>
-                    </div>
-                    <span class="sheet-caption">
-                      <span class="sheet-idx">06</span>
-                      <span class="sheet-name"><strong><span class="lang-id">Jersey olahraga</span><span class="lang-en">Sports jersey</span></strong><small><span class="lang-id">Kaos &amp; jersey</span><span class="lang-en">T-shirts &amp; jerseys</span></small></span>
-                      <span class="sheet-tag">Sample</span>
-                    </span>
-                  </div>
-                </div>
-              </li>
+              <!-- Real client work: jerseys, logos -->
+              {works.apparel.map((w) => <WorkSheet work={w} idx={num(w.key)} cat="apparel" />)}
+              {works.logo.map((w) => <WorkSheet work={w} idx={num(w.key)} cat="logo" />)}
 
-              <!-- 07 Simple logo · 1:1 -->
-              <li class="sheet" data-cat="logo" style="--tone:#f6efe4">
-                <div class="sheet-swing">
-                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
-                  <div class="sheet-paper" data-cursor="Drag">
-                    <div class="sheet-screen art art-logo" role="img" aria-label="Sample simple logo for a small bakery, with three colour versions">
-                      <span class="al-mark">RM</span>
-                      <span class="al-name">Roti Mekar</span>
-                      <span class="al-tag">Bakery</span>
-                      <span class="al-vars"><i><b></b></i><i><b></b></i><i><b></b></i></span>
-                    </div>
-                    <span class="sheet-caption">
-                      <span class="sheet-idx">07</span>
-                      <span class="sheet-name"><strong>Simple logo</strong><small><span class="lang-id">Untuk UMKM</span><span class="lang-en">For small businesses</span></small></span>
-                      <span class="sheet-tag">Sample</span>
-                    </span>
-                  </div>
-                </div>
-              </li>
+              <!-- Newsletters: hover scrolls the email; a click (or ↗) opens all of it -->
+              {works.email.map((w) => <WorkSheet work={w} idx={num(w.key)} cat="email" />)}
+
+              <!-- Packaging -->
+              {works.packaging.map((w) => <WorkSheet work={w} idx={num(w.key)} cat="packaging" />)}
 
               <!-- The open slot: always last -->
               <li class="sheet sheet--next" style="--tone:#ff304f">
@@ -398,7 +421,7 @@ const meta = {
                       <span class="next-title">Your design<br>is next<span class="accent-dot">.</span></span>
                     </span>
                     <span class="sheet-caption">
-                      <span class="sheet-idx">08</span>
+                      <span class="sheet-idx">{num("open")}</span>
                       <span class="sheet-name"><strong><span class="lang-id">Slot terbuka</span><span class="lang-en">Open slot</span></strong><small><span class="lang-id">Mulai dari brief singkat</span><span class="lang-en">Starts with a quick brief</span></small></span>
                       <a class="sheet-go sheet-go--red" href="#contact" data-cursor="Let's talk" aria-label="Let's discuss your design">→</a>
                     </span>
@@ -415,6 +438,20 @@ const meta = {
         </div>
       </div>
     </section>
+
+    <!-- Work viewer — every image of a work, scrollable; ←/→ between the works of one category -->
+    <dialog class="work-viewer" data-work-viewer aria-labelledby="mv-subject">
+      <div class="mv-bar">
+        <p class="mv-meta"><b id="mv-subject" data-mv-subject></b><small data-mv-client></small></p>
+        <p class="mv-count" aria-live="polite"><b data-mv-current>1</b> / <span data-mv-total>1</span></p>
+        <button class="round-btn" type="button" data-mv-prev aria-label="Previous"><span aria-hidden="true">←</span></button>
+        <button class="round-btn" type="button" data-mv-next aria-label="Next"><span aria-hidden="true">→</span></button>
+        <button class="round-btn mv-close" type="button" data-mv-close aria-label="Close"><span aria-hidden="true">✕</span></button>
+      </div>
+      <div class="mv-scroll" data-mv-scroll tabindex="0">
+        <div class="mv-stack" data-mv-stack></div>
+      </div>
+    </dialog>
 
     <!-- ============ WHAT WE DESIGN — every category, written out ============ -->
     <section class="why" id="scope" aria-labelledby="scope-title">
@@ -772,6 +809,8 @@ const meta = {
               <label class="chip"><input type="checkbox" name="need" value="event" data-id="Backdrop / banner / booth" data-en="Backdrop / banner / booth"><span>Backdrop / banner</span></label>
               <label class="chip"><input type="checkbox" name="need" value="merch" data-id="Kaos / jersey olahraga / merchandise" data-en="T-shirt / sports jersey / merchandise"><span><span class="lang-id">Kaos / jersey</span><span class="lang-en">T-shirt / jersey</span></span></label>
               <label class="chip"><input type="checkbox" name="need" value="logo" data-id="Simple logo" data-en="Simple logo"><span>Simple logo</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="email" data-id="Newsletter / email blast" data-en="Newsletter / email blast"><span>Newsletter / email blast</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="packaging" data-id="Kemasan / packaging" data-en="Packaging"><span><span class="lang-id">Kemasan</span><span class="lang-en">Packaging</span></span></label>
               <label class="chip"><input type="checkbox" name="need" value="other" data-id="Lainnya" data-en="Something else"><span><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></span></label>
             </div>
             <p class="field-error"><span class="lang-id">Pilih minimal satu.</span><span class="lang-en">Pick at least one.</span></p>

@@ -1,0 +1,47 @@
+---
+// One piece of real client work on the Graphic Design hero rail (the samples are HTML/CSS;
+// these are images). The card hangs like a sample; a click on it, or on ↗, opens every image
+// of the work in the viewer dialog, top to bottom. The overview wall finds it by data-key. Data: `works` in
+// src/pages/products/graphic-design/index.astro · notes: docs/graphic-design.md
+//
+// work: { key, name: string | {id, en}, client, title: {id, en}, card: {src, w, h},
+//         images: [{src, w, h, alt}], mail?: true }
+// mail: an email card is a tall image in an A-series window that scrolls on hover.
+interface Props {
+  work: any;
+  idx: string;
+  cat: string;
+}
+const { work, idx, cat } = Astro.props;
+const { card, images, mail } = work;
+const name = typeof work.name === "string" ? { id: work.name, en: work.name } : work.name;
+
+// A-series window over the email; the hover scroll travels the hidden part of the card.
+const ratio = card.h / card.w;
+const screenStyle = mail
+  ? `--mail-shift:${(-(1 - 297 / 210 / ratio) * 100).toFixed(2)}%;--mail-dur:${(ratio * 1.8).toFixed(2)}s`
+  : `aspect-ratio:${card.w} / ${card.h}`;
+---
+<li class:list={["sheet", "sheet--work", mail && "sheet--mail"]} data-cat={cat} data-key={work.key} style="--tone:#f4f1ea">
+  <div class="sheet-swing">
+    <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+    <div class="sheet-paper" data-cursor="View" data-work-sheet>
+      <div class:list={["sheet-screen", mail ? "sheet-screen--mail" : "sheet-screen--work"]} style={screenStyle}>
+        <img src={card.src} alt={images[0].alt} width={card.w} height={card.h} loading="lazy" decoding="async" draggable="false">
+      </div>
+      <span class="sheet-caption">
+        <span class="sheet-idx">{idx}</span>
+        <span class="sheet-name">
+          {name.id === name.en
+            ? <strong>{name.id}</strong>
+            : <strong><span class="lang-id">{name.id}</span><span class="lang-en">{name.en}</span></strong>}
+          <small>{work.client}</small>
+        </span>
+        <button class="sheet-go" type="button" data-cursor="View" data-work-go
+          data-title-id={work.title.id} data-title-en={work.title.en} data-client={work.client}
+          data-images={JSON.stringify(images)}
+          aria-label={`${mail ? "Open the full email" : "View the full design"}: ${work.title.en}`}><span aria-hidden="true">↗</span></button>
+      </span>
+    </div>
+  </div>
+</li>

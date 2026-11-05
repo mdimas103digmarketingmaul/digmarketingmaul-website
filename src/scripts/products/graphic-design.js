@@ -12,6 +12,7 @@
    5. Spotlight tiles, process line, header progress
    6. Brief form → prefilled WhatsApp (+ live chat preview)
    7. QRIS popover
+   8. Newsletter sheets → full-length email viewer
 ========================================================= */
 (function () {
   "use strict";
@@ -93,7 +94,7 @@
 
   const ring = $(".cursor-ring");
   const label = $(".cursor-label");
-  const CURSOR_ID = { Drag: "Geser" };
+  const CURSOR_ID = { Drag: "Geser", View: "Lihat" };
   const cursorText = (t) => (lang() === "id" && CURSOR_ID[t]) || t;
 
   if (finePointer && motionOK) {
@@ -148,10 +149,15 @@
   }
 
   /* =========================================================
-     3. HANGING SAMPLES
-     Same physics as the other product pages: the track slides along
-     the rail, each sheet is a pendulum pushed by the track's velocity.
-     Sheets differ in height (post, poster, slide…) but share a width.
+     3. OVERVIEW WALL + HANGING SHEETS
+     The hero opens on the wall (data-view="wall"): every image, small,
+     in drifting columns (CSS). A tile, a category or → switches to the
+     rail (data-view="rail") already standing on that sheet; the ▦ button
+     goes back. Both live in the same grid cell, so the rail keeps its
+     size while hidden.
+     The rail: same physics as the other product pages: the track slides
+     along the rail, each sheet is a pendulum pushed by the track's
+     velocity. Sheets differ in height but share a width.
   ========================================================= */
   (function hangingSamples() {
     const hang = $("[data-hang]");
@@ -165,6 +171,10 @@
     const counter = $("[data-hang-current]");
     const bar = $("[data-hang-bar]");
     const cats = $$("[data-cat-go]");
+    const hero = hang.closest("[data-view]");
+    const wall = $("[data-wall]");
+    const wallBtn = $("[data-view-wall]");
+    let railOn = !hero || hero.dataset.view !== "wall";
     let litCat = null;
     $("[data-hang-total]").textContent = String(sheets.length).padStart(2, "0");
 
@@ -208,7 +218,7 @@
       bar.style.setProperty("--p", ((i + 1) / sheets.length).toFixed(3));
       prevBtn.disabled = i === 0;
       nextBtn.disabled = i === sheets.length - 1;
-      const cat = sheets[i].dataset.cat || null;
+      const cat = railOn ? sheets[i].dataset.cat || null : null;
       if (cat !== litCat) {
         litCat = cat;
         cats.forEach((b) => {
@@ -261,7 +271,7 @@
       });
 
       updateUi();
-      if (inView && (motionOK || moving || dragging || target !== x)) raf = requestAnimationFrame(tick);
+      if (inView && railOn && (motionOK || moving || dragging || target !== x)) raf = requestAnimationFrame(tick);
       else lastT = 0;
     }
 
@@ -355,8 +365,47 @@
       { passive: false }
     );
 
+    /* Wall ↔ rail */
+    function setView(view) {
+      if (!hero) return;
+      railOn = view === "rail";
+      hero.dataset.view = view;
+      if (wall) wall.classList.toggle("is-off", railOn);
+      if (railOn) {
+        // the sheets arrive with a small swing
+        if (motionOK) pend.forEach((p, i) => (p.w += 26 + (i % 3) * 8));
+        wake();
+      }
+      updateUi();
+    }
+
+    // Land on sheet i: straight there when coming from the wall, sliding when already on the rail
+    function enter(i) {
+      const fromWall = !railOn;
+      go(i);
+      if (!fromWall) return;
+      x = target;
+      v = 0;
+      setView("rail");
+      if (wall && wall.contains(document.activeElement)) viewport.focus({ preventScroll: true });
+    }
+
+    $$("[data-wall-go]").forEach((tile) =>
+      tile.addEventListener("click", () => {
+        const i = sheets.findIndex((s) => s.dataset.key === tile.dataset.wallGo);
+        if (i >= 0) enter(i);
+      })
+    );
+    if (wallBtn) {
+      wallBtn.addEventListener("click", () => {
+        setView("wall");
+        const first = wall && $(".wall-tile", wall);
+        if (first) first.focus({ preventScroll: true });
+      });
+    }
+
     prevBtn.addEventListener("click", () => go(nearest(x) - 1));
-    nextBtn.addEventListener("click", () => go(nearest(x) + 1));
+    nextBtn.addEventListener("click", () => (railOn ? go(nearest(x) + 1) : enter(0)));
     viewport.addEventListener("keydown", (e) => {
       if (e.key === "ArrowRight") {
         e.preventDefault();
@@ -366,13 +415,13 @@
         go(nearest(x) - 1);
       }
     });
-    // Category index → first sheet of that category. On narrow screens the rail
-    // sits below the index, so bring it into view when it isn't.
+    // Category index → first sheet of that category (no work there yet → the open slot,
+    // “your design is next”). On narrow screens the rail sits below the index, so bring
+    // it into view when it isn't.
     cats.forEach((b) =>
       b.addEventListener("click", () => {
         const i = sheets.findIndex((s) => s.dataset.cat === b.dataset.catGo);
-        if (i < 0) return;
-        go(i);
+        enter(i < 0 ? sheets.length - 1 : i);
         if (innerWidth <= 900) {
           const r = viewport.getBoundingClientRect();
           if (r.top < 0 || r.bottom > innerHeight) {
@@ -391,6 +440,8 @@
     new IntersectionObserver((entries) => {
       inView = entries[0].isIntersecting;
       if (inView) wake();
+      // the wall drifts only while on screen
+      if (wall) wall.classList.toggle("is-away", !inView);
     }).observe(hang);
 
     let resizeTimer = 0;
@@ -663,6 +714,99 @@
       if (e.key === "Escape") set(false);
     });
     $(".qris-confirm", item).addEventListener("click", () => set(false));
+  })();
+
+  /* =========================================================
+     8. CLIENT WORK → WORK VIEWER
+     Real work hangs on the rail like the samples (a newsletter shows the
+     top of the email and scrolls on hover). A click on the sheet or its ↗
+     opens every image of that work in a <dialog>, top to bottom, with ←/→
+     between the works of the same category. A drag never opens it: the
+     rail's capture handler swallows the click that ends a drag.
+  ========================================================= */
+  (function workViewer() {
+    const viewer = $("[data-work-viewer]");
+    const buttons = $$(".sheet-go[data-work-go]");
+    if (!viewer || !buttons.length) return;
+
+    const stack = $("[data-mv-stack]", viewer);
+    const scroller = $("[data-mv-scroll]", viewer);
+    const subject = $("[data-mv-subject]", viewer);
+    const client = $("[data-mv-client]", viewer);
+    const current = $("[data-mv-current]", viewer);
+    const total = $("[data-mv-total]", viewer);
+    const prev = $("[data-mv-prev]", viewer);
+    const next = $("[data-mv-next]", viewer);
+    const catOf = (btn) => btn.closest("[data-cat]").dataset.cat;
+    const imagesOf = (btn) => JSON.parse(btn.dataset.images);
+    let list = [];
+    let index = 0;
+    let opener = null;
+
+    const preload = (btn) => {
+      if (btn) new Image().src = imagesOf(btn)[0].src;
+    };
+
+    function show(i) {
+      index = clamp(i, 0, list.length - 1);
+      const btn = list[index];
+      const d = btn.dataset;
+      const images = imagesOf(btn);
+      stack.replaceChildren(...images.map((im, k) => {
+        const el = document.createElement("img");
+        el.className = "mv-img";
+        el.width = im.w;
+        el.height = im.h;
+        el.alt = im.alt;
+        el.decoding = "async";
+        if (k > 0) el.loading = "lazy";
+        el.src = im.src;
+        return el;
+      }));
+      viewer.classList.toggle("is-wide", images[0].w > images[0].h);
+      subject.textContent = (lang() === "en" ? d.titleEn : d.titleId) || d.titleEn;
+      client.textContent = d.client;
+      current.textContent = String(index + 1);
+      total.textContent = String(list.length);
+      prev.disabled = index === 0;
+      next.disabled = index === list.length - 1;
+      scroller.scrollTop = 0;
+      preload(list[index + 1]);
+    }
+
+    function openViewer(btn) {
+      list = buttons.filter((b) => catOf(b) === catOf(btn));
+      opener = btn;
+      show(list.indexOf(btn));
+      root.classList.add("mv-lock");
+      viewer.showModal();
+      scroller.focus({ preventScroll: true });
+    }
+
+    buttons.forEach((btn) => {
+      btn.closest("[data-work-sheet]").addEventListener("click", () => openViewer(btn));
+    });
+
+    prev.addEventListener("click", () => show(index - 1));
+    next.addEventListener("click", () => show(index + 1));
+    $("[data-mv-close]", viewer).addEventListener("click", () => viewer.close());
+    // a click on the backdrop (the dialog box itself, outside its content) closes it
+    viewer.addEventListener("click", (e) => {
+      if (e.target === viewer) viewer.close();
+    });
+    viewer.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" && index < list.length - 1) {
+        e.preventDefault();
+        show(index + 1);
+      } else if (e.key === "ArrowLeft" && index > 0) {
+        e.preventDefault();
+        show(index - 1);
+      }
+    });
+    viewer.addEventListener("close", () => {
+      root.classList.remove("mv-lock");
+      if (opener) opener.focus({ preventScroll: true });
+    });
   })();
 
   setInternational(root.dataset.international === "true", false);
