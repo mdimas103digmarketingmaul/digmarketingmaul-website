@@ -1273,7 +1273,12 @@ html.js .reveal.is-in {
   margin-top: clamp(28px, 5vh, 48px);
 }
 
-.stack-tabs button {
+.stack-tablist {
+  display: contents;
+}
+
+.stack-tabs button,
+.stack-other {
   position: relative;
   min-height: 40px;
   padding: 0 16px;
@@ -1287,6 +1292,26 @@ html.js .reveal.is-in {
   text-transform: uppercase;
   isolation: isolate;
   transition: color 0.3s, box-shadow 0.3s;
+}
+
+.stack-other {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.stack-other span {
+  transition: translate 0.3s var(--ease-out);
+}
+
+.stack-other:hover {
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.stack-other:hover span {
+  translate: 0 2px;
 }
 
 .stack-tabs button::before {
@@ -1348,8 +1373,45 @@ html.js .reveal.is-in {
   transition: translate 0.9s var(--ease-expo), rotate 0.9s var(--ease-expo), scale 0.9s var(--ease-expo), opacity 0.6s;
 }
 
-.stack-card[data-pos="4"] {
-  opacity: 0;
+/* each card is a link to its product page; only the front one takes the pointer */
+a.stack-card {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.stack-card:not([data-pos="0"]) {
+  pointer-events: none;
+}
+
+.stack-card:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 4px;
+}
+
+/* ↗ in the corner: the card goes to its page */
+.sc-go {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  font-size: 15px;
+  box-shadow: 0 6px 16px -8px rgba(7, 17, 31, 0.5);
+  transition: scale 0.4s var(--ease-expo), background 0.3s, color 0.3s;
+}
+
+.stack-card:hover .sc-go,
+.stack-card:focus-visible .sc-go {
+  scale: 1.12;
+  background: var(--ink);
+  color: #fff;
 }
 
 /* the front card flicks away before it goes to the back */
@@ -1414,79 +1476,33 @@ html.js .reveal.is-in {
   object-position: top;
 }
 
-/* Ads: bars + trend, no numbers */
+/* Ads: the seven-area system map from the Ads page, fading into the card */
 .sc-ads {
-  align-content: end;
-  gap: 14px;
-  background: var(--ink);
+  place-items: center;
+  background: radial-gradient(60% 60% at 18% 8%, rgba(255, 48, 79, 0.16), transparent 70%), #08111f;
 }
 
-.sc-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  height: 52%;
-}
-
-.sc-bars i {
-  flex: 1;
-  height: calc(var(--h) * 100%);
-  border-radius: 6px 6px 2px 2px;
-  background: rgba(244, 246, 250, 0.16);
-  transform-origin: 50% 100%;
-  animation: bar-up 2.8s var(--ease-expo) infinite;
-}
-
-.sc-bars i:last-child {
-  background: var(--red);
-}
-
-.sc-bars i:nth-child(2) { animation-delay: 0.08s; }
-.sc-bars i:nth-child(3) { animation-delay: 0.16s; }
-.sc-bars i:nth-child(4) { animation-delay: 0.24s; }
-.sc-bars i:nth-child(5) { animation-delay: 0.32s; }
-.sc-bars i:nth-child(6) { animation-delay: 0.4s; }
-
-@keyframes bar-up {
-  0% {
-    transform: scaleY(0.15);
-  }
-  45%,
-  100% {
-    transform: scaleY(1);
-  }
-}
-
-.sc-trend {
+.sc-system {
   position: absolute;
-  top: 26%;
-  left: 18px;
-  right: 18px;
-  width: calc(100% - 36px);
-  height: 28%;
-  overflow: visible;
+  top: 50%;
+  left: 50%;
+  height: 104%;
+  width: auto;
+  max-width: none;
+  translate: -50% -50%;
+  -webkit-mask-image: radial-gradient(closest-side, #000 82%, transparent);
+  mask-image: radial-gradient(closest-side, #000 82%, transparent);
+  transition: scale 0.8s var(--ease-expo), rotate 0.8s var(--ease-expo);
 }
 
-.sc-trend path {
-  fill: none;
-  stroke: var(--red);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-dasharray: 1;
-  animation: trend 2.8s var(--ease-out) infinite;
-}
-
-@keyframes trend {
-  from {
-    stroke-dashoffset: 1;
-  }
-  60%,
-  to {
-    stroke-dashoffset: 0;
-  }
+.stack-card.sc-ads:hover .sc-system {
+  scale: 1.04;
 }
 
 .sc-chips {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
   display: flex;
   gap: 6px;
 }
@@ -1546,104 +1562,42 @@ html.js .reveal.is-in {
   text-transform: uppercase;
 }
 
-/* Motion: player */
+/* Motion: the two real reels from the Video page, side by side like phones */
 .sc-motion {
   place-items: center;
-  align-content: center;
-  gap: 18px;
   background: radial-gradient(70% 70% at 50% 40%, #1b2c46, #07111f);
-  color: #f4f6fa;
 }
 
-.sc-play {
-  display: grid;
-  place-items: center;
-  width: 78px;
-  height: 78px;
-  border-radius: 50%;
-  background: var(--red);
-  box-shadow: 0 0 0 10px rgba(255, 48, 79, 0.2);
-  animation: pulse-ring 2s var(--ease-out) infinite;
-}
-
-.sc-play::before {
-  content: "";
-  margin-left: 6px;
-  border-left: 22px solid #fff;
-  border-block: 14px solid transparent;
-}
-
-@keyframes pulse-ring {
-  50% {
-    box-shadow: 0 0 0 18px rgba(255, 48, 79, 0);
-  }
-}
-
-.sc-timeline {
-  width: 70%;
-  height: 4px;
-  overflow: hidden;
-  border-radius: 4px;
-  background: rgba(244, 246, 250, 0.16);
-}
-
-.sc-timeline i {
-  display: block;
+.sc-reels {
+  position: relative;
   width: 100%;
   height: 100%;
-  background: #f4f6fa;
-  transform-origin: 0 50%;
-  animation: scrub 4s linear infinite;
 }
 
-@keyframes scrub {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
+.sc-reel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 84%;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #000;
+  box-shadow: 0 0 0 4px #0b1424, 0 0 0 5px rgba(244, 246, 250, 0.14), 0 30px 50px -24px rgba(0, 0, 0, 0.8);
+  translate: calc(-50% + var(--r) * 58%) calc(-46% + var(--r) * 3%);
+  rotate: calc(var(--r) * 4deg);
+  transition: translate 0.8s var(--ease-expo), rotate 0.8s var(--ease-expo);
 }
 
-.sc-time {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--slate);
+.sc-reel video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* Brand: type + palette */
-.sc-brand {
-  align-content: center;
-  gap: 16px;
-  padding-inline: 28px;
-  background: #f3efe6;
-}
-
-.sc-type {
-  font-size: clamp(4rem, 9vw, 7rem);
-  font-weight: 800;
-  line-height: 0.8;
-  letter-spacing: -0.07em;
-  color: var(--ink);
-}
-
-.sc-swatch {
-  display: flex;
-  gap: 8px;
-}
-
-.sc-swatch i {
-  flex: 1;
-  height: 46px;
-  border-radius: 10px;
-  background: var(--c);
-  box-shadow: inset 0 0 0 1px var(--line);
-}
-
-.sc-note {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--muted);
+.stack-card.sc-motion:hover .sc-reel {
+  translate: calc(-50% + var(--r) * 64%) calc(-48% + var(--r) * 2%);
+  rotate: calc(var(--r) * 2deg);
 }
 
 /* ---------------------------------------------------------
@@ -2262,6 +2216,24 @@ html.js .reveal.is-in {
   .stack-card {
     width: 88%;
     translate: calc(-50% + var(--pos) * 16px) calc(-50% - var(--pos) * 18px);
+  }
+
+  /* five pills on one line at phone width */
+  .stack-tabs {
+    gap: 6px;
+  }
+
+  .stack-tabs button,
+  .stack-other {
+    min-height: 38px;
+    padding: 0 11px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+
+  /* the ring fills the short card; the platform chips would sit on its nodes */
+  .sc-ads .sc-chips {
+    display: none;
   }
 
   .card-visual {

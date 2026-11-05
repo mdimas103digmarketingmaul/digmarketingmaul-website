@@ -175,17 +175,20 @@
 
   /* =========================================================
      3. HERO STACK
-     Every DWELL ms the front card flicks off to the left and rejoins
-     at the back. Tabs jump to a discipline; hovering the stack or the
-     tabs pauses the clock (the tab's fill bar pauses with it). The
-     clock also stops while the hero is off screen or the tab is hidden.
+     Four cards of real work (Web, Motion, Design, Ads), each a link to
+     its product page. Every DWELL ms the front card flicks off to the
+     left and rejoins at the back. Tabs jump to a discipline; hovering or
+     focusing the stack or the tabs pauses the clock (the tab's fill bar
+     pauses with it). The clock also stops while the hero is off screen
+     or the tab is hidden. The Motion card's two reels play only while
+     that card is in front (preload="none", so they cost nothing before).
   ========================================================= */
   (function heroStack() {
     const stack = $("[data-stack]");
     const tabsWrap = $("[data-stack-tabs]");
     if (!stack || !tabsWrap) return;
     const cards = $$(".stack-card", stack);
-    const tabs = $$("button", tabsWrap);
+    const tabs = $$('[role="tab"]', tabsWrap);
     const n = cards.length;
     const DWELL = 2800;
     let active = 0;
@@ -202,7 +205,11 @@
         const pos = (i - active + n) % n;
         c.dataset.pos = String(pos);
         c.style.setProperty("--pos", String(pos));
+        // only the front card is in the tab order / read out
+        c.tabIndex = pos === 0 ? 0 : -1;
+        c.setAttribute("aria-hidden", String(pos !== 0));
       });
+      syncReels();
       tabs.forEach((t, i) => {
         t.setAttribute("aria-selected", String(i === active));
         t.tabIndex = i === active ? 0 : -1;
@@ -232,7 +239,22 @@
     }
 
     const paused = () => hovering || !visible || document.hidden;
-    const syncPause = () => tabsWrap.classList.toggle("is-paused", paused());
+    const syncPause = () => {
+      tabsWrap.classList.toggle("is-paused", paused());
+      syncReels();
+    };
+
+    // Motion card: play its reels only while it is in front and on screen
+    function syncReels() {
+      cards.forEach((c, i) => {
+        $$("video", c).forEach((v) => {
+          if (i === active && visible && !document.hidden && motionOK) {
+            const p = v.play();
+            if (p && p.catch) p.catch(() => {});
+          } else if (!v.paused) v.pause();
+        });
+      });
+    }
 
     function tick(now) {
       const dt = last ? Math.min(now - last, 100) : 0;
@@ -266,6 +288,15 @@
         syncPause();
       });
       el.addEventListener("pointerleave", () => {
+        hovering = false;
+        syncPause();
+      });
+      el.addEventListener("focusin", () => {
+        hovering = true;
+        syncPause();
+      });
+      el.addEventListener("focusout", (e) => {
+        if (el.contains(e.relatedTarget)) return;
         hovering = false;
         syncPause();
       });

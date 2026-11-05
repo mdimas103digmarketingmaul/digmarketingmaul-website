@@ -88,28 +88,36 @@ const gdWall = [
             <span class="mask-line"><span><em>Grow</em><span class="accent-dot">.</span></span></span>
           </h1>
           <p class="hero-lead reveal"><span class="lang-id">Website, ads, dan creative production — dalam satu tempat.</span><span class="lang-en">Websites, ads and creative production — in one place.</span></p>
-          <div class="stack-tabs reveal" role="tablist" aria-label="Disciplines" data-stack-tabs>
-            <button type="button" role="tab" data-i="0">Web</button>
-            <button type="button" role="tab" data-i="1">Motion</button>
-            <button type="button" role="tab" data-i="2">Design</button>
-            <button type="button" role="tab" data-i="3">Ads</button>
-            <button type="button" role="tab" data-i="4">Brand</button>
+          <div class="stack-tabs reveal" data-stack-tabs>
+            <div class="stack-tablist" role="tablist" aria-label="Disciplines">
+              <button type="button" role="tab" data-i="0">Web</button>
+              <button type="button" role="tab" data-i="1">Motion</button>
+              <button type="button" role="tab" data-i="2">Design</button>
+              <button type="button" role="tab" data-i="3">Ads</button>
+            </div>
+            <a class="stack-other" href="#products">Other <span aria-hidden="true">↓</span></a>
           </div>
         </div>
 
-        <!-- The full stack: five cards that shuffle to the front one by one (hover pauses, click a tab to jump) -->
-        <div class="stack" data-stack aria-hidden="true">
-          <div class="stack-card sc-web" data-name="Web">
+        <!-- The stack: four cards of real work that shuffle to the front one by one (hover pauses,
+             a tab jumps). Each card links to its product page; "Other" scrolls to the full list. -->
+        <div class="stack" data-stack>
+          <a class="stack-card sc-web" href="/products/website-development/" data-name="Web" data-cursor="View" aria-label="Website Development">
             <span class="sc-label">01 · Web</span>
             <span class="sc-browser"><span class="sc-bar"><i></i><i></i><i></i></span><img src="/assets/website-development/clients/haikal-cfp.webp" alt="" width="1280" height="800"></span>
-          </div>
-          <div class="stack-card sc-motion" data-name="Motion">
+            <span class="sc-go" aria-hidden="true">↗</span>
+          </a>
+          <!-- real work from /products/video-editing-motion/: the two previews play while this card is in front -->
+          <a class="stack-card sc-motion" href="/products/video-editing-motion/" data-name="Motion" data-cursor="View" aria-label="Video Editing &amp; Motion">
             <span class="sc-label">02 · Motion</span>
-            <span class="sc-play"></span>
-            <span class="sc-timeline"><i></i></span>
-            <span class="sc-time">00:12 / 00:30</span>
-          </div>
-          <div class="stack-card sc-creative" data-name="Design">
+            <span class="sc-reels">
+              <span class="sc-reel" style="--r:-1"><video src="/assets/video-editing-motion/work/hijra-deposito-10-preview.mp4" poster="/assets/video-editing-motion/work/hijra-deposito-10-poster.webp" width="540" height="960" muted loop playsinline preload="none"></video></span>
+              <span class="sc-reel" style="--r:1"><video src="/assets/video-editing-motion/work/digmarketingmaul-website-offer-preview.mp4" poster="/assets/video-editing-motion/work/digmarketingmaul-website-offer-poster.webp" width="540" height="960" muted loop playsinline preload="none"></video></span>
+            </span>
+            <small class="sc-proof-note">Promo · Motion · Reels</small>
+            <span class="sc-go" aria-hidden="true">↗</span>
+          </a>
+          <a class="stack-card sc-creative" href="/products/graphic-design/" data-name="Design" data-cursor="View" aria-label="Graphic Design">
             <span class="sc-label">03 · Design</span>
             <!-- real work from /products/graphic-design/, fanned like proofs -->
             <span class="sc-proofs">
@@ -118,19 +126,15 @@ const gdWall = [
               <img src="/assets/graphic-design/logo/meutuah-1978-logo-thumb.webp" alt="" width="480" height="600" style="--r:0">
             </span>
             <small class="sc-proof-note">Logo · Jersey · Newsletter · Packaging</small>
-          </div>
-          <div class="stack-card sc-ads" data-name="Ads">
+            <span class="sc-go" aria-hidden="true">↗</span>
+          </a>
+          <!-- the seven-area system from /products/digital-ads-management/ (a capture of its hero map) -->
+          <a class="stack-card sc-ads" href="/products/digital-ads-management/" data-name="Ads" data-cursor="View" aria-label="Digital Ads Management">
             <span class="sc-label">04 · Ads</span>
-            <span class="sc-bars"><i style="--h:.32"></i><i style="--h:.46"></i><i style="--h:.4"></i><i style="--h:.62"></i><i style="--h:.78"></i><i style="--h:1"></i></span>
-            <svg class="sc-trend" viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0 52 C 40 48, 60 36, 92 34 S 150 16, 200 6" pathLength="1"/></svg>
-            <span class="sc-chips"><b>Meta</b><b>Google</b><b>TikTok</b></span>
-          </div>
-          <div class="stack-card sc-brand" data-name="Brand">
-            <span class="sc-label">05 · Brand</span>
-            <span class="sc-type">Aa</span>
-            <span class="sc-swatch"><i style="--c:#07111f"></i><i style="--c:#ff304f"></i><i style="--c:#f4f6fa"></i><i style="--c:#f6b81f"></i></span>
-            <small class="sc-note">Logo · Color · Type</small>
-          </div>
+            <img class="sc-system" src="/assets/digital-ads-management/system-map.webp" alt="" width="760" height="730">
+            <span class="sc-chips"><b>Meta</b><b>Google</b><b>Tracking</b></span>
+            <span class="sc-go" aria-hidden="true">↗</span>
+          </a>
         </div>
       </div>
     </section>
