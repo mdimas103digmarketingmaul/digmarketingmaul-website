@@ -126,79 +126,12 @@ const faq = [
 ];
 // Real client work on the hero rail. One work = one sheet (src/components/products/WorkSheet.astro):
 // `card` is the small image that hangs, `images` what the viewer shows, top to bottom.
-// Each list sits in its category's place on the rail, after that category's HTML samples.
+// The rail shows them in the order written here (categories, and works within them).
 // The hero opens on the overview wall (every image, small); a tile opens the rail at its work.
 // Sizes are the files' real pixel sizes. Files + how to make them: docs/graphic-design.md
 const GD = "/assets/graphic-design/";
 const pic = (file, w, h, alt = "") => ({ src: GD + file, w, h, alt });
 const works = {
-  sales: [
-    {
-      key: "meutuah-price-list", name: "Price list", client: "Meutuah 1978",
-      title: { id: "Price list kopi specialty, Triple Pick", en: "Specialty coffee price list, Triple Pick" },
-      card: pic("sales/meutuah-1978-price-list-card.webp", 800, 1001),
-      images: [pic("sales/meutuah-1978-price-list.webp", 1600, 2002, "Meutuah 1978 price list for Triple Pick specialty coffee: drip bags, ground and whole bean in 100 g, 250 g and 1 kg, and bundles, with the product line photographed on a wooden table")],
-    },
-  ],
-  apparel: [
-    {
-      key: "ptm-baposa", name: { id: "Jersey tenis meja", en: "Table tennis jersey" }, client: "PTM Baposa",
-      title: { id: "Jersey tenis meja, depan & belakang", en: "Table tennis jersey, front & back" },
-      card: pic("apparel/ptm-baposa-jersey-card.webp", 800, 511),
-      images: [pic("apparel/ptm-baposa-jersey.webp", 1600, 1021, "PTM Baposa table tennis jersey in navy with a blue brush pattern: the front with the club badge and PTM BAPOSA, the back with BAPOSA written down the spine")],
-    },
-    {
-      key: "hijra-football", name: { id: "Jersey sepak bola", en: "Football kit" }, client: "Hijra Bank",
-      title: { id: "Jersey sepak bola: depan, belakang & celana", en: "Football kit: front, back & shorts" },
-      card: pic("apparel/hijra-football-kit-card.webp", 800, 1000),
-      images: [pic("apparel/hijra-football-kit.webp", 1600, 2000, "Hijra Bank football kit in sky blue with navy trim: the front with the Hijra logo and club badge, the back with name and number 6, and navy shorts with a blue side stripe")],
-    },
-    {
-      key: "hijra-runner", name: { id: "Jersey lari", en: "Running jersey" }, client: "Hijra Bank · Hijra Runner",
-      title: { id: "10 konsep dipresentasikan, lalu final", en: "10 concepts presented, then the final" },
-      card: pic("apparel/hijra-runner-jersey-card.webp", 800, 983),
-      images: [pic("apparel/hijra-runner-jersey.webp", 1600, 1966, "Hijra Runner running jersey: an overview of the ten concepts presented, above the final chosen design, Chevron Rush, in deep teal with a chevron pattern, front and back")],
-    },
-  ],
-  logo: [
-    {
-      key: "meutuah-logo", name: "Logo", client: "Meutuah 1978",
-      title: { id: "Logo: vertikal & horizontal, latar terang & gelap", en: "Logo: vertical & horizontal, on light & dark" },
-      card: pic("logo/meutuah-1978-logo-card.webp", 800, 1000),
-      images: [pic("logo/meutuah-1978-logo.webp", 1600, 2000, "Meutuah 1978 logo system: the vertical and horizontal versions, each in green on white and in white on green, with the brand colours")],
-    },
-    {
-      key: "gals-logo", name: "Logo", client: "Gals Episode",
-      title: { id: "Logo: 4 versi, filosofi & opsi yang dibuat", en: "Logo: 4 versions, the philosophy & the options" },
-      card: pic("logo/gals-episode-logo-card.webp", 800, 800),
-      images: [
-        pic("logo/gals-episode-logo.webp", 1600, 1600, "Gals Episode logo in four versions: the gradient primary, one colour on white, white on dark, and white on the brand magenta"),
-        pic("logo/gals-episode-philosophy.webp", 1600, 1600, "Gals Episode logo philosophy: the letters G and E, a butterfly shape, the colour #231F20 and the Minion Variable Concept font"),
-        pic("logo/gals-episode-options.webp", 1600, 1600, "The three logo options created for Gals Episode, a butterfly, a tulip and a rose, each with its meaning"),
-      ],
-    },
-  ],
-  email: [
-    {
-      key: "mti-juz-amma", name: "Newsletter", client: "Measured Tones Institute", mail: true,
-      title: { id: "Master the lessons of Juz ‘Amma", en: "Master the lessons of Juz ‘Amma" },
-      card: pic("newsletter/mti-juz-amma-tafseer-card.webp", 680, 2048),
-      images: [pic("newsletter/mti-juz-amma-tafseer.webp", 724, 2180, "Newsletter for Measured Tones Institute announcing The Last Chapter, a 10-month Juz ‘Amma tafseer course, with payment options and enrollment buttons")],
-    },
-    {
-      // Source is only 528px wide, so the card and the full view share one file
-      key: "mti-last-chapter", name: "Newsletter", client: "Measured Tones Institute", mail: true,
-      title: { id: "Spots still available: The Last Chapter", en: "Spots still available: The Last Chapter" },
-      card: pic("newsletter/mti-last-chapter.webp", 600, 1536),
-      images: [pic("newsletter/mti-last-chapter.webp", 600, 1536, "Enrollment newsletter for Measured Tones Institute: spots still available in The Last Chapter, a 10-month Juz ‘Amma Mastery Course, with Full Experience and Tafseer Only options")],
-    },
-    {
-      key: "mti-scholarship", name: "Newsletter", client: "Measured Tones Institute", mail: true,
-      title: { id: "We’re just $2,000 away from our goal", en: "We’re just $2,000 away from our goal" },
-      card: pic("newsletter/mti-scholarship-fund-card.webp", 680, 2528),
-      images: [pic("newsletter/mti-scholarship-fund.webp", 1280, 4759, "Fundraising newsletter for the Measured Tones Institute scholarship fund: $8,000 of $10,000 raised, with a donate button and two course options")],
-    },
-  ],
   packaging: [
     {
       key: "meutuah-drip", name: "Drip bag", client: "Meutuah 1978",
@@ -222,13 +155,77 @@ const works = {
       ],
     },
   ],
+  apparel: [
+    {
+      key: "hijra-runner", name: { id: "Jersey lari", en: "Running jersey" }, client: "Hijra Bank · Hijra Runner",
+      title: { id: "10 konsep dipresentasikan, lalu final", en: "10 concepts presented, then the final" },
+      card: pic("apparel/hijra-runner-jersey-card.webp", 800, 983),
+      images: [pic("apparel/hijra-runner-jersey.webp", 1600, 1966, "Hijra Runner running jersey: an overview of the ten concepts presented, above the final chosen design, Chevron Rush, in deep teal with a chevron pattern, front and back")],
+    },
+    {
+      key: "hijra-football", name: { id: "Jersey sepak bola", en: "Football kit" }, client: "Hijra Bank",
+      title: { id: "Jersey sepak bola: depan, belakang & celana", en: "Football kit: front, back & shorts" },
+      card: pic("apparel/hijra-football-kit-card.webp", 800, 1000),
+      images: [pic("apparel/hijra-football-kit.webp", 1600, 2000, "Hijra Bank football kit in sky blue with navy trim: the front with the Hijra logo and club badge, the back with name and number 6, and navy shorts with a blue side stripe")],
+    },
+    {
+      key: "ptm-baposa", name: { id: "Jersey tenis meja", en: "Table tennis jersey" }, client: "PTM Baposa",
+      title: { id: "Jersey tenis meja, depan & belakang", en: "Table tennis jersey, front & back" },
+      card: pic("apparel/ptm-baposa-jersey-card.webp", 800, 511),
+      images: [pic("apparel/ptm-baposa-jersey.webp", 1600, 1021, "PTM Baposa table tennis jersey in navy with a blue brush pattern: the front with the club badge and PTM BAPOSA, the back with BAPOSA written down the spine")],
+    },
+  ],
+  logo: [
+    {
+      key: "meutuah-logo", name: "Logo", client: "Meutuah 1978",
+      title: { id: "Logo: vertikal & horizontal, latar terang & gelap", en: "Logo: vertical & horizontal, on light & dark" },
+      card: pic("logo/meutuah-1978-logo-card.webp", 800, 1000),
+      images: [pic("logo/meutuah-1978-logo.webp", 1600, 2000, "Meutuah 1978 logo system: the vertical and horizontal versions, each in green on white and in white on green, with the brand colours")],
+    },
+    {
+      key: "gals-logo", name: "Logo", client: "Gals Episode",
+      title: { id: "Logo: 4 versi, filosofi & opsi yang dibuat", en: "Logo: 4 versions, the philosophy & the options" },
+      card: pic("logo/gals-episode-logo-card.webp", 800, 800),
+      images: [
+        pic("logo/gals-episode-logo.webp", 1600, 1600, "Gals Episode logo in four versions: the gradient primary, one colour on white, white on dark, and white on the brand magenta"),
+        pic("logo/gals-episode-philosophy.webp", 1600, 1600, "Gals Episode logo philosophy: the letters G and E, a butterfly shape, the colour #231F20 and the Minion Variable Concept font"),
+        pic("logo/gals-episode-options.webp", 1600, 1600, "The three logo options created for Gals Episode, a butterfly, a tulip and a rose, each with its meaning"),
+      ],
+    },
+  ],
+  sales: [
+    {
+      key: "meutuah-price-list", name: "Price list", client: "Meutuah 1978",
+      title: { id: "Price list kopi specialty, Triple Pick", en: "Specialty coffee price list, Triple Pick" },
+      card: pic("sales/meutuah-1978-price-list-card.webp", 800, 1001),
+      images: [pic("sales/meutuah-1978-price-list.webp", 1600, 2002, "Meutuah 1978 price list for Triple Pick specialty coffee: drip bags, ground and whole bean in 100 g, 250 g and 1 kg, and bundles, with the product line photographed on a wooden table")],
+    },
+  ],
+  email: [
+    {
+      key: "mti-juz-amma", name: "Newsletter", client: "Measured Tones Institute", mail: true,
+      title: { id: "Master the lessons of Juz ‘Amma", en: "Master the lessons of Juz ‘Amma" },
+      card: pic("newsletter/mti-juz-amma-tafseer-card.webp", 680, 2048),
+      images: [pic("newsletter/mti-juz-amma-tafseer.webp", 724, 2180, "Newsletter for Measured Tones Institute announcing The Last Chapter, a 10-month Juz ‘Amma tafseer course, with payment options and enrollment buttons")],
+    },
+    {
+      // Source is only 528px wide, so the card and the full view share one file
+      key: "mti-last-chapter", name: "Newsletter", client: "Measured Tones Institute", mail: true,
+      title: { id: "Spots still available: The Last Chapter", en: "Spots still available: The Last Chapter" },
+      card: pic("newsletter/mti-last-chapter.webp", 600, 1536),
+      images: [pic("newsletter/mti-last-chapter.webp", 600, 1536, "Enrollment newsletter for Measured Tones Institute: spots still available in The Last Chapter, a 10-month Juz ‘Amma Mastery Course, with Full Experience and Tafseer Only options")],
+    },
+    {
+      key: "mti-scholarship", name: "Newsletter", client: "Measured Tones Institute", mail: true,
+      title: { id: "We’re just $2,000 away from our goal", en: "We’re just $2,000 away from our goal" },
+      card: pic("newsletter/mti-scholarship-fund-card.webp", 680, 2528),
+      images: [pic("newsletter/mti-scholarship-fund.webp", 1280, 4759, "Fundraising newsletter for the Measured Tones Institute scholarship fund: $8,000 of $10,000 raised, with a donate button and two course options")],
+    },
+  ],
 };
-// Rail order = category order; the HTML samples keep their keys here so every sheet gets its number.
-const rail = [
-  ...works.sales.map((w) => w.key), "invite",
-  ...works.apparel.map((w) => w.key), ...works.logo.map((w) => w.key),
-  ...works.email.map((w) => w.key), ...works.packaging.map((w) => w.key), "open",
-];
+// Rail order = the order of `works` (owner's pick: drip bag, box & pouch, the three jerseys,
+// the logos, then the rest), each work one sheet, the open slot last.
+const rail = [...Object.values(works).flat().map((w) => w.key), "open"];
 const num = (key) => String(rail.indexOf(key) + 1).padStart(2, "0");
 
 // Overview wall: every image of every work as a small tile, categories interleaved, dealt into
@@ -338,11 +335,11 @@ const meta = {
               <li><button class="cat" type="button" data-cat-go="packaging"><span class="cat-num">08</span><span class="cat-name"><span class="lang-id">Kemasan</span><span class="lang-en">Packaging</span></span><span class="cat-items"><span class="lang-id">Sachet, box, pouch, label produk</span><span class="lang-en">Sachets, boxes, pouches, product labels</span></span><span class="cat-go" aria-hidden="true">→</span></button></li>
             </ol>
             <div class="hang-ui">
-              <p class="hang-label"><span class="hl-wall"><span class="lang-id">Semua karya</span><span class="lang-en">All work</span></span><span class="hl-rail"><span class="lang-id">Karya &amp; sample</span><span class="lang-en">Work &amp; samples</span></span></p>
+              <p class="hang-label"><span class="hl-wall"><span class="lang-id">Semua karya</span><span class="lang-en">All work</span></span><span class="hl-rail"><span class="lang-id">Karya pilihan</span><span class="lang-en">Selected work</span></span></p>
               <button class="round-btn wall-btn" type="button" data-view-wall aria-label="Show all work"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i></button>
               <p class="hang-count"><b data-hang-current>01</b> / <span data-hang-total>{num("open")}</span></p>
-              <button class="round-btn" type="button" data-hang-prev aria-label="Previous sample"><span aria-hidden="true">←</span></button>
-              <button class="round-btn" type="button" data-hang-next aria-label="Next sample"><span aria-hidden="true">→</span></button>
+              <button class="round-btn" type="button" data-hang-prev aria-label="Previous work"><span aria-hidden="true">←</span></button>
+              <button class="round-btn" type="button" data-hang-next aria-label="Next work"><span aria-hidden="true">→</span></button>
             </div>
           </div>
         </div>
@@ -368,48 +365,14 @@ const meta = {
 
         <div class="hang hang--design" data-hang>
           <span class="hang-rail" aria-hidden="true"></span>
-          <div class="hang-viewport" data-hang-viewport tabindex="0" role="region" aria-roledescription="carousel" aria-label="Sample applications — drag, or use the arrow keys">
+          <div class="hang-viewport" data-hang-viewport tabindex="0" role="region" aria-roledescription="carousel" aria-label="Selected work — drag, or use the arrow keys">
             <ol class="hang-track" data-hang-track>
               <!--
-                In category order. A sample is HTML/CSS (.art-*, styled in graphic-design.css) with a
-                "Sample" tag; real client work is a WorkSheet from `works`, placed after its
-                category's samples. Numbers come from `rail` in the frontmatter.
+                Real client work only, one WorkSheet per entry of `works`, in that order.
+                Numbers come from `rail` in the frontmatter.
               -->
 
-              {works.sales.map((w) => <WorkSheet work={w} idx={num(w.key)} cat="sales" />)}
-
-              <!-- Wedding invitation · 5:7 -->
-              <li class="sheet" data-cat="print" style="--tone:#f7f1e8">
-                <div class="sheet-swing">
-                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
-                  <div class="sheet-paper" data-cursor="Drag">
-                    <div class="sheet-screen art art-invite" role="img" aria-label="Sample wedding invitation: The wedding of Rani and Bima">
-                      <span class="ai-arch">
-                        <span class="ai-kicker">The wedding of</span>
-                        <span class="ai-names">Rani<br><span>&amp;</span> Bima</span>
-                        <span class="ai-rule"></span>
-                        <span class="ai-date">12 · 12 · 2026</span>
-                      </span>
-                      <span class="ai-foot">Save the date</span>
-                    </div>
-                    <span class="sheet-caption">
-                      <span class="sheet-idx">{num("invite")}</span>
-                      <span class="sheet-name"><strong><span class="lang-id">Undangan</span><span class="lang-en">Invitation</span></strong><small><span class="lang-id">Cetak &amp; event</span><span class="lang-en">Print &amp; events</span></small></span>
-                      <span class="sheet-tag">Sample</span>
-                    </span>
-                  </div>
-                </div>
-              </li>
-
-              <!-- Real client work: jerseys, logos -->
-              {works.apparel.map((w) => <WorkSheet work={w} idx={num(w.key)} cat="apparel" />)}
-              {works.logo.map((w) => <WorkSheet work={w} idx={num(w.key)} cat="logo" />)}
-
-              <!-- Newsletters: hover scrolls the email; a click (or ↗) opens all of it -->
-              {works.email.map((w) => <WorkSheet work={w} idx={num(w.key)} cat="email" />)}
-
-              <!-- Packaging -->
-              {works.packaging.map((w) => <WorkSheet work={w} idx={num(w.key)} cat="packaging" />)}
+              {Object.entries(works).flatMap(([cat, list]) => list.map((w) => <WorkSheet work={w} idx={num(w.key)} cat={cat} />))}
 
               <!-- The open slot: always last -->
               <li class="sheet sheet--next" style="--tone:#ff304f">
