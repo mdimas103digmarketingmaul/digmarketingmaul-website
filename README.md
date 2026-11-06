@@ -22,7 +22,7 @@ npm run build
 npm run preview
 ```
 
-`build` stages passthrough files, builds eleven Astro routes into `dist/`, then checks compatibility. `preview` serves the built frontend only.
+`build` stages passthrough files, builds twelve Astro routes into `dist/`, then checks compatibility. `preview` serves the built frontend only.
 
 For the existing Worker locally, after building:
 
@@ -45,6 +45,7 @@ Wrangler uses local emulation. No production secret is supplied by this reposito
 | `src/styles/`, `src/scripts/` | Homepage, shared site, frameworks and catalog ownership; Vanilla browser interactions |
 | `assets/` | Shared compatibility assets, brand, payment icons and snapshot dependencies |
 | `products/website-development/`, `products/digital-ads-management/` | Custom CSS/JS retained at their existing public URLs; HTML template lives in `src/pages/` |
+| `src/pages/products/1-on-1-consultation/` | 1 on 1 Consultation (no checkout: WhatsApp booking); see [docs](docs/1-on-1-consultation.md) |
 | `assets/video-editing-motion/` | Video Editing & Motion posters + web encodes (from `scripts/prepare-video-assets.mjs`); see [docs](docs/video-editing-motion.md) |
 | `products/website-course/` | Intentional standalone Vanilla course landing |
 | `checkout/`, `payment/`, `admin/` | Existing standalone applications, unchanged |
@@ -62,7 +63,7 @@ No content collection is created yet: there is one framework article and a blog 
 
 All playground source files remain Vanilla and retain their local assets. Root `/styles.css` and `/script.js` remain compatibility assets for snapshots; new marketing pages use the smaller owned styles/scripts. Do not remove those legacy files based only on references in `src/`.
 
-`sitemap.xml` remains an **editorial allowlist of eleven URLs** (Video Editing & Motion and Graphic Design added 2026-11-01). It is copied unchanged; no automatic sitemap discovery includes admin, transactions or playground. The original eBook test remains indexed; the Midtrans variant stays noindex. Changing either requires an editorial decision.
+`sitemap.xml` remains an **editorial allowlist of twelve URLs** (Video Editing & Motion and Graphic Design added 2026-11-01, 1 on 1 Consultation 2026-11-06). It is copied unchanged; no automatic sitemap discovery includes admin, transactions or playground. The original eBook test remains indexed; the Midtrans variant stays noindex. Changing either requires an editorial decision.
 
 ## Pricing and backend
 

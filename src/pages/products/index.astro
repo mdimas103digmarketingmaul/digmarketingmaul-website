@@ -7,7 +7,7 @@ import pageJs from '../../scripts/products/products.js?url';
 const meta = {
   "title": "Products & Services — M. Dimas Maulana",
   "themeColor": "#fafbfc",
-  "description": "Products dan services dari M. Dimas Maulana: website development, video editing & motion, graphic design, course website, digital ads management, dan eBook digital marketing.",
+  "description": "Products dan services dari M. Dimas Maulana: website development, video editing & motion, graphic design, course website, digital ads management, konsultasi 1 on 1, dan eBook digital marketing.",
   "canonical": "/products/",
   "image": "/assets/brand/og/products.jpg",
   "structuredData": productsGraph([
@@ -16,6 +16,7 @@ const meta = {
     ["Graphic Design", "/products/graphic-design/"],
     ["Website Pertama Kamu, Live dari 0", "/products/website-course/"],
     ["Digital Ads Management", "/products/digital-ads-management/"],
+    ["1 on 1 Consultation", "/products/1-on-1-consultation/"],
     ["Digital Marketing eBooks", "/products/digital-marketing-ebooks/"]
   ])
 };
@@ -128,10 +129,29 @@ const gdWall = [
             <small class="sc-proof-note">Logo · Jersey · Newsletter · Packaging</small>
             <span class="sc-go" aria-hidden="true">↗</span>
           </a>
-          <!-- the seven-area system from /products/digital-ads-management/ (a capture of its hero map) -->
+          <!-- the seven-area system from /products/digital-ads-management/ (a capture of its hero map) with a light flowing 01 → 07 -->
           <a class="stack-card sc-ads" href="/products/digital-ads-management/" data-name="Ads" data-cursor="View" aria-label="Digital Ads Management">
             <span class="sc-label">04 · Ads</span>
-            <img class="sc-system" src="/assets/digital-ads-management/system-map.webp" alt="" width="760" height="730">
+            <span class="sc-system">
+              <img src="/assets/digital-ads-management/system-map.webp" alt="" width="760" height="730">
+              <!-- a light runs the ring 01 → 07 and each area lights up as it passes (same geometry as the image) -->
+              <svg class="sc-flow" viewBox="0 0 760 730" aria-hidden="true">
+                <circle class="sc-node" cx="415.0" cy="84.0" r="40" style="--i:0"></circle>
+                <circle class="sc-node" cx="634.7" cy="189.8" r="40" style="--i:1"></circle>
+                <circle class="sc-node" cx="689.0" cy="427.5" r="40" style="--i:2"></circle>
+                <circle class="sc-node" cx="536.9" cy="618.2" r="40" style="--i:3"></circle>
+                <circle class="sc-node" cx="293.1" cy="618.2" r="40" style="--i:4"></circle>
+                <circle class="sc-node" cx="141.0" cy="427.5" r="40" style="--i:5"></circle>
+                <circle class="sc-node" cx="195.3" cy="189.8" r="40" style="--i:6"></circle>
+                <g class="sc-comet">
+                  <circle cx="415" cy="365" r="281" stroke-dasharray="196.2 2000" style="opacity:.22"></circle>
+                  <circle cx="415" cy="365" r="281" stroke-dasharray="107.9 2000" stroke-dashoffset="-88.3" style="opacity:.5"></circle>
+                  <circle cx="415" cy="365" r="281" stroke-dasharray="44.1 2000" stroke-dashoffset="-152.0"></circle>
+                  <circle class="sc-head-glow" cx="630.3" cy="545.6" r="18"></circle>
+                  <circle class="sc-head" cx="630.3" cy="545.6" r="7"></circle>
+                </g>
+              </svg>
+            </span>
             <span class="sc-chips"><b>Meta</b><b>Google</b><b>Tracking</b></span>
             <span class="sc-go" aria-hidden="true">↗</span>
           </a>
@@ -298,7 +318,28 @@ const gdWall = [
             </span>
           </a>
 
-          <!-- 06 Digital Marketing eBooks -->
+          <!-- 06 1 on 1 Consultation — no price here on purpose; it is on its own page -->
+          <a class="card reveal" href="/products/1-on-1-consultation/" data-spot data-cursor="View" style="--tone:#eceff4">
+            <span class="card-visual cv-talk" aria-hidden="true">
+              <span class="cvt-call">
+                <span class="cvt-head"><b>1 on 1</b><i>60:00</i></span>
+                <span class="cvt-msg cvt-msg--you"><span class="lang-id">Hai, boleh belajar tips digital marketing yang kamu jalanin?</span><span class="lang-en">Hi, can I learn the digital marketing tips you use?</span></span>
+                <span class="cvt-msg cvt-msg--me"><span class="lang-id">Boleh, yuk saling sharing.</span><span class="lang-en">Sure, let's share notes.</span></span>
+              </span>
+              <span class="cvt-tags"><i>Digital marketing</i></span>
+            </span>
+            <span class="card-body">
+              <span class="card-meta"><span>06</span><span>Consultation</span></span>
+              <strong class="card-title">1 on 1 Consultation</strong>
+              <span class="card-desc"><span class="lang-id">Ngobrol 1 jam seputar digital marketing, dari pengalaman hands-on.</span><span class="lang-en">An hour-long chat about digital marketing, from hands-on experience.</span></span>
+              <span class="card-foot">
+                <span class="card-price"><strong class="card-price-text"><span class="lang-id">1 jam · 1 on 1</span><span class="lang-en">1 hour · 1 on 1</span></strong></span>
+                <span class="card-go" aria-hidden="true">→</span>
+              </span>
+            </span>
+          </a>
+
+          <!-- 07 Digital Marketing eBooks -->
           <a class="card reveal" href="/products/digital-marketing-ebooks/" data-spot data-cursor="View" style="--tone:#e9e3d5">
             <span class="card-visual cv-books" aria-hidden="true">
               <span class="cv-book" style="--i:0;--c:#07111f"><b>Ads</b></span>
@@ -307,7 +348,7 @@ const gdWall = [
               <span class="cv-book" style="--i:3;--c:#1f5c43"><b>Data</b></span>
             </span>
             <span class="card-body">
-              <span class="card-meta"><span>06</span><span>eBook</span><span class="card-flag card-flag--muted">Live test</span></span>
+              <span class="card-meta"><span>07</span><span>eBook</span><span class="card-flag card-flag--muted">Live test</span></span>
               <strong class="card-title">Digital Marketing eBooks</strong>
               <span class="card-desc"><span class="lang-id">Uji alur pembelian. eBook final segera hadir.</span><span class="lang-en">Purchase-flow test. Final eBooks coming soon.</span></span>
               <span class="card-foot">
@@ -327,7 +368,6 @@ const gdWall = [
         <ul class="soon-list">
           <li>Meta Ads Advisory 1:1</li>
           <li>Google Ads Advisory 1:1</li>
-          <li><span class="lang-id">Diskusi Technical Digital Marketing 1:1</span><span class="lang-en">Technical Digital Marketing 1:1</span></li>
           <li>Reporting Templates</li>
           <li>Conversion Tracking Setup</li>
           <li>E-Book</li>
@@ -382,6 +422,7 @@ const gdWall = [
               <label class="chip"><input type="checkbox" name="need" value="motion" data-id="Video editing &amp; motion" data-en="Video editing &amp; motion"><span>Video &amp; motion</span></label>
               <label class="chip"><input type="checkbox" name="need" value="design" data-id="Graphic design" data-en="Graphic design"><span>Graphic design</span></label>
               <label class="chip"><input type="checkbox" name="need" value="brand" data-id="Brand guide" data-en="Brand guide"><span>Brand guide</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="consultation" data-id="Konsultasi 1 on 1" data-en="1 on 1 consultation"><span><span class="lang-id">Konsultasi 1 on 1</span><span class="lang-en">1 on 1 consultation</span></span></label>
               <label class="chip"><input type="checkbox" name="need" value="other" data-id="Lainnya" data-en="Something else"><span><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></span></label>
             </div>
             <p class="field-error"><span class="lang-id">Pilih minimal satu.</span><span class="lang-en">Pick at least one.</span></p>

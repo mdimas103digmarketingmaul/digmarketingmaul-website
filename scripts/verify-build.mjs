@@ -51,7 +51,7 @@ for(const [file,ns] of docs) {
  }
 }
 const sitemap=fs.readFileSync('dist/sitemap.xml','utf8');
-assert.equal((sitemap.match(/<loc>/g)||[]).length,11,'sitemap.xml is an editorial allowlist of 11 URLs');
+assert.equal((sitemap.match(/<loc>/g)||[]).length,12,'sitemap.xml is an editorial allowlist of 12 URLs');
 assert.ok(!/playground|\/admin|\/checkout|\/payment/.test(sitemap));
 const catalog=JSON.parse(fs.readFileSync('src/data/products.json','utf8'));
 const worker=fs.readFileSync('worker.js','utf8');

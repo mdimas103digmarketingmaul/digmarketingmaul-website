@@ -1,0 +1,584 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { serviceGraph } from '../../../data/structured-data.js';
+import initScript from '../../../scripts/products/product-page-init.js?raw';
+import baseCss from '../../../styles/products/website-development.css?url';
+import pageCss from '../../../styles/products/consultation.css?url';
+import pageJs from '../../../scripts/products/consultation.js?url';
+
+// The price lives here once: the plan, the FAQ, the WhatsApp message (data-* on the form)
+// and the JSON-LD offer all read it. The /products/ card deliberately shows no price.
+const PRICE = { id: "Rp350.000", usd: "USD 25", amount: 350000 };
+
+// Example questions on the hanging cards. tone = card colour, ink = text colour on it,
+// pick = the topic chip it ticks in the form when its → is pressed.
+const questions = [
+  { pick: "website", tone: "#f6b81f", ink: "#07111f", topic: "Website",
+    q: { id: "Mulai bikin website dari mana dulu ya?", en: "Where do I start with a website?" },
+    tags: { id: "Domain · hosting · platform · live", en: "Domain · hosting · platform · launch" } },
+  { pick: "motion", tone: "#07111f", ink: "#ffffff", topic: "Video & motion",
+    q: { id: "Bikin video promo simpel itu alurnya gimana?", en: "How do you put a simple promo video together?" },
+    tags: { id: "Konsep · editing · motion", en: "Concept · editing · motion" } },
+  { pick: "ai", tone: "#e6ebf1", ink: "#07111f", topic: "AI & automation",
+    q: { id: "Pakai AI biar kerjaan harian lebih ringan, caranya?", en: "How can AI make my daily work lighter?" },
+    tags: { id: "AI · Apps Script · jadwal otomatis", en: "AI · Apps Script · scheduled runs" } },
+  { pick: "reporting", tone: "#1f5c43", ink: "#ffffff", topic: "Reporting",
+    q: { id: "Bisa nggak report mingguan jadi otomatis?", en: "Can my weekly report build itself?" },
+    tags: { id: "Data · Google Sheets · dashboard", en: "Data · Google Sheets · dashboards" } },
+  { pick: "ads", tone: "#ff304f", ink: "#ffffff", topic: "Digital ads",
+    q: { id: "Gimana pasang tracking biar iklan lebih pintar ya?", en: "How do I set up tracking so my ads get smarter?" },
+    tags: { id: "Pixel · GTM · Meta & Google Ads", en: "Pixel · GTM · Meta & Google Ads" } },
+];
+
+// One source for the visible FAQ and its JSON-LD. Answers may hold inline HTML (links).
+const plain = (html) => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").trim();
+const faq = [
+  {
+    id: {
+      q: "Topik apa saja yang bisa dibahas?",
+      a: [
+        "Seputar digital marketing yang saya kerjakan sehari-hari: website, video dan konten, AI dan automation, reporting, sampai digital ads.",
+        "Yang bisa saya bantu, akan saya bantu. Kalau topiknya di luar itu, saya sampaikan terus terang di WhatsApp sebelum kita janjian.",
+      ],
+    },
+    en: {
+      q: "What can we talk about?",
+      a: [
+        "Digital marketing as I do it every day: websites, video and content, AI and automation, reporting and digital ads.",
+        "Whatever I can help with, I will. If a topic is outside that, I'll say so plainly on WhatsApp before we set a time.",
+      ],
+    },
+  },
+  {
+    id: {
+      q: "Saya masih pemula, boleh ikut?",
+      a: ["Boleh banget. Obrolannya menyesuaikan, dari yang baru mulai sampai yang sudah jalan dan ingin bertukar pengalaman."],
+    },
+    en: {
+      q: "I'm a complete beginner. Is that okay?",
+      a: ["Absolutely. The conversation fits where you are, from just starting out to already running and wanting to swap notes."],
+    },
+  },
+  {
+    id: {
+      q: "Bagaimana cara janjiannya?",
+      a: [
+        "Kirim WhatsApp lewat form di bawah. Kita ngobrol singkat dulu soal topiknya, lalu sepakati waktu dan caranya.",
+        `Harganya ${PRICE.id} per sesi (1 jam).`,
+      ],
+    },
+    en: {
+      q: "How do we set it up?",
+      a: [
+        "Send a WhatsApp message through the form below. We have a short chat about the topic first, then agree on the time and format.",
+        `It's ${PRICE.id} (${PRICE.usd} internationally) per one-hour session.`,
+      ],
+    },
+  },
+  {
+    id: {
+      q: "Sesinya lewat apa?",
+      a: ["Online, pilih yang paling nyaman: video call (bisa sambil share screen) atau chat WhatsApp. Waktunya kita atur bersama."],
+    },
+    en: {
+      q: "How does the session run?",
+      a: ["Online, whichever suits you: a video call (screen sharing welcome) or a WhatsApp chat. We pick the time together."],
+    },
+  },
+  {
+    id: {
+      q: "Kalau satu jam belum cukup?",
+      a: ["Bisa lanjut ke sesi berikutnya. Kalau butuh beberapa sesi, kita obrolkan di WhatsApp."],
+    },
+    en: {
+      q: "What if one hour isn't enough?",
+      a: ["We can carry on in another session. If you'd like a few, let's talk it over on WhatsApp."],
+    },
+  },
+  {
+    id: {
+      q: "Bisa sekalian dikerjakan?",
+      a: [
+        "Bisa. Lihat <a href=\"/products/website-development/\">Website Development</a>, <a href=\"/products/digital-ads-management/\">Digital Ads Management</a>, <a href=\"/products/video-editing-motion/\">Video Editing &amp; Motion</a>, dan <a href=\"/products/graphic-design/\">Graphic Design</a>.",
+      ],
+    },
+    en: {
+      q: "Can you do the work for me too?",
+      a: [
+        "Yes. See <a href=\"/products/website-development/\">Website Development</a>, <a href=\"/products/digital-ads-management/\">Digital Ads Management</a>, <a href=\"/products/video-editing-motion/\">Video Editing &amp; Motion</a> and <a href=\"/products/graphic-design/\">Graphic Design</a>.",
+      ],
+    },
+  },
+  {
+    id: {
+      q: "Dari luar Indonesia?",
+      a: [`Bisa. Harga internasional ${PRICE.usd} per sesi, bayar dengan PayPal, Visa, Mastercard, atau metode internasional lain.`],
+    },
+    en: {
+      q: "Booking from outside Indonesia?",
+      a: [`Yes. The international price is ${PRICE.usd} per session, paid by PayPal, Visa, Mastercard or other international methods.`],
+    },
+  },
+];
+
+const meta = {
+  title: "Konsultasi 1 on 1 Digital Marketing — Maul Digital",
+  themeColor: "#fafbfc",
+  description: "Sesi 1 on 1 selama 1 jam untuk diskusi seputar digital marketing bersama M. Dimas Maulana, lewat video call atau chat WhatsApp. Dijawab dari pengalaman hands-on.",
+  canonical: "/products/1-on-1-consultation/",
+  image: "/assets/brand/og/1-on-1-consultation.jpg",
+  imageAlt: "1 on 1 Consultation bersama digmarketingmaul",
+  structuredData: serviceGraph({
+    name: "1 on 1 Consultation",
+    path: "/products/1-on-1-consultation/",
+    description: "Sesi diskusi 1 on 1 selama 1 jam seputar digital marketing, lewat video call atau chat WhatsApp.",
+    serviceType: "Digital marketing consultation",
+    image: "/assets/brand/og/1-on-1-consultation.jpg",
+    offer: { currency: "IDR", minPrice: PRICE.amount },
+    faq: faq.map((item) => ({ q: plain(item.id.q), a: item.id.a.map(plain).join(" ") })),
+  }),
+};
+---
+<!--
+  1 on 1 Consultation product page — “Hanging Questions” (light only).
+  Built on the Website Development page: its stylesheet is loaded first as the shared base
+  (tokens, header, hanging rail, bento, steps, pricing, payment, FAQ, brief form, footer);
+  src/styles/products/consultation.css only adds the consultation-specific parts.
+  Script: src/scripts/products/consultation.js · notes: docs/1-on-1-consultation.md
+  No checkout: the CTA is a prefilled WhatsApp message; topic and time are agreed before payment.
+-->
+<BaseLayout meta={meta} lang="id" htmlAttributes={{"data-language": "id", "data-international": "false"}} bodyAttributes={{"data-page": "1-on-1-consultation"}}>
+<Fragment slot="head">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href={baseCss} />
+<link rel="stylesheet" href={pageCss} />
+<script is:inline set:html={initScript}></script>
+</Fragment>
+  <a class="skip-link" href="#main"><span class="lang-id">Langsung ke konten</span><span class="lang-en">Skip to content</span></a>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor-ring"><span class="cursor-label"></span></span>
+    <span class="cursor-dot"></span>
+  </div>
+
+  <!-- ============ HEADER — same as Website Development ============ -->
+  <header class="site-header" data-header>
+    <div class="site-header-inner">
+      <a href="/index.html#home" class="brand-logo" aria-label="M. Dimas Maulana Home"><img src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="34" height="34"><span class="brand-word">digmarketingmaul</span></a>
+      <div class="header-tools">
+        <label class="lang-select">
+          <span class="visually-hidden">Language</span>
+          <select data-maul-language-select>
+            <option value="id">ID</option>
+            <option value="en">EN</option>
+          </select>
+        </label>
+        <button class="intl-toggle" type="button" data-product-international-toggle aria-pressed="false" aria-label="International mode">
+          <span class="intl-track" aria-hidden="true"><i></i></span><span>International</span>
+        </button>
+        <a class="btn btn-ink btn-sm header-cta" href="#contact" data-magnetic><span class="lang-id">Yuk ngobrol</span><span class="lang-en">Let's talk</span></a>
+      </div>
+    </div>
+    <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ HERO — headline beside example questions (hanging cards) ============ -->
+    <section class="hero hero--ask" id="ask" aria-labelledby="ask-title">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <h1 class="hero-title" id="ask-title" data-reveal-title>
+            <span class="mask-line"><span>1 on 1</span></span>
+            <span class="mask-line"><span>with</span></span>
+            <span class="mask-line"><span><em>Maul</em><span class="accent-dot">.</span></span></span>
+          </h1>
+          <p class="hero-lead reveal"><span class="lang-id">Satu jam ngobrol seputar digital marketing. Dijawab dari pengalaman hands-on Maul, dan kita bisa saling sharing.</span><span class="lang-en">An hour-long conversation about digital marketing. Answered from Maul's hands-on experience, with room to share notes both ways.</span></p>
+          <ul class="hero-facts reveal" aria-label="Session">
+            <li><b>60</b><span><span class="lang-id">menit</span><span class="lang-en">minutes</span></span></li>
+            <li><b>1:1</b><span><span class="lang-id">personal</span><span class="lang-en">personal</span></span></li>
+            <li><b>Video</b><span>call</span></li>
+            <li><b>WhatsApp</b><span>chat</span></li>
+          </ul>
+          <div class="hero-work-ui reveal">
+            <p class="hero-work-label"><span class="lang-id">Contoh yang bisa kamu tanyakan</span><span class="lang-en">Things you could ask</span><span class="accent-dot">.</span></p>
+            <div class="hang-ui">
+              <p class="hang-count"><b data-hang-current>01</b> / <span data-hang-total>06</span></p>
+              <button class="round-btn" type="button" data-hang-prev aria-label="Previous question"><span aria-hidden="true">←</span></button>
+              <button class="round-btn" type="button" data-hang-next aria-label="Next question"><span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-work">
+        <div class="hang hang--ask" data-hang>
+          <span class="hang-rail" aria-hidden="true"></span>
+          <div class="hang-viewport" data-hang-viewport tabindex="0" role="region" aria-roledescription="carousel" aria-label="Example questions — drag, or use the arrow keys">
+            <ol class="hang-track" data-hang-track>
+              <!-- Add a question: one entry in `questions` (frontmatter). The open slot stays last. -->
+              {questions.map((item, i) => (
+              <li class="sheet" style={`--tone:${item.tone};--ink-on:${item.ink}`}>
+                <div class="sheet-swing">
+                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                  <div class="sheet-paper" data-cursor="Drag">
+                    <span class="sheet-screen sheet-screen--ask">
+                      <span class="ask-topic">{item.topic}</span>
+                      <span class="ask-mark" aria-hidden="true">?</span>
+                      <span class="ask-q"><span class="lang-id">{item.q.id}</span><span class="lang-en">{item.q.en}</span></span>
+                    </span>
+                    <span class="sheet-caption">
+                      <span class="sheet-idx">{String(i + 1).padStart(2, "0")}</span>
+                      <span class="sheet-name"><strong>{item.topic}</strong><small><span class="lang-id">{item.tags.id}</span><span class="lang-en">{item.tags.en}</span></small></span>
+                      <a class="sheet-go sheet-go--red" href="#contact" data-pick={item.pick} data-cursor="Ask" aria-label={`Ask about ${item.topic}`}>→</a>
+                    </span>
+                  </div>
+                </div>
+              </li>
+              ))}
+              <!-- The open slot: always last -->
+              <li class="sheet sheet--next" style="--tone:#ff304f">
+                <div class="sheet-swing">
+                  <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                  <div class="sheet-paper" data-cursor="Drag">
+                    <span class="sheet-screen sheet-screen--next">
+                      <span class="next-plus" aria-hidden="true">?</span>
+                      <span class="next-title">Your question<br>is next<span class="accent-dot">.</span></span>
+                    </span>
+                    <span class="sheet-caption">
+                      <span class="sheet-idx">{String(questions.length + 1).padStart(2, "0")}</span>
+                      <span class="sheet-name"><strong><span class="lang-id">Pertanyaan kamu</span><span class="lang-en">Your question</span></strong><small><span class="lang-id">Mulai dari WhatsApp</span><span class="lang-en">Starts on WhatsApp</span></small></span>
+                      <a class="sheet-go sheet-go--red" href="#contact" data-cursor="Let's talk" aria-label="Book a session">→</a>
+                    </span>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div class="hang-foot">
+            <span class="hang-progress" aria-hidden="true"><i data-hang-bar></i></span>
+            <span class="hang-hint" aria-hidden="true"><span class="lang-id">Geser</span><span class="lang-en">Drag</span> ↔</span>
+          </div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WHAT WE CAN TALK ABOUT — topic bento ============ -->
+    <section class="why" id="topics" aria-labelledby="topics-title">
+      <div class="shell">
+        <h2 class="section-title" id="topics-title" data-reveal-title>
+          <span class="mask-line"><span><span class="lang-id">Yang bisa kita bahas</span><span class="lang-en">What we can cover</span><span class="accent-dot">.</span></span></span>
+        </h2>
+
+        <div class="bento">
+          <a class="tile tile--wide tile--red reveal" href="#contact" data-spot data-cursor="Let's talk">
+            <div class="viz viz-chat" aria-hidden="true">
+              <span class="vc-msg vc-msg--you"><span class="lang-id">Boleh tanya cara kamu jalanin digital marketing?</span><span class="lang-en">Can I ask how you run your digital marketing?</span></span>
+              <span class="vc-msg vc-msg--me"><span class="lang-id">Boleh, yuk saling sharing.</span><span class="lang-en">Sure, let's share notes.</span></span>
+              <span class="vc-typing"><i></i><i></i><i></i></span>
+            </div>
+            <h3><span class="lang-id">Bawa pertanyaanmu.</span><span class="lang-en">Bring your question.</span></h3>
+            <p class="tile-line"><span class="lang-id">Dari hal sederhana sampai yang teknis, kita diskusikan bareng.</span><span class="lang-en">From the simple to the technical, we talk it through together.</span></p>
+            <span class="tile-go" aria-hidden="true">→</span>
+          </a>
+          <article class="tile reveal" data-spot>
+            <div class="viz viz-site" aria-hidden="true">
+              <span class="vw-browser"><span class="vw-bar"><i></i><i></i><i></i></span><span class="vw-body"><i class="vw-hero"></i><i class="vw-row"></i><i class="vw-row vw-row--short"></i><i class="vw-btn"></i></span></span>
+            </div>
+            <h3>Website<span class="accent-dot">.</span></h3>
+            <p class="tile-line"><span class="lang-id">Pilih platform, domain, hosting, sampai website live.</span><span class="lang-en">Platform, domain and hosting, through to a site that's live.</span></p>
+          </article>
+          <article class="tile reveal" data-spot>
+            <div class="viz viz-edit" aria-hidden="true">
+              <span class="ve-track"><i style="--x:0;--w:.34"></i><i style="--x:.37;--w:.22"></i><i style="--x:.62;--w:.38"></i></span>
+              <span class="ve-track"><i style="--x:.08;--w:.5"></i><i style="--x:.62;--w:.24"></i></span>
+              <span class="ve-track ve-track--audio"><i style="--x:0;--w:1"></i></span>
+              <span class="ve-head"></span>
+            </div>
+            <h3>Video &amp; motion<span class="accent-dot">.</span></h3>
+            <p class="tile-line"><span class="lang-id">Alur bikin video promo, editing, dan motion yang simpel.</span><span class="lang-en">How a promo video comes together: editing and simple motion.</span></p>
+          </article>
+          <article class="tile reveal" data-spot>
+            <div class="viz viz-flow" aria-hidden="true">
+              <span class="vf-row"><i>Data</i><span class="vf-line"></span><i class="vf-ai">AI</i><span class="vf-line"></span><i>Report</i></span>
+              <span class="vf-tools"><b>Google Apps Script</b><b>Google Sheets</b><b>AI Schedule</b></span>
+            </div>
+            <h3><span class="lang-id">AI, reporting &amp; automation.</span><span class="lang-en">AI, reporting &amp; automation.</span></h3>
+            <p class="tile-line"><span class="lang-id">Data diolah AI jadi report otomatis, berjalan sesuai jadwal.</span><span class="lang-en">Data turned into automatic reports with AI, running on a schedule.</span></p>
+          </article>
+          <article class="tile reveal" data-spot>
+            <div class="viz viz-events" aria-hidden="true">
+              <i>PageView</i><i>AddToCart</i><i>Lead</i><i>Purchase</i>
+            </div>
+            <h3><span class="lang-id">Digital ads &amp; tracking.</span><span class="lang-en">Digital ads &amp; tracking.</span></h3>
+            <p class="tile-line"><span class="lang-id">Pasang Pixel, GTM, dan konversi supaya iklan belajar dari data yang benar.</span><span class="lang-en">Pixel, GTM and conversions set up so your ads learn from the right data.</span></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="process" id="process" aria-labelledby="process-title" data-process>
+      <div class="shell">
+        <h2 class="section-title" id="process-title" data-reveal-title>
+          <span class="mask-line"><span>How it works<span class="accent-dot">.</span></span></span>
+        </h2>
+        <ol class="steps">
+          <li class="step"><span class="step-num">01</span><strong><span class="lang-id">Sapa dulu</span><span class="lang-en">Say hi</span></strong><span><span class="lang-id">Chat WhatsApp, ceritakan topikmu</span><span class="lang-en">Message me your topic on WhatsApp</span></span></li>
+          <li class="step"><span class="step-num">02</span><strong><span class="lang-id">Ngobrol singkat</span><span class="lang-en">Quick chat</span></strong><span><span class="lang-id">Lihat apa yang bisa saya bantu</span><span class="lang-en">See what I can help with</span></span></li>
+          <li class="step"><span class="step-num">03</span><strong><span class="lang-id">Janjian</span><span class="lang-en">Set a time</span></strong><span><span class="lang-id">Sepakati waktu &amp; caranya</span><span class="lang-en">Agree on the time &amp; format</span></span></li>
+          <li class="step"><span class="step-num">04</span><strong><span class="lang-id">Sesi 1 jam</span><span class="lang-en">1-hour session</span></strong><span><span class="lang-id">Video call atau chat WhatsApp</span><span class="lang-en">Video call or WhatsApp chat</span></span></li>
+          <li class="step"><span class="step-num">05</span><strong><span class="lang-id">Saling sharing</span><span class="lang-en">Share notes</span></strong><span><span class="lang-id">Diskusi dan bertukar pengalaman</span><span class="lang-en">Discuss and swap experience</span></span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ PRICING + ACCEPT PAYMENT — the price appears here, not on /products/ ============ -->
+    <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+      <div class="shell">
+        <h2 class="section-title" id="pricing-title" data-reveal-title>
+          <span class="mask-line"><span>Pricing<span class="accent-dot">.</span></span></span>
+        </h2>
+
+        <div class="plans">
+          <article class="plan plan--main reveal" data-spot>
+            <p class="plan-label">1 on 1 Consultation</p>
+            <p class="plan-price"><span class="price-from"><span class="lang-id">Per sesi · 1 jam</span><span class="lang-en">Per session · 1 hour</span></span><strong class="price" data-price-id={PRICE.id} data-price-usd={PRICE.usd}>{PRICE.id}</strong></p>
+            <ul class="plan-list">
+              <li><span class="lang-id">60 menit, video call atau chat WhatsApp</span><span class="lang-en">60 minutes, video call or WhatsApp chat</span></li>
+              <li><span class="lang-id">Topik disepakati dulu lewat WhatsApp</span><span class="lang-en">Topic agreed first on WhatsApp</span></li>
+              <li><span class="lang-id">Bebas tanya, kita diskusikan bareng</span><span class="lang-en">Ask freely, we talk it through together</span></li>
+              <li><span class="lang-id">Bayar setelah topik &amp; jadwal disepakati</span><span class="lang-en">Pay once the topic &amp; time are agreed</span></li>
+            </ul>
+            <a class="btn btn-red btn-lg btn-block" href="#contact" data-magnetic>
+              <span class="lang-id">Jadwalkan via WhatsApp</span><span class="lang-en">Book on WhatsApp</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+          </article>
+          <article class="plan plan--custom reveal" data-spot>
+            <p class="plan-label"><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></p>
+            <p class="plan-price"><strong class="plan-price-text"><span class="lang-id">Butuh lebih?</span><span class="lang-en">Need more?</span></strong></p>
+            <ul class="plan-list">
+              <li><span class="lang-id">Beberapa sesi berturut-turut</span><span class="lang-en">A run of sessions</span></li>
+              <li><span class="lang-id">Pendampingan sampai jalan</span><span class="lang-en">Guidance until it's running</span></li>
+              <li><span class="lang-id">Dikerjakan langsung oleh Maul</span><span class="lang-en">Done for you by Maul</span></li>
+            </ul>
+            <a class="btn btn-ghost btn-lg btn-block" href="#contact">Let's discuss <span class="btn-arrow" aria-hidden="true">→</span></a>
+          </article>
+        </div>
+
+        <div class="pay reveal">
+          <p class="pay-title">Accept payment</p>
+          <div class="pay-group">
+            <p class="pay-label">Indonesia</p>
+            <ul class="pay-logos">
+              <li class="qris">
+                <button class="qris-btn" type="button" aria-expanded="false" aria-controls="qris-pop" data-qris>
+                  <img src="/assets/payment-methods/qris.webp" alt="QRIS">
+                  <span class="qris-badge"><span class="lang-id">Lihat</span><span class="lang-en">View</span></span>
+                </button>
+                <div class="qris-pop" id="qris-pop" role="dialog" aria-label="QRIS digmarketingmaul" data-qris-pop>
+                  <img src="/assets/payment-methods/qris-digmarketingmaul.webp" alt="QRIS Digital Marketing Maul, NMID ID1026603703558" width="760" height="1071" loading="lazy">
+                  <p class="qris-warn"><strong><span class="lang-id">Konfirmasi dulu, baru bayar.</span><span class="lang-en">Confirm first, then pay.</span></strong> <span class="lang-id">Bayar tanpa konfirmasi =&nbsp;sedekah.</span><span class="lang-en">Paying without confirming =&nbsp;a&nbsp;donation.</span></p>
+                  <a class="qris-confirm" href="#contact"><span class="lang-id">Konfirmasi via WhatsApp</span><span class="lang-en">Confirm on WhatsApp</span> →</a>
+                </div>
+              </li>
+              <li><img src="/assets/payment-methods/hijra.webp" alt="Hijra Bank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/gopay.webp" alt="GoPay" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/shopeepay.webp" alt="ShopeePay" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/dana.webp" alt="DANA" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/ovo.webp" alt="OVO" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/permata.webp" alt="PermataBank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bsi.webp" alt="Bank Syariah Indonesia" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/mandiri.webp" alt="Bank Mandiri" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bri.webp" alt="BRI" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bni.webp" alt="BNI" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/btn.webp" alt="BTN" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/cimb.webp" alt="CIMB Niaga" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/danamon.webp" alt="Danamon" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/maybank.webp" alt="Maybank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bjb.webp" alt="bank bjb" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/sinarmas.webp" alt="Bank Sinarmas" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bnc.webp" alt="Bank Neo Commerce" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bss.webp" alt="Bank Sahabat Sampoerna" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/seabank.webp" alt="SeaBank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/alfa.webp" alt="Alfamart" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/indomaret.webp" alt="Indomaret" loading="lazy"></li>
+            </ul>
+          </div>
+          <div class="pay-group">
+            <p class="pay-label">International</p>
+            <ul class="pay-logos">
+              <li><img src="/assets/payment-methods/paypal.svg" alt="PayPal" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/visa.webp" alt="Visa" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/mastercard.webp" alt="Mastercard" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/jcb.webp" alt="JCB" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/amex.svg" alt="American Express" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/unionpay.svg" alt="UnionPay" loading="lazy"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <div class="shell">
+        <h2 class="section-title" id="faq-title" data-reveal-title>
+          <span class="mask-line"><span>FAQ<span class="accent-dot">.</span></span></span>
+        </h2>
+        <div class="faq-list">
+          {faq.map((item) => (
+            <details class="reveal">
+              <summary><span class="lang-id" set:html={item.id.q} /><span class="lang-en" set:html={item.en.q} /></summary>
+              <div class="faq-a">
+                {item.id.a.map((answer, i) => <p><span class="lang-id" set:html={answer} /><span class="lang-en" set:html={item.en.a[i]} /></p>)}
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT — booking form → WhatsApp (prefilled) ============ -->
+    <section class="contact" id="contact" aria-labelledby="final-title">
+      <div class="shell contact-grid">
+        <div class="contact-intro">
+          <h2 class="section-title" id="final-title" data-reveal-title>
+            <span class="mask-line"><span>Let's talk,</span></span>
+            <span class="mask-line"><span><em>1 on 1</em><span class="accent-dot">.</span></span></span>
+          </h2>
+          <p class="contact-lead"><span class="lang-id">Ceritakan topiknya, kita janjian di WhatsApp.</span><span class="lang-en">Tell me the topic, we'll set a time on WhatsApp.</span></p>
+
+          <div class="chat" aria-hidden="true">
+            <div class="chat-head">
+              <span class="chat-avatar"><img src="/assets/brand/logo/icon.svg" alt="" width="26" height="26"></span>
+              <span><strong>Maul</strong><small><span class="lang-id">Pratinjau pesan kamu</span><span class="lang-en">Your message preview</span></small></span>
+            </div>
+            <div class="chat-body">
+              <p class="chat-bubble"><span data-chat-text></span><small><span class="lang-id">Belum terkirim</span><span class="lang-en">Not sent yet</span></small></p>
+            </div>
+          </div>
+        </div>
+
+        <form class="brief" data-brief data-price-id={PRICE.id} data-price-usd={PRICE.usd} novalidate>
+          <div class="brief-head">
+            <p class="brief-title"><span class="lang-id">Ajak ngobrol</span><span class="lang-en">Start a conversation</span></p>
+            <span class="brief-chip"><span class="lang-id">± 1 menit</span><span class="lang-en">± 1 minute</span></span>
+          </div>
+
+          <div class="field" data-field="name">
+            <label for="f-name"><span class="lang-id">Nama kamu</span><span class="lang-en">Your name</span> <b>*</b></label>
+            <input id="f-name" name="name" autocomplete="name" required data-ph-id="Nama panggilan" data-ph-en="What should I call you?">
+            <p class="field-error"><span class="lang-id">Isi nama dulu, ya.</span><span class="lang-en">Please add your name.</span></p>
+          </div>
+
+          <div class="field">
+            <label for="f-brand"><span class="lang-id">Bisnis / pekerjaan</span><span class="lang-en">Business / role</span></label>
+            <input id="f-brand" name="brand" autocomplete="organization" data-ph-id="Contoh: Kopi Senja, atau marketer di agensi" data-ph-en="e.g. Senja Coffee, or a marketer at an agency">
+          </div>
+
+          <fieldset class="field" data-field="need">
+            <legend><span class="lang-id">Mau bahas</span><span class="lang-en">I'd like to talk about</span> <b>*</b> <small class="legend-hint"><span class="lang-id">boleh lebih dari satu</span><span class="lang-en">pick any</span></small></legend>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="need" value="website" data-id="Website" data-en="Website"><span>Website</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="motion" data-id="Video &amp; motion" data-en="Video &amp; motion"><span>Video &amp; motion</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="ai" data-id="AI &amp; automation" data-en="AI &amp; automation"><span>AI &amp; automation</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="reporting" data-id="Reporting &amp; data" data-en="Reporting &amp; data"><span>Reporting &amp; data</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="ads" data-id="Digital ads &amp; tracking" data-en="Digital ads &amp; tracking"><span>Digital ads &amp; tracking</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="other" data-id="Lainnya" data-en="Something else"><span><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></span></label>
+            </div>
+            <p class="field-error"><span class="lang-id">Pilih minimal satu.</span><span class="lang-en">Pick at least one.</span></p>
+          </fieldset>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="f-level"><span class="lang-id">Posisi kamu sekarang</span><span class="lang-en">Where you are now</span></label>
+              <select id="f-level" name="level">
+                <option value="" data-id="Pilih" data-en="Choose">Pilih</option>
+                <option value="new" data-id="Baru mulai" data-en="Just starting">Baru mulai</option>
+                <option value="running" data-id="Sudah jalan, mau naik level" data-en="Running, want to level up">Sudah jalan, mau naik level</option>
+                <option value="pro" data-id="Profesional, ingin bertukar pengalaman" data-en="Professional, want to swap notes">Profesional, ingin bertukar pengalaman</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-when"><span class="lang-id">Waktu yang cocok</span><span class="lang-en">Best time</span></label>
+              <select id="f-when" name="when">
+                <option value="" data-id="Pilih" data-en="Choose">Pilih</option>
+                <option value="weekday-day" data-id="Hari kerja, siang" data-en="Weekday, daytime">Hari kerja, siang</option>
+                <option value="weekday-night" data-id="Hari kerja, malam" data-en="Weekday, evening">Hari kerja, malam</option>
+                <option value="weekend" data-id="Akhir pekan" data-en="Weekend">Akhir pekan</option>
+                <option value="flexible" data-id="Fleksibel" data-en="Flexible">Fleksibel</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset class="field">
+            <legend><span class="lang-id">Lebih nyaman lewat</span><span class="lang-en">I'd prefer</span></legend>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="format" value="call" data-id="Video call" data-en="Video call"><span>Video call</span></label>
+              <label class="chip"><input type="radio" name="format" value="chat" data-id="Chat WhatsApp" data-en="WhatsApp chat"><span><span class="lang-id">Chat WhatsApp</span><span class="lang-en">WhatsApp chat</span></span></label>
+              <label class="chip"><input type="radio" name="format" value="any" data-id="Yang mana saja" data-en="Either is fine"><span><span class="lang-id">Yang mana saja</span><span class="lang-en">Either</span></span></label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="f-note"><span class="lang-id">Pertanyaan utama kamu</span><span class="lang-en">Your main question</span></label>
+            <textarea id="f-note" name="note" rows="3" data-ph-id="Contoh: ingin tahu cara bikin report mingguan yang otomatis" data-ph-en="e.g. how to make a weekly report that builds itself"></textarea>
+          </div>
+
+          <button class="btn btn-red btn-lg btn-block" type="submit">
+            <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+            <span class="lang-id">Lanjutkan ke WhatsApp</span><span class="lang-en">Continue on WhatsApp</span>
+          </button>
+          <p class="brief-note"><span class="lang-id">Pesan terbuka di WhatsApp. Data formulir tidak disimpan.</span><span class="lang-en">Your message opens in WhatsApp. Nothing is stored.</span></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER — same as the other pages (BrandFooter), light ============ -->
+  <footer class="brand-footer">
+    <div class="brand-footer-inner">
+      <div class="footer-cols">
+        <nav aria-label="Footer">
+          <p class="footer-label">Pages</p>
+          <ul>
+            <li><a href="/index.html#home" class="footer-link">Home</a></li>
+            <li><a href="/frameworks/" class="footer-link">Frameworks</a></li>
+            <li><a href="/blog/" class="footer-link">Blog</a></li>
+            <li><a href="/products/" class="footer-link">Products</a></li>
+          </ul>
+        </nav>
+        <div>
+          <p class="footer-label">Social</p>
+          <ul>
+            <li><a href="https://www.instagram.com/digmarketingmaul/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+            <li><a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+            <li><a href="https://www.tiktok.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-tiktok" aria-hidden="true"></i> TikTok</a></li>
+            <li><a href="https://www.youtube.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-youtube" aria-hidden="true"></i> YouTube</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-label">Based in</p>
+          <ul>
+            <li>Bekasi, Indonesia</li>
+            <li class="footer-cta-item"><a href="/products/" class="footer-cta">Let's Collaborate <span aria-hidden="true">→</span></a></li>
+          </ul>
+        </div>
+        <div class="footer-top-link">
+          <a href="#" class="back-to-top"><span aria-hidden="true">↑</span> Back to top</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Build and Design by Maul</p>
+        <img class="footer-mark" src="/assets/brand/logo/icon.svg" alt="" width="26" height="26">
+      </div>
+    </div>
+    <p class="footer-wordmark" aria-hidden="true">digmarketingmaul<span>.</span></p>
+  </footer>
+  <script is:inline src={pageJs}></script>
+</BaseLayout>

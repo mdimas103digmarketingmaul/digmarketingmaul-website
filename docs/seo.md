@@ -1,6 +1,6 @@
 # SEO
 
-Updated 2026-11-01.
+Updated 2026-11-06.
 
 ## What every page gets
 
@@ -22,9 +22,10 @@ Pages with `noindex` get no Open Graph or Twitter tags.
 | Page | JSON-LD |
 |---|---|
 | `/` | `Person` (M. Dimas Maulana, socials, Bekasi) + `WebSite` |
-| `/products/` | `CollectionPage` with an `ItemList` of the six products + breadcrumb |
+| `/products/` | `CollectionPage` with an `ItemList` of the seven products + breadcrumb |
 | Website Development | `Service` + "starting from" `Offer` (IDR 999,000, as shown on the page) + breadcrumb |
 | Video Editing & Motion, Graphic Design | `Service` + breadcrumb + `FAQPage` |
+| 1 on 1 Consultation | `Service` + `Offer` (IDR 350,000, as shown on the page) + breadcrumb + `FAQPage` |
 | Digital Ads Management | `Service` + breadcrumb |
 | Website course | `Course` (IDR 899,000) + breadcrumb |
 
@@ -36,11 +37,11 @@ Only state what the page shows: no ratings, made-up durations or claims. The FAQ
 node scripts/generate-og-images.mjs   # BROWSER_PATH=… to use another Chromium
 ```
 
-The script writes `assets/brand/og/{default,products,website-development,video-editing-motion,graphic-design,digital-ads-management,website-course}.jpg`, each around 50–75 KB. Edit the card markup inside the script and run it again.
+The script writes `assets/brand/og/{default,products,website-development,video-editing-motion,graphic-design,digital-ads-management,website-course,1-on-1-consultation}.jpg`, each around 50–75 KB. Edit the card markup inside the script and run it again; `ONLY=<name>` renders a single card and leaves the others untouched.
 
 ## Sitemap
 
-`sitemap.xml` is an editorial allowlist of 11 URLs, checked by `scripts/verify-build.mjs` and hash-locked in `tests/baseline.json`.
+`sitemap.xml` is an editorial allowlist of 12 URLs, checked by `scripts/verify-build.mjs` and hash-locked in `tests/baseline.json`.
 
 - Add `<lastmod>` only where the date is known.
 - When adding a page: add its `<url>`, update the count in `verify-build.mjs` and the digest in `baseline.json`, and add a share card if it needs one.

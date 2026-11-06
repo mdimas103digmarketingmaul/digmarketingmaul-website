@@ -463,7 +463,7 @@ html.cursor-on-red .cursor-ring.has-label {
 }
 
 .brand:hover .brand-mark {
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
 }
 
 .main-nav {

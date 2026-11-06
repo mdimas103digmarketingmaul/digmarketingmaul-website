@@ -475,7 +475,7 @@ html.js .reveal.is-in {
 }
 
 .brand-logo:hover img {
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
 }
 
 .header-tools {

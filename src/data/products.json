@@ -94,6 +94,35 @@
     }
   },
   {
+    "id": "1-on-1-consultation",
+    "name": {
+      "id": "1 on 1 Consultation"
+    },
+    "category": "advisory",
+    "categoryLabel": "1 on 1 Consultation",
+    "url": "/products/1-on-1-consultation/",
+    "icon": "fa-regular fa-comments",
+    "description": {
+      "id": "Diskusi 1 on 1 selama 1 jam seputar digital marketing, lewat video call atau chat WhatsApp, dijawab dari pengalaman hands-on.",
+      "en": "A one-hour 1 on 1 conversation about digital marketing, by video call or WhatsApp chat, answered from hands-on experience."
+    },
+    "price": {
+      "id": "Rp350.000",
+      "usd": "USD 25"
+    },
+    "promo": {
+      "id": "Harga hanya tampil di halaman produk. Topik dan jadwal disepakati via WhatsApp sebelum pembayaran.",
+      "en": "The price is shown on the product page only. Topic and time are agreed on WhatsApp before payment."
+    },
+    "status": "available",
+    "paymentSupport": false,
+    "progress": {},
+    "cta": {
+      "id": "Lihat Detail",
+      "en": "View Details"
+    }
+  },
+  {
     "id": "digital-marketing-ebooks",
     "name": {
       "id": "Digital Marketing eBooks"
@@ -188,35 +217,6 @@
     "description": {
       "id": "Pendampingan untuk memahami dan menjalankan Google Ads, termasuk Search, campaign setup, dan optimization.",
       "en": "Guidance to understand and run Google Ads, including Search, campaign setup, and optimization."
-    },
-    "price": {
-      "id": "Rpx.xxx.xxx",
-      "usd": "USD xxx"
-    },
-    "promo": {},
-    "status": "coming-soon",
-    "paymentSupport": false,
-    "progress": {
-      "id": "Produk/jasa dalam pengembangan",
-      "en": "Product/service in development"
-    },
-    "cta": {
-      "id": "Checkout segera tersedia",
-      "en": "Checkout coming soon"
-    }
-  },
-  {
-    "id": "exclusive-technical-digital-marketing-discussion",
-    "name": {
-      "id": "Diskusi Eksklusif 1 on 1 Seputar Technical Digital Marketing",
-      "en": "Exclusive 1 on 1 Technical Digital Marketing Discussion"
-    },
-    "category": "advisory",
-    "categoryLabel": "1 on 1 Discussion",
-    "icon": "fa-regular fa-message",
-    "description": {
-      "id": "Diskusi untuk panduan praktis dan insight teknis seputar digital marketing, berdasarkan pengalaman langsung yang saya jalani.",
-      "en": "A personalized discussion on practical guidance and technical insights on digital marketing, based on my hands-on experience."
     },
     "price": {
       "id": "Rpx.xxx.xxx",

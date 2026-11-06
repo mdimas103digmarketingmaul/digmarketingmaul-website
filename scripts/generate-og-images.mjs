@@ -1,5 +1,6 @@
 // Renders the 1200×630 Open Graph / Twitter share cards into assets/brand/og/*.jpg.
 // Usage:  node scripts/generate-og-images.mjs            (uses BROWSER_PATH or the macOS Chrome path)
+//         ONLY=1-on-1-consultation node scripts/generate-og-images.mjs   (one card)
 // Re-run after changing a card below or the images it uses. Pages pick their card through
 // `image` in their meta (BaseHead); pages without one use default.jpg.
 import { chromium } from '@playwright/test';
@@ -89,12 +90,27 @@ const cards = {
   'website-course': base(`${brand()}${copy('Website pertama kamu, <em>live</em> dari 0<span class="dot">.</span>', 'Course step-by-step sampai website kamu live.', 'digmarketingmaul.com/products/website-course')}
     <style>.st{position:absolute;left:30px;right:64px;top:210px}.st .c{display:flex;gap:10px}.st .c i{padding:10px 16px;border-radius:999px;background:#07111f;color:#fff;font-style:normal;font-family:'JetBrains Mono',monospace;font-size:16px}.st .c i:last-child{background:#ff304f}.st .p{display:flex;align-items:center;gap:16px;margin-top:40px;font-size:44px;font-weight:700;letter-spacing:-.05em}.st .p span{flex:1;height:6px;border-radius:6px;background:linear-gradient(90deg,#ff304f,#ff8a9c)}.st .p b:last-child{color:#ff304f}</style>
     <div class="vis"><div class="st"><div class="c"><i>Domain</i><i>Hosting</i><i>Design</i><i>Live</i></div><div class="p"><b>0</b><span></span><b>Live</b></div></div></div>`),
+
+  '1-on-1-consultation': base(`${brand()}${copy('1 on 1 with <em>Maul</em><span class="dot">.</span>', 'An hour-long chat about digital marketing, answered from hands-on experience.', 'digmarketingmaul.com/products/1-on-1-consultation')}
+    <style>
+      .q{width:230px;aspect-ratio:4/5;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:18px;border-radius:8px;font-size:27px;font-weight:650;line-height:1.04;letter-spacing:-.045em}
+      .q small{align-self:flex-start;padding:5px 10px;border-radius:999px;box-shadow:inset 0 0 0 1.5px currentColor;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+      .q b{position:absolute;top:-24px;right:6px;font-size:190px;font-weight:800;opacity:.12;letter-spacing:-.08em}
+    </style>
+    <div class="vis">
+      <div class="hang" style="left:10px;--s:44px;rotate:-3deg"><div class="paper"><div class="q" style="background:#f6b81f;color:#07111f"><b>?</b><small>Website</small>“Where do I start with a website?”</div></div></div>
+      <div class="hang" style="left:280px;--s:84px;rotate:2.5deg"><div class="paper"><div class="q" style="background:#1f5c43;color:#fff"><b>?</b><small>Reporting</small>“Can my weekly report build itself?”</div></div></div>
+      <div class="rail"></div>
+    </div>`),
 };
 
 fs.mkdirSync(out, { recursive: true });
 const browser = await chromium.launch({ headless: true, executablePath });
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
+// ONLY=name renders just that card (the others stay byte-identical)
+const only = process.env.ONLY ? process.env.ONLY.split(',') : null;
 for (const [name, html] of Object.entries(cards)) {
+  if (only && !only.includes(name)) continue;
   const tmp = path.join(out, `.${name}.html`);
   fs.writeFileSync(tmp, html);
   await page.goto(pathToFileURL(tmp).href, { waitUntil: 'networkidle' });
