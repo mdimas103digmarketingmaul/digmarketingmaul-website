@@ -1607,8 +1607,13 @@ a.stack-card {
   font-weight: 500;
 }
 
-/* Creative: three pieces of real work (jersey, newsletter, logo) fanned like proofs */
+/* Creative: four pieces of real work (logo, jersey, newsletter, packaging) fanned like proofs.
+   Each proof sits in a slot (l / c / r / b = behind the centre); while the card is in front the
+   script deals them round every PROOF_STEP ms and the note lights the centre one's category.
+   Hover: the fan tilts with the pointer (--px / --py, -1..1) and the proof under it lifts. */
 .sc-creative {
+  --px: 0;
+  --py: 0;
   place-items: center;
   background: var(--red);
 }
@@ -1617,12 +1622,18 @@ a.stack-card {
   position: relative;
   width: 100%;
   height: 100%;
+  transform-style: preserve-3d;
+  transform: perspective(1100px) rotateY(calc(var(--px) * 9deg)) rotateX(calc(var(--py) * -7deg));
+  transition: transform 0.6s var(--ease-out);
 }
 
 .sc-proofs img {
+  --r: 0;
+  --z: 0;
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 2;
   width: 34%;
   height: auto;
   aspect-ratio: 4 / 5;
@@ -1631,14 +1642,70 @@ a.stack-card {
   border-radius: 8px;
   background: #fff;
   box-shadow: 0 0 0 4px #fff, 0 26px 40px -20px rgba(7, 17, 31, 0.65);
-  translate: calc(-50% + var(--r) * 78%) calc(-46% + var(--r) * var(--r) * 6%);
+  translate: calc(-50% + var(--r) * 78% + var(--px) * var(--z) * 0.6px) calc(-46% + var(--r) * var(--r) * 6% + var(--py) * var(--z) * 0.4px);
   rotate: calc(var(--r) * 9deg);
-  transition: translate 0.8s var(--ease-expo), rotate 0.8s var(--ease-expo);
+  transform: translateZ(calc(var(--z) * 1px));
+  transition: translate 0.85s var(--ease-expo), rotate 0.85s var(--ease-expo), scale 0.5s var(--ease-expo), opacity 0.5s, box-shadow 0.4s;
 }
 
-.stack:hover .sc-creative .sc-proofs img {
-  translate: calc(-50% + var(--r) * 92%) calc(-48% + var(--r) * var(--r) * 4%);
+.sc-proofs img[data-slot="l"] {
+  --r: -1;
+  --z: 20;
+}
+
+.sc-proofs img[data-slot="r"] {
+  --r: 1;
+  --z: 20;
+}
+
+.sc-proofs img[data-slot="c"] {
+  --z: 60;
+  z-index: 3;
+  scale: 1.06;
+}
+
+.sc-proofs img[data-slot="b"] {
+  z-index: 1;
+  scale: 0.78;
+  opacity: 0;
+}
+
+/* in front: the fan breathes, each proof a beat apart */
+.stack-card.sc-creative[data-pos="0"] .sc-proofs img:not([data-slot="b"]) {
+  animation: sc-proof-float 3.6s ease-in-out infinite;
+}
+
+.sc-proofs img[data-slot="l"] {
+  animation-delay: -1.2s;
+}
+
+.sc-proofs img[data-slot="r"] {
+  animation-delay: -2.4s;
+}
+
+@keyframes sc-proof-float {
+  0%,
+  100% {
+    transform: translateZ(calc(var(--z) * 1px)) translateY(0);
+  }
+  50% {
+    transform: translateZ(calc(var(--z) * 1px)) translateY(-7px);
+  }
+}
+
+.stack-card.sc-creative:hover .sc-proofs img[data-slot="l"],
+.stack-card.sc-creative:hover .sc-proofs img[data-slot="r"] {
+  translate: calc(-50% + var(--r) * 92% + var(--px) * var(--z) * 0.6px) calc(-48% + var(--r) * var(--r) * 4% + var(--py) * var(--z) * 0.4px);
   rotate: calc(var(--r) * 6deg);
+}
+
+/* the proof under the pointer comes up and straightens */
+.stack-card.sc-creative .sc-proofs img:not([data-slot="b"]):hover {
+  --z: 110; /* the fan is 3D, so depth (not z-index) brings it over the centre */
+  z-index: 4;
+  scale: 1.14;
+  rotate: 0deg;
+  box-shadow: 0 0 0 4px #fff, 0 34px 50px -18px rgba(7, 17, 31, 0.75);
 }
 
 .sc-proof-note {
@@ -1650,6 +1717,25 @@ a.stack-card {
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.sc-creative .sc-proof-note span {
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.4s;
+}
+
+.sc-creative .sc-proof-note span.is-on {
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-proofs {
+    transform: none;
+  }
+
+  .stack-card.sc-creative[data-pos="0"] .sc-proofs img {
+    animation: none;
+  }
 }
 
 /* Motion: the two real reels from the Video page, side by side like phones */

@@ -120,13 +120,16 @@ const gdWall = [
           </a>
           <a class="stack-card sc-creative" href="/products/graphic-design/" data-name="Design" data-cursor="View" aria-label="Graphic Design">
             <span class="sc-label">03 · Design</span>
-            <!-- real work from /products/graphic-design/, fanned like proofs -->
-            <span class="sc-proofs">
-              <img src="/assets/graphic-design/apparel/hijra-football-kit-thumb.webp" alt="" width="480" height="600" style="--r:-1">
-              <img src="/assets/graphic-design/newsletter/mti-juz-amma-tafseer-thumb.webp" alt="" width="480" height="600" style="--r:1">
-              <img src="/assets/graphic-design/logo/meutuah-1978-logo-thumb.webp" alt="" width="480" height="600" style="--r:0">
+            <!-- real work from /products/graphic-design/, fanned like proofs. While this card is in front
+                 the proofs deal round (left → centre → right → behind) and the note lights the centre
+                 one's category; hovering tilts the fan with the pointer and lifts the proof under it. -->
+            <span class="sc-proofs" data-proofs>
+              <img src="/assets/graphic-design/apparel/hijra-football-kit-thumb.webp" alt="" width="480" height="600" data-k="jersey" data-slot="l">
+              <img src="/assets/graphic-design/logo/meutuah-1978-logo-thumb.webp" alt="" width="480" height="600" data-k="logo" data-slot="c">
+              <img src="/assets/graphic-design/newsletter/mti-juz-amma-tafseer-thumb.webp" alt="" width="480" height="600" data-k="newsletter" data-slot="r">
+              <img src="/assets/graphic-design/packaging/meutuah-drip-bags-thumb.webp" alt="" width="480" height="480" data-k="packaging" data-slot="b">
             </span>
-            <small class="sc-proof-note">Logo · Jersey · Newsletter · Packaging</small>
+            <small class="sc-proof-note"><span data-k="logo" class="is-on">Logo</span> · <span data-k="jersey">Jersey</span> · <span data-k="newsletter">Newsletter</span> · <span data-k="packaging">Packaging</span></small>
             <span class="sc-go" aria-hidden="true">↗</span>
           </a>
           <!-- the seven-area system from /products/digital-ads-management/ (a capture of its hero map) with a light flowing 01 → 07 -->

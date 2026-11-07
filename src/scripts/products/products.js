@@ -256,6 +256,37 @@
       });
     }
 
+    // Design card: deal the proofs round (l → c → r → b → l) while it is in front,
+    // light the centre one's category in the note, and tilt the fan with the pointer.
+    const proofCard = $(".sc-creative", stack);
+    const proofs = proofCard ? $$("[data-proofs] img", proofCard) : [];
+    const proofKeys = proofCard ? $$(".sc-proof-note [data-k]", proofCard) : [];
+    const PROOF_STEP = 900;
+    const NEXT_SLOT = { l: "c", c: "r", r: "b", b: "l" };
+    let proofElapsed = 0;
+    let onProofs = false;
+
+    function dealProofs() {
+      proofs.forEach((im) => (im.dataset.slot = NEXT_SLOT[im.dataset.slot] || "b"));
+      const centre = proofs.find((im) => im.dataset.slot === "c");
+      proofKeys.forEach((k) => k.classList.toggle("is-on", !!centre && k.dataset.k === centre.dataset.k));
+    }
+
+    if (proofCard && motionOK) {
+      proofCard.addEventListener("pointermove", (e) => {
+        if (e.pointerType !== "mouse") return;
+        const r = proofCard.getBoundingClientRect();
+        proofCard.style.setProperty("--px", (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
+        proofCard.style.setProperty("--py", (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
+      });
+      proofCard.addEventListener("pointerenter", () => (onProofs = true));
+      proofCard.addEventListener("pointerleave", () => {
+        onProofs = false;
+        proofCard.style.setProperty("--px", "0");
+        proofCard.style.setProperty("--py", "0");
+      });
+    }
+
     function tick(now) {
       const dt = last ? Math.min(now - last, 100) : 0;
       last = now;
@@ -263,6 +294,14 @@
         elapsed += dt;
         if (elapsed >= DWELL) go(active + 1, true);
       }
+      // the proofs keep dealing while a tab is chosen, but hold still under the pointer
+      if (cards[active] === proofCard && visible && !document.hidden && !onProofs) {
+        proofElapsed += dt;
+        if (proofElapsed >= PROOF_STEP) {
+          proofElapsed = 0;
+          dealProofs();
+        }
+      } else if (cards[active] !== proofCard) proofElapsed = PROOF_STEP / 2;
       requestAnimationFrame(tick);
     }
 
