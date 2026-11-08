@@ -607,6 +607,12 @@
         idle: "Hi Maul, I'd like to discuss graphic design.",
       },
     };
+    // Another page can reuse this form with its own wording (data-copy, JSON: { id: {…}, en: {…} })
+    if (form.dataset.copy) {
+      const copy = JSON.parse(form.dataset.copy);
+      Object.assign(T.id, copy.id);
+      Object.assign(T.en, copy.en);
+    }
 
     const pick = (el) => (el ? el.dataset[lang()] || el.value : "");
     const picked = (name) => $$(`[name="${name}"]:checked`, form).map(pick).join(", ");

@@ -102,6 +102,13 @@ const cards = {
       <div class="hang" style="left:280px;--s:84px;rotate:2.5deg"><div class="paper"><div class="q" style="background:#1f5c43;color:#fff"><b>?</b><small>Reporting</small>“Can my weekly report build itself?”</div></div></div>
       <div class="rail"></div>
     </div>`),
+  'crm-email-management': base(`${brand()}${copy('CRM &amp; email <em>management</em><span class="dot">.</span>', 'Email and message blasts, from setup to evaluation.', 'digmarketingmaul.com/products/crm-email-management')}
+    <style>.m{height:360px;overflow:hidden;border-radius:7px}.m img{border-radius:0}</style>
+    <div class="vis">
+      <div class="hang" style="left:30px;width:230px;--s:40px;rotate:-3deg"><div class="paper"><div class="m"><img src="${file('assets/crm-email-management/email/hijra-kilas-balik-2022-card.webp')}"></div></div></div>
+      <div class="hang" style="left:290px;width:230px;--s:84px;rotate:2.5deg"><div class="paper"><div class="m"><img src="${file('assets/graphic-design/newsletter/mti-juz-amma-tafseer-card.webp')}"></div></div></div>
+      <div class="rail"></div>
+    </div>`),
 };
 
 fs.mkdirSync(out, { recursive: true });

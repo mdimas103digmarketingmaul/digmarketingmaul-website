@@ -8,7 +8,7 @@ Added 2026-11-06. URL: `/products/1-on-1-consultation/`.
 | Styles | `src/styles/products/website-development.css` (shared base) + `src/styles/products/consultation.css` |
 | Script | `src/scripts/products/consultation.js` |
 | Share card | `assets/brand/og/1-on-1-consultation.jpg` (`ONLY=1-on-1-consultation node scripts/generate-og-images.mjs`) |
-| Card on /products/ | `src/pages/products/index.astro` (06, between Digital Ads Management and eBooks) + `.cv-talk` in `products.css` |
+| Card on /products/ | `src/pages/products/index.astro` (07, between CRM & Email Management and eBooks) + `.cv-talk` in `products.css` |
 
 ## Price
 

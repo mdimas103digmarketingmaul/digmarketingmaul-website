@@ -123,6 +123,32 @@
     }
   },
   {
+    "id": "crm-email-management",
+    "name": {
+      "id": "CRM & Email Management"
+    },
+    "category": "service",
+    "categoryLabel": "CRM",
+    "url": "/products/crm-email-management/",
+    "icon": "fa-solid fa-envelope-open-text",
+    "description": {
+      "id": "Pengelolaan email blast dan message blast: integrasi, automation, segmentasi, desain, sampai evaluasi performa.",
+      "en": "Email and message blast management: integrations, automation, segmentation, design and performance evaluation."
+    },
+    "price": {
+      "id": "Sesuai scope",
+      "usd": "By scope"
+    },
+    "promo": {},
+    "status": "available",
+    "paymentSupport": false,
+    "progress": {},
+    "cta": {
+      "id": "Lihat Detail",
+      "en": "View Details"
+    }
+  },
+  {
     "id": "digital-marketing-ebooks",
     "name": {
       "id": "Digital Marketing eBooks"

@@ -7,7 +7,7 @@ import pageJs from '../../scripts/products/products.js?url';
 const meta = {
   "title": "Products & Services — M. Dimas Maulana",
   "themeColor": "#fafbfc",
-  "description": "Products dan services dari M. Dimas Maulana: website development, video editing & motion, graphic design, course website, digital ads management, konsultasi 1 on 1, dan eBook digital marketing.",
+  "description": "Products dan services dari M. Dimas Maulana: website development, video editing & motion, graphic design, course website, digital ads management, konsultasi 1 on 1, CRM & email management, dan eBook digital marketing.",
   "canonical": "/products/",
   "image": "/assets/brand/og/products.jpg",
   "structuredData": productsGraph([
@@ -16,6 +16,7 @@ const meta = {
     ["Graphic Design", "/products/graphic-design/"],
     ["Website Pertama Kamu, Live dari 0", "/products/website-course/"],
     ["Digital Ads Management", "/products/digital-ads-management/"],
+    ["CRM & Email Management", "/products/crm-email-management/"],
     ["1 on 1 Consultation", "/products/1-on-1-consultation/"],
     ["Digital Marketing eBooks", "/products/digital-marketing-ebooks/"]
   ])
@@ -321,7 +322,26 @@ const gdWall = [
             </span>
           </a>
 
-          <!-- 06 1 on 1 Consultation — no price here on purpose; it is on its own page -->
+          <!-- 06 CRM & Email Management: real emails hanging on the rail; hover scrolls them -->
+          <a class="card reveal" href="/products/crm-email-management/" data-spot data-cursor="View" style="--tone:#d9eaf4">
+            <span class="card-visual cv-mail" aria-hidden="true">
+              <span class="cvm-rail"></span>
+              <span class="cvm-hang" style="--r:-1.6deg;--d:0s;--y:30px;--shift:-37.5%;--dur:5s"><span class="cvm-sheet"><img src="/assets/graphic-design/newsletter/mti-last-chapter.webp" alt="" width="600" height="1536" loading="lazy"></span></span>
+              <span class="cvm-hang" style="--r:.8deg;--d:-1.4s;--y:18px;--shift:-77%;--dur:9s"><span class="cvm-sheet"><img src="/assets/crm-email-management/email/hijra-monthly-september-2025-card.webp" alt="" width="680" height="4735" loading="lazy"></span></span>
+              <span class="cvm-hang" style="--r:1.6deg;--d:-2.6s;--y:30px;--shift:-57%;--dur:6s"><span class="cvm-sheet"><img src="/assets/graphic-design/newsletter/mti-scholarship-fund-card.webp" alt="" width="680" height="2528" loading="lazy"></span></span>
+            </span>
+            <span class="card-body">
+              <span class="card-meta"><span>06</span><span>CRM</span></span>
+              <strong class="card-title">CRM &amp; Email Management</strong>
+              <span class="card-desc"><span class="lang-id">Email blast dan message blast, dari setup sampai evaluasi.</span><span class="lang-en">Email and message blasts, from setup to evaluation.</span></span>
+              <span class="card-foot">
+                <span class="card-price"><strong class="card-price-text"><span class="lang-id">Sesuai scope</span><span class="lang-en">By scope</span></strong></span>
+                <span class="card-go" aria-hidden="true">→</span>
+              </span>
+            </span>
+          </a>
+
+          <!-- 07 1 on 1 Consultation — no price here on purpose; it is on its own page -->
           <a class="card reveal" href="/products/1-on-1-consultation/" data-spot data-cursor="View" style="--tone:#eceff4">
             <span class="card-visual cv-talk" aria-hidden="true">
               <span class="cvt-call">
@@ -332,7 +352,7 @@ const gdWall = [
               <span class="cvt-tags"><i>Digital marketing</i></span>
             </span>
             <span class="card-body">
-              <span class="card-meta"><span>06</span><span>Consultation</span></span>
+              <span class="card-meta"><span>07</span><span>Consultation</span></span>
               <strong class="card-title">1 on 1 Consultation</strong>
               <span class="card-desc"><span class="lang-id">Ngobrol 1 jam seputar digital marketing, dari pengalaman hands-on.</span><span class="lang-en">An hour-long chat about digital marketing, from hands-on experience.</span></span>
               <span class="card-foot">
@@ -342,7 +362,7 @@ const gdWall = [
             </span>
           </a>
 
-          <!-- 07 Digital Marketing eBooks -->
+          <!-- 08 Digital Marketing eBooks -->
           <a class="card reveal" href="/products/digital-marketing-ebooks/" data-spot data-cursor="View" style="--tone:#e9e3d5">
             <span class="card-visual cv-books" aria-hidden="true">
               <span class="cv-book" style="--i:0;--c:#07111f"><b>Ads</b></span>
@@ -351,7 +371,7 @@ const gdWall = [
               <span class="cv-book" style="--i:3;--c:#1f5c43"><b>Data</b></span>
             </span>
             <span class="card-body">
-              <span class="card-meta"><span>07</span><span>eBook</span><span class="card-flag card-flag--muted">Live test</span></span>
+              <span class="card-meta"><span>08</span><span>eBook</span><span class="card-flag card-flag--muted">Live test</span></span>
               <strong class="card-title">Digital Marketing eBooks</strong>
               <span class="card-desc"><span class="lang-id">Uji alur pembelian. eBook final segera hadir.</span><span class="lang-en">Purchase-flow test. Final eBooks coming soon.</span></span>
               <span class="card-foot">
@@ -424,6 +444,7 @@ const gdWall = [
               <label class="chip"><input type="checkbox" name="need" value="ads" data-id="Digital ads" data-en="Digital ads"><span>Digital ads</span></label>
               <label class="chip"><input type="checkbox" name="need" value="motion" data-id="Video editing &amp; motion" data-en="Video editing &amp; motion"><span>Video &amp; motion</span></label>
               <label class="chip"><input type="checkbox" name="need" value="design" data-id="Graphic design" data-en="Graphic design"><span>Graphic design</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="crm" data-id="CRM &amp; email management" data-en="CRM &amp; email management"><span>CRM &amp; email</span></label>
               <label class="chip"><input type="checkbox" name="need" value="brand" data-id="Brand guide" data-en="Brand guide"><span>Brand guide</span></label>
               <label class="chip"><input type="checkbox" name="need" value="consultation" data-id="Konsultasi 1 on 1" data-en="1 on 1 consultation"><span><span class="lang-id">Konsultasi 1 on 1</span><span class="lang-en">1 on 1 consultation</span></span></label>
               <label class="chip"><input type="checkbox" name="need" value="other" data-id="Lainnya" data-en="Something else"><span><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></span></label>

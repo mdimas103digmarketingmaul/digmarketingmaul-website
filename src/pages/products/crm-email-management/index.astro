@@ -1,0 +1,815 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { serviceGraph } from '../../../data/structured-data.js';
+import initScript from '../../../scripts/products/product-page-init.js?raw';
+import baseCss from '../../../styles/products/website-development.css?url';
+import designCss from '../../../styles/products/graphic-design.css?url';
+import pageCss from '../../../styles/products/crm-email-management.css?url';
+import railJs from '../../../scripts/products/graphic-design.js?url';
+import pageJs from '../../../scripts/products/crm-email-management.js?url';
+import WorkSheet from '../../../components/products/WorkSheet.astro';
+
+// Copy helpers: L(id, en) is one bilingual string, t() renders it for set:html.
+const L = (id, en) => ({ id, en });
+const t = (o) => (typeof o === "string" ? o : `<span class="lang-id">${o.id}</span><span class="lang-en">${o.en}</span>`);
+const plain = (html) => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").trim();
+
+// One source for the visible FAQ and its JSON-LD. Answers may hold inline HTML (links).
+const faq = [
+  L({ q: "Apa bedanya email blast dan automation?", a: "Email blast dikirim sekali ke satu segmen pada jadwal tertentu, misalnya newsletter bulanan. Automation jalan sendiri saat ada trigger, misalnya orang baru daftar atau belum menyelesaikan registrasi." },
+    { q: "What's the difference between an email blast and automation?", a: "A blast goes out once to one segment at a set time, like a monthly newsletter. Automation runs by itself when something triggers it, like a new sign-up or an unfinished registration." }),
+  L({ q: "Saya belum punya akun CRM. Bisa mulai dari nol?", a: "Bisa. Mulai dari memilih platform yang sesuai, menghubungkan domain email, menata data kontak, lalu membuat email pertama." },
+    { q: "I don't have a CRM account yet. Can we start from zero?", a: "Yes. We start by choosing the right platform, connecting your email domain, tidying your contacts, then building the first email." }),
+  L({ q: "Sudah pakai platform lain, harus pindah?", a: "Tidak harus. Akun yang sudah ada bisa dirapikan dan dikelola. Kalau memang lebih cocok pindah, data dan template bisa dibantu migrasi." },
+    { q: "I'm on another platform. Do I have to switch?", a: "No. An existing account can be cleaned up and managed. If moving really is the better fit, the data and templates can be migrated." }),
+  L({ q: "Biaya langganan platform termasuk?", a: "Tidak. Langganan dibayar langsung ke platform atas nama bisnismu, jadi akun dan datanya tetap milikmu. Saya bantu memastikan paketnya tidak kebesaran." },
+    { q: "Is the platform subscription included?", a: "No. You pay the platform directly under your business, so the account and data stay yours. I help make sure the plan isn't bigger than you need." }),
+  L({ q: "Bagaimana dengan data pelanggan saya?", a: "Akses dibuat sebagai user dengan peran yang sesuai, bukan memakai login pemilik. Data hanya dipakai untuk pekerjaan ini, dan kontak yang unsubscribe tidak dikirimi lagi." },
+    { q: "What about my customer data?", a: "Access is set up as a user with the right role, not the owner's login. The data is used only for this work, and contacts who unsubscribe are not emailed again." }),
+  L({ q: "Bisa sekalian desain dan copywriting?", a: "Bisa. Desain template, copy, subject line, sampai jadwal kirim bisa dikerjakan dalam satu alur. Contohnya ada di daftar email di atas." },
+    { q: "Can you do the design and copywriting too?", a: "Yes. Template design, copy, subject lines and scheduling can all run as one workflow. There are examples in the emails above." }),
+  L({ q: "Butuh website atau iklan juga?", a: "Bisa. Lihat <a href=\"/products/website-development/\">Website Development</a> dan <a href=\"/products/digital-ads-management/\">Digital Ads Management</a>." },
+    { q: "Need a website or ads too?", a: "Yes. See <a href=\"/products/website-development/\">Website Development</a> and <a href=\"/products/digital-ads-management/\">Digital Ads Management</a>." }),
+];
+
+// Real emails on the hero rail. One work = one sheet (WorkSheet.astro). `card` hangs, `images` opens in the
+// viewer; sizes are the files' real pixels. The rail follows the order written here. Notes: docs/crm-email-management.md
+const E = "/assets/crm-email-management/email/";
+const N = "/assets/graphic-design/newsletter/";
+const mail = (key, name, client, title, cardH, fullH, alt) => ({
+  key, name, client, title, mail: true,
+  card: { src: `${E}${key}-card.webp`, w: 680, h: cardH },
+  images: [{ src: `${E}${key}.webp`, w: 1080, h: fullH, alt }],
+});
+const HIJRA = "Hijra Bank";
+const ALAMI = "ALAMI";
+const MTI = "Measured Tones Institute";
+const works = {
+  year: [
+    mail("hijra-kilas-balik-2022", "Year in review", HIJRA, L("Kilas Balik 2022", "Kilas Balik 2022"), 3870, 6146, "Hijra year-in-review email for 2022: financing distributed, lender and project growth, positive impact figures, the year's timeline and awards"),
+    mail("hijra-kaleidoskop-2023", "Year in review", HIJRA, L("Kilas Balik Hijra di Tahun 2023", "Hijra's 2023 year in review"), 3461, 5496, "Hijra year-in-review email for 2023: users, financing and social reach, positive impact, top financing sectors, achievements and awards"),
+    mail("alami-rekap-2024", "Year in review", ALAMI, L("Kilas balik perjalanan pendana di 2024", "A lender's journey through 2024"), 3091, 4909, "Personalised ALAMI recap email for 2024 with merge fields for each lender's funding total, favourite sectors and company milestones"),
+    mail("alami-rekap-2024-v2", "Year in review", ALAMI, L("Kilas balik 2024, versi milestone", "2024 recap, milestone version"), 3081, 4893, "Second version of the ALAMI 2024 recap email with milestones, lender growth and a chart of favourite financing sectors"),
+  ],
+  monthly: [
+    mail("hijra-monthly-agustus-2025", L("Newsletter bulanan", "Monthly newsletter"), HIJRA, L("Langkah awal menuju merdeka finansial", "First steps to financial freedom"), 4012, 6372, "Hijra Bank August 2025 newsletter on SME financing by sector, sharia deposit returns and a deposit promotion with gold rewards"),
+    mail("hijra-monthly-september-2025", L("Newsletter bulanan", "Monthly newsletter"), HIJRA, L("Langkah nyata membangun ekonomi Indonesia", "Real steps to build Indonesia's economy"), 4735, 7520, "Hijra Bank September 2025 newsletter on sharia deposits, September bonuses and the launch of a QRIS soundbox with netzme"),
+  ],
+  update: [
+    mail("hijra-update-app-2024", L("Update produk", "Product update"), HIJRA, L("Update keamanan dan tampilan aplikasi", "App security and design update"), 2693, 4278, "Hijra Bank email explaining new app security features and a redesigned interface, step by step, with phone screenshots"),
+    mail("hijra-bisnis-perubahan-fitur", L("Update produk", "Product update"), HIJRA, L("Pemberitahuan perubahan fitur Hijra Bisnis", "Notice of Hijra Business feature changes"), 2495, 3963, "Hijra Bank notice about the Hijra Business feature change, with before and after app screens and a short FAQ"),
+  ],
+  lifecycle: [
+    mail("hijra-lanjutkan-pendaftaran", "Trigger", HIJRA, L("Cuma 3 menit, lanjutkan pendaftaran", "Just 3 minutes to finish signing up"), 1351, 2146, "Hijra Bank reminder email asking people who started registering to finish, with three steps and the app's main features"),
+  ],
+  b2b: [
+    mail("alami-b2b-lkpp", "B2B", ALAMI, L("Perkenalan pembiayaan untuk perusahaan", "Introducing financing to companies"), 2465, 3914, "ALAMI business email introducing sharia financing products to a company, with merge fields for the company and relationship manager"),
+    mail("alami-b2b-payor", "B2B", ALAMI, L("Referensikan mitra, dapatkan bonus", "Refer a partner, earn a bonus"), 3145, 4995, "ALAMI business email inviting companies to refer business partners, listing four financing products and a referral bonus"),
+  ],
+  event: [
+    mail("hijra-mustim-lifefest", "Event", HIJRA, L("Yuk, kunjungi booth Hijra Bank", "Come visit the Hijra Bank booth"), 1904, 3023, "Hijra Bank event email inviting people to its booth, with a virtual Hajj experience, exclusive merchandise and a QRIS charity programme"),
+  ],
+  program: [
+    { key: "mti-juz-amma", name: "Newsletter", client: MTI, mail: true, title: L("Master the lessons of Juz ‘Amma", "Master the lessons of Juz ‘Amma"),
+      card: { src: `${N}mti-juz-amma-tafseer-card.webp`, w: 680, h: 2048 },
+      images: [{ src: `${N}mti-juz-amma-tafseer.webp`, w: 724, h: 2180, alt: "Newsletter for Measured Tones Institute announcing The Last Chapter, a 10-month Juz ‘Amma tafseer course" }] },
+    { key: "mti-last-chapter", name: "Newsletter", client: MTI, mail: true, title: L("Spots still available: The Last Chapter", "Spots still available: The Last Chapter"),
+      card: { src: `${N}mti-last-chapter.webp`, w: 600, h: 1536 },
+      images: [{ src: `${N}mti-last-chapter.webp`, w: 600, h: 1536, alt: "Enrollment newsletter for Measured Tones Institute: spots still available in The Last Chapter" }] },
+    { key: "mti-scholarship", name: "Newsletter", client: MTI, mail: true, title: L("We’re just $2,000 away from our goal", "We’re just $2,000 away from our goal"),
+      card: { src: `${N}mti-scholarship-fund-card.webp`, w: 680, h: 2528 },
+      images: [{ src: `${N}mti-scholarship-fund.webp`, w: 1280, h: 4759, alt: "Fundraising newsletter for the Measured Tones Institute scholarship fund, with a donate button" }] },
+  ],
+};
+const rail = [...Object.values(works).flat().map((w) => w.key), "open"];
+const num = (key) => String(rail.indexOf(key) + 1).padStart(2, "0");
+
+const cats = [
+  ["year", L("Kilas balik", "Year in review"), L("Rekap tahunan dan data personal", "Annual recaps with personal data")],
+  ["monthly", L("Newsletter bulanan", "Monthly newsletter"), L("Info rutin, promo, dan edukasi", "Regular news, offers and education")],
+  ["update", L("Update produk", "Product updates"), L("Fitur baru dan pemberitahuan", "New features and notices")],
+  ["lifecycle", L("Trigger", "Triggered"), L("Pengingat saat pendaftaran belum selesai", "A nudge when sign-up isn't finished")],
+  ["b2b", "B2B", L("Penawaran dan referral perusahaan", "Company offers and referrals")],
+  ["event", "Event", L("Undangan booth dan program", "Booth and programme invitations")],
+  ["program", L("Program &amp; donasi", "Programmes &amp; fundraising"), L("Pendaftaran course dan penggalangan dana", "Course enrolment and fundraising")],
+];
+
+// Overview wall: every email as a small tile, categories interleaved, dealt into three columns.
+const queues = Object.entries(works).map(([cat, list]) => list.map((w) => ({
+  key: w.key, cat, client: w.client, title: w.title.en,
+  src: w.images[0].src.replace(/\.webp$/, "-thumb.webp"), w: 480, h: 600,
+})));
+const tiles = [];
+while (queues.some((q) => q.length)) for (const q of queues) if (q.length) tiles.push(q.shift());
+const wallCols = [0, 1, 2].map((c) => tiles.filter((_, i) => i % 3 === c));
+const catLabel = Object.fromEntries(cats.map(([k, name]) => [k, name]));
+
+// Hands-on platforms. Mailchimp and Resend are level on purpose (owner's call), Insider One just behind.
+const LG = "/assets/crm-email-management/logo/";
+const tools = [
+  { name: "Mailchimp", logo: `${LG}mailchimp.webp`, w: 160, h: 160, level: 88, kind: "mailchimp" },
+  { name: "Resend", logo: `${LG}resend.webp`, w: 240, h: 51, level: 88, kind: "resend" },
+  { name: "Insider One", logo: `${LG}insider-one.webp`, w: 122, h: 128, level: 72, kind: "insider" },
+];
+
+// The full scope, one tile per area
+const scope = [
+  { viz: "setup", title: L("Setup &amp; integrasi.", "Setup &amp; integration."), items: [L("Hubungkan akun email dan domain ke platform", "Connect email accounts and domains to the platform"), L("SPF, DKIM, DMARC", "SPF, DKIM, DMARC"), L("Sender name dan reply-to", "Sender name and reply-to"), L("Form website, landing page, dan aplikasi", "Website forms, landing pages and apps"), L("API, webhook, dan integrasi lainnya", "APIs, webhooks and other integrations")] },
+  { viz: "data", title: L("Data &amp; user.", "Data &amp; users."), items: [L("Import dan rapikan kontak", "Import and clean contacts"), L("Hapus duplikat, atur custom field", "Remove duplicates, set custom fields"), L("Consent dan double opt-in", "Consent and double opt-in"), L("Unsubscribe dan suppression list", "Unsubscribes and suppression lists"), L("Sinkronisasi data antar sistem", "Data sync between systems")] },
+  { viz: "segment", title: L("Segmentasi.", "Segmentation."), items: [L("Kategori, minat, dan lokasi", "Category, interest and location"), L("Aktivitas: buka, klik, transaksi", "Activity: opens, clicks, purchases"), L("Skor kualitas audience", "Audience quality scoring"), L("Kontak aktif vs tidak aktif", "Active vs inactive contacts")] },
+  { viz: "flow", title: L("Automation &amp; trigger.", "Automation &amp; triggers."), items: [L("Welcome series", "Welcome series"), L("Trigger dari aktivitas di email", "Triggers from email activity"), L("Trigger dari event website atau app", "Triggers from site or app events"), L("Pengingat registrasi belum selesai", "Unfinished registration reminders"), L("Re-engagement kontak pasif", "Re-engaging passive contacts")] },
+  { viz: "calendar", title: L("Blast &amp; jadwal.", "Blasts &amp; scheduling."), items: [L("Kalender email bulanan", "Monthly email calendar"), L("Jadwal kirim sesuai audience", "Send times that suit the audience"), L("A/B test subject dan konten", "A/B tests on subject and content"), L("Test kirim sebelum tayang", "Test sends before going live")] },
+  { viz: "content", title: L("Desain &amp; copy.", "Design &amp; copy."), items: [L("Template responsif", "Responsive templates"), L("Desain visual email", "Email visual design"), L("Subject line, preheader, dan copy", "Subject lines, preheaders and copy"), L("Custom message dan merge tag", "Custom messages and merge tags"), L("Cek tampilan di HP dan dark mode", "Mobile and dark mode checks")] },
+  { viz: "message", title: "Message blast.", items: [L("WhatsApp, SMS, dan push notification", "WhatsApp, SMS and push notifications"), L("Pengajuan template pesan", "Message template approval"), L("Personalisasi isi pesan", "Message personalisation"), L("Aturan frekuensi lintas channel", "Frequency rules across channels")] },
+  { viz: "deliver", title: "Deliverability.", items: [L("Warm-up domain baru", "Warming up new domains"), L("Kebersihan list", "List hygiene"), L("Pantau bounce dan spam complaint", "Watching bounces and spam complaints"), L("Reputasi pengirim", "Sender reputation")] },
+  { viz: "report", title: L("Evaluasi &amp; report.", "Evaluation &amp; reporting."), items: [L("Open, click, bounce, unsubscribe", "Opens, clicks, bounces, unsubscribes"), L("Traffic dan konversi dengan UTM + GA4", "Traffic and conversions with UTM + GA4"), L("Perbandingan antar campaign", "Campaign comparisons"), L("Report dan rekomendasi berikutnya", "Reports and next-step recommendations")] },
+  { viz: "account", title: L("Akun &amp; langganan.", "Accounts &amp; subscriptions."), items: [L("User, peran, dan akses", "Users, roles and access"), L("Audit paket vs pemakaian", "Plan vs usage audits"), L("Sesuaikan kuota kontak dan user", "Match contact and seat quotas"), L("Migrasi antar platform", "Migration between platforms")] },
+];
+
+// Automation examples. Each: trigger, action, wait, check, yes, no, goal
+const flows = [
+  { key: "welcome", tab: L("Daftar baru", "New sign-up"), steps: [L("Orang baru subscribe", "Someone subscribes"), L("Email 1: welcome", "Email 1: welcome"), L("Tunggu 2 hari", "Wait 2 days"), L("Email 1 dibuka?", "Opened email 1?"), L("Kirim produk utama", "Send the main product"), L("Kirim ulang, subject beda", "Resend, new subject"), L("Transaksi pertama", "First purchase")] },
+  { key: "abandon", tab: L("Daftar belum selesai", "Unfinished sign-up"), steps: [L("Mulai daftar, berhenti di tengah", "Started signing up, stopped"), L("Email: lanjutkan pendaftaran", "Email: finish signing up"), L("Tunggu 1 hari", "Wait 1 day"), L("Sudah selesai?", "Finished yet?"), L("Keluar dari flow", "Leave the flow"), L("Pengingat lewat WhatsApp", "WhatsApp reminder"), L("Akun aktif", "Active account")] },
+  { key: "click", tab: L("Klik di email", "Clicks in email"), steps: [L("Klik link produk di email", "Clicks a product link"), L("Beri tag minat", "Add an interest tag"), L("Tunggu 1 hari", "Wait 1 day"), L("Sudah beli?", "Bought yet?"), L("Masuk flow pelanggan", "Move to customer flow"), L("Kirim detail produk", "Send product details"), L("Penjualan", "Sale")] },
+  { key: "dormant", tab: L("Kontak pasif", "Passive contacts"), steps: [L("90 hari tidak buka email", "No opens for 90 days"), L("Email: masih mau terima?", "Email: still interested?"), L("Tunggu 7 hari", "Wait 7 days"), L("Ada klik?", "Any click?"), L("Kembali ke list aktif", "Back to the active list"), L("Stop kirim", "Stop sending"), L("List lebih sehat", "A healthier list")] },
+  { key: "after", tab: L("Setelah transaksi", "After a purchase"), steps: [L("Transaksi selesai", "Purchase completed"), L("Email: terima kasih", "Email: thank you"), L("Tunggu 14 hari", "Wait 14 days"), L("Transaksi lagi?", "Bought again?"), L("Tandai pelanggan loyal", "Tag as loyal"), L("Kirim produk terkait", "Send a related product"), L("Repeat order", "Repeat order")] },
+];
+const flowKind = ["trigger", "action", "wait", "check"];
+const flowLabel = [L("Trigger", "Trigger"), L("Aksi", "Action"), L("Jeda", "Delay"), L("Kondisi", "Condition")];
+
+const stages = [L("Terkirim", "Sent"), L("Sampai", "Delivered"), L("Dibuka", "Opened"), L("Diklik", "Clicked"), L("Konversi", "Converted")];
+const symptoms = [
+  { key: "spam", hit: 1, name: L("Email masuk spam", "Landing in spam"), why: L("Biasanya soal identitas pengirim atau reputasi list.", "Usually sender identity or list reputation."), checks: [L("SPF, DKIM, DMARC sudah benar?", "Are SPF, DKIM and DMARC correct?"), L("Domain baru sudah warm-up?", "Has the new domain been warmed up?"), L("Kontak lama yang tidak aktif ikut dikirim?", "Are old inactive contacts being mailed?"), L("Spam complaint naik?", "Are spam complaints rising?")] },
+  { key: "bounce", hit: 1, name: L("Bounce tinggi", "High bounce rate"), why: L("Alamat salah atau sudah mati masih ada di list.", "Wrong or dead addresses are still on the list."), checks: [L("Dari mana list ini berasal?", "Where did this list come from?"), L("Email divalidasi saat daftar?", "Are emails validated at sign-up?"), L("Hard bounce sudah dikeluarkan?", "Are hard bounces removed?"), L("Format import sudah rapi?", "Was the import formatted properly?")] },
+  { key: "open", hit: 2, name: L("Open rate turun", "Open rate falling"), why: L("Open sering terlihat lebih tinggi karena proteksi privasi Apple Mail, jadi lihat tren dan klik juga.", "Opens often look inflated by Apple Mail privacy protection, so read the trend and clicks too."), checks: [L("Subject dan preheader menarik?", "Are the subject and preheader compelling?"), L("Nama pengirim dikenali?", "Is the sender name recognisable?"), L("Jam kirim sudah cocok?", "Is the send time right?"), L("Segmennya terlalu luas?", "Is the segment too broad?")] },
+  { key: "click", hit: 3, name: L("Klik rendah", "Low clicks"), why: L("Email dibuka, tapi isinya belum mendorong orang bertindak.", "People open, but the content doesn't move them to act."), checks: [L("Ada satu CTA utama yang jelas?", "Is there one clear main CTA?"), L("Penawaran sesuai segmen?", "Does the offer suit the segment?"), L("Nyaman dibaca di HP?", "Is it comfortable on a phone?"), L("Link dan UTM berfungsi?", "Do the links and UTMs work?")] },
+  { key: "unsub", hit: 2, name: L("Banyak unsubscribe", "Many unsubscribes"), why: L("Frekuensi atau isi email tidak sesuai harapan saat orang mendaftar.", "Frequency or content doesn't match what people signed up for."), checks: [L("Terlalu sering kirim?", "Sending too often?"), L("Isi sesuai janji saat opt-in?", "Does content match the opt-in promise?"), L("Ada pilihan kurangi frekuensi?", "Is there an option to reduce frequency?"), L("Satu pesan dikirim ke semua orang?", "Is one message going to everyone?")] },
+  { key: "convert", hit: 4, name: L("Klik ada, konversi tidak", "Clicks, no conversions"), why: L("Masalahnya sering terjadi setelah email: halaman tujuan atau tracking.", "The issue is often after the email: the landing page or tracking."), checks: [L("Landing page sejalan dengan email?", "Does the landing page match the email?"), L("Event konversi tercatat di GA4?", "Are conversions recorded in GA4?"), L("Penawarannya cukup kuat?", "Is the offer strong enough?"), L("Ada follow-up untuk yang belum beli?", "Is there a follow-up for non-buyers?")] },
+];
+
+const planChecks = [L("Berapa kontak yang benar-benar aktif", "How many contacts are truly active"), L("Volume kirim per bulan", "Monthly sending volume"), L("Jumlah user yang memakai akun", "How many users need the account"), L("Fitur berbayar yang benar-benar dipakai", "Which paid features are actually used")];
+const plans = [
+  { key: "mailchimp", head: L("Mulai dari Mailchimp.", "Start with Mailchimp."), why: L("Newsletter, campaign, dan automation dasar bisa jalan tanpa developer.", "Newsletters, campaigns and basic automation, no developer needed.") },
+  { key: "resend", head: L("Resend lebih pas.", "Resend fits better."), why: L("Email dikirim dari website atau aplikasi lewat API, dengan domain milikmu.", "Email sent from your site or app through an API, on your own domain.") },
+  { key: "combo", head: L("Resend + Mailchimp.", "Resend + Mailchimp."), why: L("Email sistem dan campaign dipisah, supaya reputasi email penting tetap terjaga.", "System email and campaigns stay separate, protecting the reputation of the important ones.") },
+  { key: "insider", head: L("Arahkan ke Insider One.", "Look at Insider One."), why: L("Journey lintas channel lebih rapi kalau data pelanggan ada di satu tempat.", "Cross-channel journeys work better with customer data in one place.") },
+];
+const sizeNote = [
+  ["small", L("List masih kecil: ambil paket terkecil dulu, naik saat memang mentok.", "Small list: take the smallest plan, move up only when you hit the limit.")],
+  ["mid", L("Bersihkan kontak tidak aktif dulu, baru tentukan tier.", "Clean out inactive contacts first, then choose the tier.")],
+  ["large", L("Di volume ini, reputasi domain dan kontrak ikut menentukan.", "At this volume, domain reputation and contract terms matter too.")],
+];
+
+const briefCopy = {
+  id: { intro: "Saya ingin diskusi CRM & email management.", use: "Platform", count: "Jumlah kontak", ref: "Website", idle: "Halo Maul, saya ingin diskusi CRM & email management." },
+  en: { intro: "I'd like to discuss CRM & email management.", use: "Platform", count: "Contacts", ref: "Website", idle: "Hi Maul, I'd like to discuss CRM & email management." },
+};
+
+const meta = {
+  title: "CRM & Email Blast Management — Maul Digital",
+  themeColor: "#fafbfc",
+  description: "Kelola email blast dan message blast di Mailchimp, Resend, dan Insider One: integrasi, automation, segmentasi, desain, sampai evaluasi performa.",
+  canonical: "/products/crm-email-management/",
+  image: "/assets/brand/og/crm-email-management.jpg",
+  imageAlt: "CRM & Email Management oleh digmarketingmaul",
+  structuredData: serviceGraph({
+    name: "CRM & Email Management",
+    path: "/products/crm-email-management/",
+    description: "Pengelolaan CRM, email blast, dan message blast: integrasi akun, automation, segmentasi, desain dan copywriting, user management, subscription, serta evaluasi performa.",
+    serviceType: "CRM and email marketing management",
+    image: "/assets/brand/og/crm-email-management.jpg",
+    faq: faq.map((item) => ({ q: plain(item.id.q), a: plain(item.id.a) })),
+  }),
+};
+---
+<!--
+  CRM & Email Management product page (light only).
+  Stylesheets: website-development.css (shared base), graphic-design.css (hanging rail, overview wall,
+  email viewer, category index), then crm-email-management.css (what only this page has).
+  Scripts: graphic-design.js runs the rail, viewer, brief form and page chrome (the brief's wording comes
+  from data-copy on the form); crm-email-management.js runs the demos. Notes: docs/crm-email-management.md
+-->
+<BaseLayout meta={meta} lang="id" htmlAttributes={{"data-language": "id", "data-international": "false"}} bodyAttributes={{"data-page": "crm-email-management"}}>
+<Fragment slot="head">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href={baseCss} />
+<link rel="stylesheet" href={designCss} />
+<link rel="stylesheet" href={pageCss} />
+<script is:inline set:html={initScript}></script>
+</Fragment>
+  <a class="skip-link" href="#main"><span class="lang-id">Langsung ke konten</span><span class="lang-en">Skip to content</span></a>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor-ring"><span class="cursor-label"></span></span>
+    <span class="cursor-dot"></span>
+  </div>
+
+  <!-- ============ HEADER: same as Website Development ============ -->
+  <header class="site-header" data-header>
+    <div class="site-header-inner">
+      <a href="/index.html#home" class="brand-logo" aria-label="M. Dimas Maulana Home"><img src="/assets/brand/logo/icon.svg" alt="digmarketingmaul" width="34" height="34"><span class="brand-word">digmarketingmaul</span></a>
+      <div class="header-tools">
+        <label class="lang-select">
+          <span class="visually-hidden">Language</span>
+          <select data-maul-language-select>
+            <option value="id">ID</option>
+            <option value="en">EN</option>
+          </select>
+        </label>
+        <button class="intl-toggle" type="button" data-product-international-toggle aria-pressed="false" aria-label="International mode">
+          <span class="intl-track" aria-hidden="true"><i></i></span><span>International</span>
+        </button>
+        <a class="btn btn-ink btn-sm header-cta" href="#contact" data-magnetic>Let's discuss</a>
+      </div>
+    </div>
+    <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ HERO: the emails, on the same wall + hanging rail as Graphic Design ============ -->
+    <section class="hero hero--design hero--crm" id="emails" aria-labelledby="crm-title" data-view="wall">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <h1 class="hero-title" id="crm-title" data-reveal-title>
+            <span class="mask-line"><span>CRM &amp; email</span></span>
+            <span class="mask-line"><span><em>management</em><span class="accent-dot">.</span></span></span>
+          </h1>
+          <p class="hero-lead reveal"><span class="lang-id">Email blast dan message blast yang rapi, dari setup sampai evaluasi.</span><span class="lang-en">Email and message blasts done properly, from setup to evaluation.</span></p>
+          <div class="hero-work-ui reveal">
+            <p class="hero-work-label"><span class="lang-id">Email yang dikerjakan</span><span class="lang-en">Emails we've made</span><span class="accent-dot">.</span> <small><span class="lang-id">Klik untuk lihat emailnya</span><span class="lang-en">Click to see them</span></small></p>
+            <ol class="cats" aria-label="Email categories">
+              {cats.map(([key, name, items], i) => (
+              <li><button class="cat" type="button" data-cat-go={key}><span class="cat-num">{String(i + 1).padStart(2, "0")}</span><span class="cat-name" set:html={t(name)} /><span class="cat-items" set:html={t(items)} /><span class="cat-go" aria-hidden="true">→</span></button></li>
+              ))}
+            </ol>
+            <div class="hang-ui">
+              <p class="hang-label"><span class="hl-wall"><span class="lang-id">Semua email</span><span class="lang-en">All emails</span></span><span class="hl-rail"><span class="lang-id">Email pilihan</span><span class="lang-en">Selected emails</span></span></p>
+              <button class="round-btn wall-btn" type="button" data-view-wall aria-label="Show all emails"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i></button>
+              <p class="hang-count"><b data-hang-current>01</b> / <span data-hang-total>{num("open")}</span></p>
+              <button class="round-btn" type="button" data-hang-prev aria-label="Previous email"><span aria-hidden="true">←</span></button>
+              <button class="round-btn" type="button" data-hang-next aria-label="Next email"><span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-work">
+          <div class="wall" data-wall role="region" aria-label="All emails">
+            <div class="wall-cols">
+              {wallCols.map((col, c) => (
+              <ul class="wall-col" style={`--dur:${[64, 78, 70][c]}s`} data-dir={c === 1 ? "down" : "up"}>
+                {[...col, ...col].map((tile, k) => (
+                <li aria-hidden={k >= col.length ? "true" : undefined}>
+                  <button class="wall-tile" type="button" data-wall-go={tile.key} data-cursor="View" tabindex={k >= col.length ? -1 : undefined} aria-label={`${tile.client}: ${tile.title}`}>
+                    <img src={tile.src} alt="" width={tile.w} height={tile.h} loading={k < col.length ? "eager" : "lazy"} decoding="async" draggable="false">
+                    <span class="wall-cap"><b>{tile.client}</b><small set:html={t(catLabel[tile.cat])} /></span>
+                  </button>
+                </li>
+                ))}
+              </ul>
+              ))}
+            </div>
+          </div>
+
+          <div class="hang hang--design" data-hang>
+            <span class="hang-rail" aria-hidden="true"></span>
+            <div class="hang-viewport" data-hang-viewport tabindex="0" role="region" aria-roledescription="carousel" aria-label="Selected emails: drag, or use the arrow keys">
+              <ol class="hang-track" data-hang-track>
+                {Object.entries(works).flatMap(([cat, list]) => list.map((w) => <WorkSheet work={w} idx={num(w.key)} cat={cat} />))}
+                <li class="sheet sheet--next" style="--tone:#ff304f">
+                  <div class="sheet-swing">
+                    <span class="sheet-string" aria-hidden="true"></span><span class="sheet-clip" aria-hidden="true"></span>
+                    <div class="sheet-paper" data-cursor="Drag">
+                      <span class="sheet-screen sheet-screen--next">
+                        <span class="next-plus" aria-hidden="true">+</span>
+                        <span class="next-title">Your email<br>is next<span class="accent-dot">.</span></span>
+                      </span>
+                      <span class="sheet-caption">
+                        <span class="sheet-idx">{num("open")}</span>
+                        <span class="sheet-name"><strong><span class="lang-id">Slot terbuka</span><span class="lang-en">Open slot</span></strong><small><span class="lang-id">Mulai dari brief singkat</span><span class="lang-en">Starts with a quick brief</span></small></span>
+                        <a class="sheet-go sheet-go--red" href="#contact" data-cursor="Let's talk" aria-label="Let's discuss your email">→</a>
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </ol>
+            </div>
+            <div class="hang-foot">
+              <span class="hang-progress" aria-hidden="true"><i data-hang-bar></i></span>
+              <span class="hang-hint" aria-hidden="true"><span class="lang-id">Geser</span><span class="lang-en">Drag</span> ↔</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="work-viewer" data-work-viewer aria-labelledby="mv-subject">
+      <div class="mv-bar">
+        <p class="mv-meta"><b id="mv-subject" data-mv-subject></b><small data-mv-client></small></p>
+        <p class="mv-count" aria-live="polite"><b data-mv-current>1</b> / <span data-mv-total>1</span></p>
+        <button class="round-btn" type="button" data-mv-prev aria-label="Previous"><span aria-hidden="true">←</span></button>
+        <button class="round-btn" type="button" data-mv-next aria-label="Next"><span aria-hidden="true">→</span></button>
+        <button class="round-btn mv-close" type="button" data-mv-close aria-label="Close"><span aria-hidden="true">✕</span></button>
+      </div>
+      <div class="mv-scroll" data-mv-scroll tabindex="0">
+        <div class="mv-stack" data-mv-stack></div>
+      </div>
+    </dialog>
+
+    <!-- ============ PLATFORMS: the bars from the home page, per tool. The glow follows the pointer and takes the colour of the hovered tool. ============ -->
+    <section class="tools" id="platforms" aria-labelledby="tools-title">
+      <div class="shell">
+        <div class="tools-panel reveal" data-spot>
+          <div class="tools-head">
+            <h2 class="tools-title" id="tools-title"><span class="lang-id">Terbiasa handle</span><span class="lang-en">Hands-on</span><br><span class="lang-id">langsung di</span><span class="lang-en">inside</span><span class="accent-dot">:</span></h2>
+            <p class="tools-note"><span class="lang-id">Dari akun, data, sampai langganannya.</span><span class="lang-en">From the account and data to the subscription.</span></p>
+          </div>
+          <ul class="tools-list">
+            {tools.map((tool) => (
+            <li class="tool" data-tool={tool.kind}>
+              <span class="tool-logo"><img src={tool.logo} alt="" width={tool.w} height={tool.h} loading="lazy"></span>
+              <span class="tool-name">{tool.name}</span>
+              <span class="tool-bar" role="img" aria-label={`${tool.name}: ${tool.level} / 100`}><span class="tool-progress" style={`--progress:${tool.level}`}></span></span>
+            </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCOPE: everything the work covers ============ -->
+    <section class="why" id="scope" aria-labelledby="scope-title">
+      <div class="shell">
+        <h2 class="section-title" id="scope-title" data-reveal-title>
+          <span class="mask-line"><span>What we manage<span class="accent-dot">.</span></span></span>
+        </h2>
+        <div class="bento bento--design bento--crm">
+          <a class="tile tile--wide tile--red reveal" href="#contact" data-spot data-cursor="Let's talk">
+            <div class="viz viz-pipe" aria-hidden="true">
+              <span><i>Data</i><i>Segment</i><i>Trigger</i><i>Send</i><i>Report</i></span>
+            </div>
+            <h3><span class="lang-id">Satu orang, satu alur.</span><span class="lang-en">One person, one workflow.</span></h3>
+            <p class="tile-line"><span class="lang-id">Tidak perlu tim terpisah untuk setup, desain, copy, dan report. Tidak ada di daftar? Tanya saja.</span><span class="lang-en">No separate teams for setup, design, copy and reports. Not on the list? Just ask.</span></p>
+            <span class="tile-go" aria-hidden="true">→</span>
+          </a>
+          {scope.map((item, i) => (
+          <article class="tile reveal" data-spot>
+            <span class="tile-idx">{String(i + 1).padStart(2, "0")}</span>
+            <div class={`viz viz-c viz-${item.viz}`} aria-hidden="true" data-viz={item.viz}>
+              {item.viz === "setup" && <Fragment><b>SPF</b><b>DKIM</b><b>DMARC</b></Fragment>}
+              {item.viz === "data" && <span class="vc-table"><i></i><i></i><i class="is-x"></i><i></i></span>}
+              {item.viz === "segment" && <span class="vc-venn"><i></i><i></i></span>}
+              {item.viz === "flow" && <span class="vc-flow"><i></i><i></i><i></i></span>}
+              {item.viz === "calendar" && <span class="vc-cal">{Array.from({ length: 21 }, (_, d) => <i class={[3, 9, 12, 18].includes(d) ? "on" : undefined}></i>)}</span>}
+              {item.viz === "content" && <span class="vc-mail"><b>Aa</b><i></i><i></i><em>CTA</em></span>}
+              {item.viz === "message" && <span class="vc-chat"><i></i><i></i></span>}
+              {item.viz === "deliver" && <span class="vc-gauge"><b>Inbox</b><i></i></span>}
+              {item.viz === "report" && <span class="vc-bars"><i style="--h:.92"></i><i style="--h:.7"></i><i style="--h:.42"></i><i style="--h:.24"></i></span>}
+              {item.viz === "account" && <span class="vc-seats"><i></i><i></i><i></i><b>Plan</b></span>}
+            </div>
+            <h3 set:html={t(item.title)} />
+            <ul class="tile-list">{item.items.map((li) => <li set:html={t(li)} />)}</ul>
+          </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ AUTOMATION: pick a trigger, the flow runs ============ -->
+    <section class="crm-sec" id="automation" aria-labelledby="flow-title">
+      <div class="shell">
+        <div class="crm-head">
+          <h2 class="section-title" id="flow-title" data-reveal-title>
+            <span class="mask-line"><span>Set once,</span></span>
+            <span class="mask-line"><span>it <em>runs</em><span class="accent-dot">.</span></span></span>
+          </h2>
+          <p class="crm-note reveal"><span class="lang-id">Pilih trigger, lihat alurnya. Ini contoh yang umum dibuat, detailnya disesuaikan dengan bisnismu.</span><span class="lang-en">Pick a trigger and watch the flow. These are common examples; the details are tailored to your business.</span></p>
+        </div>
+        <div class="flow reveal" data-crm-tabs data-auto="6500">
+          <div class="crm-tabs" role="tablist" aria-label="Automation triggers">
+            {flows.map((f, i) => (
+            <button class="crm-tab" type="button" role="tab" id={`flow-tab-${f.key}`} aria-controls={`flow-${f.key}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} set:html={t(f.tab)} />
+            ))}
+          </div>
+          {flows.map((f, i) => (
+          <div class="flow-panel" role="tabpanel" id={`flow-${f.key}`} aria-labelledby={`flow-tab-${f.key}`} hidden={i !== 0}>
+            <ol class="fl">
+              {flowKind.map((kind, n) => (
+              <li class={`fl-node fl-node--${kind}`} style={`--n:${n}`}><small set:html={t(flowLabel[n])} /><b set:html={t(f.steps[n])} /></li>
+              ))}
+              <li class="fl-split" style="--n:4">
+                <div class="fl-node fl-node--yes"><small><span class="lang-id">Ya</span><span class="lang-en">Yes</span></small><b set:html={t(f.steps[4])} /></div>
+                <div class="fl-node fl-node--no"><small><span class="lang-id">Tidak</span><span class="lang-en">No</span></small><b set:html={t(f.steps[5])} /></div>
+              </li>
+              <li class="fl-node fl-node--goal" style="--n:5"><small>Goal</small><b set:html={t(f.steps[6])} /></li>
+            </ol>
+          </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SEGMENTATION: toggle conditions, the audience and the message change ============ -->
+    <section class="crm-sec" id="segment" aria-labelledby="seg-title">
+      <div class="shell">
+        <div class="crm-head">
+          <h2 class="section-title" id="seg-title" data-reveal-title>
+            <span class="mask-line"><span>Right people,</span></span>
+            <span class="mask-line"><span>right <em>message</em><span class="accent-dot">.</span></span></span>
+          </h2>
+          <p class="crm-note reveal"><span class="lang-id">Coba nyalakan kondisinya. Audience menyempit, pesannya ikut berubah.</span><span class="lang-en">Turn on some conditions. The audience narrows and the message changes with it.</span></p>
+        </div>
+        <div class="seg reveal" data-seg>
+          <fieldset class="seg-rules">
+            <legend><span class="lang-id">Kondisi</span><span class="lang-en">Conditions</span></legend>
+            <label class="seg-rule"><input type="checkbox" value="opened"><span><span class="lang-id">Buka email 30 hari terakhir</span><span class="lang-en">Opened an email in 30 days</span></span></label>
+            <label class="seg-rule"><input type="checkbox" value="clicked"><span><span class="lang-id">Klik link produk</span><span class="lang-en">Clicked a product link</span></span></label>
+            <label class="seg-rule"><input type="checkbox" value="buyer"><span><span class="lang-id">Transaksi 90 hari terakhir</span><span class="lang-en">Purchased in 90 days</span></span></label>
+            <label class="seg-rule"><input type="checkbox" value="city"><span><span class="lang-id">Domisili Jabodetabek</span><span class="lang-en">Lives in Greater Jakarta</span></span></label>
+            <p class="seg-legend"><i class="d-on"></i><span class="lang-id">Terkirim</span><span class="lang-en">Receives it</span><i class="d-off"></i><span class="lang-id">Tidak</span><span class="lang-en">Doesn't</span><i class="d-out"></i>Unsubscribe</p>
+          </fieldset>
+          <div class="seg-field">
+            <div class="seg-dots" data-seg-dots aria-hidden="true"></div>
+            <p class="seg-count" aria-live="polite"><b data-seg-count>0</b> <span>/ <span data-seg-total>0</span></span> <small><span class="lang-id">kontak contoh</span><span class="lang-en">sample contacts</span></small></p>
+          </div>
+          <div class="seg-mail">
+            <p class="seg-mail-bar"><i></i><i></i><i></i></p>
+            <p class="seg-mail-label">Subject</p>
+            <p class="seg-subject" data-seg-subject></p>
+            <div class="seg-mail-art" aria-hidden="true"><i></i><i></i><i></i></div>
+            <p class="seg-why" data-seg-why></p>
+            <p class="seg-tag" data-seg-tag hidden><span class="lang-id">Area: Jabodetabek</span><span class="lang-en">Area: Greater Jakarta</span></p>
+          </div>
+        </div>
+        <p class="crm-foot"><span class="lang-id">Ilustrasi, bukan data pelanggan sungguhan.</span><span class="lang-en">An illustration, not real customer data.</span></p>
+      </div>
+    </section>
+
+    <!-- ============ EVALUATION: pick a symptom, see where it breaks ============ -->
+    <section class="crm-sec" id="evaluation" aria-labelledby="dx-title">
+      <div class="shell">
+        <div class="crm-head">
+          <h2 class="section-title" id="dx-title" data-reveal-title>
+            <span class="mask-line"><span>Read the</span></span>
+            <span class="mask-line"><span><em>numbers</em><span class="accent-dot">.</span></span></span>
+          </h2>
+          <p class="crm-note reveal"><span class="lang-id">Angka CRM baru berguna kalau tahu harus memperbaiki apa. Pilih masalahnya.</span><span class="lang-en">CRM numbers only help if you know what to fix. Pick a problem.</span></p>
+        </div>
+        <div class="dx reveal" data-crm-tabs>
+          <div class="dx-tabs" role="tablist" aria-label="Email problems" aria-orientation="vertical">
+            {symptoms.map((s, i) => (
+            <button class="dx-tab" type="button" role="tab" id={`dx-tab-${s.key}`} aria-controls={`dx-${s.key}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1}><span set:html={t(s.name)} /><span class="dx-arrow" aria-hidden="true">→</span></button>
+            ))}
+          </div>
+          {symptoms.map((s, i) => (
+          <div class="dx-panel" role="tabpanel" id={`dx-${s.key}`} aria-labelledby={`dx-tab-${s.key}`} hidden={i !== 0}>
+            <ol class="dx-funnel">
+              {stages.map((st, n) => (
+              <li class={n === s.hit ? "is-hit" : undefined} style={`--w:${[1, 0.86, 0.62, 0.38, 0.22][n]}`}><span set:html={t(st)} /></li>
+              ))}
+            </ol>
+            <div class="dx-read">
+              <p class="dx-why" set:html={t(s.why)} />
+              <p class="dx-label"><span class="lang-id">Yang dicek</span><span class="lang-en">What gets checked</span></p>
+              <ul class="tile-list">{s.checks.map((c) => <li set:html={t(c)} />)}</ul>
+            </div>
+          </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RIGHT PLAN: a first direction on which tool fits ============ -->
+    <section class="crm-sec" id="plan" aria-labelledby="fit-title">
+      <div class="shell">
+        <div class="crm-head">
+          <h2 class="section-title" id="fit-title" data-reveal-title>
+            <span class="mask-line"><span>Pay for what</span></span>
+            <span class="mask-line"><span>you <em>use</em><span class="accent-dot">.</span></span></span>
+          </h2>
+          <p class="crm-note reveal"><span class="lang-id">Banyak akun membayar kontak yang sudah tidak aktif atau fitur yang tidak dipakai. Jawab tiga hal ini untuk arah awal.</span><span class="lang-en">Many accounts pay for inactive contacts or unused features. Answer three things for a first direction.</span></p>
+        </div>
+        <div class="fit reveal" data-fit>
+          <form class="fit-form">
+            <fieldset class="field">
+              <legend><span class="fit-n">01</span><span class="lang-id">Yang mau dikirim</span><span class="lang-en">What you'll send</span></legend>
+              <div class="chips">
+                <label class="chip"><input type="radio" name="send" value="marketing" checked><span><span class="lang-id">Newsletter &amp; promo</span><span class="lang-en">Newsletters &amp; promos</span></span></label>
+                <label class="chip"><input type="radio" name="send" value="system"><span><span class="lang-id">Email dari sistem</span><span class="lang-en">System email</span></span></label>
+                <label class="chip"><input type="radio" name="send" value="both"><span><span class="lang-id">Keduanya</span><span class="lang-en">Both</span></span></label>
+              </div>
+            </fieldset>
+            <fieldset class="field">
+              <legend><span class="fit-n">02</span><span class="lang-id">Jumlah kontak</span><span class="lang-en">Contacts</span></legend>
+              <div class="chips">
+                <label class="chip"><input type="radio" name="size" value="small" checked><span><span class="lang-id">Di bawah 2.000</span><span class="lang-en">Under 2,000</span></span></label>
+                <label class="chip"><input type="radio" name="size" value="mid"><span><span class="lang-id">2.000 – 50.000</span><span class="lang-en">2,000 – 50,000</span></span></label>
+                <label class="chip"><input type="radio" name="size" value="large"><span><span class="lang-id">Di atas 50.000</span><span class="lang-en">Over 50,000</span></span></label>
+              </div>
+            </fieldset>
+            <fieldset class="field">
+              <legend><span class="fit-n">03</span>Channel</legend>
+              <div class="chips">
+                <label class="chip"><input type="radio" name="channel" value="email" checked><span><span class="lang-id">Email saja</span><span class="lang-en">Email only</span></span></label>
+                <label class="chip"><input type="radio" name="channel" value="multi"><span><span class="lang-id">Email + WhatsApp / SMS / push</span><span class="lang-en">Email + WhatsApp / SMS / push</span></span></label>
+              </div>
+            </fieldset>
+          </form>
+          <div class="fit-result" data-active="mailchimp" aria-live="polite">
+            <ul class="fit-lineup" aria-hidden="true">
+              {tools.map((tool, i) => (
+              <li class:list={[i === 0 && "is-pick"]} data-lineup={tool.kind}>
+                <span class="tool-logo"><img src={tool.logo} alt="" width={tool.w} height={tool.h} loading="lazy"></span>
+                <b>{tool.name}</b>
+              </li>
+              ))}
+            </ul>
+            {plans.map((p, i) => (
+            <div class="fit-plan" data-plan={p.key} hidden={i !== 0}>
+              <h3 set:html={t(p.head)} />
+              <p set:html={t(p.why)} />
+            </div>
+            ))}
+            {sizeNote.map(([key, note], i) => <p class="fit-size" data-size={key} hidden={i !== 0} set:html={t(note)} />)}
+            <p class="dx-label"><span class="lang-id">Sebelum upgrade, yang dicek</span><span class="lang-en">Before upgrading, check</span></p>
+            <ul class="fit-checks">{planChecks.map((c) => <li set:html={t(c)} />)}</ul>
+            <a class="btn btn-red btn-lg btn-block" href="#contact" data-pick="audit" data-magnetic><span class="lang-id">Minta audit langganan</span><span class="lang-en">Request a plan audit</span> <span class="btn-arrow" aria-hidden="true">→</span></a>
+            <p class="crm-foot"><span class="lang-id">Arah awal saja. Keputusan akhir setelah melihat data dan paket yang aktif.</span><span class="lang-en">A first direction only. The final call comes after seeing your data and current plan.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="process" id="process" aria-labelledby="process-title" data-process>
+      <div class="shell">
+        <h2 class="section-title" id="process-title" data-reveal-title>
+          <span class="mask-line"><span>How it works<span class="accent-dot">.</span></span></span>
+        </h2>
+        <ol class="steps">
+          <li class="step"><span class="step-num">01</span><strong>Audit</strong><span><span class="lang-id">Cek akun, data, dan tujuan</span><span class="lang-en">Review the account, data and goals</span></span></li>
+          <li class="step"><span class="step-num">02</span><strong>Setup</strong><span><span class="lang-id">Domain, integrasi &amp; data</span><span class="lang-en">Domain, integrations &amp; data</span></span></li>
+          <li class="step"><span class="step-num">03</span><strong>Build</strong><span><span class="lang-id">Segmen, flow &amp; konten</span><span class="lang-en">Segments, flows &amp; content</span></span></li>
+          <li class="step"><span class="step-num">04</span><strong>Test &amp; send</strong><span><span class="lang-id">Uji coba, lalu kirim sesuai jadwal</span><span class="lang-en">Test, then send on schedule</span></span></li>
+          <li class="step"><span class="step-num">05</span><strong><span class="lang-id">Evaluasi</span><span class="lang-en">Evaluate</span></strong><span><span class="lang-id">Baca hasil, perbaiki berikutnya</span><span class="lang-en">Read results, improve the next one</span></span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ PRICING + ACCEPT PAYMENT ============ -->
+    <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+      <div class="shell">
+        <h2 class="section-title" id="pricing-title" data-reveal-title>
+          <span class="mask-line"><span>Pricing<span class="accent-dot">.</span></span></span>
+        </h2>
+        <div class="plans">
+          <article class="plan plan--main reveal" data-spot>
+            <p class="plan-label">CRM &amp; Email Management</p>
+            <p class="plan-price"><strong class="plan-price-text"><span class="lang-id">Sesuai scope</span><span class="lang-en">By scope</span></strong></p>
+            <ul class="plan-list">
+              <li><span class="lang-id">Harga disepakati sebelum mulai</span><span class="lang-en">Price agreed before we start</span></li>
+              <li><span class="lang-id">Bulanan atau per project</span><span class="lang-en">Monthly or per project</span></li>
+              <li><span class="lang-id">Dihitung dari platform, jumlah kontak, dan volume kerja</span><span class="lang-en">Based on the platform, contacts and workload</span></li>
+              <li><span class="lang-id">Biaya langganan platform terpisah</span><span class="lang-en">Platform subscription billed separately</span></li>
+            </ul>
+            <a class="btn btn-red btn-lg btn-block" href="#contact" data-magnetic>
+              <span class="lang-id">Diskusikan Scope</span><span class="lang-en">Discuss the scope</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+          </article>
+          <article class="plan plan--custom reveal" data-spot>
+            <p class="plan-label"><span class="lang-id">Mulai kecil</span><span class="lang-en">Start small</span></p>
+            <p class="plan-price"><strong class="plan-price-text"><span class="lang-id">Satu pekerjaan saja?</span><span class="lang-en">Just one job?</span></strong></p>
+            <ul class="plan-list">
+              <li><span class="lang-id">Audit akun dan langganan</span><span class="lang-en">Account and plan audit</span></li>
+              <li><span class="lang-id">Setup domain dan integrasi</span><span class="lang-en">Domain and integration setup</span></li>
+              <li><span class="lang-id">Satu automation flow</span><span class="lang-en">One automation flow</span></li>
+              <li><span class="lang-id">Satu desain email</span><span class="lang-en">One email design</span></li>
+            </ul>
+            <a class="btn btn-ghost btn-lg btn-block" href="#contact">Let's discuss <span class="btn-arrow" aria-hidden="true">→</span></a>
+          </article>
+        </div>
+        <div class="pay reveal">
+          <p class="pay-title">Accept payment</p>
+          <div class="pay-group">
+            <p class="pay-label">Indonesia</p>
+            <ul class="pay-logos">
+              <li class="qris">
+                <button class="qris-btn" type="button" aria-expanded="false" aria-controls="qris-pop" data-qris>
+                  <img src="/assets/payment-methods/qris.webp" alt="QRIS">
+                  <span class="qris-badge"><span class="lang-id">Lihat</span><span class="lang-en">View</span></span>
+                </button>
+                <div class="qris-pop" id="qris-pop" role="dialog" aria-label="QRIS digmarketingmaul" data-qris-pop>
+                  <img src="/assets/payment-methods/qris-digmarketingmaul.webp" alt="QRIS Digital Marketing Maul, NMID ID1026603703558" width="760" height="1071" loading="lazy">
+                  <p class="qris-warn"><strong><span class="lang-id">Konfirmasi dulu, baru bayar.</span><span class="lang-en">Confirm first, then pay.</span></strong> <span class="lang-id">Bayar tanpa konfirmasi =&nbsp;sedekah.</span><span class="lang-en">Paying without confirming =&nbsp;a&nbsp;donation.</span></p>
+                  <a class="qris-confirm" href="#contact"><span class="lang-id">Konfirmasi via WhatsApp</span><span class="lang-en">Confirm on WhatsApp</span> →</a>
+                </div>
+              </li>
+              <li><img src="/assets/payment-methods/hijra.webp" alt="Hijra Bank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/gopay.webp" alt="GoPay" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/shopeepay.webp" alt="ShopeePay" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/dana.webp" alt="DANA" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/ovo.webp" alt="OVO" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/permata.webp" alt="PermataBank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bsi.webp" alt="Bank Syariah Indonesia" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/mandiri.webp" alt="Bank Mandiri" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bri.webp" alt="BRI" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bni.webp" alt="BNI" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/btn.webp" alt="BTN" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/cimb.webp" alt="CIMB Niaga" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/danamon.webp" alt="Danamon" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/maybank.webp" alt="Maybank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bjb.webp" alt="bank bjb" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/sinarmas.webp" alt="Bank Sinarmas" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bnc.webp" alt="Bank Neo Commerce" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/bss.webp" alt="Bank Sahabat Sampoerna" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/seabank.webp" alt="SeaBank" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/alfa.webp" alt="Alfamart" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/indomaret.webp" alt="Indomaret" loading="lazy"></li>
+            </ul>
+          </div>
+          <div class="pay-group">
+            <p class="pay-label">International</p>
+            <ul class="pay-logos">
+              <li><img src="/assets/payment-methods/paypal.svg" alt="PayPal" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/visa.webp" alt="Visa" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/mastercard.webp" alt="Mastercard" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/jcb.webp" alt="JCB" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/amex.svg" alt="American Express" loading="lazy"></li>
+              <li><img src="/assets/payment-methods/unionpay.svg" alt="UnionPay" loading="lazy"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <div class="shell">
+        <h2 class="section-title" id="faq-title" data-reveal-title>
+          <span class="mask-line"><span>FAQ<span class="accent-dot">.</span></span></span>
+        </h2>
+        <div class="faq-list">
+          {faq.map((item) => (
+            <details class="reveal">
+              <summary><span class="lang-id" set:html={item.id.q} /><span class="lang-en" set:html={item.en.q} /></summary>
+              <div class="faq-a"><p><span class="lang-id" set:html={item.id.a} /><span class="lang-en" set:html={item.en.a} /></p></div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT: brief form → WhatsApp (prefilled) ============ -->
+    <section class="contact" id="contact" aria-labelledby="final-title">
+      <div class="shell contact-grid">
+        <div class="contact-intro">
+          <h2 class="section-title" id="final-title" data-reveal-title>
+            <span class="mask-line"><span>Let's discuss</span></span>
+            <span class="mask-line"><span>your <em>CRM</em><span class="accent-dot">.</span></span></span>
+          </h2>
+          <p class="contact-lead"><span class="lang-id">Isi singkat, lanjut ke WhatsApp.</span><span class="lang-en">A quick brief, then WhatsApp.</span></p>
+          <div class="chat" aria-hidden="true">
+            <div class="chat-head">
+              <span class="chat-avatar"><img src="/assets/brand/logo/icon.svg" alt="" width="26" height="26"></span>
+              <span><strong>Maul</strong><small><span class="lang-id">Pratinjau pesan kamu</span><span class="lang-en">Your message preview</span></small></span>
+            </div>
+            <div class="chat-body">
+              <p class="chat-bubble"><span data-chat-text></span><small><span class="lang-id">Belum terkirim</span><span class="lang-en">Not sent yet</span></small></p>
+            </div>
+          </div>
+        </div>
+
+        <form class="brief" data-brief data-copy={JSON.stringify(briefCopy)} novalidate>
+          <div class="brief-head">
+            <p class="brief-title"><span class="lang-id">Brief CRM</span><span class="lang-en">CRM brief</span></p>
+            <span class="brief-chip"><span class="lang-id">± 1 menit</span><span class="lang-en">± 1 minute</span></span>
+          </div>
+
+          <div class="field" data-field="name">
+            <label for="f-name"><span class="lang-id">Nama kamu</span><span class="lang-en">Your name</span> <b>*</b></label>
+            <input id="f-name" name="name" autocomplete="name" required data-ph-id="Nama panggilan" data-ph-en="What should we call you?">
+            <p class="field-error"><span class="lang-id">Isi nama dulu, ya.</span><span class="lang-en">Please add your name.</span></p>
+          </div>
+
+          <div class="field">
+            <label for="f-brand"><span class="lang-id">Bisnis / brand</span><span class="lang-en">Business / brand</span></label>
+            <input id="f-brand" name="brand" autocomplete="organization" data-ph-id="Contoh: Kopi Senja" data-ph-en="e.g. Senja Coffee">
+          </div>
+
+          <fieldset class="field" data-field="need">
+            <legend><span class="lang-id">Kamu butuh</span><span class="lang-en">You need</span> <b>*</b> <small class="legend-hint"><span class="lang-id">boleh lebih dari satu</span><span class="lang-en">pick any</span></small></legend>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="need" value="setup" data-id="Setup & integrasi" data-en="Setup & integration"><span><span class="lang-id">Setup &amp; integrasi</span><span class="lang-en">Setup &amp; integration</span></span></label>
+              <label class="chip"><input type="checkbox" name="need" value="blast" data-id="Email blast / newsletter" data-en="Email blast / newsletter"><span>Email blast</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="message" data-id="Message blast" data-en="Message blast"><span>Message blast</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="automation" data-id="Automation & trigger" data-en="Automation & triggers"><span>Automation</span></label>
+              <label class="chip"><input type="checkbox" name="need" value="segment" data-id="Segmentasi & data" data-en="Segmentation & data"><span><span class="lang-id">Segmentasi &amp; data</span><span class="lang-en">Segments &amp; data</span></span></label>
+              <label class="chip"><input type="checkbox" name="need" value="content" data-id="Desain & copywriting" data-en="Design & copywriting"><span><span class="lang-id">Desain &amp; copy</span><span class="lang-en">Design &amp; copy</span></span></label>
+              <label class="chip"><input type="checkbox" name="need" value="report" data-id="Evaluasi & report" data-en="Evaluation & reports"><span><span class="lang-id">Evaluasi &amp; report</span><span class="lang-en">Evaluation &amp; reports</span></span></label>
+              <label class="chip"><input type="checkbox" name="need" value="audit" data-id="Audit akun & langganan" data-en="Account & plan audit"><span><span class="lang-id">Audit langganan</span><span class="lang-en">Plan audit</span></span></label>
+              <label class="chip"><input type="checkbox" name="need" value="other" data-id="Lainnya" data-en="Something else"><span><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></span></label>
+            </div>
+            <p class="field-error"><span class="lang-id">Pilih minimal satu.</span><span class="lang-en">Pick at least one.</span></p>
+          </fieldset>
+
+          <fieldset class="field">
+            <legend><span class="lang-id">Platform sekarang</span><span class="lang-en">Current platform</span></legend>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" name="use" value="mailchimp" data-id="Mailchimp" data-en="Mailchimp"><span>Mailchimp</span></label>
+              <label class="chip"><input type="checkbox" name="use" value="resend" data-id="Resend" data-en="Resend"><span>Resend</span></label>
+              <label class="chip"><input type="checkbox" name="use" value="insider" data-id="Insider One" data-en="Insider One"><span>Insider One</span></label>
+              <label class="chip"><input type="checkbox" name="use" value="other" data-id="Platform lain" data-en="Another platform"><span><span class="lang-id">Lainnya</span><span class="lang-en">Other</span></span></label>
+              <label class="chip"><input type="checkbox" name="use" value="none" data-id="Belum ada" data-en="None yet"><span><span class="lang-id">Belum ada</span><span class="lang-en">None yet</span></span></label>
+            </div>
+          </fieldset>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="f-count"><span class="lang-id">Jumlah kontak</span><span class="lang-en">Contacts</span></label>
+              <select id="f-count" name="count">
+                <option value="" data-id="Pilih" data-en="Choose">Pilih</option>
+                <option value="small" data-id="Di bawah 2.000" data-en="Under 2,000">Di bawah 2.000</option>
+                <option value="mid" data-id="2.000 – 50.000" data-en="2,000 – 50,000">2.000 – 50.000</option>
+                <option value="large" data-id="Di atas 50.000" data-en="Over 50,000">Di atas 50.000</option>
+                <option value="unsure" data-id="Belum tahu" data-en="Not sure yet">Belum tahu</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-when"><span class="lang-id">Target mulai</span><span class="lang-en">Start date</span></label>
+              <select id="f-when" name="when">
+                <option value="" data-id="Pilih" data-en="Choose">Pilih</option>
+                <option value="asap" data-id="Secepatnya" data-en="As soon as possible">Secepatnya</option>
+                <option value="1m" data-id="Kurang dari 1 bulan" data-en="Within a month">Kurang dari 1 bulan</option>
+                <option value="3m" data-id="1–3 bulan" data-en="1–3 months">1–3 bulan</option>
+                <option value="unsure" data-id="Belum tahu" data-en="Not sure yet">Belum tahu</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="f-ref">Website</label>
+            <input id="f-ref" name="ref" data-ph-id="Link website (opsional)" data-ph-en="Website link (optional)">
+          </div>
+
+          <div class="field">
+            <label for="f-note"><span class="lang-id">Ceritakan kebutuhanmu</span><span class="lang-en">Tell us what you need</span></label>
+            <textarea id="f-note" name="note" rows="3" data-ph-id="Tujuan, kondisi akun sekarang, kendala, atau apa pun di kepalamu" data-ph-en="Your goal, the account today, problems, anything on your mind"></textarea>
+          </div>
+
+          <button class="btn btn-red btn-lg btn-block" type="submit">
+            <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+            <span class="lang-id">Lanjutkan ke WhatsApp</span><span class="lang-en">Continue on WhatsApp</span>
+          </button>
+          <p class="brief-note"><span class="lang-id">Pesan terbuka di WhatsApp. Data formulir tidak disimpan.</span><span class="lang-en">Your message opens in WhatsApp. Nothing is stored.</span></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER — same as the other pages (BrandFooter), light ============ -->
+  <footer class="brand-footer">
+    <div class="brand-footer-inner">
+      <div class="footer-cols">
+        <nav aria-label="Footer">
+          <p class="footer-label">Pages</p>
+          <ul>
+            <li><a href="/index.html#home" class="footer-link">Home</a></li>
+            <li><a href="/frameworks/" class="footer-link">Frameworks</a></li>
+            <li><a href="/blog/" class="footer-link">Blog</a></li>
+            <li><a href="/products/" class="footer-link">Products</a></li>
+          </ul>
+        </nav>
+        <div>
+          <p class="footer-label">Social</p>
+          <ul>
+            <li><a href="https://www.instagram.com/digmarketingmaul/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+            <li><a href="https://www.linkedin.com/in/muhammad-dimas-maulana-4a5526148/" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+            <li><a href="https://www.tiktok.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-tiktok" aria-hidden="true"></i> TikTok</a></li>
+            <li><a href="https://www.youtube.com/@digmarketingmaul" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fa-brands fa-youtube" aria-hidden="true"></i> YouTube</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-label">Based in</p>
+          <ul>
+            <li>Bekasi, Indonesia</li>
+            <li class="footer-cta-item"><a href="/products/" class="footer-cta">Let's Collaborate <span aria-hidden="true">→</span></a></li>
+          </ul>
+        </div>
+        <div class="footer-top-link">
+          <a href="#" class="back-to-top"><span aria-hidden="true">↑</span> Back to top</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Build and Design by Maul</p>
+        <img class="footer-mark" src="/assets/brand/logo/icon.svg" alt="" width="26" height="26">
+      </div>
+    </div>
+    <p class="footer-wordmark" aria-hidden="true">digmarketingmaul<span>.</span></p>
+  </footer>
+  <script is:inline src={railJs}></script>
+  <script is:inline src={pageJs}></script>
+</BaseLayout>

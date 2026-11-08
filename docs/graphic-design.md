@@ -39,7 +39,7 @@ Apart from the shared logo, favicon and payment logos, the only images are the c
 | `src/styles/products/website-development.css` | **Shared base**, loaded first. Changing it changes all three pages. |
 | `src/components/products/WorkSheet.astro` | One real-work sheet on the rail (card, caption, ↗ with the viewer data) |
 | `src/styles/products/graphic-design.css` | Design-only additions: sheet sizes, sample artwork, work sheets + viewer, bento visuals, the “one look” stage |
-| `src/scripts/products/graphic-design.js` | Language + International, hanging samples, the sample-brand switcher, brief → WhatsApp, QRIS, reveals, cursor |
+| `src/scripts/products/graphic-design.js` | Language + International, hanging samples, the sample-brand switcher, brief → WhatsApp, QRIS, reveals, cursor. Also runs [CRM & Email Management](./crm-email-management.md): check both pages after changing it or `graphic-design.css`. |
 
 **Add real work:** add an item to the right list in `works` (`key`, `name`, `client`, `title` id/en, `card`, `images` with real pixel sizes and an `alt` each). It lands after the last piece of that category; numbers follow. Put the files in `assets/graphic-design/<category>/`.
 - **Boards, not loose files.** A work with several views (front/back, colour versions, concepts → final) is one composed board, 1600px wide (`<name>.webp`) plus an 800px card (`<name>-card.webp`): same padding (72px) and gutter (28px), rounded tiles, small mono labels (VERTICAL / ON DARK, FRONT / BACK…). The 2026-11-05 boards were made with sharp; jerseys on mismatched backgrounds were cut out by colour (saturation mask, holes filled, small open/close) and set on one light canvas with a soft floor shadow. Use only the brand's real colours on a palette row.
