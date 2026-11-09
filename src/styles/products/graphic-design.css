@@ -1280,6 +1280,30 @@ html.mv-lock {
   overflow: hidden;
 }
 
+/* Native dialogs live in the top layer, above the custom cursor. Restore
+   the system cursor on the whole page (including the backdrop) while open. */
+html.has-cursor.mv-lock,
+html.has-cursor.mv-lock * {
+  cursor: auto;
+}
+
+html.has-cursor.mv-lock .work-viewer::backdrop {
+  cursor: default;
+}
+
+html.has-cursor.mv-lock .work-viewer button:not(:disabled) {
+  cursor: pointer;
+}
+
+html.has-cursor.mv-lock .work-viewer button:disabled {
+  cursor: default;
+}
+
+html.has-cursor.mv-lock .cursor-dot,
+html.has-cursor.mv-lock .cursor-ring {
+  visibility: hidden;
+}
+
 .mv-bar {
   display: flex;
   align-items: center;
