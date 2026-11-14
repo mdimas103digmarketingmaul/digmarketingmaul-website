@@ -1,7 +1,9 @@
 /* =========================================================
    HERO — "Everything connects."
    The meadow video loops on its own. On top, one canvas draws the code effects:
-   - always: twinkling stars, laptop glow, fingertip glow
+   - always: twinkling stars, a star that flares now and then, shooting stars at random,
+     stars brightening around the cursor, a tap/click in the sky launches a shooting star,
+     laptop glow, fingertip glow
    - with scroll (stage pinned): light leaves the laptop and gathers at the fingertip,
      a beam shoots into the sky, a shockwave opens a nebula, eight decorative points
      light up and link into a network, a pulse runs Creative → Growth, closing line.
@@ -109,6 +111,7 @@
   const FINGER = [1500, 1135];
   const SCREEN = [1462, 1170];
   const HORIZON_Y = 860;
+  const DARK_SKY_Y = 640; /* lowest point of the dark sky, above the orange horizon glow */
   const FIGURE = [1650, 820, 2160, 1300]; /* no extra stars drawn over the figure */
 
   const NAMES = ["Creative", "Content", "Motion", "Website", "Ads", "Automation", "Analytics", "Growth"];
@@ -182,6 +185,7 @@
     const finger = map(FINGER);
     const screen = map(SCREEN);
     const horizon = map([0, HORIZON_Y])[1];
+    const skyY = Math.max(0.2 * H, map([0, DARK_SKY_Y])[1]);
     const fig = [map([FIGURE[0], FIGURE[1]]), map([FIGURE[2], FIGURE[3]])];
 
     const chain = P.slice(0, -1).map((p, i) => bent(p, P[i + 1], i % 2 ? 0.1 : -0.1));
@@ -217,35 +221,28 @@
       };
     });
 
-    /* nebula band along the chain, pre-baked at half resolution */
+    /* nebula: a soft red-to-navy haze along the chain, pre-baked at half resolution.
+       Only large, faint blobs — small specks read as dirt once upscaled on phones. */
     const neb = document.createElement("canvas");
     neb.width = Math.max(1, Math.round(W / 2));
     neb.height = Math.max(1, Math.round(H / 2));
     const nx = neb.getContext("2d");
     nx.globalCompositeOperation = "lighter";
     nx.scale(0.5, 0.5);
-    const pal = [[SP.red, 0.4], [SP.magenta, 0.25], [SP.violet, 0.2], [SP.blue, 0.15]];
+    const pal = [[SP.red, 0.5], [SP.blue, 0.3], [SP.magenta, 0.12], [SP.violet, 0.08]];
     const pick = () => {
       let q = R();
       for (const [s, w] of pal) if ((q -= w) <= 0) return s;
       return SP.red;
     };
     const spread = (tall ? 0.09 : 0.12) * H;
-    for (let i = 0; i < 110; i++) {
+    for (let i = 0; i < 70; i++) {
       const p = pointAt(chainAll, R());
-      glow(pick(), p[0] + (R() - 0.5) * 0.05 * W, p[1] + (R() + R() + R() - 1.5) * spread, (0.05 + R() * 0.13) * Math.max(W, H), 0.05 + R() * 0.08, nx);
+      glow(pick(), p[0] + (R() - 0.5) * 0.06 * W, p[1] + (R() + R() + R() - 1.5) * spread, (0.1 + R() * 0.16) * Math.max(W, H), 0.03 + R() * 0.045, nx);
     }
-    for (let i = 0; i < 900; i++) {
-      const p = pointAt(chainAll, R());
-      nx.globalAlpha = 0.15 + R() * 0.6;
-      nx.fillStyle = R() > 0.7 ? "#ffb3c2" : "#ffffff";
-      const s = 0.8 + R() * 1.6;
-      nx.fillRect(p[0] + (R() - 0.5) * 0.05 * W, p[1] + (R() + R() + R() - 1.5) * spread * 1.15, s, s);
-    }
-    nx.globalAlpha = 1;
 
     G = {
-      u, ui, tall, nodes, spark, finger, screen, stars, parts, neb,
+      u, ui, tall, nodes, spark, finger, screen, stars, parts, neb, skyY,
       link0: bent(spark, P[0], 0.1),
       chain, chainAll,
       cross: L.cross.map(([a, b], k) => bent(P[a], P[b], k % 2 ? 0.08 : -0.08)),
@@ -271,6 +268,96 @@
 
   const pointer = { x: -9999, y: -9999 };
 
+  /* ---------- sky events: a star flares now and then, shooting stars at random ---------- */
+  const flares = [];
+  const meteors = [];
+  let nextFlare = 1.2;
+  let nextMeteor = 2.5;
+  const rand = (a, b) => a + Math.random() * (b - a);
+
+  /* Shooting stars stay high in the dark sky: shallow paths (seen far away) that burn out
+     before the orange horizon glow, never over the mountains. */
+  function launchMeteor(x, y, now) {
+    const floor = G.skyY - 0.04 * H;
+    if (y > floor - 0.06 * H) return;
+    const dir = Math.random() < 0.75 ? -1 : 1; /* mostly drifting toward the left */
+    const tilt = rand(0.16, 0.36); /* radians below horizontal */
+    const ang = dir < 0 ? Math.PI - tilt : tilt;
+    const speed = rand(0.45, 0.7) * Math.max(W, 520);
+    const vx = Math.cos(ang) * speed;
+    const vy = Math.sin(ang) * speed;
+    const life = Math.min(rand(0.7, 1.1), (floor - y) / vy);
+    if (life < 0.3) return;
+    meteors.push({ x, y, vx, vy, t0: now, life, floor, tail: rand(110, 200) * G.ui });
+  }
+
+  function drawSky(clock) {
+    const { ui } = G;
+    /* a random bright-ish star flares into a four-point glint */
+    if (clock >= nextFlare && G.stars.length) {
+      const st = G.stars[Math.floor(Math.random() * G.stars.length)];
+      flares.push({ st, t0: clock, life: rand(0.9, 1.5), size: rand(10, 18) * ui });
+      nextFlare = clock + rand(0.9, 2.6);
+    }
+    for (let i = flares.length - 1; i >= 0; i--) {
+      const f = flares[i];
+      const q = (clock - f.t0) / f.life;
+      if (q >= 1 || q < 0) { flares.splice(i, 1); continue; }
+      const e = Math.sin(Math.PI * q);
+      const { x, y } = f.st;
+      glow(SP.white, x, y, f.size * 0.9 * e, 0.9 * e);
+      glow(SP.pink, x, y, f.size * 2.2 * e, 0.25 * e);
+      const len = f.size * 1.6 * e;
+      for (const [dx, dy, k] of [[1, 0, 1], [0, 1, 0.75]]) {
+        const g = ctx.createLinearGradient(x - dx * len, y - dy * len, x + dx * len, y + dy * len);
+        g.addColorStop(0, "rgba(255,255,255,0)");
+        g.addColorStop(0.5, `rgba(255,255,255,${0.85 * e * k})`);
+        g.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.strokeStyle = g;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x - dx * len * k, y - dy * len * k);
+        ctx.lineTo(x + dx * len * k, y + dy * len * k);
+        ctx.stroke();
+      }
+    }
+
+    /* shooting stars: one every few seconds, somewhere in the upper sky */
+    if (clock >= nextMeteor) {
+      const top = 0.03 * H;
+      const low = Math.max(top + 1, Math.min(0.28 * H, G.skyY - 0.2 * H));
+      launchMeteor(rand(0.2, 1) * W, rand(top, low), clock);
+      if (Math.random() < 0.18) launchMeteor(rand(0.3, 1) * W, rand(top, low), clock + 0.35);
+      nextMeteor = clock + rand(3.5, 8);
+    }
+    for (let i = meteors.length - 1; i >= 0; i--) {
+      const m = meteors[i];
+      const age = clock - m.t0;
+      if (age < 0) continue;
+      const q = age / m.life;
+      if (q >= 1) { meteors.splice(i, 1); continue; }
+      const hx = m.x + m.vx * age;
+      const hy = m.y + m.vy * age;
+      const a = Math.sin(Math.PI * Math.min(1, q * 1.3)) * (1 - q * 0.4) * clamp((m.floor - hy) / (0.05 * H));
+      const v = Math.hypot(m.vx, m.vy);
+      const tx = hx - (m.vx / v) * m.tail;
+      const ty = hy - (m.vy / v) * m.tail;
+      const g = ctx.createLinearGradient(hx, hy, tx, ty);
+      g.addColorStop(0, `rgba(255,255,255,${0.95 * a})`);
+      g.addColorStop(0.25, `rgba(255,190,205,${0.45 * a})`);
+      g.addColorStop(1, "rgba(255,120,150,0)");
+      ctx.strokeStyle = g;
+      ctx.lineCap = "round";
+      ctx.lineWidth = 1.6 * Math.max(0.8, ui);
+      ctx.beginPath();
+      ctx.moveTo(hx, hy);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+      glow(SP.white, hx, hy, 9 * ui, 0.95 * a);
+      glow(SP.pink, hx, hy, 26 * ui, 0.35 * a);
+    }
+  }
+
   function draw(s, clock) {
     if (!G) return;
     const { u, ui, nodes, spark, finger, screen } = G;
@@ -287,7 +374,7 @@
       ctx.beginPath();
       ctx.arc(spark[0], spark[1], Math.max(1, shockR), 0, Math.PI * 2);
       ctx.clip();
-      ctx.globalAlpha = 0.95 * nebA;
+      ctx.globalAlpha = (G.tall ? 0.6 : 0.8) * nebA;
       ctx.drawImage(G.neb, Math.sin(clock * 0.12) * 14, Math.cos(clock * 0.09) * 6, W, H);
       ctx.restore();
       ctx.globalAlpha = 1;
@@ -295,18 +382,25 @@
 
     ctx.globalCompositeOperation = "lighter";
 
-    /* twinkling stars; brighter once the network is alive and where the shockwave passes */
+    /* twinkling stars; brighter once the network is alive, where the shockwave passes
+       and around the cursor */
     const net = seg(s, 6, 10);
+    const reach = 120 * ui;
     ctx.fillStyle = "#fff";
     for (const st of G.stars) {
       let a = st.a * (0.55 + 0.45 * Math.sin(clock * st.f * 2 + st.p)) * (0.75 + 0.45 * net);
       if (shock > 0 && shock < 1) a += Math.max(0, 1 - Math.abs(Math.hypot(st.x - spark[0], st.y - spark[1]) - shockR) / (70 * ui)) * (1 - shock) * 1.4;
+      const near = Math.max(0, 1 - Math.hypot(st.x - pointer.x, st.y - pointer.y) / reach);
+      a += near * near * 0.9;
       if (a <= 0.01) continue;
       ctx.globalAlpha = Math.min(1, a);
-      ctx.fillRect(st.x - st.s / 2, st.y - st.s / 2, st.s, st.s);
+      ctx.beginPath();
+      ctx.arc(st.x, st.y, st.s / 2, 0, Math.PI * 2);
+      ctx.fill();
       if (a > 0.72) glow(SP.white, st.x, st.y, st.s * 5, (a - 0.72) * 0.8);
     }
     ctx.globalAlpha = 1;
+    drawSky(clock);
 
     if (shock > 0 && shock < 1) {
       ctx.beginPath();
@@ -317,30 +411,6 @@
       ctx.strokeStyle = `rgba(255,170,190,${0.45 * (1 - shock)})`;
       ctx.lineWidth = 1.8 * ui;
       ctx.stroke();
-    }
-
-    /* an occasional shooting star while the network is alive */
-    if (s > 6.5) {
-      const cyc = clock % 7.5;
-      const k = Math.floor(clock / 7.5);
-      const q = seg(cyc, 0, 0.7);
-      if (q > 0 && q < 1) {
-        const x0 = W * (0.55 + ((k * 0.37) % 0.4));
-        const y0 = H * (0.05 + ((k * 0.23) % 0.15));
-        const hx = x0 - 0.33 * W * q;
-        const hy = y0 + 0.2 * H * q;
-        const a = Math.sin(Math.PI * q);
-        const tail = 180 * ui;
-        const g = ctx.createLinearGradient(hx, hy, hx + tail, hy - tail * 0.42);
-        g.addColorStop(0, `rgba(255,255,255,${0.85 * a})`);
-        g.addColorStop(1, "rgba(255,255,255,0)");
-        ctx.strokeStyle = g;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(hx, hy);
-        ctx.lineTo(hx + tail, hy - tail * 0.42);
-        ctx.stroke();
-      }
     }
 
     /* network */
@@ -587,12 +657,21 @@
   if (document.fonts) document.fonts.load('500 17px "JetBrains Mono"').catch(() => {});
 
   stage.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse") return; /* touch scrolling shouldn't light the sky */
     const r = stage.getBoundingClientRect();
     pointer.x = e.clientX - r.left;
     pointer.y = e.clientY - r.top;
   });
   stage.addEventListener("pointerleave", () => {
     pointer.x = pointer.y = -9999;
+  });
+  /* a tap or click in the sky sends a shooting star from that point */
+  stage.addEventListener("pointerdown", (e) => {
+    if (!G || e.target.closest("a, button")) return;
+    const r = stage.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    launchMeteor(x, y, (performance.now() - start) / 1000); /* ignored below the dark sky */
   });
 
   if ("IntersectionObserver" in window) {

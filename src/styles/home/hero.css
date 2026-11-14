@@ -80,7 +80,8 @@ html.js .hero-video.is-playing {
 
 .hero-copy {
   max-width: min(48rem, 56vw);
-  text-shadow: 0 2px 30px rgba(7, 17, 31, 0.45);
+  /* drop-shadow on the parent: a text-shadow would be cut into boxes by the word masks */
+  filter: drop-shadow(0 2px 16px rgba(7, 17, 31, 0.45));
   will-change: opacity, transform;
 }
 
@@ -161,7 +162,7 @@ html.is-ready .hero-foot {
   font-weight: 500;
   line-height: 1.16;
   letter-spacing: -0.02em;
-  text-shadow: 0 2px 24px rgba(7, 17, 31, 0.8);
+  filter: drop-shadow(0 2px 14px rgba(7, 17, 31, 0.7));
 }
 
 .hero-closing-line {
