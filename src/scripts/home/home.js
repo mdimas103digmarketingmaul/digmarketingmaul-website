@@ -518,10 +518,7 @@
   const footer = document.querySelector(".site-footer");
   const themedSections = Array.from(main.querySelectorAll("section[data-theme]"));
 
-  const hero = document.querySelector(".hero");
-  const heroInner = document.querySelector(".hero-inner");
-  const heroLines = Array.from(document.querySelectorAll(".hero-line"));
-  const heroLineDrift = [-0.06, 0.09, -0.035, 0.05]; /* fraction of viewport width, per line */
+  /* The hero runs its own scene: src/scripts/home/hero.js */
 
   const floatingCta = document.querySelector(".floating-cta");
 
@@ -532,12 +529,10 @@
   let lastScrollY = window.scrollY;
   let scrollVelocity = 0;
   let ticking = false;
-  let heroHeight = hero.offsetHeight;
 
   function onScrollFrame() {
     ticking = false;
     const y = window.scrollY;
-    const isMobile = vw < 768;
     scrollVelocity = y - lastScrollY;
 
     /* ---- READ ---- */
@@ -582,18 +577,6 @@
     floatingCta.classList.toggle("is-shown", root.classList.contains("is-ready") && !collabOnScreen && !footerOpen);
 
     if (motionOK) {
-      /* HERO — lines drift apart at different velocities, block lifts away */
-      if (y < heroHeight * 1.2) {
-        const h = clamp(y / heroHeight);
-        if (!isMobile) {
-          heroLines.forEach((line, i) => {
-            line.style.transform = `translate3d(${(heroLineDrift[i] * vw * h).toFixed(1)}px,0,0)`;
-          });
-        }
-        heroInner.style.transform = `translate3d(0,${(h * vh * 0.14).toFixed(1)}px,0) scale(${(1 - h * 0.05).toFixed(4)})`;
-        heroInner.style.opacity = (1 - h * 0.75).toFixed(3);
-      }
-
       /* COLLABORATE — red field grows from the centre */
       const c = progress(collabRect.top, vh, vh * 0.1);
       collabFill.style.clipPath = `circle(${(easeInOut(c) * 75).toFixed(2)}% at 50% 50%)`;
@@ -627,9 +610,6 @@
     resizeTimer = window.setTimeout(() => {
       vw = window.innerWidth;
       vh = window.innerHeight;
-      heroHeight = hero.offsetHeight;
-      if (vw >= 768) heroLines.forEach((line) => (line.style.transform = ""));
-      else heroLines.forEach((line) => (line.style.transform = "none"));
       checkFooter();
       if (vw >= 1024 && body.classList.contains("menu-open")) closeMenu(false);
       requestScrollFrame();
@@ -811,51 +791,6 @@
       });
     });
 
-    /* ---- Hero: cursor-lit grid, trailing glow, depth parallax ---- */
-    const depthEls = Array.from(hero.querySelectorAll("[data-depth]"));
-    const glow = { x: vw * 0.7, y: vh * 0.3, tx: vw * 0.7, ty: vh * 0.3 };
-    const grid = { x: -400, y: -400, tx: -400, ty: -400 };
-    let heroRunning = false;
-
-    const heroLoop = () => {
-      glow.x = lerp(glow.x, glow.tx, 0.05);
-      glow.y = lerp(glow.y, glow.ty, 0.05);
-      grid.x = lerp(grid.x, grid.tx, 0.18);
-      grid.y = lerp(grid.y, grid.ty, 0.18);
-      hero.style.setProperty("--gx", `${grid.x.toFixed(1)}px`);
-      hero.style.setProperty("--gy", `${grid.y.toFixed(1)}px`);
-      hero.style.setProperty("--glow-x", `${glow.x.toFixed(1)}px`);
-      hero.style.setProperty("--glow-y", `${glow.y.toFixed(1)}px`);
-
-      /* depth parallax only where the intro floats beside the headline (desktop);
-         clamped so a stale pointer position after a resize can't push it off */
-      const nx = clamp(glow.x / vw) - 0.5;
-      const ny = clamp(glow.y / vh) - 0.5;
-      depthEls.forEach((el) => {
-        const depth = vw >= 1024 ? Number(el.dataset.depth) : 0;
-        el.style.translate = `${(nx * depth * 2).toFixed(2)}px ${(ny * depth * 2).toFixed(2)}px`;
-      });
-
-      if (Math.abs(glow.tx - glow.x) > 0.5 || Math.abs(glow.ty - glow.y) > 0.5) requestAnimationFrame(heroLoop);
-      else heroRunning = false;
-    };
-
-    hero.addEventListener("pointermove", (event) => {
-      const r = hero.getBoundingClientRect();
-      glow.tx = event.clientX;
-      glow.ty = event.clientY;
-      grid.tx = event.clientX - r.left;
-      grid.ty = event.clientY - r.top;
-      if (!heroRunning) {
-        heroRunning = true;
-        requestAnimationFrame(heroLoop);
-      }
-    });
-
-    hero.addEventListener("pointerleave", () => {
-      grid.tx = grid.ty = -400;
-    });
-
     /* ---- Portrait: subtle 3D tilt toward the cursor ---- */
     const aboutVisual = document.querySelector(".about-visual");
     const portraitFrame = document.querySelector(".portrait-frame");
@@ -922,40 +857,6 @@
 
     certList.addEventListener("toggle", syncPreview, true);
     document.querySelectorAll(".cert-row").forEach((row) => (row.dataset.cursor = "View"));
-  }
-
-  /* =========================================================
-     7b. HERO DRIFT (touch devices) — with no cursor to follow, the lit grid
-         and the glow wander slowly on their own while the hero is on screen
-  ========================================================= */
-  if (!finePointer && motionOK && "IntersectionObserver" in window) {
-    let drifting = false;
-    let w = hero.offsetWidth;
-    let h = hero.offsetHeight;
-
-    const drift = (now) => {
-      if (!drifting) return;
-      const t = now / 1000;
-      /* two slow Lissajous paths: the spotlight leads, the glow trails behind it */
-      const gx = w * (0.5 + 0.38 * Math.sin(t * 0.55));
-      const gy = h * (0.42 + 0.28 * Math.sin(t * 0.83 + 1));
-      const lx = w * (0.5 + 0.32 * Math.sin(t * 0.55 - 0.9));
-      const ly = h * (0.45 + 0.22 * Math.sin(t * 0.83 + 0.1));
-      hero.style.setProperty("--gx", `${gx.toFixed(1)}px`);
-      hero.style.setProperty("--gy", `${gy.toFixed(1)}px`);
-      hero.style.setProperty("--glow-x", `${lx.toFixed(1)}px`);
-      hero.style.setProperty("--glow-y", `${ly.toFixed(1)}px`);
-      requestAnimationFrame(drift);
-    };
-
-    new IntersectionObserver((entries) => {
-      const entry = entries[0];
-      w = entry.boundingClientRect.width;
-      h = entry.boundingClientRect.height;
-      const wasDrifting = drifting;
-      drifting = entry.isIntersecting;
-      if (drifting && !wasDrifting) requestAnimationFrame(drift);
-    }).observe(hero);
   }
 
   /* =========================================================

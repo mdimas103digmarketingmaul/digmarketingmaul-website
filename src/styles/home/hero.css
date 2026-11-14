@@ -1,0 +1,301 @@
+/* =========================================================
+   SECTION 01 — HERO · "Everything connects."
+   A pinned stage: the looping meadow video, a code-drawn effects canvas on top
+   (screen-blended), and the copy. With JS + motion the section is taller than the
+   screen so scrolling plays the story (src/scripts/home/hero.js); without either it
+   is a plain one-screen hero showing the finished network.
+   Assets: assets/home/hero/ · source + storyboard: content/hero-cosmic/
+========================================================= */
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+  background: var(--navy);
+}
+
+html.js .hero {
+  height: 250vh;
+}
+
+.hero-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 560px;
+  overflow: clip;
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-poster,
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 50%;
+}
+
+html.js .hero-video {
+  opacity: 0;
+  transition: opacity 0.9s var(--ease-out);
+}
+
+html.js .hero-video.is-playing {
+  opacity: 1;
+}
+
+.hero-fx {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: screen;
+}
+
+/* Top: keeps the header legible. Bottom: melts into the navy showreel below. */
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(7, 17, 31, 0.55) 0, rgba(7, 17, 31, 0) 18%),
+    linear-gradient(to top, var(--navy) 0, rgba(7, 17, 31, 0) 12%);
+}
+
+.hero-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding-top: calc(var(--header-h) + clamp(28px, 9vh, 120px));
+  padding-bottom: 28px;
+  pointer-events: none;
+}
+
+.hero-copy {
+  max-width: min(48rem, 56vw);
+  text-shadow: 0 2px 30px rgba(7, 17, 31, 0.45);
+  will-change: opacity, transform;
+}
+
+.hero-hello {
+  margin-bottom: clamp(10px, 1.6vh, 18px);
+  font-size: clamp(1.125rem, 1.45vw, 1.625rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.hero-hello-accent {
+  color: var(--red);
+}
+
+.hero-title {
+  font-size: clamp(3.25rem, 7.3vw, 8.75rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+}
+
+.hero-line {
+  display: block;
+}
+
+.hero-lede {
+  max-width: 34ch;
+  margin-top: clamp(18px, 2.8vh, 32px);
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: rgba(244, 246, 250, 0.8);
+}
+
+/* Word masks (headline) */
+.hero .w {
+  display: inline-block;
+  overflow: clip;
+  /* bottom padding keeps descenders (g, y) inside the mask */
+  padding: 0 0.04em 0.26em;
+  margin: 0 -0.04em -0.26em;
+  vertical-align: top;
+}
+
+.hero .w-in {
+  display: inline-block;
+}
+
+html.js .hero .w-in {
+  transform: translateY(112%) rotate(5deg);
+  transform-origin: 0 100%;
+  transition: transform 1.3s var(--ease-expo);
+  transition-delay: calc(0.55s + var(--i) * 0.09s);
+}
+
+html.is-ready .hero .w-in {
+  transform: none;
+}
+
+html.js .hero-hello,
+html.js .hero-lede,
+html.js .hero-foot {
+  opacity: 0;
+  transition: opacity 1s var(--ease-out) 1.1s;
+}
+
+html.is-ready .hero-hello,
+html.is-ready .hero-lede,
+html.is-ready .hero-foot {
+  opacity: 1;
+}
+
+/* Closing line — appears at the end of the story (driven by hero.js) */
+.hero-closing {
+  position: absolute;
+  top: 55%;
+  left: var(--gutter);
+  font-size: clamp(1.375rem, 2.15vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 24px rgba(7, 17, 31, 0.8);
+}
+
+.hero-closing-line {
+  display: block;
+  overflow: clip;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.hc-w {
+  display: inline-block;
+}
+
+html.js .hc-w {
+  transform: translateY(115%);
+}
+
+.hero-foot {
+  display: flex;
+  align-items: center;
+}
+
+.scroll-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  pointer-events: auto;
+}
+
+.scroll-cue-track {
+  position: relative;
+  width: 1px;
+  height: 44px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.scroll-cue-dot {
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 5px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--red);
+  animation: scrollCue 2s var(--ease-expo) infinite;
+}
+
+@keyframes scrollCue {
+  0% { transform: translateY(-14px); }
+  60%, 100% { transform: translateY(46px); }
+}
+
+@media (min-width: 1521px) {
+  .hero-closing {
+    left: calc((100vw - var(--container)) / 2 + var(--gutter));
+  }
+}
+
+/* Portrait screens (tablets too): the network fills the sky, so the closing line sits on top */
+@media (max-aspect-ratio: 17/20) {
+  .hero-closing {
+    top: calc(var(--header-h) + 20px);
+    left: var(--gutter);
+  }
+}
+
+/* ≤ 767 — phones: the portrait crop of the meadow, copy at the top */
+@media (max-width: 767px) {
+  html.js .hero {
+    height: 210vh;
+  }
+
+  .hero-poster,
+  .hero-video {
+    object-position: 50% 50%;
+  }
+
+  .hero-inner {
+    padding-top: calc(var(--header-h) + 28px);
+    padding-bottom: 20px;
+  }
+
+  .hero-copy {
+    max-width: none;
+  }
+
+  .hero-hello {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-size: 17vw;
+    line-height: 0.9;
+  }
+
+  .hero-lede {
+    max-width: 26ch;
+    font-size: 1rem;
+  }
+
+  .hero-closing {
+    top: calc(var(--header-h) + 20px);
+    font-size: 1.3rem;
+  }
+}
+
+/* Reduced motion: one screen, video paused on its first frame, the finished network */
+@media (prefers-reduced-motion: reduce) {
+  html.js .hero {
+    height: 100svh;
+  }
+
+  html.js .hero-video {
+    display: none;
+  }
+
+  html.js .hc-w {
+    transform: none;
+  }
+
+  .hero-closing {
+    display: none;
+  }
+}

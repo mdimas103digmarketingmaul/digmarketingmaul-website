@@ -7,6 +7,8 @@ import homeCss from '../styles/home/home.css?url';
 import homeJs from '../scripts/home/home.js?url';
 import showreelCss from '../styles/home/showreel.css?url';
 import showreelJs from '../scripts/home/showreel.js?url';
+import heroCss from '../styles/home/hero.css?url';
+import heroJs from '../scripts/home/hero.js?url';
 const meta = {
   "title": "M. Dimas Maulana — Digital Marketing",
   "description": "M. Dimas Maulana — Digital Marketer working across creative, acquisition, measurement, digital products, and performance optimization.",
@@ -24,6 +26,7 @@ const meta = {
   <!-- Homepage owns its stylesheet and interactions; legacy assets remain for snapshots. -->
   <link rel="stylesheet" href={homeCss} />
   <link rel="stylesheet" href={showreelCss} />
+  <link rel="stylesheet" href={heroCss} />
 
   <!-- Enables JS-only initial states (hidden reveals, intro curtain). Without JS everything stays visible. -->
   <script is:inline set:html={enableMotionScript}></script>
@@ -89,38 +92,49 @@ const meta = {
   <main id="main">
 
     <!-- =========================================================
-         SECTION 01 — HERO
-         Typography-led. Words reveal through masks, each line drifts at its
-         own velocity on scroll, the grid + glow respond softly to the cursor.
+         SECTION 01 — HERO · "Everything connects."
+         A looping night meadow (Kling 4.0 video, content/hero-cosmic/) with a code-drawn
+         layer on top: twinkling stars, then — driven by scroll while the stage is pinned —
+         light leaves the laptop, reaches the fingertip, shoots into the sky and lights
+         eight decorative points into a network. Styles: src/styles/home/hero.css ·
+         script: src/scripts/home/hero.js · storyboard: content/hero-cosmic/storyboard.md
     ========================================================== -->
-    <section class="hero" id="home" data-theme="dark">
-      <div class="hero-bg" aria-hidden="true">
-        <div class="hero-grid"></div>
-        <div class="hero-grid hero-grid-lit"></div>
-        <div class="hero-glow"></div>
-      </div>
-
-      <div class="hero-inner container">
-        <div class="hero-headline-wrap">
-          <h1 class="hero-title" aria-label="Design, Develop and Grow Digital Marketing Efficiently.">
-            <span class="hero-line" data-line="0" aria-hidden="true"><span class="w"><span class="w-in" style="--i:0">Design,</span></span> <span class="w"><span class="w-in" style="--i:1">Develop</span></span></span>
-            <span class="hero-line hero-line-indent" data-line="1" aria-hidden="true"><span class="w w-and"><span class="w-in" style="--i:2">and</span></span> <span class="w"><span class="w-in" style="--i:3">Grow</span></span></span>
-            <span class="hero-line" data-line="2" aria-hidden="true"><span class="w"><span class="w-in" style="--i:4">Digital</span></span> <span class="w"><span class="w-in" style="--i:5">Marketing</span></span></span>
-            <span class="hero-line hero-line-end" data-line="3" aria-hidden="true"><span class="w"><span class="w-in" style="--i:6">Efficiently<span class="accent-dot">.</span></span></span></span>
-          </h1>
-
-          <div class="hero-intro" data-depth="10">
-            <p class="hero-hello"><span class="hero-hello-accent">Hi,</span> I’m Maul.</p>
-            <p class="hero-lede">I work across the full stack of digital marketing — from the first impression to the final conversion.</p>
-          </div>
+    <section class="hero" id="home" data-theme="dark" aria-labelledby="hero-title">
+      <div class="hero-stage">
+        <div class="hero-media" aria-hidden="true">
+          <picture>
+            <source media="(max-width: 767px)" srcset="/assets/home/hero/meadow-poster-mobile.webp" width="760" height="1080">
+            <img class="hero-poster" src="/assets/home/hero/meadow-poster-1920.webp" srcset="/assets/home/hero/meadow-poster-960.webp 960w, /assets/home/hero/meadow-poster-1920.webp 1920w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+          </picture>
+          <video class="hero-video" muted loop playsinline autoplay preload="metadata" disablepictureinpicture tabindex="-1">
+            <source src="/assets/home/hero/meadow-loop-mobile.mp4" type="video/mp4" media="(max-width: 767px)">
+            <source src="/assets/home/hero/meadow-loop-1080.mp4" type="video/mp4">
+          </video>
+          <canvas class="hero-fx"></canvas>
+          <div class="hero-shade"></div>
         </div>
 
-        <div class="hero-foot">
-          <a href="#showreel" class="scroll-cue" data-magnetic>
-            <span class="scroll-cue-track" aria-hidden="true"><span class="scroll-cue-dot"></span></span>
-            <span>Scroll to explore</span>
-          </a>
-          <p class="hero-foot-note" data-depth="-4">Creative · Acquire · Build · Measure · Optimize</p>
+        <div class="hero-inner container">
+          <div class="hero-copy">
+            <p class="hero-hello"><span class="hero-hello-accent">Hi,</span> I’m Maul.</p>
+            <h1 class="hero-title" id="hero-title" aria-label="Everything connects.">
+              <span class="hero-line" aria-hidden="true"><span class="w"><span class="w-in" style="--i:0">Everything</span></span></span>
+              <span class="hero-line" aria-hidden="true"><span class="w"><span class="w-in" style="--i:1">connects<span class="accent-dot">.</span></span></span></span>
+            </h1>
+            <p class="hero-lede">Full-stack digital marketing — from first impression to final conversion.</p>
+          </div>
+
+          <p class="hero-closing">
+            <span class="hero-closing-line"><span class="hc-w">Design, develop and grow</span></span>
+            <span class="hero-closing-line"><span class="hc-w">digital marketing — efficiently<span class="accent-dot">.</span></span></span>
+          </p>
+
+          <div class="hero-foot">
+            <a href="#showreel" class="scroll-cue" data-magnetic>
+              <span class="scroll-cue-track" aria-hidden="true"><span class="scroll-cue-dot"></span></span>
+              <span>Scroll to explore</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -678,4 +692,5 @@ const meta = {
   <div class="skill-tooltip" id="skill-tooltip" role="tooltip"></div>
   <script is:inline src={homeJs}></script>
   <script is:inline src={showreelJs}></script>
+  <script is:inline src={heroJs}></script>
 </BaseLayout>
